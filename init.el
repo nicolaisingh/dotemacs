@@ -1,0 +1,199 @@
+;;; My Emacs init file
+
+(require 'package)
+(add-to-list 'package-archives '("melpa" . "https://melpa.org/packages/"))
+(package-initialize)
+
+(setq inhibit-startup-screen t
+      initial-scratch-message nil
+      initial-major-mode 'org-mode
+      visible-bell t)
+
+(put 'downcase-region 'disabled nil)
+(put 'upcase-region 'disabled nil)
+
+;; GUI
+;;(menu-bar-mode -1)
+(tool-bar-mode -1)
+(scroll-bar-mode -1)
+(blink-cursor-mode t)
+
+(column-number-mode t)
+(show-paren-mode t)
+
+(set-face-attribute 'default t :font "Source Code Pro-9:weight=book:width=regular")
+(add-to-list 'default-frame-alist '(font . "Source Code Pro-9:weight=book:width=regular"))
+(add-to-list 'default-frame-alist '(height . 50))
+(add-to-list 'default-frame-alist '(width . 100))
+(add-to-list 'default-frame-alist '(background-color . "WhiteSmoke"))
+(add-to-list 'default-frame-alist '(foreground-color . "gray25"))
+
+;; (global-hl-line-mode t)
+;; (set-face-background 'hl-line "#f8f8f8")
+(set-face-background 'region "RosyBrown2")
+
+;; Mode line colors
+(set-face-background 'mode-line "DodgerBlue3")
+(set-face-foreground 'mode-line "white")
+(set-face-attribute 'mode-line t :box "DodgerBlue3")
+(set-face-foreground 'mode-line-inactive "gray45")
+(set-face-attribute 'mode-line-inactive t :box "gray45")
+
+
+;; Where to store backup and autosave files 
+(setq backup-directory-alist `(("." . ,(concat user-emacs-directory "backups/")))
+      auto-save-file-name-transforms `((".*" ,(concat user-emacs-directory "autosaves/") t)))
+
+;; fast minibuffer selection
+;; (icomplete-mode t)
+
+(fset 'yes-or-no-p 'y-or-n-p)
+
+;; Override just-one-space
+(global-set-key (kbd "M-SPC") 'cycle-spacing)
+
+;; Other keybinds
+(global-set-key (kbd "C-S-o") 'other-window)
+(global-set-key (kbd "C-x C-S-c") 'save-buffers-kill-emacs)
+(global-set-key (kbd "C-x C-b") 'buffer-menu)
+
+(defun my/find-init-file ()
+  "Find my emacs init file"
+  (interactive)
+  (find-file "~/.emacs.d/init.el"))
+
+;; change-inner
+(require 'change-inner)
+(global-set-key (kbd "C-c i") 'change-inner)
+(global-set-key (kbd "C-c o") 'change-outer)
+
+;; expand-region
+(require 'expand-region)
+(global-set-key (kbd "C-=") 'er/expand-region)
+
+;; recentf
+(require 'recentf)
+(setq recentf-max-menu-items 25
+      recentf-auto-cleanup 'never)
+(recentf-mode 1)
+(global-set-key (kbd "C-x C-r") 'recentf-open-files)
+
+;; smex
+(require 'smex)
+(smex-initialize)
+(global-set-key (kbd "M-x") 'smex)
+(global-set-key (kbd "M-S-x") 'smex-major-mode-commands)
+(global-set-key (kbd "C-c C-c M-x") 'execute-extended-command)
+
+;; ido-mode
+(require 'ido)
+(ido-everywhere t)
+(ido-mode t)
+(ido-vertical-mode t)
+(setq ido-enable-flex-matching t
+      do-vertical-show-count t)
+
+;; org-mode
+(require 'org)
+(setq org-default-notes-file (concat org-directory "/notes.org")
+      org-agenda-files '("~/org/kotlin.org"
+			 "~/org/ideas.org"
+			 "~/org/notes.org")
+      org-capture-templates '(("t" "TODO" entry (file+headline 'org-default-notes-file "Tasks")
+			       "* TODO %?\nCreated %U\n")
+			      ("T" "TODO - Annotated" entry (file+headline 'org-default-notes-file "Tasks")
+			       "* TODO %?\n%U\n%a\n")
+			      ("n" "Note" entry (file+headline 'org-default-notes-file "Notes")
+			       "* %?\n%U\n")
+			      ("i" "Idea" entry (file (concat org-directory "/ideas.org"))
+			       "* %?\n%U\n")))
+
+(global-set-key (kbd "C-c l") 'org-store-link)
+(global-set-key (kbd "C-c c") 'org-capture)
+(global-set-key (kbd "C-c a") 'org-agenda)
+(global-set-key (kbd "C-c b") 'org-iswitchb)
+
+;; modalka
+(require 'modalka)
+(global-set-key (kbd "C-z") 'modalka-mode)
+(modalka-define-kbd "c i" "C-c i")
+(modalka-define-kbd "c o" "C-c o")
+(modalka-define-kbd "n" "C-n")
+(modalka-define-kbd "o" "C-o")
+(modalka-define-kbd "p" "C-p")
+(modalka-define-kbd "e" "C-e")
+(modalka-define-kbd "a" "C-a")
+(modalka-define-kbd "f" "M-f")
+(modalka-define-kbd "l" "C-l")
+(modalka-define-kbd "b" "M-b")
+(modalka-define-kbd "d" "M-d")
+(modalka-define-kbd "u" "C-u")
+(modalka-define-kbd "=" "C-=")
+(modalka-define-kbd "SPC" "C-SPC")
+(modalka-define-kbd "0" "C-0")
+(modalka-define-kbd "1" "C-1")
+(modalka-define-kbd "2" "C-2")
+(modalka-define-kbd "3" "C-3")
+(modalka-define-kbd "4" "C-4")
+(modalka-define-kbd "5" "C-5")
+(modalka-define-kbd "6" "C-6")
+(modalka-define-kbd "7" "C-7")
+(modalka-define-kbd "8" "C-8")
+(modalka-define-kbd "9" "C-9")
+
+(defun modalka-cursor ()
+  (if modalka-mode
+      (progn
+	(setq prev-cursor-color
+	      (cdr (assoc 'cursor-color (frame-parameters))))
+	(set-cursor-color "deep sky blue"))
+    (set-cursor-color prev-cursor-color)))
+(add-hook 'modalka-mode-hook 'modalka-cursor)
+
+;; temporary
+(defun org-cycle-agenda-files ()
+  "cycle through the files in `org-agenda-files'.
+if the current buffer visits an agenda file, find the next one in the list.
+if the current buffer does not, find the first agenda file."
+  (interactive)
+  (let* ((fs (org-agenda-files t))
+   (files (append fs (list (car fs))))
+   (tcf (if buffer-file-name (file-truename buffer-file-name)))
+   file)
+    (unless files (user-error "no agenda files"))
+    (catch 'exit
+      (while (setq file (pop files))
+  (if (equal (file-truename file) tcf)
+      (when (car files)
+        (find-file (car files))
+        (throw 'exit t))))
+      (find-file (car fs)))
+    (if (buffer-base-buffer) (org-pop-to-buffer-same-window (buffer-base-buffer)))))
+
+;; AUCTeX
+(setq TeX-auto-save t
+      TeX-parse-self t)
+;; enable for multi-file document structure
+;; (setq-default TeX-master nil)
+
+;; pdf-tools
+(pdf-tools-install)
+(add-hook 'LaTeX-mode-hook 'add-pdftools-to-selection)
+
+(defun add-pdftools-to-selection ()
+  (add-to-list 'TeX-view-program-selection '(output-pdf "PDF Tools")))
+
+(custom-set-variables
+ ;; custom-set-variables was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ '(package-selected-packages
+   (quote
+    (change-inner expand-region modalka smex cyberpunk-theme ido-vertical-mode pdf-tools auctex))))
+(custom-set-faces
+ ;; custom-set-faces was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ )
