@@ -78,19 +78,35 @@
 (global-set-key (kbd "C-x C-r") 'recentf-open-files)
 
 ;; smex
-(require 'smex)
-(smex-initialize)
-(global-set-key (kbd "M-x") 'smex)
-(global-set-key (kbd "M-S-x") 'smex-major-mode-commands)
-(global-set-key (kbd "C-c C-c M-x") 'execute-extended-command)
+;; (require 'smex)
+;; (smex-initialize)
+;; (global-set-key (kbd "M-x") 'smex)
+;; (global-set-key (kbd "M-S-x") 'smex-major-mode-commands)
+;; (global-set-key (kbd "C-c C-c M-x") 'execute-extended-command)
 
 ;; ido-mode
-(require 'ido)
-(ido-everywhere t)
-(ido-mode t)
-(ido-vertical-mode t)
-(setq ido-enable-flex-matching t
-      do-vertical-show-count t)
+;; (require 'ido)
+;; (ido-everywhere t)
+;; (ido-mode t)
+;; (ido-vertical-mode t)
+;; (setq ido-enable-flex-matching t
+;;       do-vertical-show-count t)
+
+;; avy
+(require 'avy)
+(global-set-key (kbd "C-'") 'avy-goto-char-timer)
+
+;; avy-zap
+(require 'avy-zap)
+(global-set-key (kbd "M-z") 'avy-zap-to-char-dwim)
+(global-set-key (kbd "M-Z") 'avy-zap-up-to-char-dwim)
+
+;; ivy
+(require 'ivy)
+(ivy-mode 1)
+(setq ivy-use-virtual-buffers t
+      ivy-wrap t
+      ivy-height 10)
 
 ;; org-mode
 (require 'org)
@@ -111,6 +127,11 @@
 (global-set-key (kbd "C-c c") 'org-capture)
 (global-set-key (kbd "C-c a") 'org-agenda)
 (global-set-key (kbd "C-c b") 'org-iswitchb)
+
+(add-hook 'org-mode-hook
+	  (lambda ()
+	    (local-unset-key (kbd "C-,"))
+	    (local-unset-key (kbd "C-'"))))
 
 ;; modalka
 (require 'modalka)
@@ -189,7 +210,7 @@ if the current buffer does not, find the first agenda file."
  ;; If there is more than one, they won't work right.
  '(package-selected-packages
    (quote
-    (change-inner expand-region modalka smex cyberpunk-theme ido-vertical-mode pdf-tools auctex))))
+    (avy avy-zap ivy centered-cursor-mode change-inner expand-region modalka smex cyberpunk-theme ido-vertical-mode pdf-tools auctex))))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
