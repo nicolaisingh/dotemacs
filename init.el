@@ -39,7 +39,6 @@
 (set-face-foreground 'mode-line-inactive "gray45")
 (set-face-attribute 'mode-line-inactive t :box "gray45")
 
-
 ;; Where to store backup and autosave files 
 (setq backup-directory-alist `(("." . ,(concat user-emacs-directory "backups/")))
       auto-save-file-name-transforms `((".*" ,(concat user-emacs-directory "autosaves/") t)))
@@ -141,14 +140,15 @@
 (modalka-define-kbd "8" "C-8")
 (modalka-define-kbd "9" "C-9")
 
-(defun modalka-cursor ()
-  (if modalka-mode
-      (progn
-	(setq prev-cursor-color
-	      (cdr (assoc 'cursor-color (frame-parameters))))
-	(set-cursor-color "deep sky blue"))
-    (set-cursor-color prev-cursor-color)))
-(add-hook 'modalka-mode-hook 'modalka-cursor)
+(add-hook 'modalka-mode-hook
+	  ;; Change cursor color on emacs/modalka mode
+	  (lambda ()
+	    (if modalka-mode
+		(progn
+		  (setq prev-cursor-color
+			(cdr (assoc 'cursor-color (frame-parameters))))
+		  (set-cursor-color "deep sky blue"))
+	      (set-cursor-color prev-cursor-color))))
 
 ;; temporary
 (defun org-cycle-agenda-files ()
@@ -178,10 +178,9 @@ if the current buffer does not, find the first agenda file."
 
 ;; pdf-tools
 (pdf-tools-install)
-(add-hook 'LaTeX-mode-hook 'add-pdftools-to-selection)
-
-(defun add-pdftools-to-selection ()
-  (add-to-list 'TeX-view-program-selection '(output-pdf "PDF Tools")))
+(add-hook 'LaTeX-mode-hook
+	  (lambda()
+	    (add-to-list 'TeX-view-program-selection '(output-pdf "PDF Tools"))))
 
 (custom-set-variables
  ;; custom-set-variables was added by Custom.
