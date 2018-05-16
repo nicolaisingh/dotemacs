@@ -203,6 +203,11 @@ if the current buffer does not, find the first agenda file."
 	  (lambda()
 	    (add-to-list 'TeX-view-program-selection '(output-pdf "PDF Tools"))))
 
+;; plantuml-mode
+(setq plantuml-jar-path "/usr/share/java/plantuml.jar"
+      plantuml-output-type "png")
+(add-to-list 'auto-mode-alist '("\\.plantuml\\'" . plantuml-mode))
+
 (custom-set-variables
  ;; custom-set-variables was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
@@ -210,7 +215,7 @@ if the current buffer does not, find the first agenda file."
  ;; If there is more than one, they won't work right.
  '(package-selected-packages
    (quote
-    (avy avy-zap ivy centered-cursor-mode change-inner expand-region modalka smex cyberpunk-theme ido-vertical-mode pdf-tools auctex))))
+    (plantuml-mode avy avy-zap ivy centered-cursor-mode change-inner expand-region modalka smex cyberpunk-theme ido-vertical-mode pdf-tools auctex))))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
