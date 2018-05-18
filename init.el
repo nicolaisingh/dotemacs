@@ -208,6 +208,31 @@ if the current buffer does not, find the first agenda file."
       plantuml-output-type "png")
 (add-to-list 'auto-mode-alist '("\\.plantuml\\'" . plantuml-mode))
 
+;; winresize minor mode
+(define-minor-mode winresize-mode
+  "Toggle winresize mode.  When enabled, this makes resizing
+  windows easier TODO."
+  :init-value nil
+  :lighter " Win-Resize"
+  :global t
+  :group 'winresize
+  :keymap (let ((map (make-sparse-keymap)))
+	    (define-key map (kbd "C-1") 'delete-other-window)
+	    (define-key map (kbd "C-2") 'split-window-below)
+	    (define-key map (kbd "C-3") 'split-window-right)
+	    (define-key map (kbd "C-0") 'delete-window)
+	    (define-key map (kbd "C-f") 'enlarge-window-horizontally)
+	    (define-key map (kbd "C-b") 'shrink-window-horizontally)
+	    (define-key map (kbd "C-n") 'enlarge-window)
+	    (define-key map (kbd "C-p") 'shrink-window)
+	    (define-key map (kbd "C--") 'shrink-window-if-larger-than-buffer)
+	    (define-key map (kbd "C-=") 'balance-windows)
+	    (define-key map (kbd "C-S-o") 'other-window)
+	    (define-key map (kbd "<return>") 'winresize-mode)
+	    (define-key map (kbd "<escape>") 'winresize-mode)
+	    map))
+(global-set-key (kbd "C-c w r") 'winresize-mode)
+
 (custom-set-variables
  ;; custom-set-variables was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
