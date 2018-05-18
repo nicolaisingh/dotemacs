@@ -17,13 +17,14 @@
 ;;(menu-bar-mode -1)
 (tool-bar-mode -1)
 (scroll-bar-mode -1)
-(blink-cursor-mode t)
+(blink-cursor-mode -1)
 
 (column-number-mode t)
 (show-paren-mode t)
 
-(set-face-attribute 'default t :font "Source Code Pro-9:weight=book:width=regular")
-(add-to-list 'default-frame-alist '(font . "Source Code Pro-9:weight=book:width=regular"))
+(setq my-font "Source Code Pro-9:weight=book:width=regular")
+(set-face-attribute 'default t :font my-font)
+(add-to-list 'default-frame-alist `(font . ,my-font))
 (add-to-list 'default-frame-alist '(height . 50))
 (add-to-list 'default-frame-alist '(width . 100))
 (add-to-list 'default-frame-alist '(background-color . "WhiteSmoke"))
@@ -43,9 +44,6 @@
 ;; Where to store backup and autosave files 
 (setq backup-directory-alist `(("." . ,(concat user-emacs-directory "backups/")))
       auto-save-file-name-transforms `((".*" ,(concat user-emacs-directory "autosaves/") t)))
-
-;; fast minibuffer selection
-;; (icomplete-mode t)
 
 (fset 'yes-or-no-p 'y-or-n-p)
 
