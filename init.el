@@ -4,8 +4,9 @@
 (add-to-list 'package-archives '("melpa" . "https://melpa.org/packages/"))
 (package-initialize)
 
+(setq my-scratch-message "* (my/find-init-file)")
 (setq inhibit-startup-screen t
-      initial-scratch-message nil
+      initial-scratch-message my-scratch-message
       initial-major-mode 'org-mode
       visible-bell t)
 
