@@ -14,7 +14,7 @@
 (put 'upcase-region 'disabled nil)
 
 ;; GUI
-;;(menu-bar-mode -1)
+(menu-bar-mode -1)
 (tool-bar-mode -1)
 (scroll-bar-mode -1)
 (blink-cursor-mode -1)
@@ -109,7 +109,7 @@
 (ivy-mode 1)
 (setq ivy-use-virtual-buffers t
       ivy-wrap t
-      ivy-height 10)
+      ivy-height 20)
 
 ;; org-mode
 (require 'org)
