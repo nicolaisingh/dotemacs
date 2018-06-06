@@ -52,7 +52,8 @@
 (global-set-key (kbd "M-SPC") 'cycle-spacing)
 
 ;; Other keybinds
-(global-set-key (kbd "C-S-o") 'other-window)
+(global-set-key (kbd "C-S-o") 'ace-window)
+;(global-set-key (kbd "C-S-o") 'other-window)
 (global-set-key (kbd "C-x C-S-c") 'save-buffers-kill-emacs)
 (global-set-key (kbd "C-x C-b") 'buffer-menu)
 
@@ -110,7 +111,20 @@
 (ivy-mode 1)
 (setq ivy-use-virtual-buffers t
       ivy-wrap t
-      ivy-height 20)
+      ivy-height 10)
+
+(global-set-key (kbd "M-x") 'counsel-M-x)
+(global-set-key (kbd "C-x C-f") 'counsel-find-file)
+(global-set-key (kbd "C-h C-l") 'counsel-find-library)
+(global-set-key (kbd "C-h f") 'counsel-describe-function)
+(global-set-key (kbd "C-h v") 'counsel-describe-variable)
+(global-set-key (kbd "C-h C-u") 'counsel-unicode-char)
+;; (global-set-key (kbd "C-c g") 'counsel-git)
+;; (global-set-key (kbd "C-c j") 'counsel-git-grep)
+;; (global-set-key (kbd "C-c k") 'counsel-ag)
+;; (global-set-key (kbd "C-x l") 'counsel-locate)
+;; (global-set-key (kbd "C-S-o") 'counsel-rhythmbox)
+(global-set-key (kbd "C-c C-r") 'ivy-resume)
 
 ;; org-mode
 (require 'org)
@@ -213,6 +227,15 @@ if the current buffer does not, find the first agenda file."
       plantuml-output-type "png")
 (add-to-list 'auto-mode-alist '("\\.plantuml\\'" . plantuml-mode))
 
+;; which-key
+(require 'which-key)
+(which-key-mode)
+(which-key-setup-side-window-right-bottom)
+(setq which-key-idle-delay 1.5)
+(global-set-key (kbd "C-h C-b") 'which-key-show-major-mode)
+
+
+
 ;; winresize minor mode
 (define-minor-mode winresize-mode
   "Toggle winresize mode.  When enabled, this makes resizing
@@ -245,7 +268,7 @@ if the current buffer does not, find the first agenda file."
  ;; If there is more than one, they won't work right.
  '(package-selected-packages
    (quote
-    (plantuml-mode avy avy-zap ivy centered-cursor-mode change-inner expand-region modalka smex cyberpunk-theme ido-vertical-mode pdf-tools auctex))))
+    (ace-window which-key counsel afternoon-theme plantuml-mode avy avy-zap ivy centered-cursor-mode change-inner expand-region modalka smex cyberpunk-theme ido-vertical-mode pdf-tools auctex))))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
