@@ -12,6 +12,7 @@
 
 (put 'downcase-region 'disabled nil)
 (put 'upcase-region 'disabled nil)
+(put 'dired-find-alternate-file 'disabled nil)
 
 ;; GUI
 (menu-bar-mode -1)
@@ -113,7 +114,8 @@
 
 ;; org-mode
 (require 'org)
-(setq org-default-notes-file (concat org-directory "/notes.org")
+(setq org-startup-indented t
+      org-default-notes-file (concat org-directory "/notes.org")
       org-agenda-files '("~/org/kotlin.org"
 			 "~/org/ideas.org"
 			 "~/org/notes.org")
