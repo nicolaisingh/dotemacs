@@ -102,6 +102,10 @@
 (global-set-key (kbd "C-M-z") 'avy-zap-to-char-dwim)
 (global-set-key (kbd "C-M-S-z") 'avy-zap-up-to-char-dwim)
 
+;; browse-kill-ring
+(require 'browse-kill-ring)
+(browse-kill-ring-default-keybindings)
+
 ;; misc
 (require 'misc)
 (global-set-key (kbd "M-S-z") 'zap-up-to-char)
@@ -268,7 +272,7 @@ if the current buffer does not, find the first agenda file."
  ;; If there is more than one, they won't work right.
  '(package-selected-packages
    (quote
-    (ace-window which-key counsel afternoon-theme plantuml-mode avy avy-zap ivy centered-cursor-mode change-inner expand-region modalka smex cyberpunk-theme ido-vertical-mode pdf-tools auctex))))
+    (browse-kill-ring ace-window which-key counsel afternoon-theme plantuml-mode avy avy-zap ivy centered-cursor-mode change-inner expand-region modalka smex cyberpunk-theme ido-vertical-mode pdf-tools auctex))))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
