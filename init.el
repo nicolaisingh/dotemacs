@@ -133,13 +133,13 @@
       org-agenda-files '("~/org/kotlin.org"
 			 "~/org/ideas.org"
 			 "~/org/notes.org")
-      org-capture-templates '(("t" "TODO" entry (file+headline 'org-default-notes-file "Tasks")
+      org-capture-templates `(("t" "TODO" entry (file+headline org-default-notes-file "Tasks")
 			       "* TODO %?\nCreated %U\n")
-			      ("T" "TODO - Annotated" entry (file+headline 'org-default-notes-file "Tasks")
+			      ("T" "TODO - Annotated" entry (file+headline org-default-notes-file "Tasks")
 			       "* TODO %?\n%U\n%a\n")
-			      ("n" "Note" entry (file+headline 'org-default-notes-file "Notes")
+			      ("n" "Note" entry (file+headline org-default-notes-file "Notes")
 			       "* %?\n%U\n")
-			      ("i" "Idea" entry (file (concat org-directory "/ideas.org"))
+			      ("i" "Idea" entry (file ,(concat org-directory "/ideas.org"))
 			       "* %?\n%U\n")))
 
 (global-set-key (kbd "C-c l") 'org-store-link)
