@@ -85,6 +85,11 @@
 (recentf-mode 1)
 (global-set-key (kbd "C-x C-r") 'recentf-open-files)
 
+;; smartparens
+(require 'smartparens-config)
+(add-hook 'prog-mode-hook (lambda ()
+			    (smartparens-mode t)))
+
 ;; smex
 ;; (require 'smex)
 ;; (smex-initialize)
@@ -279,7 +284,7 @@ if the current buffer does not, find the first agenda file."
  ;; If there is more than one, they won't work right.
  '(package-selected-packages
    (quote
-    (json-mode origami browse-kill-ring ace-window which-key counsel afternoon-theme plantuml-mode avy avy-zap ivy centered-cursor-mode change-inner expand-region modalka smex cyberpunk-theme ido-vertical-mode pdf-tools auctex))))
+    (smartparens json-mode origami browse-kill-ring ace-window which-key counsel afternoon-theme plantuml-mode avy avy-zap ivy centered-cursor-mode change-inner expand-region modalka smex cyberpunk-theme ido-vertical-mode pdf-tools auctex))))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
