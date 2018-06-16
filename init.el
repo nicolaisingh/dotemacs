@@ -42,7 +42,7 @@
 (set-face-foreground 'mode-line-inactive "gray45")
 (set-face-attribute 'mode-line-inactive t :box "gray45")
 
-;; Where to store backup and autosave files 
+;; Where to store backup and autosave files
 (setq backup-directory-alist `(("." . ,(concat user-emacs-directory "backups/")))
       auto-save-file-name-transforms `((".*" ,(concat user-emacs-directory "autosaves/") t)))
 
@@ -221,8 +221,8 @@ if the current buffer does not, find the first agenda file."
       (while (setq file (pop files))
   (if (equal (file-truename file) tcf)
       (when (car files)
-        (find-file (car files))
-        (throw 'exit t))))
+	(find-file (car files))
+	(throw 'exit t))))
       (find-file (car fs)))
     (if (buffer-base-buffer) (org-pop-to-buffer-same-window (buffer-base-buffer)))))
 
