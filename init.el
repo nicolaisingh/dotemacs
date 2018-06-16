@@ -250,7 +250,8 @@ if the current buffer does not, find the first agenda file."
 (setq which-key-idle-delay 1.5)
 (global-set-key (kbd "C-h C-b") 'which-key-show-major-mode)
 
-
+;; winner-mode
+(winner-mode t)
 
 ;; winresize minor mode
 (define-minor-mode winresize-mode
