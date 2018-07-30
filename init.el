@@ -23,12 +23,12 @@
 (column-number-mode t)
 (show-paren-mode t)
 
-(setq my-font "Source Code Pro-10:weight=book:width=regular")
+(setq my-font "Source Code Pro-9:weight=book:width=regular")
 (set-face-attribute 'default t :font my-font)
 (add-to-list 'default-frame-alist `(font . ,my-font))
 (add-to-list 'default-frame-alist '(height . 50))
 (add-to-list 'default-frame-alist '(width . 100))
-(add-to-list 'default-frame-alist '(background-color . "WhiteSmoke"))
+(add-to-list 'default-frame-alist '(background-color . "White"))
 (add-to-list 'default-frame-alist '(foreground-color . "gray25"))
 
 ;; (global-hl-line-mode t)
@@ -36,9 +36,9 @@
 (set-face-background 'region "RosyBrown2")
 
 ;; Mode line colors
-(set-face-background 'mode-line "DodgerBlue3")
+(set-face-background 'mode-line "gray40")
 (set-face-foreground 'mode-line "white")
-(set-face-attribute 'mode-line t :box "DodgerBlue3")
+(set-face-attribute 'mode-line t :box "gray40")
 (set-face-foreground 'mode-line-inactive "gray45")
 (set-face-attribute 'mode-line-inactive t :box "gray45")
 
