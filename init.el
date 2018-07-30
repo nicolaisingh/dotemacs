@@ -282,6 +282,16 @@ if the current buffer does not, find the first agenda file."
 	    map))
 (global-set-key (kbd "C-c w r") 'winresize-mode)
 
+;; xmodmap mode
+;; From: https://www.emacswiki.org/emacs/XModMapMode
+(define-generic-mode 'xmodmap-mode
+      '(?!)
+      '("add" "clear" "keycode" "keysym" "pointer" "remove")
+      nil
+      '("[xX]modmap\\(rc\\)?\\'")
+      nil
+      "Simple mode for xmodmap files.")
+
 (custom-set-variables
  ;; custom-set-variables was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
