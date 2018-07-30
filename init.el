@@ -71,6 +71,10 @@
 (require 'expand-region)
 (global-set-key (kbd "C-=") 'er/expand-region)
 
+;; js2-mode
+(require 'js2-mode)
+(add-to-list 'auto-mode-alist '("\\.js\\'" . js2-mode))
+
 ;; origami
 (require 'origami)
 (define-key origami-mode-map (kbd "C-c f f") 'origami-toggle-node)
@@ -285,7 +289,7 @@ if the current buffer does not, find the first agenda file."
  ;; If there is more than one, they won't work right.
  '(package-selected-packages
    (quote
-    (smartparens json-mode origami browse-kill-ring ace-window which-key counsel afternoon-theme plantuml-mode avy avy-zap ivy centered-cursor-mode change-inner expand-region modalka smex cyberpunk-theme ido-vertical-mode pdf-tools auctex))))
+    (js2-mode kotlin-mode smartparens json-mode origami browse-kill-ring ace-window which-key counsel afternoon-theme plantuml-mode avy avy-zap ivy centered-cursor-mode change-inner expand-region modalka smex cyberpunk-theme ido-vertical-mode pdf-tools auctex))))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
