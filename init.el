@@ -150,22 +150,28 @@
 (require 'org)
 (setq org-startup-indented t
       org-default-notes-file (concat org-directory "/notes.org")
-      org-agenda-files '("~/org/kotlin.org"
-			 "~/org/ideas.org"
-			 "~/org/notes.org")
+      org-agenda-files '("~/org/notes.org"
+			 "~/org/personal.org")
+      org-refile-targets '((nil :maxlevel . 3)
+			   (org-agenda-files :maxlevel . 2))
       org-capture-templates `(("t" "TODO" entry (file+headline org-default-notes-file "Tasks")
 			       "* TODO %?\nCreated %U\n")
 			      ("T" "TODO - Annotated" entry (file+headline org-default-notes-file "Tasks")
 			       "* TODO %?\n%U\n%a\n")
 			      ("n" "Note" entry (file+headline org-default-notes-file "Notes")
 			       "* %?\n%U\n")
-			      ("i" "Idea" entry (file ,(concat org-directory "/ideas.org"))
+			      ("i" "Idea" entry (file+headline org-default-notes-file "Ideas")
 			       "* %?\n%U\n")))
 
 (global-set-key (kbd "C-c l") 'org-store-link)
 (global-set-key (kbd "C-c c") 'org-capture)
 (global-set-key (kbd "C-c a") 'org-agenda)
-(global-set-key (kbd "C-c b") 'org-iswitchb)
+(global-set-key (kbd "C-c b") 'org-switchb)
+
+(setq org-tag-alist '(("@dev" . ?d)
+		      ("@idea" . ?i)
+		      ("@learn" . ?l)
+		      ("@home" . ?h)))
 
 (add-hook 'org-mode-hook
 	  (lambda ()
