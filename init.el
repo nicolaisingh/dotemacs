@@ -161,7 +161,9 @@
 			      ("n" "Note" entry (file+headline org-default-notes-file "Notes")
 			       "* %?\n%U\n")
 			      ("i" "Idea" entry (file+headline org-default-notes-file "Ideas")
-			       "* %?\n%U\n")))
+			       "* %?\n%U\n")
+			      ("b" "Bookmark" entry (file+headline ,(concat org-directory "/bookmarks.org") "Web bookmarks")
+			       "* [[%x][%?]] %^g\n%U")))
 
 (global-set-key (kbd "C-c l") 'org-store-link)
 (global-set-key (kbd "C-c c") 'org-capture)
