@@ -68,6 +68,11 @@
   (interactive)
   (find-file "~/.emacs.d/init.el"))
 
+(defun my/sudo-find-alternate-file ()
+  "Find this file as sudo"
+  (interactive)
+  (find-alternate-file (concat "/sudo::" (buffer-file-name))))
+
 ;; ace-window
 (require 'ace-window)
 (setq aw-dispatch-always t)
