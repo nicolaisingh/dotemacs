@@ -48,12 +48,18 @@
 
 (fset 'yes-or-no-p 'y-or-n-p)
 
+;; Disable transient mode
+(transient-mark-mode -1)
+
 ;; Override just-one-space
 (global-set-key (kbd "M-SPC") 'cycle-spacing)
 
+;; Allow C-SPC to continue popping the mark after C-u C-SPC
+(setq set-mark-command-repeat-pop 1)
+
 ;; Other keybinds
 (global-set-key (kbd "C-S-o") 'ace-window)
-;(global-set-key (kbd "C-S-o") 'other-window)
+(global-set-key (kbd "C-M-S-o") 'other-window)
 (global-set-key (kbd "C-x C-S-c") 'save-buffers-kill-emacs)
 (global-set-key (kbd "C-x C-b") 'buffer-menu)
 
@@ -61,6 +67,11 @@
   "Find my emacs init file"
   (interactive)
   (find-file "~/.emacs.d/init.el"))
+
+;; ace-window
+(require 'ace-window)
+(setq aw-dispatch-always t)
+(add-to-list 'aw-dispatch-alist '(? (lambda () (other-window 1))))
 
 ;; change-inner
 (require 'change-inner)
@@ -238,7 +249,6 @@
 (require 'which-key)
 (which-key-mode)
 (which-key-setup-side-window-right-bottom)
-(setq which-key-idle-delay 1.5)
 (global-set-key (kbd "C-h C-b") 'which-key-show-major-mode)
 
 ;; winner-mode
