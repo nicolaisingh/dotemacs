@@ -84,10 +84,8 @@
 
 ;; recentf
 (require 'recentf)
-(setq recentf-max-menu-items 25
-      recentf-auto-cleanup 'never)
+(setq recentf-max-menu-items 25)
 (recentf-mode 1)
-(global-set-key (kbd "C-x C-r") 'recentf-open-files)
 
 ;; smartparens
 (require 'smartparens-config)
@@ -134,6 +132,7 @@
       ivy-height 10)
 
 (global-set-key (kbd "M-x") 'counsel-M-x)
+(global-set-key (kbd "C-x r b") 'counsel-bookmark)
 (global-set-key (kbd "C-x C-f") 'counsel-find-file)
 (global-set-key (kbd "C-h C-l") 'counsel-find-library)
 (global-set-key (kbd "C-h f") 'counsel-describe-function)
