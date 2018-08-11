@@ -88,6 +88,10 @@
 (require 'company)
 (add-hook 'after-init-hook 'global-company-mode)
 
+;; edit-server
+(require 'edit-server)
+(edit-server-start)
+
 ;; expand-region
 (require 'expand-region)
 (global-set-key (kbd "C-=") 'er/expand-region)
