@@ -84,6 +84,10 @@
 (global-set-key (kbd "C-c i") 'change-inner)
 (global-set-key (kbd "C-c o") 'change-outer)
 
+;; company
+(require 'company)
+(add-hook 'after-init-hook 'global-company-mode)
+
 ;; expand-region
 (require 'expand-region)
 (global-set-key (kbd "C-=") 'er/expand-region)

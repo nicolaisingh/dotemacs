@@ -3,6 +3,9 @@
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
+ '(company-minimum-prefix-length 5)
+ '(company-selection-wrap-around t)
+ '(company-show-numbers t)
  '(package-selected-packages
    (quote
     (js2-mode kotlin-mode smartparens json-mode origami browse-kill-ring ace-window which-key counsel afternoon-theme plantuml-mode avy avy-zap ivy centered-cursor-mode change-inner expand-region modalka smex cyberpunk-theme ido-vertical-mode pdf-tools auctex))))
