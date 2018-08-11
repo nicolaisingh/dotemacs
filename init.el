@@ -1,5 +1,10 @@
-;;; My Emacs init file
+;;; init.el --- Nicolai's Emacs init file.
 
+;;; Commentary:
+
+;; This contains my personal Emacs settings.
+
+;;; Code:
 (require 'package)
 (add-to-list 'package-archives '("melpa" . "https://melpa.org/packages/"))
 (package-initialize)
@@ -65,12 +70,12 @@
 (global-set-key (kbd "C-x C-b") 'buffer-menu)
 
 (defun my/find-init-file ()
-  "Find my emacs init file"
+  "Find my Emacs init file."
   (interactive)
   (find-file "~/.emacs.d/init.el"))
 
 (defun my/sudo-find-alternate-file ()
-  "Find this file as sudo"
+  "Find this file as sudo."
   (interactive)
   (find-alternate-file (concat "/sudo::" (buffer-file-name))))
 
@@ -95,6 +100,16 @@
 ;; expand-region
 (require 'expand-region)
 (global-set-key (kbd "C-=") 'er/expand-region)
+
+;; flycheck
+(require 'flycheck)
+(add-hook 'after-init-hook 'global-flycheck-mode)
+(setq flycheck-check-syntax-automatically nil)
+
+;; flycheck-kotlin
+(require 'flycheck-kotlin)
+(add-hook 'kotlin-mode-hook 'flycheck-mode)
+(flycheck-kotlin-setup)
 
 ;; js2-mode
 (require 'js2-mode)
@@ -306,3 +321,5 @@
 
 (setq custom-file "~/.emacs.d/custom.el")
 (load custom-file)
+
+;;; init.el ends here
