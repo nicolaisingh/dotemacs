@@ -36,9 +36,6 @@
 (add-to-list 'default-frame-alist '(width . 100))
 (add-to-list 'default-frame-alist '(background-color . "White"))
 (add-to-list 'default-frame-alist '(foreground-color . "gray25"))
-
-;; (global-hl-line-mode t)
-;; (set-face-background 'hl-line "#f8f8f8")
 (set-face-background 'region "RosyBrown2")
 
 ;; Mode line colors
