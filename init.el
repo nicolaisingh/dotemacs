@@ -60,6 +60,10 @@
 ;; Allow C-SPC to continue popping the mark after C-u C-SPC
 (setq set-mark-command-repeat-pop 1)
 
+;; kotlin-mode
+(add-hook 'kotlin-mode-hook
+	  (lambda () (setq indent-tabs-mode nil)))
+
 ;; Other keybinds
 (global-set-key (kbd "C-S-o") 'ace-window)
 (global-set-key (kbd "C-M-S-o") 'other-window)

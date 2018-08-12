@@ -7,6 +7,7 @@
  '(company-selection-wrap-around t)
  '(company-show-numbers t)
  '(cursor-in-non-selected-windows (quote bar))
+ '(kotlin-tab-width 4)
  '(package-selected-packages
    (quote
     (flycheck flycheck-kotlin typing company-auctex company edit-server js2-mode kotlin-mode smartparens json-mode origami browse-kill-ring ace-window which-key counsel afternoon-theme plantuml-mode avy avy-zap ivy centered-cursor-mode change-inner expand-region modalka smex cyberpunk-theme ido-vertical-mode pdf-tools auctex)))
