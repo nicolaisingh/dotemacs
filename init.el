@@ -94,6 +94,15 @@
 (require 'company)
 (add-hook 'after-init-hook 'global-company-mode)
 
+;; company-lsp
+(require 'company-lsp)
+(push 'company-lsp company-backends)
+(setq company-lsp-cache-candidates t
+      company-lsp-enable-recompletion t
+      company-lsp-enable-snippet t)
+(with-eval-after-load 'lsp-mode
+  (add-hook 'lsp-after-open-hook 'yas-minor-mode))
+
 ;; edit-server
 (require 'edit-server)
 (edit-server-start)
@@ -117,6 +126,20 @@
 ;; js2-mode
 (require 'js2-mode)
 (add-to-list 'auto-mode-alist '("\\.js\\'" . js2-mode))
+
+;; lsp-intellij
+(with-eval-after-load 'lsp-mode
+  (require 'lsp-intellij)
+  (add-hook 'kotlin-mode-hook #'lsp-intellij-enable))
+
+;; lsp-mode
+(require 'lsp-mode)
+;; (add-hook 'kotlin-mode-hook #'lsp-prog-major-mode-enable)
+
+;; lsp-ui
+(with-eval-after-load 'lsp-mode
+  (require 'lsp-ui)
+  (add-hook 'lsp-after-open-hook 'lsp-ui-mode))
 
 ;; origami
 (require 'origami)
