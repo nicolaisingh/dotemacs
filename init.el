@@ -105,7 +105,9 @@
 ;; flycheck
 (require 'flycheck)
 (add-hook 'after-init-hook 'global-flycheck-mode)
-(setq flycheck-check-syntax-automatically nil)
+(setq-default flycheck-idle-change-delay 1.0)
+(setq-default flycheck-check-syntax-automatically
+	      '(save idle-change mode-enabled ))
 
 ;; flycheck-kotlin
 (require 'flycheck-kotlin)
