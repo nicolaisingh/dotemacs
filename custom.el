@@ -16,7 +16,7 @@
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
- '(aw-background-face ((t (:foreground "gray75"))))
+ '(aw-background-face ((t (:foreground "gray50"))))
  '(aw-leading-char-face ((t (:foreground "firebrick" :weight bold))))
  '(cursor ((t (:background "gray25"))))
  '(lsp-intellij-face-code-lens-run ((t nil))))

@@ -65,8 +65,6 @@
 	  (lambda () (setq indent-tabs-mode nil)))
 
 ;; Other keybinds
-(global-set-key (kbd "C-S-o") 'ace-window)
-(global-set-key (kbd "C-M-S-o") 'other-window)
 (global-set-key (kbd "C-x C-S-c") 'save-buffers-kill-emacs)
 (global-set-key (kbd "C-x C-b") 'buffer-menu)
 
@@ -83,7 +81,8 @@
 ;; ace-window
 (require 'ace-window)
 (setq aw-dispatch-always t)
-(add-to-list 'aw-dispatch-alist '(? (lambda () (other-window 1))))
+(global-set-key (kbd "C-;") 'ace-window)
+(add-to-list 'aw-dispatch-alist '(? (lambda () (other-window 1))))
 
 ;; change-inner
 (require 'change-inner)
