@@ -62,7 +62,10 @@
 
 ;; kotlin-mode
 (add-hook 'kotlin-mode-hook
-	  (lambda () (setq indent-tabs-mode nil)))
+	  (lambda ()
+	    (setq indent-tabs-mode nil)
+	    (add-hook 'before-save-hook
+		      'delete-trailing-whitespace nil t)))
 
 ;; Other keybinds
 (global-set-key (kbd "C-x C-S-c") 'save-buffers-kill-emacs)
@@ -243,7 +246,9 @@
 (add-hook 'org-mode-hook
 	  (lambda ()
 	    (local-unset-key (kbd "C-,"))
-	    (local-unset-key (kbd "C-'"))))
+	    (local-unset-key (kbd "C-'"))
+	    (add-hook 'before-save-hook
+		      'delete-trailing-whitespace nil t)))
 
 ;; modalka
 (require 'modalka)
