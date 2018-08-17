@@ -182,16 +182,12 @@
 
 ;; avy-zap
 (require 'avy-zap)
-(global-set-key (kbd "C-M-z") 'avy-zap-to-char-dwim)
-(global-set-key (kbd "C-M-S-z") 'avy-zap-up-to-char-dwim)
+(global-set-key (kbd "M-z") 'avy-zap-to-char-dwim)
+(global-set-key (kbd "M-Z") 'avy-zap-up-to-char-dwim)
 
 ;; browse-kill-ring
 (require 'browse-kill-ring)
 (browse-kill-ring-default-keybindings)
-
-;; misc
-(require 'misc)
-(global-set-key (kbd "M-S-z") 'zap-up-to-char)
 
 ;; ivy
 (require 'ivy)
