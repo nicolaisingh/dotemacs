@@ -63,6 +63,9 @@
 ;; Allow C-SPC to continue popping the mark after C-u C-SPC
 (setq set-mark-command-repeat-pop 1)
 
+;; emacs-lisp-mode
+(add-hook 'emacs-lisp-mode-hook 'flycheck-mode)
+
 ;; kotlin-mode
 (add-hook 'kotlin-mode-hook
 	  (lambda ()
@@ -118,7 +121,7 @@
 
 ;; flycheck
 (require 'flycheck)
-(add-hook 'after-init-hook 'global-flycheck-mode)
+;(add-hook 'after-init-hook 'global-flycheck-mode)
 (setq-default flycheck-idle-change-delay 1.0)
 (setq-default flycheck-check-syntax-automatically
 	      '(save idle-change mode-enabled ))
