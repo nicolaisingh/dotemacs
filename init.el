@@ -124,9 +124,10 @@
 	      '(save idle-change mode-enabled ))
 
 ;; flycheck-kotlin
-(require 'flycheck-kotlin)
-(add-hook 'kotlin-mode-hook 'flycheck-mode)
-(flycheck-kotlin-setup)
+(with-eval-after-load 'flycheck
+    (require 'flycheck-kotlin)
+    (flycheck-kotlin-setup)
+    (add-hook 'kotlin-mode-hook 'flycheck-mode))
 
 ;; js2-mode
 (require 'js2-mode)
@@ -135,7 +136,7 @@
 ;; lsp-intellij
 (with-eval-after-load 'lsp-mode
   (require 'lsp-intellij)
-  (add-hook 'kotlin-mode-hook #'lsp-intellij-enable))
+  (add-hook 'kotlin-mode-hook #'lsp-intellij-enable t))
 
 ;; lsp-mode
 (require 'lsp-mode)
