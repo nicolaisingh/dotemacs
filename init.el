@@ -9,6 +9,9 @@
 (add-to-list 'package-archives '("melpa" . "https://melpa.org/packages/"))
 (package-initialize)
 
+(setq custom-file "~/.emacs.d/custom.el")
+(load custom-file)
+
 (setq my-scratch-message "* (my/find-init-file)")
 (setq inhibit-startup-screen t
       initial-scratch-message my-scratch-message
@@ -349,8 +352,5 @@
       '("[xX]modmap\\(rc\\)?\\'")
       nil
       "Simple mode for xmodmap files.")
-
-(setq custom-file "~/.emacs.d/custom.el")
-(load custom-file)
 
 ;;; init.el ends here
