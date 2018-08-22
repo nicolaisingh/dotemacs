@@ -75,7 +75,6 @@
 
 ;; Other keybinds
 (global-set-key (kbd "C-x C-S-c") 'save-buffers-kill-emacs)
-(global-set-key (kbd "C-x C-b") 'buffer-menu)
 
 (defun my/find-init-file ()
   "Find my Emacs init file."
@@ -131,6 +130,13 @@
     (require 'flycheck-kotlin)
     (flycheck-kotlin-setup)
     (add-hook 'kotlin-mode-hook 'flycheck-mode))
+
+;; ibuffer
+(require 'ibuffer)
+(global-set-key (kbd "C-x C-b") 'ibuffer-other-window)
+(add-hook 'ibuffer-mode-hook
+	  (lambda ()
+	    (ibuffer-switch-to-saved-filter-groups "nas")))
 
 ;; js2-mode
 (require 'js2-mode)

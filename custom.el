@@ -6,6 +6,20 @@
  '(company-selection-wrap-around t)
  '(company-show-numbers t)
  '(cursor-in-non-selected-windows (quote bar))
+ '(ibuffer-saved-filter-groups
+   (quote
+    (("nas"
+      ("Kotlin"
+       (mode . kotlin-mode))
+      ("Emacs Lisp"
+       (mode . emacs-lisp-mode))
+      ("Org"
+       (mode . org-mode))
+      ("Magit"
+       (name . "^magit.*:"))
+      ("Dired"
+       (mode . dired-mode))))))
+ '(ibuffer-show-empty-filter-groups nil)
  '(kotlin-tab-width 4)
  '(package-selected-packages
    (quote
