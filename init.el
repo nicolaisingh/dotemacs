@@ -150,6 +150,11 @@
   (require 'lsp-ui)
   (add-hook 'lsp-after-open-hook 'lsp-ui-mode))
 
+;; magit
+(require 'magit)
+(global-set-key (kbd "C-x g") 'magit-status)
+(global-set-key (kbd "C-x M-g") 'magit-dispatch-popup)
+
 ;; origami
 (require 'origami)
 (define-key origami-mode-map (kbd "C-c f f") 'origami-toggle-node)
