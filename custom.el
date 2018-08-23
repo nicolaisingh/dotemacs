@@ -21,6 +21,7 @@
        (mode . dired-mode))))))
  '(ibuffer-show-empty-filter-groups nil)
  '(kotlin-tab-width 4)
+ '(mode-line-percent-position nil)
  '(package-selected-packages
    (quote
     (magit htmlize discover-my-major lsp-ui company-lsp lsp-intellij lsp-mode flycheck flycheck-kotlin typing company-auctex company edit-server js2-mode kotlin-mode smartparens json-mode origami browse-kill-ring ace-window which-key counsel afternoon-theme plantuml-mode avy avy-zap ivy centered-cursor-mode change-inner expand-region modalka smex cyberpunk-theme ido-vertical-mode pdf-tools auctex)))
@@ -37,6 +38,8 @@
  '(cursor ((t (:background "gray25"))))
  '(fringe ((t (:background "gray96"))))
  '(lsp-intellij-face-code-lens-run ((t nil)))
- '(window-divider ((t (:distant-foreground "gray96" :foreground "white"))))
- '(window-divider-first-pixel ((t (:foreground "gray40"))))
- '(window-divider-last-pixel ((t (:foreground "gray40")))))
+ '(mode-line ((t (:background "gray40" :foreground "white" :box (:line-width 3 :color "gray40")))))
+ '(mode-line-inactive ((t (:inherit mode-line :background "gray90" :foreground "gray45" :box (:line-width 3 :color "gray90") :weight light))))
+ '(window-divider ((t (:distant-foreground "gray40" :foreground "white"))))
+ '(window-divider-first-pixel ((t (:foreground "gray96"))))
+ '(window-divider-last-pixel ((t (:foreground "gray96")))))

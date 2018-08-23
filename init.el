@@ -41,13 +41,6 @@
 (add-to-list 'default-frame-alist '(foreground-color . "gray25"))
 (set-face-background 'region "RosyBrown2")
 
-;; Mode line colors
-(set-face-background 'mode-line "gray40")
-(set-face-foreground 'mode-line "white")
-(set-face-attribute 'mode-line t :box "gray40")
-(set-face-foreground 'mode-line-inactive "gray45")
-(set-face-attribute 'mode-line-inactive t :box "gray45")
-
 ;; Where to store backup and autosave files
 (setq backup-directory-alist `(("." . ,(concat user-emacs-directory "backups/")))
       auto-save-file-name-transforms `((".*" ,(concat user-emacs-directory "autosaves/") t)))
