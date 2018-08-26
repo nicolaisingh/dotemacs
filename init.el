@@ -200,6 +200,11 @@
 (require 'browse-kill-ring)
 (browse-kill-ring-default-keybindings)
 
+;; counsel-projectile
+(with-eval-after-load 'projectile
+  (require 'counsel-projectile)
+  (counsel-projectile-mode 1))
+
 ;; discover-my-major
 (require 'discover-my-major)
 (global-set-key (kbd "C-h C-m") 'discover-my-major)
@@ -316,6 +321,11 @@
 (setq plantuml-jar-path "/usr/share/java/plantuml.jar"
       plantuml-output-type "png")
 (add-to-list 'auto-mode-alist '("\\.plantuml\\'" . plantuml-mode))
+
+;; projectile
+(require 'projectile)
+(projectile-mode 1)
+(define-key projectile-mode-map (kbd "C-c p") 'projectile-command-map)
 
 ;; which-key
 (require 'which-key)
