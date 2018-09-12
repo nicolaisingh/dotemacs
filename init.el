@@ -336,10 +336,28 @@
 ;; winner-mode
 (winner-mode t)
 
+;; reader minor mode
+(define-minor-mode reader-mode
+  "Make a reader-friendly view by removing screen distractions
+  and adding margins."
+  :init-value nil
+  :lighter " Reader"
+  :global nil
+  :group 'reader
+
+  (if reader-mode
+      (progn
+	(let ((size (truncate (* (frame-width) 0.2))))
+          (set-window-margins nil size size))
+	(set-fringe-style 0))
+    (progn
+      (set-window-margins nil 0 0)
+      (set-fringe-style nil))))
+
 ;; winresize minor mode
 (define-minor-mode winresize-mode
   "Toggle winresize mode.  When enabled, this makes resizing
-  windows easier TODO."
+  windows easier."
   :init-value nil
   :lighter " Win-Resize"
   :global t
