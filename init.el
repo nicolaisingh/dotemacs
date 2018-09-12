@@ -56,16 +56,6 @@
 ;; Allow C-SPC to continue popping the mark after C-u C-SPC
 (setq set-mark-command-repeat-pop 1)
 
-;; emacs-lisp-mode
-(add-hook 'emacs-lisp-mode-hook 'flycheck-mode)
-
-;; kotlin-mode
-(add-hook 'kotlin-mode-hook
-	  (lambda ()
-	    (setq indent-tabs-mode nil)
-	    (add-hook 'before-save-hook
-		      'delete-trailing-whitespace nil t)))
-
 ;; Other keybinds
 (global-set-key (kbd "C-x C-S-c") 'save-buffers-kill-emacs)
 
@@ -85,6 +75,31 @@
 (global-set-key (kbd "C-;") 'ace-window)
 (add-to-list 'aw-dispatch-alist '(? (lambda () (other-window 1))))
 
+;; AUCTeX
+(setq TeX-auto-save t
+      TeX-parse-self t)
+;; enable for multi-file document structure
+;; (setq-default TeX-master nil)
+
+(pdf-tools-install)
+(add-hook 'LaTeX-mode-hook
+	  (lambda()
+	    (add-to-list 'TeX-view-program-selection '(output-pdf "PDF Tools"))))
+
+;; avy
+(require 'avy)
+(global-set-key (kbd "C-'") 'avy-goto-char-timer)
+(setq avy-timeout-seconds 0.3)
+
+;; avy-zap
+(require 'avy-zap)
+(global-set-key (kbd "M-z") 'avy-zap-to-char-dwim)
+(global-set-key (kbd "M-Z") 'avy-zap-up-to-char-dwim)
+
+;; browse-kill-ring
+(require 'browse-kill-ring)
+(browse-kill-ring-default-keybindings)
+
 ;; change-inner
 (require 'change-inner)
 (global-set-key (kbd "C-c i") 'change-inner)
@@ -103,9 +118,36 @@
 (with-eval-after-load 'lsp-mode
   (add-hook 'lsp-after-open-hook 'yas-minor-mode))
 
+;; counsel
+(global-set-key (kbd "M-x") 'counsel-M-x)
+(global-set-key (kbd "C-x r b") 'counsel-bookmark)
+(global-set-key (kbd "C-x C-f") 'counsel-find-file)
+(global-set-key (kbd "C-h C-l") 'counsel-find-library)
+(global-set-key (kbd "C-h f") 'counsel-describe-function)
+(global-set-key (kbd "C-h v") 'counsel-describe-variable)
+(global-set-key (kbd "C-h C-u") 'counsel-unicode-char)
+;; (global-set-key (kbd "C-c g") 'counsel-git)
+;; (global-set-key (kbd "C-c j") 'counsel-git-grep)
+;; (global-set-key (kbd "C-c k") 'counsel-ag)
+;; (global-set-key (kbd "C-x l") 'counsel-locate)
+;; (global-set-key (kbd "C-S-o") 'counsel-rhythmbox)
+
+;; counsel-projectile
+(with-eval-after-load 'projectile
+  (require 'counsel-projectile)
+  (counsel-projectile-mode 1))
+
+;; discover-my-major
+(require 'discover-my-major)
+(global-set-key (kbd "C-h C-m") 'discover-my-major)
+(global-set-key (kbd "C-h M-m") 'discover-my-mode)
+
 ;; edit-server
 (require 'edit-server)
 (edit-server-start)
+
+;; emacs-lisp-mode
+(add-hook 'emacs-lisp-mode-hook 'flycheck-mode)
 
 ;; expand-region
 (require 'expand-region)
@@ -131,14 +173,38 @@
 	  (lambda ()
 	    (ibuffer-switch-to-saved-filter-groups "nas")))
 
+;; ido-mode
+;; (require 'ido)
+;; (ido-everywhere t)
+;; (ido-mode t)
+;; (ido-vertical-mode t)
+;; (setq ido-enable-flex-matching t
+;;       do-vertical-show-count t)
+
+;; ivy
+(require 'ivy)
+(ivy-mode 1)
+(setq ivy-use-virtual-buffers t
+      ivy-wrap t
+      ivy-height 10)
+(global-set-key (kbd "C-c C-r") 'ivy-resume)
+
 ;; js2-mode
 (require 'js2-mode)
 (add-to-list 'auto-mode-alist '("\\.js\\'" . js2-mode))
 
+;; kotlin-mode
+(add-hook 'kotlin-mode-hook
+	  (lambda ()
+	    (setq indent-tabs-mode nil)
+	    (add-hook 'before-save-hook
+		      'delete-trailing-whitespace nil t)))
+
 ;; lsp-intellij
 (with-eval-after-load 'lsp-mode
   (require 'lsp-intellij)
-  (add-hook 'kotlin-mode-hook #'lsp-intellij-enable t))
+  (add-hook 'kotlin-mode-hook #'lsp-intellij-enable t)
+  (setq lsp-intellij-server-port 8099))
 
 ;; lsp-mode
 (require 'lsp-mode)
@@ -153,119 +219,6 @@
 (require 'magit)
 (global-set-key (kbd "C-x g") 'magit-status)
 (global-set-key (kbd "C-x M-g") 'magit-dispatch-popup)
-
-;; origami
-(require 'origami)
-(define-key origami-mode-map (kbd "C-c f f") 'origami-toggle-node)
-(define-key origami-mode-map (kbd "C-c f O") 'origami-open-all-nodes)
-(define-key origami-mode-map (kbd "C-c f C") 'origami-close-all-nodes)
-(global-origami-mode)
-
-;; recentf
-(require 'recentf)
-(setq recentf-max-menu-items 25)
-(recentf-mode 1)
-
-;; smartparens
-(require 'smartparens-config)
-(add-hook 'prog-mode-hook (lambda ()
-			    (smartparens-mode t)))
-
-;; smex
-;; (require 'smex)
-;; (smex-initialize)
-;; (global-set-key (kbd "M-x") 'smex)
-;; (global-set-key (kbd "M-S-x") 'smex-major-mode-commands)
-;; (global-set-key (kbd "C-c C-c M-x") 'execute-extended-command)
-
-;; ido-mode
-;; (require 'ido)
-;; (ido-everywhere t)
-;; (ido-mode t)
-;; (ido-vertical-mode t)
-;; (setq ido-enable-flex-matching t
-;;       do-vertical-show-count t)
-
-;; avy
-(require 'avy)
-(global-set-key (kbd "C-'") 'avy-goto-char-timer)
-(setq avy-timeout-seconds 0.3)
-
-;; avy-zap
-(require 'avy-zap)
-(global-set-key (kbd "M-z") 'avy-zap-to-char-dwim)
-(global-set-key (kbd "M-Z") 'avy-zap-up-to-char-dwim)
-
-;; browse-kill-ring
-(require 'browse-kill-ring)
-(browse-kill-ring-default-keybindings)
-
-;; counsel-projectile
-(with-eval-after-load 'projectile
-  (require 'counsel-projectile)
-  (counsel-projectile-mode 1))
-
-;; discover-my-major
-(require 'discover-my-major)
-(global-set-key (kbd "C-h C-m") 'discover-my-major)
-(global-set-key (kbd "C-h M-m") 'discover-my-mode)
-
-;; ivy
-(require 'ivy)
-(ivy-mode 1)
-(setq ivy-use-virtual-buffers t
-      ivy-wrap t
-      ivy-height 10)
-
-(global-set-key (kbd "M-x") 'counsel-M-x)
-(global-set-key (kbd "C-x r b") 'counsel-bookmark)
-(global-set-key (kbd "C-x C-f") 'counsel-find-file)
-(global-set-key (kbd "C-h C-l") 'counsel-find-library)
-(global-set-key (kbd "C-h f") 'counsel-describe-function)
-(global-set-key (kbd "C-h v") 'counsel-describe-variable)
-(global-set-key (kbd "C-h C-u") 'counsel-unicode-char)
-;; (global-set-key (kbd "C-c g") 'counsel-git)
-;; (global-set-key (kbd "C-c j") 'counsel-git-grep)
-;; (global-set-key (kbd "C-c k") 'counsel-ag)
-;; (global-set-key (kbd "C-x l") 'counsel-locate)
-;; (global-set-key (kbd "C-S-o") 'counsel-rhythmbox)
-(global-set-key (kbd "C-c C-r") 'ivy-resume)
-
-;; org-mode
-(require 'org)
-(setq org-startup-indented t
-      org-default-notes-file (concat org-directory "/notes.org")
-      org-agenda-files '("~/org/notes.org"
-			 "~/org/personal.org")
-      org-refile-targets '((nil :maxlevel . 3)
-			   (org-agenda-files :maxlevel . 2))
-      org-capture-templates `(("t" "TODO" entry (file+headline org-default-notes-file "Tasks")
-			       "* TODO %?\nCreated %U\n")
-			      ("T" "TODO - Annotated" entry (file+headline org-default-notes-file "Tasks")
-			       "* TODO %?\n%U\n%a\n")
-			      ("n" "Note" entry (file+headline org-default-notes-file "Notes")
-			       "* %?\n%U\n")
-			      ("i" "Idea" entry (file+headline org-default-notes-file "Ideas")
-			       "* %?\n%U\n")
-			      ("b" "Bookmark" entry (file+headline ,(concat org-directory "/bookmarks.org") "Web bookmarks")
-			       "* [[%x][%?]] %^g\n%U")))
-
-(global-set-key (kbd "C-c l") 'org-store-link)
-(global-set-key (kbd "C-c c") 'org-capture)
-(global-set-key (kbd "C-c a") 'org-agenda)
-(global-set-key (kbd "C-c b") 'org-switchb)
-
-(setq org-tag-alist '(("@dev" . ?d)
-		      ("@idea" . ?i)
-		      ("@learn" . ?l)
-		      ("@home" . ?h)))
-
-(add-hook 'org-mode-hook
-	  (lambda ()
-	    (local-unset-key (kbd "C-,"))
-	    (local-unset-key (kbd "C-'"))
-	    (add-hook 'before-save-hook
-		      'delete-trailing-whitespace nil t)))
 
 ;; modalka
 (require 'modalka)
@@ -305,17 +258,48 @@
 		  (set-cursor-color "deep sky blue"))
 	      (set-cursor-color prev-cursor-color))))
 
-;; AUCTeX
-(setq TeX-auto-save t
-      TeX-parse-self t)
-;; enable for multi-file document structure
-;; (setq-default TeX-master nil)
+;; org-mode
+(require 'org)
+(setq org-startup-indented t
+      org-default-notes-file (concat org-directory "/notes.org")
+      org-agenda-files '("~/org/notes.org"
+			 "~/org/personal.org")
+      org-refile-targets '((nil :maxlevel . 3)
+			   (org-agenda-files :maxlevel . 2))
+      org-capture-templates `(("t" "TODO" entry (file+headline org-default-notes-file "Tasks")
+			       "* TODO %?\nCreated %U\n")
+			      ("T" "TODO - Annotated" entry (file+headline org-default-notes-file "Tasks")
+			       "* TODO %?\n%U\n%a\n")
+			      ("n" "Note" entry (file+headline org-default-notes-file "Notes")
+			       "* %?\n%U\n")
+			      ("i" "Idea" entry (file+headline org-default-notes-file "Ideas")
+			       "* %?\n%U\n")
+			      ("b" "Bookmark" entry (file+headline ,(concat org-directory "/bookmarks.org") "Web bookmarks")
+			       "* [[%x][%?]] %^g\n%U")))
 
-;; pdf-tools
-(pdf-tools-install)
-(add-hook 'LaTeX-mode-hook
-	  (lambda()
-	    (add-to-list 'TeX-view-program-selection '(output-pdf "PDF Tools"))))
+(global-set-key (kbd "C-c l") 'org-store-link)
+(global-set-key (kbd "C-c c") 'org-capture)
+(global-set-key (kbd "C-c a") 'org-agenda)
+(global-set-key (kbd "C-c b") 'org-switchb)
+
+(setq org-tag-alist '(("@dev" . ?d)
+		      ("@idea" . ?i)
+		      ("@learn" . ?l)
+		      ("@home" . ?h)))
+
+(add-hook 'org-mode-hook
+	  (lambda ()
+	    (local-unset-key (kbd "C-,"))
+	    (local-unset-key (kbd "C-'"))
+	    (add-hook 'before-save-hook
+		      'delete-trailing-whitespace nil t)))
+
+;; origami
+(require 'origami)
+(define-key origami-mode-map (kbd "C-c f f") 'origami-toggle-node)
+(define-key origami-mode-map (kbd "C-c f O") 'origami-open-all-nodes)
+(define-key origami-mode-map (kbd "C-c f C") 'origami-close-all-nodes)
+(global-origami-mode)
 
 ;; plantuml-mode
 (setq plantuml-jar-path "/usr/share/java/plantuml.jar"
@@ -326,6 +310,23 @@
 (require 'projectile)
 (projectile-mode 1)
 (define-key projectile-mode-map (kbd "C-c p") 'projectile-command-map)
+
+;; recentf
+(require 'recentf)
+(setq recentf-max-menu-items 25)
+(recentf-mode 1)
+
+;; smartparens
+(require 'smartparens-config)
+(add-hook 'prog-mode-hook (lambda ()
+			    (smartparens-mode t)))
+
+;; smex
+;; (require 'smex)
+;; (smex-initialize)
+;; (global-set-key (kbd "M-x") 'smex)
+;; (global-set-key (kbd "M-S-x") 'smex-major-mode-commands)
+;; (global-set-key (kbd "C-c C-c M-x") 'execute-extended-command)
 
 ;; which-key
 (require 'which-key)
