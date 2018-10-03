@@ -348,12 +348,11 @@
 
   (if reader-mode
       (progn
-	(let ((size (truncate (* (frame-width) 0.2))))
-          (set-window-margins nil size size))
-	(set-fringe-style 0))
+	(writeroom-mode 1)
+	(visual-line-mode 1))
     (progn
-      (set-window-margins nil 0 0)
-      (set-fringe-style nil))))
+      (writeroom-mode -1)
+      (visual-line-mode -1))))
 
 ;; winresize minor mode
 (define-minor-mode winresize-mode
@@ -389,5 +388,9 @@
       '("[xX]modmap\\(rc\\)?\\'")
       nil
       "Simple mode for xmodmap files.")
+
+;; yasnippet
+(require 'yasnippet)
+(yas-global-mode 1)
 
 ;;; init.el ends here

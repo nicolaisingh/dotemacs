@@ -24,9 +24,13 @@
  '(mode-line-percent-position nil)
  '(package-selected-packages
    (quote
-    (counsel-projectile projectile magit htmlize discover-my-major lsp-ui company-lsp lsp-intellij lsp-mode flycheck flycheck-kotlin typing company-auctex company edit-server js2-mode kotlin-mode smartparens json-mode origami browse-kill-ring ace-window which-key counsel afternoon-theme plantuml-mode avy avy-zap ivy centered-cursor-mode change-inner expand-region modalka smex cyberpunk-theme ido-vertical-mode pdf-tools auctex)))
+    (writeroom-mode yasnippet-snippets counsel-projectile projectile magit htmlize discover-my-major lsp-ui company-lsp lsp-intellij lsp-mode flycheck flycheck-kotlin typing company-auctex company edit-server js2-mode kotlin-mode smartparens json-mode origami browse-kill-ring ace-window which-key counsel afternoon-theme plantuml-mode avy avy-zap ivy centered-cursor-mode change-inner expand-region modalka smex cyberpunk-theme ido-vertical-mode pdf-tools auctex)))
  '(window-divider-default-right-width 3)
  '(window-divider-mode t)
+ '(writeroom-extra-line-spacing 0.3)
+ '(writeroom-global-effects
+   (quote
+    (writeroom-set-alpha writeroom-set-menu-bar-lines writeroom-set-tool-bar-lines writeroom-set-vertical-scroll-bars writeroom-set-bottom-divider-width)))
  '(x-stretch-cursor t))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
