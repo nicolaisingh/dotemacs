@@ -200,12 +200,6 @@
 	    (add-hook 'before-save-hook
 		      'delete-trailing-whitespace nil t)))
 
-;; lsp-intellij
-(with-eval-after-load 'lsp-mode
-  (require 'lsp-intellij)
-  (add-hook 'kotlin-mode-hook #'lsp-intellij-enable t)
-  (setq lsp-intellij-server-port 8099))
-
 ;; lsp-mode
 (require 'lsp-mode)
 ;; (add-hook 'kotlin-mode-hook #'lsp-prog-major-mode-enable)
