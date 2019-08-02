@@ -217,6 +217,10 @@
 (require 'magit)
 (global-set-key (kbd "C-x g") 'magit-status)
 (global-set-key (kbd "C-x M-g") 'magit-dispatch-popup)
+(setq magit-repository-directories
+      '(("~/prj/emacs-config/" . 0)
+	("~/AndroidStudioProjects/Ideate/" . 0)
+	("~/dev/masterlist-module/" . 0)))
 
 ;; modalka
 (require 'modalka)
