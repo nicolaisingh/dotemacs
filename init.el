@@ -149,6 +149,10 @@
 ;; emacs-lisp-mode
 (add-hook 'emacs-lisp-mode-hook 'flycheck-mode)
 
+;; erc (Emacs IRC)
+(require 'erc)
+(erc-dcc-mode 1)
+
 ;; expand-region
 (require 'expand-region)
 (global-set-key (kbd "C-=") 'er/expand-region)
