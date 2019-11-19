@@ -119,6 +119,7 @@
   (add-hook 'lsp-after-open-hook 'yas-minor-mode))
 
 ;; counsel
+(global-set-key (kbd "C-x C-m") 'counsel-M-x)
 (global-set-key (kbd "M-x") 'counsel-M-x)
 (global-set-key (kbd "C-x r b") 'counsel-bookmark)
 (global-set-key (kbd "C-x C-f") 'counsel-find-file)
