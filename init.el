@@ -31,7 +31,7 @@
 (column-number-mode t)
 (show-paren-mode t)
 
-(setq my-font "DejaVu Sans Mono-10:weight=book:width=regular")
+(setq my-font "DejaVu Sans Mono-9:weight=book:width=regular")
 
 (set-face-attribute 'default t :font my-font)
 (add-to-list 'default-frame-alist `(font . ,my-font))
