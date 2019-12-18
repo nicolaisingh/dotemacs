@@ -12,7 +12,23 @@
 (setq custom-file "~/.emacs.d/custom.el")
 (load custom-file)
 
-(setq my-scratch-message "* (my/find-init-file)")
+(setq my-scratch-message "#+TITLE: Scratch buffer
+
+* Important Key Binding Conventions (from elisp manual)
+** Reserved for users to customize
+*** C-c LETTER
+*** <F5>-<F9>
+** Reserved for major modes
+*** C-c <CONTROL-CHAR>
+*** C-c C-#
+*** C-c { } < > : or ;
+** Reserved for minor modes
+*** C-c any other symbol or punctuation
+** Don't bind
+*** C-h following any prefix char (e.g. C-h C-c)
+*** C-x as this is for Emacs itself
+")
+
 (setq inhibit-startup-screen t
       initial-scratch-message my-scratch-message
       initial-major-mode 'org-mode
@@ -59,6 +75,7 @@
 
 ;; Other keybinds
 (global-set-key (kbd "C-x C-S-c") 'save-buffers-kill-emacs)
+(global-set-key (kbd "C-?") 'undo-only)
 
 (defun my/find-init-file ()
   "Find my Emacs init file."
@@ -103,8 +120,8 @@
 
 ;; change-inner
 (require 'change-inner)
-(global-set-key (kbd "C-c i") 'change-inner)
-(global-set-key (kbd "C-c o") 'change-outer)
+(global-set-key (kbd "C-c c i") 'change-inner)
+(global-set-key (kbd "C-c c o") 'change-outer)
 
 ;; company
 (require 'company)
@@ -281,10 +298,10 @@
 			      ("b" "Bookmark" entry (file+headline ,(concat org-directory "/bookmarks.org") "Web bookmarks")
 			       "* [[%x][%?]] %^g\n%U")))
 
-(global-set-key (kbd "C-c l") 'org-store-link)
-(global-set-key (kbd "C-c c") 'org-capture)
-(global-set-key (kbd "C-c a") 'org-agenda)
-(global-set-key (kbd "C-c b") 'org-switchb)
+(global-set-key (kbd "C-c o l") 'org-store-link)
+(global-set-key (kbd "C-c o c") 'org-capture)
+(global-set-key (kbd "C-c o a") 'org-agenda)
+(global-set-key (kbd "C-c o b") 'org-switchb)
 
 (setq org-tag-alist '(("@dev" . ?d)
 		      ("@idea" . ?i)
