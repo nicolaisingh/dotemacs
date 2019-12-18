@@ -42,6 +42,7 @@
  '(aw-leading-char-face ((t (:foreground "firebrick" :weight bold))))
  '(cursor ((t (:background "gray25"))))
  '(fringe ((t (:background "gray96"))))
+ '(hl-line ((t (:background "gray96"))))
  '(lsp-intellij-face-code-lens-run ((t nil)))
  '(mode-line ((t (:background "gray40" :foreground "white" :box (:line-width 3 :color "gray40")))))
  '(mode-line-inactive ((t (:inherit mode-line :background "gray90" :foreground "gray45" :box (:line-width 3 :color "gray90") :weight light))))
