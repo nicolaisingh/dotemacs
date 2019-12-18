@@ -87,6 +87,17 @@
   (interactive)
   (find-alternate-file (concat "/sudo::" (buffer-file-name))))
 
+(defun scratch-buffer ()
+  "Find the *scratch* buffer."
+  (interactive)
+  (switch-to-buffer-other-window (get-buffer-create "*scratch*")))
+
+(defun revert-undo-history ()
+  "Delete the undo history of this buffer."
+  (interactive)
+  (buffer-disable-undo)
+  (buffer-enable-undo))
+
 ;; ace-window
 (require 'ace-window)
 (setq aw-dispatch-always t)
