@@ -18,7 +18,9 @@
       ("Magit"
        (name . "^magit.*:"))
       ("Dired"
-       (mode . dired-mode))))))
+       (mode . dired-mode))
+      ("Shell"
+       (mode . shell-mode))))))
  '(ibuffer-show-empty-filter-groups nil)
  '(kotlin-tab-width 4)
  '(mode-line-percent-position nil)

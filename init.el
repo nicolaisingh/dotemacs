@@ -47,6 +47,7 @@
 
 (column-number-mode t)
 (show-paren-mode t)
+(setq-default cursor-type 'bar)
 
 (setq my-font "DejaVu Sans Mono-9:weight=book:width=regular")
 
