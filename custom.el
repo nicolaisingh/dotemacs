@@ -42,7 +42,6 @@
  ;; If there is more than one, they won't work right.
  '(aw-background-face ((t (:foreground "gray50"))))
  '(aw-leading-char-face ((t (:foreground "firebrick" :weight bold))))
- '(cursor ((t (:background "gray25"))))
  '(fringe ((t (:background "gray96"))))
  '(hl-line ((t (:background "gray96"))))
  '(lsp-intellij-face-code-lens-run ((t nil)))
