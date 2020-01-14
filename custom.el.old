@@ -3,6 +3,9 @@
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
+ '(company-selection-wrap-around t)
+ '(company-show-numbers t)
+ '(cursor-in-non-selected-windows (quote bar))
  '(ibuffer-saved-filter-groups
    (quote
     (("nas"
@@ -21,7 +24,6 @@
  '(ibuffer-show-empty-filter-groups nil)
  '(kotlin-tab-width 4)
  '(mode-line-percent-position nil)
- '(org-agenda-files (quote ("~/org/notes.org" "~/org/personal.org")))
  '(package-selected-packages
    (quote
     (unfill readline-complete writeroom-mode counsel-projectile projectile magit htmlize discover-my-major lsp-ui company-lsp lsp-mode flycheck flycheck-kotlin typing company-auctex company edit-server js2-mode kotlin-mode smartparens json-mode origami browse-kill-ring ace-window which-key counsel afternoon-theme plantuml-mode avy avy-zap ivy centered-cursor-mode change-inner expand-region modalka smex cyberpunk-theme ido-vertical-mode pdf-tools auctex)))
@@ -43,9 +45,8 @@
  '(fringe ((t (:background "gray98"))))
  '(hl-line ((t (:background "gray98"))))
  '(lsp-intellij-face-code-lens-run ((t nil)))
- '(mode-line ((t (:background "gray40" :foreground "white" :box (:line-width 2 :color "gray40")))))
- '(mode-line-highlight ((t (:underline t))))
- '(mode-line-inactive ((t (:inherit mode-line :background "gray90" :foreground "gray45" :box (:line-width 2 :color "gray90") :weight light))))
+ '(mode-line ((t (:background "gray40" :foreground "white" :box (:line-width 3 :color "gray40")))))
+ '(mode-line-inactive ((t (:inherit mode-line :background "gray90" :foreground "gray45" :box (:line-width 3 :color "gray90") :weight light))))
  '(window-divider ((t (:distant-foreground "gray40" :foreground "white"))))
  '(window-divider-first-pixel ((t (:foreground "gray98"))))
  '(window-divider-last-pixel ((t (:foreground "gray98")))))
