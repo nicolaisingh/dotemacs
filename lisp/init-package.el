@@ -10,6 +10,7 @@
 (require 'package)
 
 (add-to-list 'package-archives '("melpa" . "https://melpa.org/packages/"))
+(add-to-list 'package-archives '("ox-odt" . "https://kjambunathan.github.io/elpa/"))
 (package-initialize)
 
 (provide 'init-package)
