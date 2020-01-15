@@ -55,6 +55,12 @@ collection.  Use revert-gc-cons-percentage to restore the value."
 ;; Allow C-SPC to continue popping the mark after C-u C-SPC
 (setq-default set-mark-command-repeat-pop 1)
 
+;; Do not exit incremental search when scrolling
+(setq-default isearch-allow-scroll 1)
+
+;; Show N lines of text on top/bottom when scrolling
+(setq-default scroll-margin 2)
+
 (global-set-key (kbd "C-x C-S-c") 'save-buffers-kill-emacs)
 (global-set-key (kbd "C-x C-b") 'bs-show)
 (global-set-key (kbd "M-SPC") 'cycle-spacing)
