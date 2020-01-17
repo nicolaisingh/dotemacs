@@ -28,6 +28,7 @@ collection.  Use revert-gc-cons-percentage to restore the value."
 (require 'init-erc)
 (require 'init-expand-region)
 ;; (require 'init-ibuffer)
+;; (require 'init-icomplete)
 (require 'init-ido)
 ;; (require 'init-ivy)
 (require 'init-js2-mode)
@@ -36,6 +37,7 @@ collection.  Use revert-gc-cons-percentage to restore the value."
 (require 'init-org)
 (require 'init-origami)
 (require 'init-plantuml)
+(require 'init-recentf)
 (require 'init-which-key)
 
 (require 'init-gui)
