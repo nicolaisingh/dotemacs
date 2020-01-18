@@ -24,12 +24,13 @@ collection.  Use revert-gc-cons-percentage to restore the value."
 (require 'init-package)
 
 (require 'init-browse-kill-ring)
+(require 'init-bs)
 (require 'init-discover-my-major)
 (require 'init-erc)
 (require 'init-expand-region)
 ;; (require 'init-ibuffer)
-;; (require 'init-icomplete)
-(require 'init-ido)
+(require 'init-icomplete)
+;; (require 'init-ido)
 ;; (require 'init-ivy)
 (require 'init-js2-mode)
 (require 'init-latex)
@@ -65,9 +66,9 @@ collection.  Use revert-gc-cons-percentage to restore the value."
 (setq-default scroll-margin 2)
 
 (global-set-key (kbd "C-x C-S-c") 'save-buffers-kill-emacs)
-(global-set-key (kbd "C-x C-b") 'bs-show)
 (global-set-key (kbd "M-SPC") 'cycle-spacing)
 (global-set-key (kbd "C-x C-m") (key-binding (kbd "M-x")))
+(global-set-key (kbd "C-`") (key-binding (kbd "C-x o")))
 
 ;; Set up customize
 (setq custom-file (expand-file-name "custom.el" user-emacs-directory))
