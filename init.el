@@ -19,6 +19,8 @@ collection.  Use revert-gc-cons-percentage to restore the value."
   (setq gc-cons-percentage original-gc-cons-percentage))
 
 (increase-gc-cons-percentage)
+(setq garbage-collection-messages 1)
+
 (add-to-list 'load-path (expand-file-name "lisp" user-emacs-directory))
 
 (require 'init-package)
