@@ -6,6 +6,8 @@
 
 ;;; Code:
 
+;;;; GC setup
+
 (setq original-gc-cons-percentage gc-cons-percentage
       higher-gc-cons-percentage 0.6)
 
@@ -20,6 +22,13 @@ collection.  Use revert-gc-cons-percentage to restore the value."
 
 (increase-gc-cons-percentage)
 (setq garbage-collection-messages 1)
+
+(add-hook 'minibuffer-setup-hook #'increase-gc-cons-percentage)
+(add-hook 'minibuffer-exit-hook #'revert-gc-cons-percentage)
+
+(add-hook 'after-init-hook #'revert-gc-cons-percentage)
+
+;;;; Package initializations
 
 (add-to-list 'load-path (expand-file-name "lisp" user-emacs-directory))
 
@@ -45,6 +54,8 @@ collection.  Use revert-gc-cons-percentage to restore the value."
 
 (require 'init-gui)
 (require 'init-etc)
+
+;;;; Emacs-wide initializations
 
 (winner-mode 1)
 (fset 'yes-or-no-p 'y-or-n-p)
@@ -80,11 +91,6 @@ collection.  Use revert-gc-cons-percentage to restore the value."
 (setq custom-file (expand-file-name "custom.el" user-emacs-directory))
 (when (file-exists-p custom-file)
   (load custom-file))
-
-(add-hook 'minibuffer-setup-hook #'increase-gc-cons-percentage)
-(add-hook 'minibuffer-exit-hook #'revert-gc-cons-percentage)
-
-(add-hook 'after-init-hook #'revert-gc-cons-percentage)
 
 (add-hook 'emacs-startup-hook
 	  (lambda ()
