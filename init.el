@@ -50,6 +50,10 @@ collection.  Use revert-gc-cons-percentage to restore the value."
 (put 'upcase-region 'disabled nil)
 (put 'dired-find-alternate-file 'disabled nil)
 
+;; Enable recursive minibuffers
+(setq enable-recursive-minibuffers 1)
+(minibuffer-depth-indicate-mode 1)
+
 ;; Where to store backup and autosave files
 (setq backup-directory-alist
       `(("." . ,(concat user-emacs-directory "backups/")))
