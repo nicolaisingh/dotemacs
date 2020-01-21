@@ -21,6 +21,9 @@
 ;; (add-to-list 'completion-styles 'initials)
 ;; (add-to-list 'completion-styles 'substring)
 
+(let ((map icomplete-minibuffer-map))
+  (define-key map (kbd "C-S-j") 'minibuffer-force-complete))
+
 (when (>= emacs-major-version 27)
   (add-to-list 'completion-styles 'flex))
 
