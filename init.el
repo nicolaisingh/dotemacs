@@ -63,6 +63,8 @@ collection.  Use revert-gc-cons-percentage to restore the value."
 (put 'downcase-region 'disabled nil)
 (put 'upcase-region 'disabled nil)
 (put 'dired-find-alternate-file 'disabled nil)
+(blink-cursor-mode 1)
+(save-place-mode 1)
 
 ;; Enable recursive minibuffers
 (setq enable-recursive-minibuffers 1)
