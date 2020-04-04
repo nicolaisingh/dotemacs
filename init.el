@@ -36,6 +36,7 @@ collection.  Use revert-gc-cons-percentage to restore the value."
 
 (require 'init-browse-kill-ring)
 (require 'init-bs)
+(require 'init-dired)
 (require 'init-discover-my-major)
 (require 'init-erc)
 (require 'init-expand-region)
