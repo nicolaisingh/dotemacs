@@ -101,6 +101,8 @@ collection.  Use revert-gc-cons-percentage to restore the value."
 (when (file-exists-p custom-file)
   (load custom-file))
 
+(add-hook 'before-save-hook 'delete-trailing-whitespace)
+
 (add-hook 'emacs-startup-hook
 	  (lambda ()
 	    (message (concat "Emacs startup took " (emacs-init-time) " with " (number-to-string gcs-done) " GCs."))))

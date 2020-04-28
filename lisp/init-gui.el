@@ -28,6 +28,7 @@
 (setq initial-major-mode 'org-mode)
 (setq inhibit-startup-screen 1)
 (setq visible-bell 1)
+(setq ring-bell-function 'ignore)
 
 (menu-bar-mode -1)
 (tool-bar-mode -1)
