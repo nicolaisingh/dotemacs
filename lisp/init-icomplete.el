@@ -11,7 +11,7 @@
 (icomplete-mode 1)
 
 (setq icomplete-prospects-height 1
-      icomplete-separator "  |  "
+      icomplete-separator ", "
       icomplete-hide-common-prefix nil)
 
 ;; Show prospects immediately
