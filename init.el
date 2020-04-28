@@ -84,6 +84,9 @@ collection.  Use revert-gc-cons-percentage to restore the value."
 ;; Do not exit incremental search when scrolling
 (setq-default isearch-allow-scroll 1)
 
+;; Make space characters match anything
+(setq search-whitespace-regexp ".+?")
+
 ;; Show N lines of text on top/bottom when scrolling
 (setq-default scroll-margin 2)
 
