@@ -48,6 +48,7 @@
 (add-to-list 'default-frame-alist `(font . ,my-font))
 (add-to-list 'default-frame-alist '(height . 60))
 (add-to-list 'default-frame-alist '(width . 180))
+(add-to-list 'default-frame-alist '(background-color . "white smoke"))
 
 (provide 'init-gui)
 ;;; init-gui.el ends here
