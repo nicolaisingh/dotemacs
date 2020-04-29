@@ -71,6 +71,9 @@ collection.  Use revert-gc-cons-percentage to restore the value."
 (save-place-mode 1)
 (global-hl-line-mode 1)
 
+;; Save bookmarks immediately
+(setq bookmark-save-flag 1)
+
 ;; Enable recursive minibuffers
 (setq enable-recursive-minibuffers 1)
 (minibuffer-depth-indicate-mode 1)
