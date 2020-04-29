@@ -43,6 +43,7 @@ collection.  Use revert-gc-cons-percentage to restore the value."
 ;; (require 'init-ibuffer)
 (require 'init-icomplete)
 ;; (require 'init-ido)
+(require 'init-isearch)
 ;; (require 'init-ivy)
 (require 'init-js2-mode)
 (require 'init-latex)
@@ -81,12 +82,6 @@ collection.  Use revert-gc-cons-percentage to restore the value."
 
 ;; Allow C-SPC to continue popping the mark after C-u C-SPC
 (setq-default set-mark-command-repeat-pop 1)
-
-;; Do not exit incremental search when scrolling
-(setq-default isearch-allow-scroll 1)
-
-;; Make space characters match anything
-(setq search-whitespace-regexp ".+?")
 
 ;; Show N lines of text on top/bottom when scrolling
 (setq-default scroll-margin 2)
