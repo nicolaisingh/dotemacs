@@ -11,18 +11,34 @@
 (icomplete-mode 1)
 
 (setq icomplete-prospects-height 1
-      icomplete-separator ", "
+      icomplete-separator (propertize "  |  " 'face 'font-lock-variable-name-face)
       icomplete-hide-common-prefix nil)
 
 ;; Show prospects immediately
 (setq icomplete-show-matches-on-no-input 1
       icomplete-compute-delay 0)
 
-;; (add-to-list 'completion-styles 'initials)
-;; (add-to-list 'completion-styles 'substring)
-
 (let ((map icomplete-minibuffer-map))
   (define-key map (kbd "C-S-j") 'minibuffer-force-complete))
+
+;;;; Not icomplete-related, but still under completion
+
+;; Always ignore case during completion
+(setq completion-ignore-case 1
+      read-file-name-completion-ignore-case 1
+      read-buffer-completion-ignore-case 1)
+
+(setq completion-auto-help nil
+      completion-cycle-threshold nil)
+
+;; Complete file names with SPC
+(define-key minibuffer-local-filename-completion-map (kbd "SPC")
+  'minibuffer-complete-word)
+(define-key minibuffer-local-must-match-filename-map (kbd "SPC")
+  'minibuffer-complete-word)
+
+;; (add-to-list 'completion-styles 'initials)
+;; (add-to-list 'completion-styles 'substring)
 
 (when (>= emacs-major-version 27)
   (add-to-list 'completion-styles 'flex))
