@@ -29,5 +29,25 @@
   (buffer-disable-undo)
   (buffer-enable-undo))
 
+(defun swap-buffer-with-other (count)
+  "Swap the current window's buffer with the next window's
+buffer, and then select the next window."
+  (interactive "p")
+  (let* ((original-window (selected-window))
+	 (current-buffer (window-buffer (selected-window))))
+    (other-window count)
+    (set-window-buffer original-window (window-buffer (selected-window)))
+    (set-window-buffer (selected-window) current-buffer)))
+
+(defun swap-buffer-with-largest ()
+  "Swap the current window's buffer with the largest window's
+buffer, and then select the largest window."
+  (interactive)
+  (let* ((original-window (selected-window))
+	 (current-buffer (window-buffer (selected-window))))
+    (select-window (get-largest-window))
+    (set-window-buffer original-window (window-buffer (selected-window)))
+    (set-window-buffer (selected-window) current-buffer)))
+
 (provide 'init-etc)
 ;;; init-etc.el ends here.

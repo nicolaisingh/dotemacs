@@ -93,7 +93,11 @@ collection.  Use revert-gc-cons-percentage to restore the value."
 (global-set-key (kbd "C-x C-S-c") 'save-buffers-kill-emacs)
 (global-set-key (kbd "M-SPC") 'cycle-spacing)
 (global-set-key (kbd "C-x C-m") (key-binding (kbd "M-x")))
+
+;; Window management
 (global-set-key (kbd "C-`") (key-binding (kbd "C-x o")))
+(global-set-key (kbd "C-~") 'swap-buffer-with-other)
+(global-set-key (kbd "C-M-~") 'swap-buffer-with-largest)
 
 ;; Set up customize
 (setq custom-file (expand-file-name "custom.el" user-emacs-directory))
