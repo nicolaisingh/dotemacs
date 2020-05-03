@@ -39,6 +39,7 @@ collection.  Use revert-gc-cons-percentage to restore the value."
 (require 'init-company)
 (require 'init-diminish)
 (require 'init-dired)
+(require 'init-dired-toggle)
 (require 'init-discover-my-major)
 (require 'init-erc)
 (require 'init-expand-region)
