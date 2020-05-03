@@ -74,6 +74,9 @@ collection.  Use revert-gc-cons-percentage to restore the value."
 (save-place-mode 1)
 (global-hl-line-mode 1)
 
+;; Do not ask to follow symlinks; always follow
+(setq vc-follow-symlinks t)
+
 ;; Save bookmarks immediately
 (setq bookmark-save-flag 1)
 
