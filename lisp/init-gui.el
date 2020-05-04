@@ -54,12 +54,15 @@ C-h o		describe-symbol
 (setq inhibit-startup-screen 1)
 (setq visible-bell 1)
 (setq ring-bell-function 'ignore)
+(setq blink-cursor-interval 0.25)
+(setq blink-cursor-blinks 15)
 
 (menu-bar-mode -1)
 (tool-bar-mode -1)
 (scroll-bar-mode -1)
-(blink-cursor-mode -1)
-;; (global-hl-line-mode 1)
+(blink-cursor-mode 1)
+(global-hl-line-mode -1)
+(save-place-mode 1)
 
 (show-paren-mode 1)
 (column-number-mode 1)

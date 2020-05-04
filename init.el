@@ -70,9 +70,6 @@ collection.  Use revert-gc-cons-percentage to restore the value."
 (put 'upcase-region 'disabled nil)
 (put 'dired-find-alternate-file 'disabled nil)
 (put 'narrow-to-region 'disabled nil)
-(blink-cursor-mode 1)
-(save-place-mode 1)
-(global-hl-line-mode 1)
 
 ;; Do not ask to follow symlinks; always follow
 (setq vc-follow-symlinks t)
