@@ -31,6 +31,9 @@
 (setq completion-auto-help nil
       completion-cycle-threshold nil)
 
+;; For partial-completion style: SPC inserts delimiters
+(setq completion-pcm-complete-word-inserts-delimiters 1)
+
 ;; Complete file names with SPC
 (define-key minibuffer-local-filename-completion-map (kbd "SPC")
   'minibuffer-complete-word)
