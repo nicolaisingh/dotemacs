@@ -17,19 +17,28 @@
          (dir-p (file-directory-p file)))
     (if dir-p
 	(find-alternate-file file)
-      (message "refwin=%s selected=%s" dired-toggle-refwin (selected-window))
-      (let ((dired-toggle-window (selected-window)))
+      (let ((dired-toggle-window (selected-window))
+	     (dired-toggle-buffer (window-buffer (selected-window))))
 	(dired-find-file-other-window)
-	(delete-window dired-toggle-window)))
+	(delete-window dired-toggle-window)
+	(kill-buffer dired-toggle-buffer)))
     (when (eq major-mode 'dired-mode)
       (dired-toggle-mode dired-toggle-enabled)
       (dired-hide-details-mode dired-hide-details-enabled))))
+
+(defun dired-toggle-my-quit ()
+  "Quit action under `dired-toggle-mode'.  Kill the buffer
+instead of burying it."
+  (interactive)
+  (if (one-window-p)
+      (quit-window 1)
+    (kill-buffer-and-window)))
 
 ;; There seems to be a bug with dired-toggle-find-file.  There are
 ;; instances where finding a file displays it in the same window as
 ;; the dired-toggle window with the same narrow size.
 (define-key dired-toggle-mode-map (kbd "RET") #'dired-toggle-my-find-file)
-(define-key dired-toggle-mode-map (kbd "q") #'dired-toggle-quit)
+(define-key dired-toggle-mode-map (kbd "q") #'dired-toggle-my-quit)
 (define-key dired-toggle-mode-map (kbd "^") #'dired-toggle-up-directory)
 
 (setq dired-toggle-window-size 32)
