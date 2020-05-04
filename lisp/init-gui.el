@@ -22,7 +22,32 @@
 ;; *** C-h following any prefix char (e.g. C-h C-c)
 ;; *** C-x as this is for Emacs itself
 ;; ")
-(setq my-scratch-message "# This is the scratch buffer\n")
+(setq my-scratch-message "# This is the scratch buffer
+
+For icomplete:
+----
+C-M-i		minibuffer-force-complete
+
+M-v		switch-to-completions
+
+M-n		next-history-element
+M-p		previous-history-element
+M-r		previous-matching-history-element
+M-s		next-matching-history-element\n
+
+Completion:
+----
+M-v		switch-to-completions
+
+Recursive minibuffer:
+----
+C-]		abort-recursive-edit
+
+Help:
+----
+C-h S		info-lookup-symbol
+C-h o		describe-symbol
+")
 (setq initial-scratch-message my-scratch-message)
 
 (setq initial-major-mode 'org-mode)

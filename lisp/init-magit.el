@@ -8,8 +8,8 @@
 
 (require 'magit)
 
-(global-set-key (kbd "C-x g") 'magit-status)
-(global-set-key (kbd "C-x M-g") 'magit-dispatch-popup)
+(global-set-key (kbd "C-c g") #'magit-status)
+(global-set-key (kbd "C-c M-g") #'magit-dispatch-popup)
 
 (setq magit-repository-directories
       '(("~/prj/emacs-config/" . 0)
