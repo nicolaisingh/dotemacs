@@ -18,8 +18,21 @@
 (setq icomplete-show-matches-on-no-input 1
       icomplete-compute-delay 0)
 
+(defun star-before-word-completion ()
+  "Performs an additional step before doing word completion.
+Insert a star/asterisk first, and if invoked again, perform word
+completion."
+  (interactive)
+  (let ((prev-char (buffer-substring (- (point) 1) (point)))
+	(replace-prev-char (lambda (char) (delete-char -1) (insert-char char))))
+    (if (or (equal prev-char "-") (equal prev-char "*"))
+	(minibuffer-complete-word)
+      (insert-char ?*))))
+
 (let ((map icomplete-minibuffer-map))
-  (define-key map (kbd "C-S-j") 'minibuffer-force-complete))
+  (define-key map (kbd "C-S-j") 'minibuffer-force-complete)
+  (define-key map (kbd "SPC") 'star-before-word-completion))
+
 
 ;;;; Not icomplete-related, but still under completion
 
