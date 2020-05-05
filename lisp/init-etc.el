@@ -49,5 +49,13 @@ buffer, and then select the largest window."
     (set-window-buffer original-window (window-buffer (selected-window)))
     (set-window-buffer (selected-window) current-buffer)))
 
+(defun my-find-file ()
+  (interactive)
+  (if current-prefix-arg
+      (find-file-in-repository)
+    (call-interactively #'find-file)))
+
+(global-set-key (kbd "C-x C-f") #'my-find-file)
+
 (provide 'init-etc)
 ;;; init-etc.el ends here.
