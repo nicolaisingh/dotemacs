@@ -13,6 +13,8 @@
     '(diminish 'org-indent-mode))
   (eval-after-load 'subword
     '(diminish 'subword-mode "subWord"))
+  (eval-after-load 'smartparens
+    '(diminish 'smartparens-mode))
   (diminish 'auto-revert-mode))
 (add-hook 'after-init-hook 'load-diminish)
 
