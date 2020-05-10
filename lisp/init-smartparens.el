@@ -8,13 +8,10 @@
 
 (require 'smartparens-config)
 
-;; Author config
-;; https://github.com/Fuco1/.emacs.d/blob/master/files/smartparens.el
-
-(define-key smartparens-mode-map (kbd "C-c } }") #'sp-forward-barf-sexp)
-(define-key smartparens-mode-map (kbd "C-c { {") #'sp-backward-barf-sexp)
-(define-key smartparens-mode-map (kbd "C-c ] ]") #'sp-forward-slurp-sexp)
-(define-key smartparens-mode-map (kbd "C-c [ [") #'sp-backward-slurp-sexp)
+(define-key smartparens-mode-map (kbd "C-)") #'sp-forward-barf-sexp)
+(define-key smartparens-mode-map (kbd "C-(") #'sp-backward-barf-sexp)
+(define-key smartparens-mode-map (kbd "C-0") #'sp-forward-slurp-sexp)
+(define-key smartparens-mode-map (kbd "C-9") #'sp-backward-slurp-sexp)
 (define-key smartparens-mode-map (kbd "C-c [ ]") #'sp-splice-sexp)
 
 (add-hook 'lisp-mode-hook #'smartparens-mode)
