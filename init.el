@@ -28,13 +28,15 @@ collection.  Use revert-gc-cons-percentage to restore the value."
 
 (start-gc-idle-timer)
 (increase-gc-cons-percentage)
-
-(add-hook 'minibuffer-setup-hook #'increase-gc-cons-percentage)
-(add-hook 'minibuffer-exit-hook #'revert-gc-cons-percentage)
 (add-hook 'after-init-hook
 	  (lambda ()
 	    (revert-gc-cons-percentage)
 	    (setq garbage-collection-messages 1)))
+
+(add-hook 'minibuffer-setup-hook #'increase-gc-cons-percentage)
+(add-hook 'minibuffer-exit-hook #'revert-gc-cons-percentage)
+(add-hook 'isearch-mode-hook #'increase-gc-cons-percentage)
+(add-hook 'isearch-mode-end-hook #'revert-gc-cons-percentage)
 
 ;;;; Package initializations
 
