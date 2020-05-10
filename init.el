@@ -10,6 +10,12 @@
 
 (setq original-gc-cons-percentage gc-cons-percentage
       higher-gc-cons-percentage 0.6)
+(setq gc-idle-timer nil)
+
+(defun start-gc-idle-timer ()
+  "Set a timer that GCs when Emacs idles, like package gcmh."
+  (when (timerp gc-idle-timer) (cancel-timer gc-idle-timer))
+  (setq gc-idle-timer (run-with-idle-timer 5 t #'garbage-collect)))
 
 (defun increase-gc-cons-percentage ()
   "Set a higher value for gc-cons-percentage to prevent garbage
@@ -20,13 +26,15 @@ collection.  Use revert-gc-cons-percentage to restore the value."
   "Restore gc-cons-percentage to its original value."
   (setq gc-cons-percentage original-gc-cons-percentage))
 
+(start-gc-idle-timer)
 (increase-gc-cons-percentage)
-(setq garbage-collection-messages 1)
 
 (add-hook 'minibuffer-setup-hook #'increase-gc-cons-percentage)
 (add-hook 'minibuffer-exit-hook #'revert-gc-cons-percentage)
-
-(add-hook 'after-init-hook #'revert-gc-cons-percentage)
+(add-hook 'after-init-hook
+	  (lambda ()
+	    (revert-gc-cons-percentage)
+	    (setq garbage-collection-messages 1)))
 
 ;;;; Package initializations
 
