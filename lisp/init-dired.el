@@ -29,7 +29,14 @@
   (dired-sort-other (dired-set-listing-switches)))
 
 (dired-set-listing-switches)
+
+(setq dired-hide-details-hide-symlink-targets nil
+      dired-hide-details-hide-information-lines nil)
+
 (define-key dired-mode-map (kbd "C-c .") #'toggle-other-files)
+
+(add-hook 'dired-mode-hook #'hl-line-mode)
+(add-hook 'dired-mode-hook #'dired-hide-details-mode)
 
 (provide 'init-dired)
 ;;; init-dired.el ends here
