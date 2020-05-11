@@ -65,6 +65,7 @@ collection.  Use revert-gc-cons-percentage to restore the value."
 (require 'init-org)
 (require 'init-origami)
 (require 'init-plantuml)
+(require 'init-prism)
 (require 'init-recentf)
 (require 'init-smartparens)
 (require 'init-transpose-frame)
