@@ -69,6 +69,8 @@ C-h o		describe-symbol
 
 (setq-default cursor-type 'bar)
 
+(global-set-key (kbd "C-c h l") #'hl-line-mode)
+
 (load-theme 'dichromacy)
 
 (setq my-font "DejaVu Sans Mono-9:weight=book:width=regular")
