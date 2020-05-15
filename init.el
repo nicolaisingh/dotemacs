@@ -60,6 +60,7 @@ collection.  Use revert-gc-cons-percentage to restore the value."
 (require 'init-isearch)
 ;; (require 'init-ivy)
 (require 'init-js2-mode)
+(require 'init-json-navigator)
 (require 'init-latex)
 (require 'init-magit)
 (require 'init-org)
