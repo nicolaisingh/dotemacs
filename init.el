@@ -106,6 +106,10 @@ collection.  Use revert-gc-cons-percentage to restore the value."
 ;; Show N lines of text on top/bottom when scrolling
 (setq-default scroll-margin 2)
 
+;; Display long lines as is
+(setq-default truncate-lines t)
+
+(global-set-key (kbd "C-c t l") #'toggle-truncate-lines)
 (global-set-key (kbd "C-x C-S-c") 'save-buffers-kill-emacs)
 (global-set-key (kbd "M-SPC") 'cycle-spacing)
 (global-set-key (kbd "C-x C-m") (key-binding (kbd "M-x")))
