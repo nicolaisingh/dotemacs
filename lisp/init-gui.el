@@ -75,7 +75,20 @@ C-h o		describe-symbol
 
 (setq my-font "DejaVu Sans Mono-9:weight=book:width=regular")
 (set-face-attribute 'default t :font my-font)
-(set-face-attribute 'show-paren-match t :weight 'bold :background "gray95")
+
+(set-face-attribute 'show-paren-match t
+		    :weight 'bold
+		    :background "gray95")
+
+(set-face-attribute 'mode-line t
+		    :foreground "gray30"
+		    :background "slategray1"
+		    :box '(:line-width 1 :color "gray30" :style nil))
+
+(set-face-attribute 'mode-line-inactive t
+		    :foreground "gray60"
+		    :background "gray96"
+		    :box '(:line-width 1 :color "gray60" :style nil))
 
 (add-to-list 'default-frame-alist `(font . ,my-font))
 (add-to-list 'default-frame-alist '(height . 60))
