@@ -44,6 +44,7 @@ collection.  Use revert-gc-cons-percentage to restore the value."
 
 (require 'init-package)
 
+(require 'init-aggressive-indent)
 (require 'init-browse-kill-ring)
 (require 'init-bs)
 (require 'init-company)
