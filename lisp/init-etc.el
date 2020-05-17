@@ -55,7 +55,19 @@ buffer, and then select the largest window."
       (find-file-in-repository)
     (call-interactively #'find-file)))
 
+(defun indent-using-tabs ()
+  (interactive)
+  (setq-default indent-tabs-mode t)
+  (tabify (point-min) (point-max)))
+
+(defun indent-using-spaces ()
+  (interactive)
+  (setq-default indent-tabs-mode nil)
+  (untabify (point-min) (point-max)))
+
 (global-set-key (kbd "C-x C-f") #'my-find-file)
+(global-set-key (kbd "C-c i TAB") #'indent-using-tabs)
+(global-set-key (kbd "C-c i SPC") #'indent-using-spaces)
 
 (provide 'init-etc)
 ;;; init-etc.el ends here.

@@ -110,6 +110,9 @@ collection.  Use revert-gc-cons-percentage to restore the value."
 ;; Display long lines as is
 (setq-default truncate-lines t)
 
+;; Tabs and spaces handling
+(setq-default tab-width 4)
+
 (global-set-key (kbd "C-c t l") #'toggle-truncate-lines)
 (global-set-key (kbd "C-x C-S-c") 'save-buffers-kill-emacs)
 (global-set-key (kbd "M-SPC") 'cycle-spacing)
@@ -124,6 +127,9 @@ collection.  Use revert-gc-cons-percentage to restore the value."
 (setq custom-file (expand-file-name "custom.el" user-emacs-directory))
 (when (file-exists-p custom-file)
   (load custom-file))
+
+(defun turn-off-indent-tabs-mode () (setq indent-tabs-mode nil))
+(add-hook 'emacs-lisp-mode-hook #'turn-off-indent-tabs-mode)
 
 (add-hook 'before-save-hook 'delete-trailing-whitespace)
 
