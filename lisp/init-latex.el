@@ -9,8 +9,8 @@
 
 ;; (pdf-tools-install)
 (add-hook 'LaTeX-mode-hook
-	  (lambda()
-	    (add-to-list 'TeX-view-program-selection '(output-pdf "PDF Tools"))))
+          (lambda()
+            (add-to-list 'TeX-view-program-selection '(output-pdf "PDF Tools"))))
 
 (add-hook 'after-init-hook 'pdf-tools-install)
 

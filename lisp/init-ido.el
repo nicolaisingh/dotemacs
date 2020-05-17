@@ -30,21 +30,21 @@
 ;; Don't expand the minibuffer
 (setq ido-max-window-height 1)
 (add-hook 'ido-minibuffer-setup-hook
-	  (lambda ()
-	    (visual-line-mode nil)))
+          (lambda ()
+            (visual-line-mode nil)))
 
 (setq ido-decorations
       '(" { "
-	" } "
-	" | "
-	" | ..."
-	"["
-	"]"
-	" [No match]"
-	" [Matched]"
-	" [Not readable]"
-	" [Too big]"
-	" [Confirm]"))
+        " } "
+        " | "
+        " | ..."
+        "["
+        "]"
+        " [No match]"
+        " [Matched]"
+        " [Not readable]"
+        " [Too big]"
+        " [Confirm]"))
 
 (ido-everywhere 1)
 (ido-mode 1)

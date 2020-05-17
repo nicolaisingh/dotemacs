@@ -16,18 +16,18 @@
 
   (if reader-mode
       (progn
-	(writeroom-mode 1)
-	(visual-line-mode 1))
+        (writeroom-mode 1)
+        (visual-line-mode 1))
     (progn
       (writeroom-mode -1))))
-      
+
 (define-generic-mode 'xmodmap-mode
-      '(?!)
-      '("add" "clear" "keycode" "keysym" "pointer" "remove")
-      nil
-      '("[xX]modmap\\(rc\\)?\\'")
-      nil
-      "Simple mode for xmodmap files.
+  '(?!)
+  '("add" "clear" "keycode" "keysym" "pointer" "remove")
+  nil
+  '("[xX]modmap\\(rc\\)?\\'")
+  nil
+  "Simple mode for xmodmap files.
 
 From https://www.emacswiki.org/emacs/XModMapMode")
 

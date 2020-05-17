@@ -12,13 +12,13 @@
 
 (defun dired-set-listing-switches ()
   (setq dired-listing-switches
-	(concat "--group-directories-first -lh" dired-listing-switch-A)))
+        (concat "--group-directories-first -lh" dired-listing-switch-A)))
 
 (defun message-other-files-state ()
   (message "%s other files"
-	   (if (string-empty-p dired-listing-switch-A)
-	       "Hide"
-	     "Show")))
+           (if (string-empty-p dired-listing-switch-A)
+               "Hide"
+             "Show")))
 
 (defun toggle-other-files ()
   (interactive)

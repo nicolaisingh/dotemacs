@@ -29,9 +29,9 @@ collection.  Use revert-gc-cons-percentage to restore the value."
 (start-gc-idle-timer)
 (increase-gc-cons-percentage)
 (add-hook 'after-init-hook
-	  (lambda ()
-	    (revert-gc-cons-percentage)
-	    (setq garbage-collection-messages 1)))
+          (lambda ()
+            (revert-gc-cons-percentage)
+            (setq garbage-collection-messages 1)))
 
 (add-hook 'minibuffer-setup-hook #'increase-gc-cons-percentage)
 (add-hook 'minibuffer-exit-hook #'revert-gc-cons-percentage)
@@ -134,8 +134,8 @@ collection.  Use revert-gc-cons-percentage to restore the value."
 (add-hook 'before-save-hook 'delete-trailing-whitespace)
 
 (add-hook 'emacs-startup-hook
-	  (lambda ()
-	    (message (concat "Emacs startup took " (emacs-init-time) " with " (number-to-string gcs-done) " GCs."))))
+          (lambda ()
+            (message (concat "Emacs startup took " (emacs-init-time) " with " (number-to-string gcs-done) " GCs."))))
 
 (provide 'init)
 ;;; init.el ends here

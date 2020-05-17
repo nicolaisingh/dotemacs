@@ -11,9 +11,9 @@
 (ivy-mode 1)
 
 (setq-default ivy-use-virtual-buffers 1
-	      ivy-count-format ""
-	      ivy-height 6
-	      ivy-wrap 1)
+              ivy-count-format ""
+              ivy-height 6
+              ivy-wrap 1)
 
 (global-set-key (kbd "M-x") 'counsel-M-x)
 ;; (global-set-key (kbd "C-x r b") 'counsel-bookmark)

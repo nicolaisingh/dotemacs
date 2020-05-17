@@ -9,8 +9,8 @@
 (require 'ibuffer)
 
 (add-hook 'ibuffer-mode-hook
-	  (lambda ()
-	    (ibuffer-switch-to-saved-filter-groups "nas")))
+          (lambda ()
+            (ibuffer-switch-to-saved-filter-groups "nas")))
 
 (global-set-key (kbd "C-x C-b") 'ibuffer)
 

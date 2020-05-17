@@ -13,8 +13,8 @@
 
 (setq magit-repository-directories
       '(("~/prj/emacs-config/" . 0)
-	("~/AndroidStudioProjects/Ideate/". 0)
-	("~/dev/masterlist-module/" . 0)))
+        ("~/AndroidStudioProjects/Ideate/". 0)
+        ("~/dev/masterlist-module/" . 0)))
 
 (provide 'init-magit)
 ;;; init-magit.el ends here

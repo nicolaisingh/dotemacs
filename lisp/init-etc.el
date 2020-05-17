@@ -34,7 +34,7 @@
 buffer, and then select the next window."
   (interactive "p")
   (let* ((original-window (selected-window))
-	 (current-buffer (window-buffer (selected-window))))
+         (current-buffer (window-buffer (selected-window))))
     (other-window count)
     (set-window-buffer original-window (window-buffer (selected-window)))
     (set-window-buffer (selected-window) current-buffer)))
@@ -44,7 +44,7 @@ buffer, and then select the next window."
 buffer, and then select the largest window."
   (interactive)
   (let* ((original-window (selected-window))
-	 (current-buffer (window-buffer (selected-window))))
+         (current-buffer (window-buffer (selected-window))))
     (select-window (get-largest-window))
     (set-window-buffer original-window (window-buffer (selected-window)))
     (set-window-buffer (selected-window) current-buffer)))

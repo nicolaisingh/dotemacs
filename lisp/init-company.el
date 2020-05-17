@@ -14,11 +14,11 @@
       company-selection-wrap-around 1)
 
 (setq company-transformers '(company-sort-by-occurrence
-			     company-sort-by-backend-importance))
+                             company-sort-by-backend-importance))
 
 (eval-after-load 'company
   '(progn (define-key company-active-map (kbd "C-n") 'company-select-next)
-	  (define-key company-active-map (kbd "C-p") 'company-select-previous)))
+          (define-key company-active-map (kbd "C-p") 'company-select-previous)))
 
 (add-hook 'after-init-hook 'global-company-mode)
 

@@ -16,12 +16,12 @@
          (file (dired-get-file-for-visit))
          (dir-p (file-directory-p file)))
     (if dir-p
-	(find-alternate-file file)
+        (find-alternate-file file)
       (let ((dired-toggle-window (selected-window))
-	     (dired-toggle-buffer (window-buffer (selected-window))))
-	(dired-find-file-other-window)
-	(delete-window dired-toggle-window)
-	(kill-buffer dired-toggle-buffer)))
+            (dired-toggle-buffer (window-buffer (selected-window))))
+        (dired-find-file-other-window)
+        (delete-window dired-toggle-window)
+        (kill-buffer dired-toggle-buffer)))
     (when (eq major-mode 'dired-mode)
       (dired-toggle-mode dired-toggle-enabled)
       (dired-hide-details-mode dired-hide-details-enabled))))
@@ -46,11 +46,11 @@ instead of burying it."
 (setq dired-toggle-window-side 'left)
 
 (add-hook 'dired-toggle-mode-hook
-	  (lambda ()
-	    (interactive)
-	    (visual-line-mode 1)
-	    (setq-local visual-line-fringe-indicators '(nil right-curly-arrow))
-	    (setq-local word-wrap nil)))
+          (lambda ()
+            (interactive)
+            (visual-line-mode 1)
+            (setq-local visual-line-fringe-indicators '(nil right-curly-arrow))
+            (setq-local word-wrap nil)))
 
 (global-set-key (kbd "C-c d t") #'dired-toggle)
 
