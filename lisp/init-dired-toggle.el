@@ -40,6 +40,7 @@ instead of burying it."
 (define-key dired-toggle-mode-map (kbd "RET") #'dired-toggle-my-find-file)
 (define-key dired-toggle-mode-map (kbd "q") #'dired-toggle-my-quit)
 (define-key dired-toggle-mode-map (kbd "^") #'dired-toggle-up-directory)
+(define-key dired-toggle-mode-map (kbd "z") #'dired-toggle-up-directory)
 
 (setq dired-toggle-window-size 32)
 (setq dired-toggle-window-side 'left)

@@ -34,6 +34,7 @@
       dired-hide-details-hide-information-lines nil)
 
 (define-key dired-mode-map (kbd "C-c .") #'toggle-other-files)
+(define-key dired-mode-map (kbd "z") #'dired-up-directory)
 
 (add-hook 'dired-mode-hook #'hl-line-mode)
 (add-hook 'dired-mode-hook #'dired-hide-details-mode)
