@@ -40,12 +40,14 @@ collection.  Use revert-gc-cons-percentage to restore the value."
 
 ;;;; Emacs-wide initializations
 
-(winner-mode 1)
-(fset 'yes-or-no-p 'y-or-n-p)
+;; Always enable the following functions
 (put 'downcase-region 'disabled nil)
 (put 'upcase-region 'disabled nil)
 (put 'dired-find-alternate-file 'disabled nil)
 (put 'narrow-to-region 'disabled nil)
+
+(winner-mode 1)
+(fset 'yes-or-no-p 'y-or-n-p)
 
 ;; Do not ask to follow symlinks; always follow
 (setq vc-follow-symlinks t)
@@ -75,20 +77,24 @@ collection.  Use revert-gc-cons-percentage to restore the value."
 ;; Tabs and spaces handling
 (setq-default tab-width 4)
 
+(defun turn-off-indent-tabs-mode () (setq indent-tabs-mode nil))
+(add-hook 'emacs-lisp-mode-hook #'turn-off-indent-tabs-mode)
+
+(add-hook 'before-save-hook 'delete-trailing-whitespace)
+
+;; Line display
 (global-set-key (kbd "C-c t l") #'toggle-truncate-lines)
-(global-set-key (kbd "C-x C-S-c") 'save-buffers-kill-emacs)
-(global-set-key (kbd "M-SPC") 'cycle-spacing)
-(global-set-key (kbd "C-x C-m") (key-binding (kbd "M-x")))
+(global-set-key (kbd "C-c h l") #'hl-line-mode)
 
 ;; Window management
 (global-set-key (kbd "C-`") (key-binding (kbd "C-x o")))
 (global-set-key (kbd "C-~") 'swap-buffer-with-other)
 (global-set-key (kbd "C-M-~") 'swap-buffer-with-largest)
 
-(defun turn-off-indent-tabs-mode () (setq indent-tabs-mode nil))
-(add-hook 'emacs-lisp-mode-hook #'turn-off-indent-tabs-mode)
-
-(add-hook 'before-save-hook 'delete-trailing-whitespace)
+;; Other key bindings
+(global-set-key (kbd "C-x C-S-c") 'save-buffers-kill-emacs)
+(global-set-key (kbd "M-SPC") 'cycle-spacing)
+(global-set-key (kbd "C-x C-m") (key-binding (kbd "M-x")))
 
 (add-hook 'emacs-startup-hook
           (lambda ()
