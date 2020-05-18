@@ -38,44 +38,6 @@ collection.  Use revert-gc-cons-percentage to restore the value."
 (add-hook 'isearch-mode-hook #'increase-gc-cons-percentage)
 (add-hook 'isearch-mode-end-hook #'revert-gc-cons-percentage)
 
-;;;; Package initializations
-
-(add-to-list 'load-path (expand-file-name "lisp" user-emacs-directory))
-
-(require 'init-package)
-
-(require 'init-aggressive-indent)
-(require 'init-browse-kill-ring)
-(require 'init-bs)
-(require 'init-company)
-(require 'init-diminish)
-(require 'init-dired)
-(require 'init-dired-toggle)
-(require 'init-discover-my-major)
-(require 'init-erc)
-(require 'init-expand-region)
-(require 'init-hippie-expand)
-;; (require 'init-ibuffer)
-(require 'init-icomplete)
-;; (require 'init-ido)
-(require 'init-isearch)
-;; (require 'init-ivy)
-(require 'init-js2-mode)
-(require 'init-json-navigator)
-(require 'init-latex)
-(require 'init-magit)
-(require 'init-org)
-(require 'init-origami)
-(require 'init-plantuml)
-(require 'init-prism)
-(require 'init-recentf)
-(require 'init-smartparens)
-(require 'init-transpose-frame)
-(require 'init-which-key)
-
-(require 'init-gui)
-(require 'init-etc)
-
 ;;;; Emacs-wide initializations
 
 (winner-mode 1)
@@ -123,11 +85,6 @@ collection.  Use revert-gc-cons-percentage to restore the value."
 (global-set-key (kbd "C-~") 'swap-buffer-with-other)
 (global-set-key (kbd "C-M-~") 'swap-buffer-with-largest)
 
-;; Set up customize
-(setq custom-file (expand-file-name "custom.el" user-emacs-directory))
-(when (file-exists-p custom-file)
-  (load custom-file))
-
 (defun turn-off-indent-tabs-mode () (setq indent-tabs-mode nil))
 (add-hook 'emacs-lisp-mode-hook #'turn-off-indent-tabs-mode)
 
@@ -136,6 +93,51 @@ collection.  Use revert-gc-cons-percentage to restore the value."
 (add-hook 'emacs-startup-hook
           (lambda ()
             (message (concat "Emacs startup took " (emacs-init-time) " with " (number-to-string gcs-done) " GCs."))))
+
+;;;; Load Customize file
+
+(setq custom-file (expand-file-name "custom.el" user-emacs-directory))
+(when (file-exists-p custom-file)
+  (load custom-file))
+
+;;;; Package initializations
+
+(add-to-list 'load-path (expand-file-name "lisp" user-emacs-directory))
+
+(require 'init-package)
+(ensure-all-packages-installed)
+
+(require 'init-aggressive-indent)
+(require 'init-browse-kill-ring)
+(require 'init-bs)
+(require 'init-company)
+(require 'init-diminish)
+(require 'init-dired)
+(require 'init-dired-toggle)
+(require 'init-discover-my-major)
+(require 'init-erc)
+(require 'init-expand-region)
+(require 'init-hippie-expand)
+;; (require 'init-ibuffer)
+(require 'init-icomplete)
+;; (require 'init-ido)
+(require 'init-isearch)
+;; (require 'init-ivy)
+(require 'init-js2-mode)
+(require 'init-json-navigator)
+(require 'init-latex)
+(require 'init-magit)
+(require 'init-org)
+(require 'init-origami)
+(require 'init-plantuml)
+(require 'init-prism)
+(require 'init-recentf)
+(require 'init-smartparens)
+(require 'init-transpose-frame)
+(require 'init-which-key)
+
+(require 'init-gui)
+(require 'init-etc)
 
 (provide 'init)
 ;;; init.el ends here

@@ -13,5 +13,11 @@
 (add-to-list 'package-archives '("ox-odt" . "https://kjambunathan.github.io/elpa/"))
 (package-initialize)
 
+(defun ensure-all-packages-installed ()
+  (dolist (package package-selected-packages)
+    (unless (package-installed-p package)
+      (message "Installing missing package `%s'" package)
+      (package-install package))))
+
 (provide 'init-package)
 ;;; init-package.el ends here
