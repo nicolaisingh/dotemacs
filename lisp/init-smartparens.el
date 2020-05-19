@@ -16,6 +16,8 @@
 
 (add-hook 'lisp-mode-hook #'smartparens-mode)
 (add-hook 'emacs-lisp-mode-hook #'smartparens-mode)
+(add-hook 'clojure-mode-hook #'smartparens-mode)
+(add-hook 'clojurescript-mode-hook #'smartparens-mode)
 
 (provide 'init-smartparens)
 ;;; init-smartparens.el ends here

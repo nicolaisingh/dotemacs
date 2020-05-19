@@ -144,6 +144,7 @@ collection.  Use revert-gc-cons-percentage to restore the value."
 
 (require 'init-gui)
 (require 'init-etc)
+(require 'init-clojurescript)
 
 (provide 'init)
 ;;; init.el ends here
