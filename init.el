@@ -121,6 +121,7 @@ collection.  Use revert-gc-cons-percentage to restore the value."
 (require 'init-dired)
 (require 'init-dired-toggle)
 (require 'init-discover-my-major)
+(require 'init-ediff)
 (require 'init-erc)
 (require 'init-expand-region)
 (require 'init-hippie-expand)
