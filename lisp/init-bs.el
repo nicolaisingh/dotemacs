@@ -8,7 +8,20 @@
 
 (require 'bs)
 
-(setq bs-default-configuration "files-and-scratch"
+(defun bs-must-show-modes (buf)
+  "Return non-nil for buffers matching specific modes.  Used for
+the configuration 'files-plus-some-buffers-and-modes."
+  (let ((major-mode (buffer-local-value 'major-mode buf)))
+    (find major-mode '(term-mode shell-mode fundamental-mode))))
+
+;; Additional bs config that shows files, some buffer names and modes.
+(add-to-list 'bs-configurations
+             '("files-plus-some-buffers-and-modes"
+               "^\\(\\*scratch\\*\\|test\\)$" bs-must-show-modes
+               nil bs-visits-non-file
+               bs-sort-buffer-interns-are-last))
+
+(setq bs-default-configuration "files-plus-some-buffers-and-modes"
       bs-max-window-height 30
       bs-minimal-buffer-name-column 25)
 
