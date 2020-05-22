@@ -28,6 +28,16 @@
   (message-other-files-state)
   (dired-sort-other (dired-set-listing-switches)))
 
+(defun current-directory-find-name-dired (pattern)
+  "Call `find-name-dired' using dired's current directory."
+  (interactive "sFind-name (filename wildcard): ")
+  (find-name-dired (dired-current-directory) pattern))
+
+(defun current-directory-find-grep-dired (regexp)
+  "Call `find-grep-dired' using dired's current directory."
+  (interactive "sFind-grep (grep regexp): ")
+  (find-grep-dired (dired-current-directory) regexp))
+
 (dired-set-listing-switches)
 
 (setq dired-hide-details-hide-symlink-targets nil
@@ -35,6 +45,9 @@
 
 (define-key dired-mode-map (kbd "C-c .") #'toggle-other-files)
 (define-key dired-mode-map (kbd "z") #'dired-up-directory)
+(define-key dired-mode-map (kbd "C-c m .") #'toggle-other-files)
+(define-key dired-mode-map (kbd "C-c m f") #'current-directory-find-name-dired)
+(define-key dired-mode-map (kbd "C-c m g") #'current-directory-find-grep-dired)
 
 (add-hook 'dired-mode-hook #'hl-line-mode)
 (add-hook 'dired-mode-hook #'dired-hide-details-mode)
