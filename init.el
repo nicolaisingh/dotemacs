@@ -113,6 +113,9 @@ collection.  Use revert-gc-cons-percentage to restore the value."
 (require 'init-package)
 (ensure-all-packages-installed)
 
+(require 'init-gui)
+(require 'init-etc)
+
 (require 'init-aggressive-indent)
 (require 'init-browse-kill-ring)
 (require 'init-bs)
@@ -143,8 +146,6 @@ collection.  Use revert-gc-cons-percentage to restore the value."
 (require 'init-transpose-frame)
 (require 'init-which-key)
 
-(require 'init-gui)
-(require 'init-etc)
 (require 'init-clojurescript)
 
 (provide 'init)
