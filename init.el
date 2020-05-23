@@ -137,6 +137,7 @@ collection.  Use revert-gc-cons-percentage to restore the value."
 (require 'init-json-navigator)
 (require 'init-latex)
 (require 'init-magit)
+(require 'init-multiple-cursors)
 (require 'init-org)
 (require 'init-origami)
 (require 'init-plantuml)
