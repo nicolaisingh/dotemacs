@@ -69,7 +69,8 @@ C-h o		describe-symbol
 
 (setq-default cursor-type 'bar)
 
-(load-theme 'dichromacy)
+;; (load-theme 'dichromacy)
+(load-theme 'tsdh-light)
 
 (setq my-font "DejaVu Sans Mono-9:weight=book:width=regular")
 (set-face-attribute 'default t :font my-font)
