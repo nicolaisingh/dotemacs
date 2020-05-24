@@ -16,6 +16,8 @@
 (setq company-transformers '(company-sort-by-occurrence
                              company-sort-by-backend-importance))
 
+(add-to-list 'company-backends 'company-restclient)
+
 (eval-after-load 'company
   '(progn (define-key company-active-map (kbd "C-n") 'company-select-next)
           (define-key company-active-map (kbd "C-p") 'company-select-previous)))

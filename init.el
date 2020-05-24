@@ -143,6 +143,7 @@ collection.  Use revert-gc-cons-percentage to restore the value."
 (require 'init-plantuml)
 (require 'init-prism)
 (require 'init-recentf)
+(require 'init-restclient)
 (require 'init-smartparens)
 (require 'init-transpose-frame)
 (require 'init-which-key)
