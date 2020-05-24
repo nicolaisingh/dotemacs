@@ -72,6 +72,10 @@ C-h o		describe-symbol
 ;; (load-theme 'dichromacy)
 (load-theme 'tsdh-light)
 
+;; tsdh-light's #a0a1a7 is too light for me
+(set-face-attribute 'font-lock-comment-face t
+                    :foreground "#8c8d91")
+
 (setq my-font "DejaVu Sans Mono-9:weight=book:width=regular")
 (set-face-attribute 'default t :font my-font)
 
