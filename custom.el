@@ -24,7 +24,7 @@
  '(org-agenda-files (quote ("~/org/notes.org" "~/org/personal.org")))
  '(package-selected-packages
    (quote
-    (company-restclient restclient know-your-http-well multiple-cursors inf-clojure clojure-mode aggressive-indent tree-mode json-navigator prism find-file-in-repository dired-toggle diminish transpose-frame amx ido-completing-read+ ox-odt unfill readline-complete writeroom-mode counsel-projectile projectile magit htmlize discover-my-major lsp-ui company-lsp lsp-mode flycheck flycheck-kotlin typing company-auctex company edit-server js2-mode kotlin-mode smartparens json-mode origami browse-kill-ring ace-window which-key counsel afternoon-theme plantuml-mode avy avy-zap ivy centered-cursor-mode change-inner expand-region modalka smex cyberpunk-theme ido-vertical-mode pdf-tools auctex)))
+    (graphviz-dot-mode company-restclient restclient know-your-http-well multiple-cursors inf-clojure clojure-mode aggressive-indent tree-mode json-navigator prism find-file-in-repository dired-toggle diminish transpose-frame amx ido-completing-read+ ox-odt unfill readline-complete writeroom-mode counsel-projectile projectile magit htmlize discover-my-major lsp-ui company-lsp lsp-mode flycheck flycheck-kotlin typing company-auctex company edit-server js2-mode kotlin-mode smartparens json-mode origami browse-kill-ring ace-window which-key counsel afternoon-theme plantuml-mode avy avy-zap ivy centered-cursor-mode change-inner expand-region modalka smex cyberpunk-theme ido-vertical-mode pdf-tools auctex)))
  '(plantuml-default-exec-mode (quote jar))
  '(window-divider-default-right-width 3)
  '(window-divider-mode t)
