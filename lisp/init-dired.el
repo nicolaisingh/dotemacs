@@ -56,6 +56,29 @@ https://oremacs.com/2017/03/18/dired-ediff"
       (ediff-files (first files) (second files))
       (add-hook 'ediff-after-quit-hook-internal #'restore-window-config))))
 
+(defun apply-safely (function input)
+  "Basically apply, but with safety checks on the function
+arity."
+  (if (not (fboundp function))
+      (error "%s is not a function" function)
+    (let* ((arity (func-arity function))
+           (min-arity (car arity))
+           (max-arity (cdr arity))
+           (input-length (length input)))
+      (if (not (or (and (numberp max-arity)
+                        (>= input-length min-arity)
+                        (<= input-length max-arity))
+                   (and (>= input-length min-arity)
+                        (eq 'many max-arity))))
+          (error "Input does not match function arity")
+        (apply function input)))))
+
+(defun apply-to-marked-files (function)
+  "Prompt for a function and pass the marked dired entries as its
+arguments."
+  (interactive "CApply to marked dired entries: ")
+  (apply-safely function (dired-get-marked-files)))
+
 (dired-set-listing-switches)
 
 (setq dired-hide-details-hide-symlink-targets nil
@@ -67,6 +90,7 @@ https://oremacs.com/2017/03/18/dired-ediff"
 (define-key dired-mode-map (kbd "C-c m f") #'current-directory-find-name-dired)
 (define-key dired-mode-map (kbd "C-c m g") #'current-directory-find-grep-dired)
 (define-key dired-mode-map (kbd "C-c m d") #'ediff-marked-files)
+(define-key dired-mode-map (kbd "C-c m !") #'apply-to-marked-files)
 
 (add-hook 'dired-mode-hook #'hl-line-mode)
 (add-hook 'dired-mode-hook #'dired-hide-details-mode)
