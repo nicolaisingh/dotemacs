@@ -14,9 +14,12 @@
   (find-file (expand-file-name "init.el" user-emacs-directory)))
 
 (defun sudo-find-alternate-file ()
-  "Find this file as sudo."
+  "Find a file/directory as sudo."
   (interactive)
-  (find-alternate-file (concat "/sudo::" (buffer-file-name))))
+  (cond
+   ((derived-mode-p 'dired-mode) (find-alternate-file (concat "/sudo::" (dired-current-directory))))
+   ((unless (buffer-file-name) (error "Buffer is not visiting a file")))
+   (t (find-alternate-file (concat "/sudo::" (buffer-file-name))))))
 
 (defun scratch-buffer ()
   "Find the *scratch* buffer."
