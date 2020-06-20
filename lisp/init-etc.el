@@ -13,15 +13,15 @@
   (interactive)
   (find-file (expand-file-name "init.el" user-emacs-directory)))
 
-(defun my-sudo-find-alternate-file ()
+(defun sudo-find-alternate-file ()
   "Find this file as sudo."
   (interactive)
   (find-alternate-file (concat "/sudo::" (buffer-file-name))))
 
-(defun my-scratch-buffer ()
+(defun scratch-buffer ()
   "Find the *scratch* buffer."
   (interactive)
-  (switch-to-buffer-other-window (get-buffer-create "*scratch*")))
+  (switch-to-buffer (get-buffer-create "*scratch*")))
 
 (defun my-delete-undo-history ()
   "Delete the undo history of this buffer."
@@ -65,9 +65,21 @@ buffer, and then select the largest window."
   (setq-default indent-tabs-mode nil)
   (untabify (point-min) (point-max)))
 
+(defun mark-line (&optional arg)
+  (interactive "p")
+  (if (and (region-active-p)
+           (eq last-command this-command))
+      (forward-line (if (> (mark) (point)) -1 1))
+    (push-mark)
+    (push-mark (beginning-of-line) nil t)
+    (forward-line arg)))
+
 (global-set-key (kbd "C-x C-f") #'my-find-file)
 (global-set-key (kbd "C-c i TAB") #'indent-using-tabs)
 (global-set-key (kbd "C-c i SPC") #'indent-using-spaces)
+(global-set-key (kbd "C-c f #") #'sudo-find-alternate-file)
+(global-set-key (kbd "C-c f s") #'scratch-buffer)
+(global-set-key (kbd "C-c m l") #'mark-line)
 
 (provide 'init-etc)
 ;;; init-etc.el ends here.
