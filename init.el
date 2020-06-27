@@ -77,6 +77,9 @@ collection.  Use revert-gc-cons-percentage to restore the value."
 ;; Tabs and spaces handling
 (setq-default tab-width 4)
 
+;; Don't ask when reverting for the following regex
+(setq revert-without-query '("^.*\\.pdf$"))
+
 (defun turn-off-indent-tabs-mode () (setq indent-tabs-mode nil))
 (add-hook 'emacs-lisp-mode-hook #'turn-off-indent-tabs-mode)
 
