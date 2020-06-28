@@ -96,7 +96,10 @@ C-h o		describe-symbol
 (add-to-list 'default-frame-alist `(font . ,my-font))
 (add-to-list 'default-frame-alist '(height . 60))
 (add-to-list 'default-frame-alist '(width . 180))
-(add-to-list 'default-frame-alist '(background-color . "white"))
+
+;; Having a background-color in terminals shows the wrong color
+(add-to-list 'window-system-default-frame-alist '(x . ((background-color . "white"))))
+(add-to-list 'window-system-default-frame-alist '(ns . ((background-color . "white"))))
 
 (provide 'init-gui)
 ;;; init-gui.el ends here
