@@ -77,6 +77,13 @@ buffer, and then select the largest window."
     (push-mark (beginning-of-line) nil t)
     (forward-line arg)))
 
+(defun handle-large-file ()
+  (interactive)
+  (when (> (buffer-size) large-file-warning-threshold)
+    (font-lock-mode -1)))
+
+(add-hook 'find-file-hook #'handle-large-file)
+
 (global-set-key (kbd "C-x C-f") #'my-find-file)
 (global-set-key (kbd "C-c i TAB") #'indent-using-tabs)
 (global-set-key (kbd "C-c i SPC") #'indent-using-spaces)
