@@ -38,13 +38,6 @@
   (interactive "sFind-grep (grep regexp): ")
   (find-grep-dired (dired-current-directory) regexp))
 
-(defun restore-window-config ()
-  "Restore the previous window configuration before
-ediff-marked-files was ran."
-  (remove-hook 'ediff-after-quit-hook-internal #'ediff-restore-window-config)
-  (set-window-configuration my--previous-window-config)
-  (setq my--previous-window-config nil))
-
 (defun ediff-marked-files ()
   "Run ediff-files on 2 marked files in dired.  Inspired by
 https://oremacs.com/2017/03/18/dired-ediff"
@@ -52,9 +45,7 @@ https://oremacs.com/2017/03/18/dired-ediff"
   (let ((files (dired-get-marked-files)))
     (if (not (= (length files) 2))
         (error "Marked files != 2")
-      (setq my--previous-window-config (current-window-configuration))
-      (ediff-files (first files) (second files))
-      (add-hook 'ediff-after-quit-hook-internal #'restore-window-config))))
+      (ediff-files (first files) (second files)))))
 
 (defun apply-safely (function input)
   "Basically apply, but with safety checks on the function
