@@ -93,6 +93,8 @@ C-h o		describe-symbol
                     :background "gray96"
                     :box '(:line-width 1 :color "gray60" :style nil))
 
+(add-to-list 'initial-frame-alist '(fullscreen . maximized))
+
 (add-to-list 'default-frame-alist `(font . ,my-font))
 (add-to-list 'default-frame-alist '(height . 60))
 (add-to-list 'default-frame-alist '(width . 180))
