@@ -69,6 +69,10 @@ C-h o		describe-symbol
 
 (setq-default cursor-type 'bar)
 
+;; Make the fringe slightly thicker
+(add-to-list 'fringe-styles '("padded" 12))
+(fringe-mode 12)
+
 ;; (load-theme 'dichromacy)
 (load-theme 'tsdh-light)
 
@@ -84,6 +88,9 @@ C-h o		describe-symbol
 (set-face-attribute 'show-paren-match t
                     :weight 'bold
                     :background "gray95")
+
+(set-face-attribute 'fringe t
+                    :background "gray98")
 
 (set-face-attribute 'mode-line t
                     :foreground "gray30"
