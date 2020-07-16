@@ -68,6 +68,14 @@ buffer, and then select the largest window."
   (setq-default indent-tabs-mode nil)
   (untabify (point-min) (point-max)))
 
+(defun indent-tab-width-4 ()
+  (interactive)
+  (setq-local tab-width 4))
+
+(defun indent-tab-width-8 ()
+  (interactive)
+  (setq-local tab-width 8))
+
 (defun mark-line (&optional arg)
   (interactive "p")
   (if (and (region-active-p)
@@ -105,6 +113,8 @@ times."
 (global-set-key (kbd "C-x C-f") #'my-find-file)
 (global-set-key (kbd "C-c i TAB") #'indent-using-tabs)
 (global-set-key (kbd "C-c i SPC") #'indent-using-spaces)
+(global-set-key (kbd "C-c i 4") #'indent-tab-width-4)
+(global-set-key (kbd "C-c i 8") #'indent-tab-width-8)
 (global-set-key (kbd "C-c f #") #'sudo-find-alternate-file)
 (global-set-key (kbd "C-c f s") #'scratch-buffer)
 (global-set-key (kbd "C-c m l") #'mark-line)
