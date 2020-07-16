@@ -82,6 +82,24 @@ buffer, and then select the largest window."
   (when (> (buffer-size) large-file-warning-threshold)
     (font-lock-mode -1)))
 
+(defun benchmark-this (repetitions)
+  "Time the execution of the last sexp or the region if active.
+Specify a prefix argument to perform the execution REPETITIONS
+times."
+  (interactive "p")
+  (let ((form (if (use-region-p)
+                  (read (concat "(progn "
+                                (buffer-substring-no-properties
+                                 (region-beginning)
+                                 (region-end))
+                                ")"))
+                (pp-last-sexp))))
+    (if (not form)
+        (error "No form found")
+      (message "Form: %S\nBenchmark: %S"
+               form
+               (eval `(benchmark-run ,repetitions ,form))))))
+
 (add-hook 'find-file-hook #'handle-large-file)
 
 (global-set-key (kbd "C-x C-f") #'my-find-file)
