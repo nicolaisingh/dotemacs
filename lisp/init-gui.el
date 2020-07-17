@@ -83,7 +83,7 @@ C-h o		describe-symbol
 (setq my-font "DejaVu Sans Mono-9:weight=book:width=regular")
 (set-face-attribute 'default t
                     :font my-font
-                    :background "white")
+                    :background "#ffffff")
 
 (set-face-attribute 'show-paren-match t
                     :weight 'bold
