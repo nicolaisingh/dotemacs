@@ -7,12 +7,9 @@
 
 ;;; Code:
 
-;; (pdf-tools-install)
 (add-hook 'LaTeX-mode-hook
           (lambda()
             (add-to-list 'TeX-view-program-selection '(output-pdf "PDF Tools"))))
-
-(add-hook 'after-init-hook 'pdf-tools-install)
 
 (setq TeX-auto-save t)
 (setq TeX-parse-self t)

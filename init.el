@@ -149,6 +149,7 @@ collection.  Use revert-gc-cons-percentage to restore the value."
 (require 'init-multiple-cursors)
 (require 'init-org)
 (require 'init-origami)
+(require 'init-pdf)
 (require 'init-plantuml)
 (require 'init-prism)
 (require 'init-recentf)
