@@ -93,11 +93,6 @@ collection.  Use revert-gc-cons-percentage to restore the value."
 (global-set-key (kbd "C-c t l") #'toggle-truncate-lines)
 (global-set-key (kbd "C-c h l") #'hl-line-mode)
 
-;; Window management
-(global-set-key (kbd "C-`") (key-binding (kbd "C-x o")))
-(global-set-key (kbd "C-~") 'swap-buffer-with-other)
-(global-set-key (kbd "C-M-~") 'swap-buffer-with-largest)
-
 ;; Other key bindings
 (global-set-key (kbd "C-x C-S-c") 'save-buffers-kill-emacs)
 (global-set-key (kbd "M-SPC") 'cycle-spacing)
