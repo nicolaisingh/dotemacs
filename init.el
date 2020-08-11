@@ -9,7 +9,7 @@
 ;;;; GC setup
 
 (setq original-gc-cons-percentage gc-cons-percentage
-      higher-gc-cons-percentage 0.6)
+      higher-gc-cons-percentage 0.75)
 (setq gc-idle-timer nil)
 
 (defun start-gc-idle-timer ()
@@ -31,7 +31,8 @@ collection.  Use revert-gc-cons-percentage to restore the value."
 (add-hook 'after-init-hook
           (lambda ()
             (revert-gc-cons-percentage)
-            (setq garbage-collection-messages 1)))
+            (garbage-collect)
+            (setq garbage-collection-messages nil)))
 
 (add-hook 'minibuffer-setup-hook #'increase-gc-cons-percentage)
 (add-hook 'minibuffer-exit-hook #'revert-gc-cons-percentage)
