@@ -20,6 +20,9 @@
   (setq isearch-success nil)
   (isearch-cancel))
 
+;; Show match numbers in the search prompt
+(setq isearch-lazy-count t)
+
 (define-key isearch-mode-map (kbd "C-g") 'my-isearch-control-g)
 
 (provide 'init-isearch)

@@ -11,7 +11,9 @@
 
 (add-to-list 'package-archives '("melpa" . "https://melpa.org/packages/"))
 (add-to-list 'package-archives '("ox-odt" . "https://kjambunathan.github.io/elpa/"))
-(package-initialize)
+
+(when (< emacs-major-version 27)
+  (package-initialize))
 
 (defun ensure-all-packages-installed ()
   (dolist (package package-selected-packages)

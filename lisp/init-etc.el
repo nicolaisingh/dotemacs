@@ -15,12 +15,15 @@
   (find-file (expand-file-name "init.el" user-emacs-directory)))
 
 (defun sudo-find-alternate-file ()
-  "Find a file/directory as sudo."
+  "Find a file/directory as sudo.
+Emacs 27 introduced a connection method `/sudoedit' for security
+reasons.  Use this if it is available.  Otherwise, use `/sudo'."
   (interactive)
-  (cond
-   ((derived-mode-p 'dired-mode) (find-alternate-file (concat "/sudo::" (dired-current-directory))))
-   ((unless (buffer-file-name) (error "Buffer is not visiting a file")))
-   (t (find-alternate-file (concat "/sudo::" (buffer-file-name))))))
+  (let ((sudomethod (if (< emacs-major-version 27) "/sudo::" "/sudoedit::")))
+    (cond
+     ((derived-mode-p 'dired-mode) (find-alternate-file (concat sudomethod (dired-current-directory))))
+     ((unless (buffer-file-name) (error "Buffer is not visiting a file")))
+     (t (find-alternate-file (concat sudomethod (buffer-file-name)))))))
 
 (defun scratch-buffer ()
   "Find the *scratch* buffer."
