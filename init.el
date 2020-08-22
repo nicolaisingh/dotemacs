@@ -143,6 +143,7 @@ collection.  Use revert-gc-cons-percentage to restore the value."
 (require 'init-latex)
 (require 'init-magit)
 (require 'init-multiple-cursors)
+(require 'init-native-complete)
 (require 'init-org)
 (require 'init-origami)
 (require 'init-pdf)

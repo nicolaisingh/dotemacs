@@ -17,6 +17,7 @@
                              company-sort-by-backend-importance))
 
 (add-to-list 'company-backends 'company-restclient)
+(add-to-list 'company-backends 'company-native-complete)
 
 (eval-after-load 'company
   '(progn (define-key company-active-map (kbd "C-n") 'company-select-next)
