@@ -14,16 +14,39 @@
   (interactive)
   (find-file (expand-file-name "init.el" user-emacs-directory)))
 
+(defun sudo-find-alternate-file-local (file-or-buffer)
+  "Find a local file/directory as sudo."
+  (let ((sudomethod (if (< emacs-major-version 27) "/sudo::" "/sudoedit::")))
+    (find-alternate-file (concat sudomethod file-or-buffer))))
+
+(defun sudo-find-alternate-file-tramp (tramp-file-name)
+  "Find a tramp file/directory as sudo."
+  (let ((sudomethod "sudo")
+        (sudouser "root")
+        (vec (tramp-dissect-file-name tramp-file-name)))
+    (find-alternate-file
+     (tramp-make-tramp-file-name
+      sudomethod
+      sudouser
+      (tramp-file-name-domain vec)
+      (tramp-file-name-host vec)
+      nil ;; PORT
+      (tramp-file-name-localname vec)
+      (tramp-make-tramp-hop-name vec)))))
+
 (defun sudo-find-alternate-file ()
   "Find a file/directory as sudo.
+
 Emacs 27 introduced a connection method `/sudoedit' for security
 reasons.  Use this if it is available.  Otherwise, use `/sudo'."
   (interactive)
-  (let ((sudomethod (if (< emacs-major-version 27) "/sudo::" "/sudoedit::")))
-    (cond
-     ((derived-mode-p 'dired-mode) (find-alternate-file (concat sudomethod (dired-current-directory))))
-     ((unless (buffer-file-name) (error "Buffer is not visiting a file")))
-     (t (find-alternate-file (concat sudomethod (buffer-file-name)))))))
+  (let ((current-buffer (cond
+                         ((derived-mode-p 'dired-mode) (dired-current-directory))
+                         ((buffer-file-name) (buffer-file-name))
+                         (t (error "Buffer is not visiting a file")))))
+    (if (tramp-tramp-file-p current-buffer)
+        (sudo-find-alternate-file-tramp current-buffer)
+      (sudo-find-alternate-file-local current-buffer))))
 
 (defun scratch-buffer ()
   "Find the *scratch* buffer."
