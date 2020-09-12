@@ -47,7 +47,7 @@
 
 (set-face-attribute 'mode-line t
                     :foreground "gray30"
-                    :background "slategray1"
+                    :background "slategray2"
                     :box '(:line-width 1 :color "gray30" :style nil))
 
 (set-face-attribute 'mode-line-inactive t
