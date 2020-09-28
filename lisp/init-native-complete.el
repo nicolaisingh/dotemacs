@@ -3,14 +3,17 @@
 ;;; Commentary:
 
 ;; This contains init customization for the package native-complete.
+;;
+;; Some notes:
+;; - For the company-mode completion backend, company-native-complete
+;; is set up in init-company
+;; - Put HISTCONTROL=ignoreboth in bashrc to avoid polluting the shell
+;; history with the `echo' commands made by this package
 
 ;;; Code:
 
 (with-eval-after-load 'shell
   (native-complete-setup-bash))
-
-;; NOTE: For the company-mode completion backend,
-;; company-native-complete is set up in init-company
 
 (provide 'init-native-complete)
 ;; init-native-complete.el ends here
