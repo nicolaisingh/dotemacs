@@ -92,6 +92,12 @@ reasons.  Use this if it is available.  Otherwise, use `/sudo'."
     (push-mark (beginning-of-line) nil t)
     (forward-line arg)))
 
+(defun toggle-line-and-column-numbers ()
+  "Toggle `line-number-mode' and `column-number-mode'."
+  (interactive)
+  (line-number-mode 'toggle)
+  (column-number-mode 'toggle))
+
 (defun handle-large-file ()
   (interactive)
   (when (> (buffer-size) large-file-warning-threshold)
@@ -125,6 +131,7 @@ times."
 (global-set-key (kbd "C-c f #") #'sudo-find-alternate-file)
 (global-set-key (kbd "C-c f s") #'scratch-buffer)
 (global-set-key (kbd "C-c m l") #'mark-line)
+(global-set-key (kbd "C-c l n") #'toggle-line-and-column-numbers)
 
 (provide 'init-etc)
 ;;; init-etc.el ends here.
