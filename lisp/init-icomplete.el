@@ -17,8 +17,6 @@
 
 (define-key minibuffer-local-filename-completion-map (kbd "SPC")
   #'minibuffer-complete-word)
-(define-key minibuffer-local-must-match-filename-map (kbd "SPC")
-  #'minibuffer-complete-word)
 
 (defun star-before-word-completion ()
   "Insert a literal `*' on the first invocation, then runs minibuffer-complete-word if invoked again.
