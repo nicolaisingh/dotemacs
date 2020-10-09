@@ -1,4 +1,4 @@
-;;; init-magit.el --- Init configuration.
+;;; init-magit.el --- Init configuration
 
 ;;; Commentary:
 

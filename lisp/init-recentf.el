@@ -1,4 +1,4 @@
-;;; init-recentf.el --- Init customization.
+;;; init-recentf.el --- Init customization
 
 ;;; Commentary:
 
@@ -12,7 +12,7 @@
       recentf-max-saved-items 100
       recentf-menu-filter 'recentf-sort-directories-ascending)
 
-(global-set-key (kbd "C-x C-S-f") 'recentf-open-files)
+(global-set-key (kbd "C-x C-S-f") #'recentf-open-files)
 
 (provide 'init-recentf)
 ;;; init-recentf.el ends here

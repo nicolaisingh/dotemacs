@@ -1,4 +1,4 @@
-;;; init-clojurescript.el --- Init configuration.
+;;; init-clojurescript.el --- Init configuration
 
 ;;; Commentary:
 

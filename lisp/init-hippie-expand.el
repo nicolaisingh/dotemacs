@@ -1,4 +1,4 @@
-;;; init-hippie-expand.el --- Init configuration for hippie-expand.
+;;; init-hippie-expand.el --- Init configuration for hippie-expand
 
 ;;; Commentary:
 

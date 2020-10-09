@@ -1,4 +1,4 @@
-;;; init-gui.el --- Init configuration.
+;;; init-gui.el --- Init configuration
 
 ;;; Commentary:
 

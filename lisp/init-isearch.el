@@ -1,4 +1,4 @@
-;;; init-isearch.el --- Init configuration.
+;;; init-isearch.el --- Init configuration
 
 ;;; Commentary:
 
@@ -23,7 +23,7 @@
 ;; Show match numbers in the search prompt
 (setq isearch-lazy-count t)
 
-(define-key isearch-mode-map (kbd "C-g") 'my-isearch-control-g)
+(define-key isearch-mode-map (kbd "C-g") #'my-isearch-control-g)
 
 (provide 'init-isearch)
 ;;; init-isearch.el ends here

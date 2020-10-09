@@ -1,4 +1,4 @@
-;;; init-hippie-expand.el --- Init configuration.
+;;; init-hippie-expand.el --- Init configuration
 
 ;;; Commentary:
 
@@ -20,10 +20,10 @@
 (add-to-list 'company-backends 'company-native-complete)
 
 (eval-after-load 'company
-  '(progn (define-key company-active-map (kbd "C-n") 'company-select-next)
-          (define-key company-active-map (kbd "C-p") 'company-select-previous)))
+  '(progn (define-key company-active-map (kbd "C-n") #'company-select-next)
+          (define-key company-active-map (kbd "C-p") #'company-select-previous)))
 
-(add-hook 'after-init-hook 'global-company-mode)
+(add-hook 'after-init-hook #'global-company-mode)
 
 (provide 'init-company)
 ;;; init-company.el ends here

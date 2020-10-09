@@ -1,4 +1,4 @@
-;;; init-prism.el --- Init customization.
+;;; init-prism.el --- Init customization
 
 ;;; Commentary:
 

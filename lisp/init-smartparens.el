@@ -1,4 +1,4 @@
-;;; init-smartparens.el --- Init customization.
+;;; init-smartparens.el --- Init customization
 
 ;;; Commentary:
 

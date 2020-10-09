@@ -1,4 +1,4 @@
-;;; init-expand-region.el --- Init customization.
+;;; init-expand-region.el --- Init customization
 
 ;;; Commentary:
 

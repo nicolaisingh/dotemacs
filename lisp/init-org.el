@@ -1,4 +1,4 @@
-;;; init-org.el --- Init configuration.
+;;; init-org.el --- Init configuration
 
 ;;; Commentary:
 
@@ -22,10 +22,10 @@
                       ("@learn" . ?l)
                       ("@home" . ?h)))
 
-(global-set-key (kbd "C-c o l") 'org-store-link)
-(global-set-key (kbd "C-c o c") 'org-capture)
-(global-set-key (kbd "C-c o a") 'org-agenda)
-(global-set-key (kbd "C-c o b") 'org-switchb)
+(global-set-key (kbd "C-c o l") #'org-store-link)
+(global-set-key (kbd "C-c o c") #'org-capture)
+(global-set-key (kbd "C-c o a") #'org-agenda)
+(global-set-key (kbd "C-c o b") #'org-switchb)
 
 (provide 'init-org)
 ;;; init-org.el ends here

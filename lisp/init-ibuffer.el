@@ -1,4 +1,4 @@
-;;; init-ibuffer.el --- Init customization.
+;;; init-ibuffer.el --- Init customization
 
 ;;; Commentary:
 

@@ -1,4 +1,4 @@
-;;; aggressive-indent.el --- Init configuration.
+;;; aggressive-indent.el --- Init configuration
 
 ;;; Commentary:
 

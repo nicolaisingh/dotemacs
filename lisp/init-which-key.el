@@ -1,4 +1,4 @@
-;;; init-which-key.el --- Init customization.
+;;; init-which-key.el --- Init customization
 
 ;;; Commentary:
 

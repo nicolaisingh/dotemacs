@@ -1,4 +1,4 @@
-;;; init-dired-toggle.el --- Init configuration.
+;;; init-dired-toggle.el --- Init configuration
 
 ;;; Commentary:
 

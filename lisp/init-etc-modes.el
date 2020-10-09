@@ -1,4 +1,4 @@
-;;; init-etc-modes.el --- Custom modes.
+;;; init-etc-modes.el --- Custom modes
 
 ;;; Commentary:
 

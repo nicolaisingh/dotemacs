@@ -1,4 +1,4 @@
-;;; init-discover-my-major.el --- Init configuration.
+;;; init-discover-my-major.el --- Init configuration
 
 ;;; Commentary:
 
@@ -8,8 +8,8 @@
 
 (require 'discover-my-major)
 
-(global-set-key (kbd "C-c d m") 'discover-my-major)
-(global-set-key (kbd "C-c d M") 'discover-my-mode)
+(global-set-key (kbd "C-c d m") #'discover-my-major)
+(global-set-key (kbd "C-c d M") #'discover-my-mode)
 
 (provide 'init-discover-my-major)
 ;;; init-discover-my-major.el ends here

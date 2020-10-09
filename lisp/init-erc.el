@@ -1,4 +1,4 @@
-;;; init-erc.el --- Init configuration.
+;;; init-erc.el --- Init configuration
 
 ;;; Commentary:
 

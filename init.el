@@ -1,4 +1,4 @@
-;;; init.el --- Nicolai's Emacs init file.
+;;; init.el --- Nicolai's Emacs init file
 
 ;;; Commentary:
 
@@ -88,15 +88,15 @@ collection.  Use revert-gc-cons-percentage to restore the value."
 (defun turn-off-indent-tabs-mode () (setq indent-tabs-mode nil))
 (add-hook 'emacs-lisp-mode-hook #'turn-off-indent-tabs-mode)
 
-(add-hook 'before-save-hook 'delete-trailing-whitespace)
+(add-hook 'before-save-hook #'delete-trailing-whitespace)
 
 ;; Line display
 (global-set-key (kbd "C-c t l") #'toggle-truncate-lines)
 (global-set-key (kbd "C-c h l") #'hl-line-mode)
 
 ;; Other key bindings
-(global-set-key (kbd "C-x C-S-c") 'save-buffers-kill-emacs)
-(global-set-key (kbd "M-SPC") 'cycle-spacing)
+(global-set-key (kbd "C-x C-S-c") #'save-buffers-kill-emacs)
+(global-set-key (kbd "M-SPC") #'cycle-spacing)
 (global-set-key (kbd "C-x C-m") (key-binding (kbd "M-x")))
 (global-set-key (kbd "C-z") #'repeat)
 

@@ -1,4 +1,4 @@
-;;; init-ivy.el --- Init configuration.
+;;; init-ivy.el --- Init configuration
 
 ;;; Commentary:
 

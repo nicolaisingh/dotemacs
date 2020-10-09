@@ -1,4 +1,4 @@
-;;; init-transpose-frame.el --- Init configuration.
+;;; init-transpose-frame.el --- Init configuration
 
 ;;; Commentary:
 
@@ -8,7 +8,7 @@
 
 (require 'transpose-frame)
 
-(global-set-key (kbd "C-c t f") 'transpose-frame)
+(global-set-key (kbd "C-c t f") #'transpose-frame)
 
 (provide 'init-transpose-frame)
 ;;; init-transpose-frame.el ends here

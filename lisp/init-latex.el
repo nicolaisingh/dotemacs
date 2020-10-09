@@ -1,4 +1,4 @@
-;;; init-latex.el --- Init configuration.
+;;; init-latex.el --- Init configuration
 
 ;;; Commentary:
 

@@ -1,4 +1,4 @@
-;;; init-etc.el --- Init configuration.
+;;; init-etc.el --- Init configuration
 
 ;;; Commentary:
 
@@ -134,4 +134,4 @@ times."
 (global-set-key (kbd "C-c l n") #'toggle-line-and-column-numbers)
 
 (provide 'init-etc)
-;;; init-etc.el ends here.
+;;; init-etc.el ends here

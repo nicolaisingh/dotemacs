@@ -1,4 +1,4 @@
-;;; init-bs.el --- Init configuration.
+;;; init-bs.el --- Init configuration
 
 ;;; Commentary:
 
@@ -29,7 +29,7 @@ the configuration 'files-plus-some-buffers-and-modes."
 ;; (setq bs-default-sort-name "by filename")
 (setq bs--current-sort-function (assoc "by filename" bs-sort-functions))
 
-(global-set-key (kbd "C-x C-b") 'bs-show)
+(global-set-key (kbd "C-x C-b") #'bs-show)
 (global-set-key (kbd "C-=") #'bs-cycle-next)
 (global-set-key (kbd "C-+") #'bs-cycle-previous)
 

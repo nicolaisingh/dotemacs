@@ -1,4 +1,4 @@
-;;; init-plantuml.el --- Init configuration.
+;;; init-plantuml.el --- Init configuration
 
 ;;; Commentary:
 

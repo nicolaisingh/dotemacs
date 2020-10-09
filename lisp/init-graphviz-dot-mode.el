@@ -1,4 +1,4 @@
-;;; graphviz-dot-mode.el --- Init configuration.
+;;; graphviz-dot-mode.el --- Init configuration
 
 ;;; Commentary:
 

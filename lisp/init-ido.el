@@ -1,4 +1,4 @@
-;;; init-ido.el --- Init configuration.
+;;; init-ido.el --- Init configuration
 
 ;;; Commentary:
 

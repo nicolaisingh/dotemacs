@@ -1,4 +1,4 @@
-;;; init-diminish.el --- Init customization.
+;;; init-diminish.el --- Init customization
 
 ;;; Commentary:
 
@@ -16,7 +16,7 @@
   (eval-after-load 'smartparens
     '(diminish 'smartparens-mode))
   (diminish 'auto-revert-mode))
-(add-hook 'after-init-hook 'load-diminish)
+(add-hook 'after-init-hook #'load-diminish)
 
 (provide 'init-diminish)
 ;;; init-diminish.el ends here

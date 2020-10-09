@@ -1,4 +1,4 @@
-;;; init-package.el --- Init configuration.
+;;; init-package.el --- Init configuration
 
 ;;; Commentary:
 

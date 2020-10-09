@@ -1,4 +1,4 @@
-;;; init-restclient.el --- Init configuration.
+;;; init-restclient.el --- Init configuration
 
 ;;; Commentary:
 

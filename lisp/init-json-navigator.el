@@ -1,4 +1,4 @@
-;;; init-json-navigator.el --- Init configuration.
+;;; init-json-navigator.el --- Init configuration
 
 ;;; Commentary:
 

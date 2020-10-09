@@ -1,4 +1,4 @@
-;;; init-dired.el --- Init configuration.
+;;; init-dired.el --- Init configuration
 
 ;;; Commentary:
 

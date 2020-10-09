@@ -1,4 +1,4 @@
-;;; init-ediff.el --- Init configuration.
+;;; init-ediff.el --- Init configuration
 
 ;;; Commentary:
 

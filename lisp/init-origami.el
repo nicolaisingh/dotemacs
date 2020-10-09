@@ -1,4 +1,4 @@
-;;; init-origami.el --- Init customization.
+;;; init-origami.el --- Init customization
 
 ;;; Commentary:
 
@@ -8,9 +8,9 @@
 
 (require 'origami)
 
-(define-key origami-mode-map (kbd "C-c f f") 'origami-toggle-node)
-(define-key origami-mode-map (kbd "C-c f O") 'origami-open-all-nodes)
-(define-key origami-mode-map (kbd "C-c f C") 'origami-close-all-nodes)
+(define-key origami-mode-map (kbd "C-c f f") #'origami-toggle-node)
+(define-key origami-mode-map (kbd "C-c f O") #'origami-open-all-nodes)
+(define-key origami-mode-map (kbd "C-c f C") #'origami-close-all-nodes)
 
 (global-origami-mode)
 

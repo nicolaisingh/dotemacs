@@ -1,4 +1,4 @@
-;;; init-multiple-cursors.el --- Init configuration.
+;;; init-multiple-cursors.el --- Init configuration
 
 ;;; Commentary:
 
@@ -25,10 +25,10 @@
       (message "<C-p> to mark previous, <C-n> to mark next, <C-P> to remove, <C-N> to skip")
     (message "<C-n> to mark next, <C-p> to mark previous, <C-N> to remove, <C-P> to skip")))
 
-(define-key mc/mark-more-like-this-extended-keymap (kbd "C-p") 'mc/mmlte--up)
-(define-key mc/mark-more-like-this-extended-keymap (kbd "C-n") 'mc/mmlte--down)
-(define-key mc/mark-more-like-this-extended-keymap (kbd "C-S-n") 'mc/mmlte--left)
-(define-key mc/mark-more-like-this-extended-keymap (kbd "C-S-p") 'mc/mmlte--right)
+(define-key mc/mark-more-like-this-extended-keymap (kbd "C-p") #'mc/mmlte--up)
+(define-key mc/mark-more-like-this-extended-keymap (kbd "C-n") #'mc/mmlte--down)
+(define-key mc/mark-more-like-this-extended-keymap (kbd "C-S-n") #'mc/mmlte--left)
+(define-key mc/mark-more-like-this-extended-keymap (kbd "C-S-p") #'mc/mmlte--right)
 
 (provide 'init-multiple-cursors)
 ;;; init-multiple-cursors.el ends here

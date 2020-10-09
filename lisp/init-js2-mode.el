@@ -1,4 +1,4 @@
-;;; init-js2-mode.el --- Init customization.
+;;; init-js2-mode.el --- Init customization
 
 ;;; Commentary:
 
