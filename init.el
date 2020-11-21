@@ -81,6 +81,7 @@ collection.  Use revert-gc-cons-percentage to restore the value."
 (setq-default tab-width 4)
 (add-hook 'shell-mode-hook #'indent-tab-width-8)
 (add-hook 'emacs-lisp-mode-hook #'indent-tab-width-8)
+(add-hook 'kotlin-mode-hook #'indent-spaces)
 
 ;; Don't ask when reverting for the following regex
 (setq revert-without-query '("^.*\\.pdf$"))

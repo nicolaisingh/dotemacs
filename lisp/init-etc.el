@@ -83,6 +83,10 @@ reasons.  Use this if it is available.  Otherwise, use `/sudo'."
   (interactive)
   (setq-local tab-width 8))
 
+(defun indent-spaces ()
+  (interactive)
+  (setq-local indent-tabs-mode nil))
+
 (defun mark-line (&optional arg)
   (interactive "p")
   (if (and (region-active-p)
