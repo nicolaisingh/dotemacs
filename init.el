@@ -132,6 +132,7 @@ collection.  Use revert-gc-cons-percentage to restore the value."
 (require 'init-ediff)
 (require 'init-erc)
 (require 'init-expand-region)
+(require 'init-flycheck)
 (require 'init-graphviz-dot-mode)
 (require 'init-hippie-expand)
 ;; (require 'init-ibuffer)
@@ -157,6 +158,7 @@ collection.  Use revert-gc-cons-percentage to restore the value."
 (require 'init-which-key)
 
 (require 'init-clojurescript)
+(require 'init-kotlin)
 
 (provide 'init)
 ;;; init.el ends here
