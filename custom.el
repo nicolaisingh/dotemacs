@@ -23,7 +23,7 @@
  '(mode-line-percent-position nil)
  '(org-agenda-files '("~/org/notes.org" "~/org/personal.org"))
  '(package-selected-packages
-   '(currency-convert company-native-complete native-complete saveplace-pdf-view graphviz-dot-mode company-restclient restclient know-your-http-well multiple-cursors inf-clojure clojure-mode aggressive-indent tree-mode json-navigator prism find-file-in-repository dired-toggle diminish transpose-frame amx unfill readline-complete writeroom-mode counsel-projectile magit htmlize discover-my-major lsp-ui company-lsp lsp-mode flycheck flycheck-kotlin typing company edit-server js2-mode kotlin-mode smartparens json-mode origami browse-kill-ring ace-window which-key afternoon-theme plantuml-mode avy-zap centered-cursor-mode change-inner expand-region modalka smex ido-vertical-mode pdf-tools))
+   '(yasnippet package-lint currency-convert company-native-complete native-complete saveplace-pdf-view graphviz-dot-mode company-restclient restclient know-your-http-well multiple-cursors inf-clojure clojure-mode aggressive-indent tree-mode json-navigator prism find-file-in-repository dired-toggle diminish transpose-frame amx unfill readline-complete writeroom-mode counsel-projectile magit htmlize discover-my-major company-lsp lsp-mode flycheck flycheck-kotlin typing company edit-server js2-mode kotlin-mode smartparens json-mode origami browse-kill-ring ace-window which-key afternoon-theme plantuml-mode avy-zap centered-cursor-mode change-inner expand-region modalka smex ido-vertical-mode pdf-tools))
  '(plantuml-default-exec-mode 'jar)
  '(window-divider-default-right-width 3)
  '(window-divider-mode t)
