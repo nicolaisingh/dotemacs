@@ -43,7 +43,7 @@
                     :background "gray95")
 
 (set-face-attribute 'fringe t
-                    :background "gray98")
+                    :background "#ffffff")
 
 (set-face-attribute 'mode-line t
                     :foreground "gray30"

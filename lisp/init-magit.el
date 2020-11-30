@@ -13,6 +13,7 @@
 
 (setq magit-repository-directories
       '(("~/prj/emacs-config/" . 0)
+        ("~/prj/emacs/saveplace-pdf-view" . 0)
         ("~/AndroidStudioProjects/Ideate/". 0)
         ("~/dev/masterlist-module/" . 0)))
 

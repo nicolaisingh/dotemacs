@@ -38,7 +38,6 @@
  ;; If there is more than one, they won't work right.
  '(aw-background-face ((t (:foreground "gray50"))))
  '(aw-leading-char-face ((t (:foreground "firebrick" :weight bold))))
- '(fringe ((t (:background "white"))))
  '(hl-line ((t (:background "gray95"))))
  '(mode-line-highlight ((t (:underline t))))
  '(window-divider ((t (:distant-foreground "gray50" :foreground "white"))))
