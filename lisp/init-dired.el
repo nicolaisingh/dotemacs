@@ -7,6 +7,7 @@
 ;;; Code:
 
 (require 'dired-x)
+(require 'find-dired)
 
 (setq dired-listing-switch-A "")
 
@@ -31,12 +32,25 @@
 (defun current-directory-find-name-dired (pattern)
   "Call `find-name-dired' using dired's current directory."
   (interactive "sFind-name (filename wildcard): ")
-  (find-name-dired (dired-current-directory) pattern))
+  (let* ((case-fold-search nil)
+         (find-name-arg
+          (if (or current-prefix-arg
+                  (string-match-p "[[:upper:]]" pattern))
+              "-name"
+            "-iname")))
+    (find-name-dired (dired-current-directory) pattern)))
 
 (defun current-directory-find-grep-dired (regexp)
   "Call `find-grep-dired' using dired's current directory."
   (interactive "sFind-grep (grep regexp): ")
-  (find-grep-dired (dired-current-directory) regexp))
+  (let* ((case-fold-search nil)
+         (grep-ignore-case-flag
+          (if (or current-prefix-arg
+                  (string-match-p "[[:upper:]]" regexp))
+              ""
+            " -i"))
+         (find-grep-options (concat find-grep-options grep-ignore-case-flag)))
+    (find-grep-dired (dired-current-directory) regexp)))
 
 (defun ediff-marked-files ()
   "Run ediff-files on 2 marked files in dired.  Inspired by
