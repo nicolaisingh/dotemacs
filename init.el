@@ -138,6 +138,7 @@ collection.  Use revert-gc-cons-percentage to restore the value."
 ;; (require 'init-ibuffer)
 (require 'init-icomplete)
 ;; (require 'init-ido)
+(require 'init-imenu-list)
 (require 'init-isearch)
 ;; (require 'init-ivy)
 (require 'init-js2-mode)
