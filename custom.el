@@ -30,6 +30,7 @@
  '(writeroom-extra-line-spacing 0.3)
  '(writeroom-global-effects
    '(writeroom-set-alpha writeroom-set-menu-bar-lines writeroom-set-tool-bar-lines writeroom-set-vertical-scroll-bars writeroom-set-bottom-divider-width))
+ '(writeroom-maximize-window nil)
  '(x-stretch-cursor t))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.

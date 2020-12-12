@@ -8,18 +8,15 @@
 
 (define-minor-mode reader-mode
   "Make a reader-friendly view by removing screen distractions
-  and adding margins."
+and adding margins."
   :init-value nil
   :lighter " Reader"
   :global nil
   :group 'reader
 
-  (if reader-mode
-      (progn
-        (writeroom-mode 1)
-        (visual-line-mode 1))
-    (progn
-      (writeroom-mode -1))))
+  (let ((enabled (if reader-mode t -1)))
+    (writeroom-mode enabled)
+    (visual-line-mode enabled)))
 
 (define-generic-mode 'xmodmap-mode
   '(?!)
