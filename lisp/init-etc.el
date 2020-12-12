@@ -125,6 +125,20 @@ times."
                form
                (eval `(benchmark-run ,repetitions ,form))))))
 
+(defun repeatkey-repeatable-call (f)
+  "Call function F interactively, then allow the last key used to
+  repeat the call, similar to C-x z z z in `repeat'."
+  (setq repeatkey-last-command f)
+  (let ((repeat-char last-command-event))
+    (call-interactively f)
+    (set-transient-map
+     (let ((map (make-sparse-keymap)))
+       (define-key map (vector repeat-char)
+         (lambda ()
+           (interactive)
+           (repeatkey-repeatable-call repeatkey-last-command)))
+       map))))
+
 (add-hook 'find-file-hook #'handle-large-file)
 
 (global-set-key (kbd "C-x C-f") #'my-find-file)

@@ -77,6 +77,9 @@ collection.  Use revert-gc-cons-percentage to restore the value."
 ;; Display long lines as is
 (setq-default truncate-lines t)
 
+;; Show paren matches instantly
+(setq show-paren-delay 0)
+
 ;; Tabs and spaces handling
 (setq-default tab-width 4)
 (add-hook 'shell-mode-hook #'indent-tab-width-8)
