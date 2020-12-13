@@ -25,17 +25,13 @@
 (add-to-list 'fringe-styles '("padded" 12))
 (fringe-mode 12)
 
-(setq my-font "DejaVu Sans Mono-9:weight=book:width=regular")
-
 (load-theme 'tsdh-light)
 
 ;; tsdh-light's #a0a1a7 is too light for me
 (set-face-attribute 'font-lock-comment-face t
                     :foreground "#8c8d91")
 
-;; (setq my-font "DejaVu Sans Mono-9:weight=book:width=regular")
 (set-face-attribute 'default t
-                    :font my-font
                     :background "#ffffff")
 
 (set-face-attribute 'show-paren-match t
@@ -56,10 +52,15 @@
                     :box '(:line-width 1 :color "gray60" :style nil))
 
 (add-to-list 'initial-frame-alist '(fullscreen . maximized))
-
-(add-to-list 'default-frame-alist `(font . ,my-font))
 (add-to-list 'default-frame-alist '(height . 60))
 (add-to-list 'default-frame-alist '(width . 180))
+
+;; Load a nice font
+;; (setq my-font "DejaVu Sans Mono-9:weight=normal:width=regular")
+(setq my-font "Source Code Pro-10:weight=normal:width=regular")
+(when (bound-and-true-p my-font)
+  (set-face-attribute 'default t :font my-font)
+  (add-to-list 'default-frame-alist `(font . ,my-font)))
 
 (provide 'early-init)
 ;;; early-init.el ends here
