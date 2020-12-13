@@ -28,14 +28,20 @@
   (interactive)
   (repeatkey-repeatable-call #'sp-backward-barf-sexp))
 
-(define-key smartparens-mode-map (kbd "C-c [ ]") #'sp-forward-slurp-sexp-repeatable)
-(define-key smartparens-mode-map (kbd "C-c [ [") #'sp-backward-slurp-sexp-repeatable)
-(define-key smartparens-mode-map (kbd "C-c [ }") #'sp-forward-barf-sexp-repeatable)
-(define-key smartparens-mode-map (kbd "C-c [ {") #'sp-backward-barf-sexp-repeatable)
+(define-key smartparens-mode-map (kbd "C-c s 0") #'sp-forward-slurp-sexp-repeatable)
+(define-key smartparens-mode-map (kbd "C-c s 9") #'sp-backward-slurp-sexp-repeatable)
+(define-key smartparens-mode-map (kbd "C-c s )") #'sp-forward-barf-sexp-repeatable)
+(define-key smartparens-mode-map (kbd "C-c s (") #'sp-backward-barf-sexp-repeatable)
 
-(define-key smartparens-mode-map (kbd "C-c [ s") #'sp-splice-sexp)
-(define-key smartparens-mode-map (kbd "C-c [ r") #'sp-raise-sexp)
-(define-key smartparens-mode-map (kbd "C-c [ c") #'sp-change-enclosing)
+(define-key smartparens-mode-map (kbd "C-c s u") #'sp-splice-sexp)
+(define-key smartparens-mode-map (kbd "C-c s r") #'sp-raise-sexp)
+(define-key smartparens-mode-map (kbd "C-c s c") #'sp-change-enclosing)
+(define-key smartparens-mode-map (kbd "C-c s j") #'sp-join-sexp)
+(define-key smartparens-mode-map (kbd "C-c s s") #'sp-split-sexp)
+
+(define-key smartparens-mode-map (kbd "M-W") #'sp-wrap-round)
+(define-key smartparens-mode-map (kbd "M-F") #'sp-forward-symbol)
+(define-key smartparens-mode-map (kbd "M-B") #'sp-backward-symbol)
 
 (define-key smartparens-mode-map (kbd "M-D") #'sp-kill-symbol)
 (define-key smartparens-mode-map (kbd "M-S-<backspace>") #'sp-backward-kill-symbol)
