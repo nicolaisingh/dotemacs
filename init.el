@@ -98,6 +98,20 @@ collection.  Use revert-gc-cons-percentage to restore the value."
 (global-set-key (kbd "C-c t l") #'toggle-truncate-lines)
 (global-set-key (kbd "C-c h l") #'hl-line-mode)
 
+;; Allow repeating keys for previous
+(defun previous-buffer-repeatable ()
+  "Call `previous-buffer' using `repeatkey-repeatable-call'."
+  (interactive)
+  (repeatkey-repeatable-call #'previous-buffer))
+
+(defun next-buffer-repeatable ()
+  "Call `next-buffer' using `repeatkey-repeatable-call'."
+  (interactive)
+  (repeatkey-repeatable-call #'next-buffer))
+
+(global-set-key (kbd "C-x <left>") #'previous-buffer-repeatable)
+(global-set-key (kbd "C-x <right>") #'next-buffer-repeatable)
+
 ;; Other key bindings
 (global-set-key (kbd "C-x C-S-c") #'save-buffers-kill-emacs)
 (global-set-key (kbd "M-SPC") #'cycle-spacing)
