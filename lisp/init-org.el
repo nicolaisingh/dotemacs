@@ -22,6 +22,11 @@
                       ("@learn" . ?l)
                       ("@home" . ?h)))
 
+(defun org-set-custom-bindings ()
+  (define-key org-mode-map (kbd "C-c C--") #'org-ctrl-c-minus)
+  (define-key org-mode-map (kbd "C-c C-8") #'org-ctrl-c-star))
+(add-hook 'org-mode-hook #'org-set-custom-bindings)
+
 (global-set-key (kbd "C-c o l") #'org-store-link)
 (global-set-key (kbd "C-c o c") #'org-capture)
 (global-set-key (kbd "C-c o a") #'org-agenda)
