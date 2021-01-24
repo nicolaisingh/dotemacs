@@ -44,12 +44,24 @@
 (set-face-attribute 'mode-line t
                     :foreground "gray30"
                     :background "slategray2"
-                    :box '(:line-width 1 :color "gray30" :style nil))
+                    :box '(:line-width 1 :color "slategray4" :style released-button))
 
 (set-face-attribute 'mode-line-inactive t
                     :foreground "gray60"
                     :background "gray96"
-                    :box '(:line-width 1 :color "gray60" :style nil))
+                    :box '(:line-width 1 :color "gray60" :style released-button))
+
+(set-face-attribute 'minibuffer-prompt t
+                    :foreground "gray30"
+                    :background "slategray1"
+                    :box nil
+                    :weight 'normal)
+
+(set-face-attribute 'region t
+                    :background "khaki1")
+
+(set-face-attribute 'highlight t
+                    :background "azure2")
 
 (add-to-list 'initial-frame-alist '(fullscreen . maximized))
 (add-to-list 'default-frame-alist '(height . 60))
