@@ -89,14 +89,16 @@ arguments."
 (setq dired-hide-details-hide-symlink-targets nil
       dired-hide-details-hide-information-lines nil)
 
-(define-key dired-mode-map (kbd "C-c .") #'toggle-other-files)
-(define-key dired-mode-map (kbd "z") #'dired-up-directory)
-(define-key dired-mode-map (kbd "C-c m .") #'toggle-other-files)
-(define-key dired-mode-map (kbd "C-c m f") #'current-directory-find-name-dired)
-(define-key dired-mode-map (kbd "C-c m g") #'current-directory-find-grep-dired)
-(define-key dired-mode-map (kbd "C-c m d") #'ediff-marked-files)
-(define-key dired-mode-map (kbd "C-c m !") #'apply-to-marked-files)
+(defun dired-mode-my-custom-keys ()
+  (define-key dired-mode-map (kbd "C-c .") #'toggle-other-files)
+  (define-key dired-mode-map (kbd "z") #'dired-up-directory)
+  (define-key dired-mode-map (kbd "C-c m .") #'toggle-other-files)
+  (define-key dired-mode-map (kbd "C-c m f") #'current-directory-find-name-dired)
+  (define-key dired-mode-map (kbd "C-c m g") #'current-directory-find-grep-dired)
+  (define-key dired-mode-map (kbd "C-c m d") #'ediff-marked-files)
+  (define-key dired-mode-map (kbd "C-c m !") #'apply-to-marked-files))
 
+(add-hook 'dired-mode-hook #'dired-mode-my-custom-keys)
 (add-hook 'dired-mode-hook #'hl-line-mode)
 (add-hook 'dired-mode-hook #'dired-hide-details-mode)
 

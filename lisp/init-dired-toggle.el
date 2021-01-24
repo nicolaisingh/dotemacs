@@ -8,6 +8,9 @@
 
 (require 'dired-toggle)
 
+;; There seems to be a bug with dired-toggle-find-file.  There are
+;; instances where finding a file displays it in the same window as
+;; the dired-toggle window with the same narrow size.
 (defun dired-toggle-my-find-file ()
   (interactive)
   (let* ((dired-toggle-enabled (if dired-toggle-mode 1 0))
@@ -34,20 +37,18 @@ instead of burying it."
       (quit-window 1)
     (kill-buffer-and-window)))
 
-;; There seems to be a bug with dired-toggle-find-file.  There are
-;; instances where finding a file displays it in the same window as
-;; the dired-toggle window with the same narrow size.
-(define-key dired-toggle-mode-map (kbd "RET") #'dired-toggle-my-find-file)
-(define-key dired-toggle-mode-map (kbd "q") #'dired-toggle-my-quit)
-(define-key dired-toggle-mode-map (kbd "^") #'dired-toggle-up-directory)
-(define-key dired-toggle-mode-map (kbd "z") #'dired-toggle-up-directory)
-
 (setq dired-toggle-window-size 32)
 (setq dired-toggle-window-side 'left)
 
+(defun dired-toggle-mode-my-custom-keys ()
+  (define-key dired-toggle-mode-map (kbd "RET") #'dired-toggle-my-find-file)
+  (define-key dired-toggle-mode-map (kbd "q") #'dired-toggle-my-quit)
+  (define-key dired-toggle-mode-map (kbd "^") #'dired-toggle-up-directory)
+  (define-key dired-toggle-mode-map (kbd "z") #'dired-toggle-up-directory))
+
+(add-hook 'dired-toggle-mode-hook #'dired-toggle-mode-my-custom-keys)
 (add-hook 'dired-toggle-mode-hook
           (lambda ()
-            (interactive)
             (visual-line-mode 1)
             (setq-local visual-line-fringe-indicators '(nil right-curly-arrow))
             (setq-local word-wrap nil)))
