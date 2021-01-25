@@ -52,8 +52,8 @@
                     :box '(:line-width 1 :color "gray60" :style released-button))
 
 (set-face-attribute 'minibuffer-prompt t
-                    :foreground "gray30"
-                    :background "slategray1"
+                    :foreground "#ffffff"
+                    :background "slategray4"
                     :box nil
                     :weight 'normal)
 
