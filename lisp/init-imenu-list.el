@@ -42,12 +42,12 @@ currently selected."
 ;; Mode-specific imenu expressions
 (defun imenu-restclient-mode ()
   (setq-mode-local restclient-mode
-                   imenu-generic-expression '((nil "^\n# \\(.*\\)$" 1)
+                   imenu-generic-expression '((nil "^#+ *\\(.+\\)\n[A-Z]+ " 1)
                                               ("Verb DELETE" "^\\(DELETE \\).*$" 0)
                                               ("Verb PUT" "^\\(PUT \\).*$" 0)
                                               ("Verb POST" "^\\(POST\\).*$" 0)
                                               ("Verb GET" "^\\(GET \\).*$" 0)
-                                              ("Sections" "^\n## \\(.*\\)\n$" 1))))
+                                              ("Sections" "^\n#+ *\\(.*\\)\n$" 1))))
 (add-hook 'restclient-mode-hook #'imenu-restclient-mode)
 
 (global-set-key (kbd "C-c i m") #'imenu-list)
