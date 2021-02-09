@@ -39,7 +39,8 @@ Useful for completion style 'partial-completion."
   (add-hook 'icomplete-minibuffer-setup-hook #'prefer-pcm-before-flex)
 
   (let ((map icomplete-minibuffer-map))
-    (define-key map (kbd "SPC") #'star-before-word-completion)))
+    (define-key map (kbd "SPC") #'star-before-word-completion)
+    (define-key map (kbd "C-S-j") #'icomplete-force-complete)))
 
  (t
   ;; Original preferences prior to Emacs 27
