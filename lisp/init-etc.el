@@ -150,6 +150,7 @@ times."
 (global-set-key (kbd "C-c f s") #'scratch-buffer)
 (global-set-key (kbd "C-c m l") #'mark-line)
 (global-set-key (kbd "C-c l n") #'toggle-line-and-column-numbers)
+(global-set-key (kbd "C-c h n") #'highlight-numbers-mode)
 
 (provide 'init-etc)
 ;;; init-etc.el ends here
