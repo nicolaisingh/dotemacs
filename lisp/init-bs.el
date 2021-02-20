@@ -28,7 +28,7 @@ the configuration 'files-plus-some-buffers-and-modes."
 ;; Additional bs configurations
 ;;;; Show files, some buffer names and modes
 (add-to-list 'bs-configurations
-             '("files-plus-some-buffers-and-modes"
+             '("default--files-plus-some-buffers-and-modes"
                ;; Must show regexp and function
                "^\\(\\*scratch\\*\\|test\\)$"
                bs-must-show-modes
@@ -47,13 +47,53 @@ the configuration 'files-plus-some-buffers-and-modes."
                bs-not-dired-mode-p
                nil))
 
-(setq bs-default-configuration "files-plus-some-buffers-and-modes"
-      bs-max-window-height 30
-      bs-minimal-buffer-name-column 25)
+(setq bs-default-configuration "default--files-plus-some-buffers-and-modes"
+      bs-max-window-height 35
+      bs-minimal-buffer-name-column 20)
 
 ;; bs-default-sort-name is not working
 ;; (setq bs-default-sort-name "by filename")
 ;; (setq bs--current-sort-function (assoc "by filename" bs-sort-functions))
+
+;; Custom size column based on file size, not buffer size
+(defun bs--get-filesize-string (_start-buffer _all-buffers)
+  "Return file size of the current buffer for Buffer Selection Menu."
+  (let* ((attributes (file-attributes (buffer-name)))
+         (filesize (if attributes (file-attribute-size attributes) 0))
+         (a-megabyte (* 1024 1024)))
+    (if (>= filesize a-megabyte)
+        (concat (format "%.01f" (/ (float filesize) a-megabyte)) "M")
+      (concat (format "%.01f" (/ (float filesize) 1024)) "K"))))
+
+(defun bs--sort-by-filesize (b1 b2)
+  (let* ((b1-attributes (file-attributes (buffer-file-name b1)))
+         (b2-attributes (file-attributes (buffer-file-name b2)))
+         (b1-filesize (if b1-attributes (file-attribute-size b1-attributes) 0))
+         (b2-filesize (if b2-attributes (file-attribute-size b2-attributes) 0)))
+    (< b1-filesize b2-filesize)))
+
+(setq bs-attributes-list
+      '((""       1   1 left  bs--get-marked-string)
+        ("M"      1   1 left  bs--get-modified-string)
+        ("R"      2   2 left  bs--get-readonly-string)
+        ("Buffer" bs--get-name-length 10 left  bs--get-name)
+        (""       1   1 left  " ")
+        ;; ("Size"   8   8 right bs--get-size-string)
+        ;; (""       1   1 left  " ")
+        ("Size" 8   8 right bs--get-filesize-string)
+        (""       1   1 left  " ")
+        ("Mode"   12 12 right bs--get-mode-name)
+        (""       2   2 left  "  ")
+        ("File"   12 12 left  bs--get-file-name)
+        (""       2   2 left  "  ")))
+
+(setq bs-sort-functions
+      '(("by name"     bs--sort-by-name     "Buffer" region)
+        ;; ("by size"     bs--sort-by-size     "Size"   region)
+        ("by filesize" bs--sort-by-filesize "Size"  region)
+        ("by mode"     bs--sort-by-mode     "Mode"   region)
+        ("by filename" bs--sort-by-filename "File"   region)
+        ("by nothing"  nil                  nil      nil)))
 
 (global-set-key (kbd "C-x C-b") #'bs-show)
 (global-set-key (kbd "C-=") #'bs-cycle-next)
