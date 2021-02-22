@@ -7,7 +7,6 @@
 ;;; Code:
 
 (require 'init-etc-modes)
-(require 'init-etc-windows)
 
 (defun my-find-init-file ()
   "Find my Emacs init file."

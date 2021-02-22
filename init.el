@@ -118,6 +118,10 @@ collection.  Use revert-gc-cons-percentage to restore the value."
 (global-set-key (kbd "C-x C-m") (key-binding (kbd "M-x")))
 (global-set-key (kbd "C-z") #'repeat)
 
+;; Move facemenu-keymap to another binding
+(define-key global-map (kbd "M-o") nil)
+(define-key global-map (kbd "C-c f m") 'facemenu-keymap)
+
 (add-hook 'emacs-startup-hook
           (lambda ()
             (message (concat "Emacs startup took " (emacs-init-time) " with " (number-to-string gcs-done) " GCs."))))
@@ -137,6 +141,7 @@ collection.  Use revert-gc-cons-percentage to restore the value."
 
 (require 'init-gui)
 (require 'init-etc)
+(require 'winfast)
 
 (require 'init-aggressive-indent)
 (require 'init-browse-kill-ring)
