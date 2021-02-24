@@ -154,6 +154,7 @@ collection.  Use revert-gc-cons-percentage to restore the value."
 (require 'init-discover-my-major)
 (require 'init-ediff)
 (require 'init-erc)
+(require 'init-eshell)
 (require 'init-expand-region)
 (require 'init-flycheck)
 (require 'init-graphviz-dot-mode)
