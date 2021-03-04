@@ -6,9 +6,18 @@
 
 ;;; Code:
 
+(defun eshell-define-aliases ()
+  (eshell/alias "1" "ls -1 $*")
+  (eshell/alias "ll" "ls -l $*")
+  (eshell/alias "mv" "mv -i $*")
+  (eshell/alias "cp" "cp -i $*")
+  (eshell/alias "df" "df -h"))
+
 (defun eshell-set-config ()
   (setq-local completion-auto-help t)
   (company-mode -1)
+
+  (eshell-define-aliases)
 
   (define-key eshell-mode-map (kbd "C-c m l s")
     (lambda ()
