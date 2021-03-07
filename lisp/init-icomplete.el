@@ -36,11 +36,16 @@ Useful for completion style 'partial-completion."
 
   (defun prefer-pcm-before-flex ()
     (setq-local completion-styles '(partial-completion flex)))
-  (add-hook 'icomplete-minibuffer-setup-hook #'prefer-pcm-before-flex)
 
-  (let ((map icomplete-minibuffer-map))
-    (define-key map (kbd "SPC") #'star-before-word-completion)
-    (define-key map (kbd "C-S-j") #'icomplete-force-complete)))
+  (defun icomplete-my-custom-keys ()
+    (let ((map icomplete-minibuffer-map))
+      (define-key map (kbd "SPC") #'star-before-word-completion)
+      (define-key map (kbd "C-S-j") #'icomplete-force-complete)
+      (define-key map (kbd "C-n") #'empty-command)
+      (define-key map (kbd "C-p") #'empty-command)))
+
+  (add-hook 'icomplete-minibuffer-setup-hook #'prefer-pcm-before-flex)
+  (add-hook 'icomplete-minibuffer-setup-hook #'icomplete-my-custom-keys))
 
  (t
   ;; Original preferences prior to Emacs 27

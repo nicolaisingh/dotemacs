@@ -138,6 +138,10 @@ times."
            (repeatkey-repeatable-call repeatkey-last-command)))
        map))))
 
+(defun empty-command ()
+  "A command that doesn't do anything."
+  (interactive))
+
 (add-hook 'find-file-hook #'handle-large-file)
 
 (global-set-key (kbd "C-x C-f") #'my-find-file)
