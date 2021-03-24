@@ -96,8 +96,6 @@ the configuration 'files-plus-some-buffers-and-modes."
         ("by nothing"  nil                  nil      nil)))
 
 (global-set-key (kbd "C-x C-b") #'bs-show)
-(global-set-key (kbd "C-=") #'bs-cycle-next)
-(global-set-key (kbd "C-+") #'bs-cycle-previous)
 
 (add-hook 'bs-mode-hook #'hl-line-mode)
 
