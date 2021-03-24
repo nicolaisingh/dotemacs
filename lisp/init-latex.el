@@ -15,5 +15,12 @@
 (setq TeX-parse-self t)
 (setq-default TeX-master nil)
 
+;; For latex-mode
+
+(setq latex-run-command "pdflatex"
+      tex-run-command "pdflatex"
+      tex-print-file-extension ".pdf"
+      tex-dvi-view-command "emacsclient -e \"(find-file-other-window \\\"*\\\")\"")
+
 (provide 'init-latex)
 ;;; init-latex.el ends here.
