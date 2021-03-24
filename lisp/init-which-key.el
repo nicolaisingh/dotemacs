@@ -8,8 +8,8 @@
 
 (require 'which-key)
 
-(setq-default which-key-idle-delay 2)
-(setq-default which-key-lighter nil)
+(setq which-key-idle-delay 1
+      which-key-lighter nil)
 
 (add-hook 'after-init-hook #'which-key-mode)
 
