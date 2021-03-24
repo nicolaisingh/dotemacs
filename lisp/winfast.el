@@ -81,17 +81,23 @@ called again."
     (winfast-fullscreen-window-layout)))
 
 (defun winfast-pre-command-hook ()
-  ;; Turn off winfast-mode if the keybinding does not belong to its
-  ;; keymap, and execute the keybinding normally (like isearch).
-  (let ((key (this-single-command-keys)))
-    (unless (commandp (lookup-key winfast-mode-map key nil))
+  (let* ((key (this-single-command-keys))
+         (winfast-key (lookup-key winfast-mode-map key nil)))
+    ;; Reset the fullscreen flag if the key is a winfast command
+    ;; that is not `winfast-toggle-fullscreen-window'
+    (when winfast--fullscreen-p
+      (when (and (commandp winfast-key)
+                 (not (eq 'winfast-toggle-fullscreen-window winfast-key)))
+        (setq winfast--fullscreen-p nil)))
+
+    ;; Turn off winfast-mode if the keybinding does not belong to its
+    ;; keymap, and execute the keybinding normally (like isearch).
+    (unless (commandp winfast-key)
       (winfast-mode-done))))
 
 (defun winfast-mode-done ()
   "Cleanup before fully turning off winfast-mode."
   (remove-hook 'pre-command-hook #'winfast-pre-command-hook)
-  (setq winfast--fullscreen-p nil)
-  (setq winfast--last-window-configuration nil)
   (winfast-mode -1))
 
 (defvar winfast-mode-map
