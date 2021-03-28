@@ -9,7 +9,9 @@
 (add-to-list 'auto-mode-alist '("\\.epub\\'" . nov-mode))
 
 (defun nov-font-setup ()
-  (face-remap-add-relative 'default :height 1.3)
+  (face-remap-add-relative 'default :height 1.2)
+  (face-remap-add-relative 'variable-pitch :family "Serif" :height 1.2)
+  (centered-cursor-mode t)
   (setq nov-text-width 70
         line-spacing 0.3
         visual-fill-column-center-text t))
