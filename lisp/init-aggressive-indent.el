@@ -11,6 +11,7 @@
 (add-hook 'emacs-lisp-mode-hook #'aggressive-indent-mode)
 (add-hook 'clojure-mode-hook #'aggressive-indent-mode)
 (add-hook 'clojurescript-mode-hook #'aggressive-indent-mode)
+(add-hook 'scheme-mode-hook #'aggressive-indent-mode)
 
 (global-set-key (kbd "C-c i A") #'aggressive-indent-mode)
 

@@ -55,6 +55,7 @@
 (add-hook 'lisp-mode-hook #'setup-smartparens-lisp)
 (add-hook 'emacs-lisp-mode-hook #'setup-smartparens-lisp)
 (add-hook 'clojure-mode-hook #'setup-smartparens-lisp)
+(add-hook 'scheme-mode-hook #'setup-smartparens-lisp)
 (add-hook 'eval-expression-minibuffer-setup-hook #'setup-smartparens-lisp)
 
 (add-hook 'kotlin-mode-hook #'smartparens-mode)

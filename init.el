@@ -91,6 +91,7 @@ collection.  Use revert-gc-cons-percentage to restore the value."
 
 (defun turn-off-indent-tabs-mode () (setq indent-tabs-mode nil))
 (add-hook 'emacs-lisp-mode-hook #'turn-off-indent-tabs-mode)
+(add-hook 'scheme-mode-hook #'turn-off-indent-tabs-mode)
 
 (add-hook 'before-save-hook #'delete-trailing-whitespace)
 
