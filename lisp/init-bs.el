@@ -12,7 +12,7 @@
   "Return non-nil for buffers matching specific modes.  Used for
 the configuration 'files-plus-some-buffers-and-modes."
   (let ((major-mode (buffer-local-value 'major-mode buf)))
-    (find major-mode '(term-mode shell-mode fundamental-mode))))
+    (find major-mode '(term-mode shell-mode eshell-mode fundamental-mode))))
 
 (defun bs-dont-show-modes (buf)
   "Return non-nil for buffers which should not be shown."
