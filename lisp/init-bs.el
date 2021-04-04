@@ -95,9 +95,32 @@ the configuration 'files-plus-some-buffers-and-modes."
         ("by filename" bs--sort-by-filename "File"   region)
         ("by nothing"  nil                  nil      nil)))
 
+(defun bs-custom-set-configuration-and-refresh (config-name)
+  (bs-set-configuration config-name)
+  (bs--redisplay t)
+  (bs-message-without-log config-name))
+
+(defun bs-mode-my-custom-keys ()
+  (define-key bs-mode-map (kbd "0")
+    (lambda ()
+      (interactive)
+      (apply #'bs-custom-set-configuration-and-refresh
+             '("default--files-plus-some-buffers-and-modes"))))
+  (define-key bs-mode-map (kbd "1")
+    (lambda ()
+      (interactive)
+      (apply #'bs-custom-set-configuration-and-refresh
+             '("dired-only"))))
+  (define-key bs-mode-map (kbd "2")
+    (lambda ()
+      (interactive)
+      (apply #'bs-custom-set-configuration-and-refresh
+             '("all")))))
+
 (global-set-key (kbd "C-x C-b") #'bs-show)
 
 (add-hook 'bs-mode-hook #'hl-line-mode)
+(add-hook 'bs-mode-hook #'bs-mode-my-custom-keys)
 
 (provide 'init-bs)
 ;;; init-bs.el ends here
