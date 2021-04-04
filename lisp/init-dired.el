@@ -84,6 +84,14 @@ arguments."
   (interactive "CApply to marked dired entries: ")
   (apply-safely function (dired-get-marked-files)))
 
+(defun dired-dir-to-kill-ring ()
+  "Insert the dired buffer's current directory to the kill
+ring."
+  (interactive)
+  (kill-new dired-directory)
+  (let ((message-log-max nil))
+    (message "Current directory inserted to the kill ring (%s)" dired-directory)))
+
 (dired-set-listing-switches)
 
 (setq dired-hide-details-hide-symlink-targets nil
@@ -96,7 +104,8 @@ arguments."
   (define-key dired-mode-map (kbd "C-c m f") #'current-directory-find-name-dired)
   (define-key dired-mode-map (kbd "C-c m g") #'current-directory-find-grep-dired)
   (define-key dired-mode-map (kbd "C-c m d") #'ediff-marked-files)
-  (define-key dired-mode-map (kbd "C-c m !") #'apply-to-marked-files))
+  (define-key dired-mode-map (kbd "C-c m !") #'apply-to-marked-files)
+  (define-key dired-mode-map (kbd "C-c m k") #'dired-dir-to-kill-ring))
 
 (add-hook 'dired-mode-hook #'dired-mode-my-custom-keys)
 (add-hook 'dired-mode-hook #'hl-line-mode)
