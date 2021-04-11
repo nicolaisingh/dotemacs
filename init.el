@@ -120,6 +120,7 @@ collection.  Use revert-gc-cons-percentage to restore the value."
 (global-set-key (kbd "C-z") #'repeat)
 
 ;; Move facemenu-keymap to another binding
+(require 'facemenu)
 (define-key global-map (kbd "M-o") nil)
 (define-key global-map (kbd "C-c f m") 'facemenu-keymap)
 
