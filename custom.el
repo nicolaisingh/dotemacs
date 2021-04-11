@@ -43,6 +43,11 @@
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
  '(hl-line ((t (:background "gray90"))))
+ '(magit-diff-context-highlight ((t (:extend t :background "grey98" :foreground "grey50"))))
+ '(magit-diff-hunk-heading-highlight ((t (:extend t :background "grey88"))))
+ '(magit-section-highlight ((t (:extend t :background "grey98"))))
+ ;; '(magit-diff-added ((t (:inherit magit-diff-added-highlight))))
+ ;; '(magit-diff-removed ((t (:inherit magit-diff-removed-highlight))))
  '(mode-line-highlight ((t (:underline t))))
  '(window-divider ((t (:distant-foreground "gray50" :foreground "gray94"))))
  '(window-divider-first-pixel ((t (:foreground "gray94"))))

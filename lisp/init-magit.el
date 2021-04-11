@@ -17,5 +17,20 @@
         ("~/AndroidStudioProjects/Ideate/". 0)
         ("~/dev/masterlist-module/" . 0)))
 
+(setq magit-diff-highlight-hunk-body nil)
+
+(defun magit-diff-toggle-hunk-highlights ()
+  (interactive)
+  (setq magit-diff-highlight-hunk-body (not magit-diff-highlight-hunk-body))
+  (let ((message-log-max nil))
+    (apply #'message "magit-diff-highlight-hunk-body: %s"
+           `(,magit-diff-highlight-hunk-body))))
+
+(defun magit-mode-my-custom-keys ()
+  (let ((map magit-mode-map))
+    (define-key map (kbd "C-c m h") #'magit-diff-toggle-hunk-highlights)))
+
+(add-hook 'magit-mode-hook #'magit-mode-my-custom-keys)
+
 (provide 'init-magit)
 ;;; init-magit.el ends here
