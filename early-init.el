@@ -27,19 +27,28 @@
 
 (load-theme 'tsdh-light)
 
+;; f0f0f0=gray94
+;; e5e5e5=gray90
+;; dbdbdb=gray86
+;; d1d1d1=gray82
+(setq my-bg-color "#f0f0f0"
+      my-bg-hl1-color "#e5e5e5"
+      my-bg-hl2-color "#dbdbdb"
+      my-bg-hl3-color "#d1d1d1")
+
 ;; tsdh-light's #a0a1a7 is too light for me
 (set-face-attribute 'font-lock-comment-face t
                     :foreground "#8c8d91")
 
 (set-face-attribute 'default t
-                    :background "#ffffff")
+                    :background my-bg-color)
 
 (set-face-attribute 'show-paren-match t
                     :weight 'bold
-                    :background "gray95")
+                    :background my-bg-hl2-color)
 
 (set-face-attribute 'fringe t
-                    :background "#ffffff")
+                    :background my-bg-color)
 
 (set-face-attribute 'mode-line t
                     :foreground "gray30"
@@ -48,7 +57,7 @@
 
 (set-face-attribute 'mode-line-inactive t
                     :foreground "gray60"
-                    :background "gray96"
+                    :background my-bg-hl1-color
                     :box '(:line-width 1 :color "gray60" :style released-button))
 
 (set-face-attribute 'minibuffer-prompt t
@@ -58,10 +67,10 @@
                     :weight 'normal)
 
 (set-face-attribute 'region t
-                    :background "khaki1")
+                    :background "pale goldenrod")
 
 (set-face-attribute 'highlight t
-                    :background "azure2")
+                    :background "azure3")
 
 (add-to-list 'initial-frame-alist '(fullscreen . maximized))
 (add-to-list 'default-frame-alist '(height . 60))

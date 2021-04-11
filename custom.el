@@ -42,10 +42,8 @@
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
- '(aw-background-face ((t (:foreground "gray50"))))
- '(aw-leading-char-face ((t (:foreground "firebrick" :weight bold))))
- '(hl-line ((t (:background "gray95"))))
+ '(hl-line ((t (:background "gray90"))))
  '(mode-line-highlight ((t (:underline t))))
- '(window-divider ((t (:distant-foreground "gray50" :foreground "white"))))
- '(window-divider-first-pixel ((t (:foreground "white"))))
- '(window-divider-last-pixel ((t (:foreground "white")))))
+ '(window-divider ((t (:distant-foreground "gray50" :foreground "gray94"))))
+ '(window-divider-first-pixel ((t (:foreground "gray94"))))
+ '(window-divider-last-pixel ((t (:foreground "gray94")))))
