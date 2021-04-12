@@ -9,8 +9,8 @@
 (defun eshell-define-aliases ()
   (eshell/alias "1" "ls -1 $*")
   (eshell/alias "ll" "ls -l $*")
-  (eshell/alias "mv" "mv -i $*")
-  (eshell/alias "cp" "cp -i $*")
+  ;; (eshell/alias "mv" "mv -i $*")
+  ;; (eshell/alias "cp" "cp -i $*")
   (eshell/alias "df" "df -h"))
 
 (defun eshell-set-config ()
