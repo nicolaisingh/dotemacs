@@ -101,6 +101,7 @@ ring."
   (define-key dired-mode-map (kbd "C-c .") #'toggle-other-files)
   (define-key dired-mode-map (kbd "z") #'dired-up-directory)
   (define-key dired-mode-map (kbd "C-c m .") #'toggle-other-files)
+  (define-key dired-mode-map (kbd "C-c m e") #'dired-create-empty-file)
   (define-key dired-mode-map (kbd "C-c m f") #'current-directory-find-name-dired)
   (define-key dired-mode-map (kbd "C-c m g") #'current-directory-find-grep-dired)
   (define-key dired-mode-map (kbd "C-c m d") #'ediff-marked-files)
