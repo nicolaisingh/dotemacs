@@ -142,6 +142,12 @@ times."
   "A command that doesn't do anything."
   (interactive))
 
+(defun profiler-toggle ()
+  (interactive)
+  (if (profiler-running-p)
+      (profiler-stop)
+    (profiler-start 'cpu+mem)))
+
 (add-hook 'find-file-hook #'handle-large-file)
 
 (global-set-key (kbd "C-x C-f") #'my-find-file)
@@ -154,6 +160,8 @@ times."
 (global-set-key (kbd "C-c m l") #'mark-line)
 (global-set-key (kbd "C-c l n") #'toggle-line-and-column-numbers)
 (global-set-key (kbd "C-c h n") #'highlight-numbers-mode)
+(global-set-key (kbd "C-c P P") #'profiler-toggle)
+(global-set-key (kbd "C-c P R") #'profiler-report)
 
 (provide 'init-etc)
 ;;; init-etc.el ends here
