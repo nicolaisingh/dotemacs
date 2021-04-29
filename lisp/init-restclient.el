@@ -10,5 +10,23 @@
 
 (add-to-list 'auto-mode-alist '("\\.restclient\\'" . restclient-mode))
 
+(defun restclient-no-gc-before-request ()
+  (increase-gc-cons-percentage))
+
+(defun restclient-gc-after-response ()
+  (revert-gc-cons-percentage)
+  (garbage-collect))
+
+(defun restclient-format-response ()
+  (show-paren-mode -1)
+  (font-lock-mode -1)
+  (buffer-disable-undo)
+  (buffer-enable-undo))
+
+(add-hook 'restclient-http-do-hook #'restclient-no-gc-before-request)
+(add-hook 'restclient-response-loaded-hook #'restclient-gc-after-response)
+
+(add-hook 'restclient-response-loaded-hook #'restclient-format-response)
+
 (provide 'init-restclient)
 ;;; init-restclient.el ends here
