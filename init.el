@@ -110,9 +110,6 @@ collection.  Use revert-gc-cons-percentage to restore the value."
   (interactive)
   (repeatkey-repeatable-call #'next-buffer))
 
-(global-set-key (kbd "C-x <left>") #'previous-buffer-repeatable)
-(global-set-key (kbd "C-x <right>") #'next-buffer-repeatable)
-
 ;; Other key bindings
 (global-set-key (kbd "C-x C-S-c") #'save-buffers-kill-emacs)
 (global-set-key (kbd "M-SPC") #'cycle-spacing)
