@@ -48,7 +48,7 @@ the configuration 'files-plus-some-buffers-and-modes."
                nil))
 
 (setq bs-default-configuration "default--files-plus-some-buffers-and-modes"
-      bs-max-window-height 35
+      bs-max-window-height 20
       bs-minimal-buffer-name-column 20)
 
 ;; bs-default-sort-name is not working
@@ -117,10 +117,14 @@ the configuration 'files-plus-some-buffers-and-modes."
       (apply #'bs-custom-set-configuration-and-refresh
              '("all")))))
 
+(defun bs-mode-my-config ()
+  (bs-mode-my-custom-keys)
+  (hl-line-mode)
+  (set (make-local-variable 'scroll-conservatively) 101))
+
 (global-set-key (kbd "C-x C-b") #'bs-show)
 
-(add-hook 'bs-mode-hook #'hl-line-mode)
-(add-hook 'bs-mode-hook #'bs-mode-my-custom-keys)
+(add-hook 'bs-mode-hook #'bs-mode-my-config)
 
 (provide 'init-bs)
 ;;; init-bs.el ends here
