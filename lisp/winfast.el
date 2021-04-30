@@ -108,6 +108,7 @@ called again."
     (define-key map "\M-2" #'split-window-below)
     (define-key map "\M-3" #'split-window-right)
     (define-key map "\M-m" #'minimize-window)
+    (define-key map "\M-k" #'kill-buffer-and-window)
     (define-key map "\M-M" #'maximize-window)
     (define-key map "\M-=" #'balance-windows)
     (define-key map "\M-p" #'previous-buffer)

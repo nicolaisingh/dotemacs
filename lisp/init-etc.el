@@ -144,6 +144,7 @@ times."
 
 (defun profiler-toggle ()
   (interactive)
+  (require 'profiler)
   (if (profiler-running-p)
       (profiler-stop)
     (profiler-start 'cpu+mem)))
