@@ -28,6 +28,14 @@ and adding margins."
 
 From https://www.emacswiki.org/emacs/XModMapMode")
 
+(define-generic-mode miranda-mode
+  '("||")
+  '("where" "if" "otherwise")
+  nil
+  nil
+  nil
+  "Generic major mode for the Miranda programming language.")
+
 ;; prevnext-buffer-mode
 
 (defun prevnext-buffer-mode-done ()
