@@ -184,6 +184,7 @@ collection.  Use revert-gc-cons-percentage to restore the value."
 
 (require 'init-clojurescript)
 (require 'init-kotlin)
+(require 'init-nix)
 
 (provide 'init)
 ;;; init.el ends here

@@ -13,13 +13,18 @@
   (interactive)
   (find-file (expand-file-name "init.el" user-emacs-directory)))
 
-(defun sudo-find-alternate-file-local (file-or-buffer)
+(defun sudo-find-file (file-or-buffer)
   "Find a local file/directory as sudo."
+  (let ((sudomethod (if (< emacs-major-version 27) "/sudo::" "/sudoedit::")))
+    (find-file (concat sudomethod file-or-buffer))))
+
+(defun sudo-find-alternate-file-local (file-or-buffer)
+  "Alternate find a local file/directory as sudo."
   (let ((sudomethod (if (< emacs-major-version 27) "/sudo::" "/sudoedit::")))
     (find-alternate-file (concat sudomethod file-or-buffer))))
 
 (defun sudo-find-alternate-file-tramp (tramp-file-name)
-  "Find a tramp file/directory as sudo."
+  "Alternate find a tramp file/directory as sudo."
   (let ((sudomethod "sudo")
         (sudouser "root")
         (vec (tramp-dissect-file-name tramp-file-name)))
@@ -34,7 +39,7 @@
       (tramp-make-tramp-hop-name vec)))))
 
 (defun sudo-find-alternate-file ()
-  "Find a file/directory as sudo.
+  "Alternate find a file/directory as sudo.
 
 Emacs 27 introduced a connection method `/sudoedit' for security
 reasons.  Use this if it is available.  Otherwise, use `/sudo'."
