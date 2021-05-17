@@ -9,7 +9,10 @@
 (require 'dired-x)
 (require 'find-dired)
 
-(setq dired-listing-switch-A "")
+(setq dired-listing-switch-A ""
+      dired-isearch-filenames t
+      dired-hide-details-hide-symlink-targets nil
+      dired-hide-details-hide-information-lines nil)
 
 (defun dired-set-listing-switches ()
   (setq dired-listing-switches
@@ -94,9 +97,6 @@ ring."
 
 (dired-set-listing-switches)
 
-(setq dired-hide-details-hide-symlink-targets nil
-      dired-hide-details-hide-information-lines nil)
-
 (defun dired-mode-my-custom-keys ()
   (define-key dired-mode-map (kbd "C-c .") #'toggle-other-files)
   (define-key dired-mode-map (kbd "z") #'dired-up-directory)
@@ -110,7 +110,7 @@ ring."
 
 (add-hook 'dired-mode-hook #'dired-mode-my-custom-keys)
 (add-hook 'dired-mode-hook #'hl-line-mode)
-(add-hook 'dired-mode-hook #'dired-hide-details-mode)
+;; (add-hook 'dired-mode-hook #'dired-hide-details-mode)
 
 (provide 'init-dired)
 ;;; init-dired.el ends here

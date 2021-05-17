@@ -39,6 +39,7 @@
 Emacs 27 introduced a connection method `/sudoedit' for security
 reasons.  Use this if it is available.  Otherwise, use `/sudo'."
   (interactive)
+  (require 'tramp)
   (let ((current-buffer (cond
                          ((derived-mode-p 'dired-mode) (dired-current-directory))
                          ((buffer-file-name) (buffer-file-name))
