@@ -10,7 +10,7 @@
 
 (setq recentf-max-menu-items 100
       recentf-max-saved-items 1000
-      recentf-auto-cleanup 60
+      recentf-auto-cleanup 'never
       recentf-menu-filter 'recentf-show-basenames-ascending)
 
 (defun recentf-open-files-completing-read ()

@@ -136,8 +136,5 @@ Any other key binding used which is not in the map will turn off
   (when winfast-mode
     (add-hook 'pre-command-hook #'winfast-pre-command-hook)))
 
-(define-key global-map (kbd "M-o") #'winfast-mode)
-;; (global-set-key (kbd "C-`") (key-binding (kbd "C-x o")))
-
 (provide 'winfast)
 ;;; winfast.el ends here

@@ -144,6 +144,7 @@ collection.  Use revert-gc-cons-percentage to restore the value."
 (require 'esh-toggle)
 (define-key global-map (kbd "C-c e t") #'eshell-toggle)
 (require 'winfast)
+(define-key global-map (kbd "M-o") #'winfast-mode)
 
 (require 'init-aggressive-indent)
 (require 'init-browse-kill-ring)
