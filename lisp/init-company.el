@@ -17,9 +17,7 @@
 (setq company-transformers '(company-sort-by-occurrence
                              company-sort-by-backend-importance))
 
-(add-to-list 'company-backends 'company-restclient)
 (add-to-list 'company-backends 'company-native-complete)
-(add-to-list 'company-backends 'company-nixos-options)
 
 (define-key company-active-map (kbd "C-n") #'company-select-next)
 (define-key company-active-map (kbd "C-p") #'company-select-previous)

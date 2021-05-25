@@ -12,9 +12,25 @@
 
 (defun my-find-nixos-config-file ()
   (interactive)
-  (sudo-find-file "/etc/nixos/configuration.nix"))
+  (find-file "/home/nas/nix/configuration.nix"))
 
-(global-set-key (kbd "C-c n c") #'my-find-nixos-config-file)
+(defun my-find-nixos-home-file ()
+  (interactive)
+  (find-file "/home/nas/.config/nixpkgs/home.nix"))
+
+(defvar nixos-helpers-map
+  (let ((map (make-sparse-keymap)))
+    (define-key map "c" #'my-find-nixos-config-file)
+    (define-key map "h" #'my-find-nixos-home-file)
+    map)
+  "Key map for my NixOS helper functions.")
+
+(global-set-key (kbd "C-c n") nixos-helpers-map)
+
+(defun nix-mode-my-config ()
+  (add-to-list (make-local-variable 'company-backends) 'company-nixos-options))
+
+(add-hook 'nix-mode-hook #'nix-mode-my-config)
 
 (provide 'init-nix)
 ;;; init-nix.el ends here

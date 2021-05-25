@@ -23,6 +23,11 @@
   (buffer-disable-undo)
   (buffer-enable-undo))
 
+(defun restclient-mode-my-config ()
+  (add-to-list (make-local-variable 'company-backends) 'company-restclient))
+
+(add-hook 'restclient-mode-hook #'restclient-mode-my-config)
+
 (add-hook 'restclient-http-do-hook #'restclient-no-gc-before-request)
 (add-hook 'restclient-response-loaded-hook #'restclient-gc-after-response)
 
