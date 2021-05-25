@@ -140,6 +140,9 @@ collection.  Use revert-gc-cons-percentage to restore the value."
 
 (require 'init-gui)
 (require 'init-etc)
+
+(require 'esh-toggle)
+(define-key global-map (kbd "C-c e t") #'eshell-toggle)
 (require 'winfast)
 
 (require 'init-aggressive-indent)
