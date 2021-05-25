@@ -13,6 +13,7 @@
 ;;; Code:
 
 (with-eval-after-load 'shell
+  (require 'native-complete)
   (native-complete-setup-bash))
 
 (provide 'init-native-complete)
