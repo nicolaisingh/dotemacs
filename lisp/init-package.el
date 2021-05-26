@@ -21,5 +21,7 @@
       (message "Installing missing package `%s'" package)
       (package-install package))))
 
+(add-hook 'package-menu-mode-hook #'hl-line-mode)
+
 (provide 'init-package)
 ;;; init-package.el ends here
