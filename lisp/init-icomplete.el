@@ -41,8 +41,10 @@ Useful for completion style 'partial-completion."
     (let ((map icomplete-minibuffer-map))
       (define-key map (kbd "SPC") #'star-before-word-completion)
       (define-key map (kbd "C-S-j") #'icomplete-force-complete)
-      (define-key map (kbd "C-n") #'empty-command)
-      (define-key map (kbd "C-p") #'empty-command)))
+      (define-key map (kbd "C-n") #'icomplete-forward-completions)
+      (define-key map (kbd "C-p") #'icomplete-backward-completions)
+      (when (>= emacs-major-version 28)
+        (define-key map (kbd "C-c m l") #'icomplete-vertical-mode))))
 
   (add-hook 'icomplete-minibuffer-setup-hook #'prefer-pcm-before-flex)
   (add-hook 'icomplete-minibuffer-setup-hook #'icomplete-my-custom-keys))
