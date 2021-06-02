@@ -31,6 +31,7 @@
   (add-to-list (make-local-variable 'company-backends) 'company-nixos-options))
 
 (add-hook 'nix-mode-hook #'nix-mode-my-config)
+(add-hook 'nix-mode-hook #'smartparens-mode)
 
 (provide 'init-nix)
 ;;; init-nix.el ends here
