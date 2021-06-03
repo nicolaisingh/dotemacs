@@ -14,14 +14,9 @@
   (interactive)
   (find-file "/home/nas/nix/configuration.nix"))
 
-(defun my-find-nixos-home-file ()
-  (interactive)
-  (find-file "/home/nas/.config/nixpkgs/home.nix"))
-
 (defvar nixos-helpers-map
   (let ((map (make-sparse-keymap)))
     (define-key map "c" #'my-find-nixos-config-file)
-    (define-key map "h" #'my-find-nixos-home-file)
     map)
   "Key map for my NixOS helper functions.")
 

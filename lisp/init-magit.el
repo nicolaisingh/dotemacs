@@ -15,7 +15,8 @@
       '(("~/prj/emacs-config/" . 0)
         ("~/prj/emacs/saveplace-pdf-view" . 0)
         ("~/prj/ideate-android/src" . 0)
-        ("~/prj/masterlist-module" . 0)))
+        ("~/prj/masterlist-module" . 0)
+        ("~/prj/nix-config" . 0)))
 
 (setq magit-diff-highlight-hunk-body nil)
 
