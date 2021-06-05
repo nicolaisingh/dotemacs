@@ -17,10 +17,21 @@
 
 ;; For latex-mode
 
+(defun tex-file-custom (&optional arg)
+  (interactive "P")
+  (unless arg
+    (save-buffer))
+  (call-interactively #'tex-file))
+
 (setq latex-run-command "pdflatex"
       tex-run-command "pdflatex"
       tex-print-file-extension ".pdf"
       tex-dvi-view-command "emacsclient -e \"(find-file-other-window \\\"*\\\")\"")
+
+(defun latex-mode-my-config ()
+  (define-key latex-mode-map (kbd "C-c C-f") #'tex-file-custom))
+
+(add-hook 'latex-mode-hook #'latex-mode-my-config)
 
 (provide 'init-latex)
 ;;; init-latex.el ends here.
