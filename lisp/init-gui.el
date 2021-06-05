@@ -45,6 +45,7 @@
 ")
 
 (setq initial-scratch-message my-scratch-message)
+(setq initial-major-mode 'fundamental-mode)
 (save-place-mode 1)
 
 ;; Most of the code here are now in early-init.el to utilize the early
