@@ -13,6 +13,8 @@
       recentf-auto-cleanup 'never
       recentf-menu-filter 'recentf-show-basenames-ascending)
 
+(add-to-list 'recentf-exclude "\\/sudoedit:root")
+
 (defun recentf-open-files-completing-read ()
   (interactive)
   (let* ((recentf-menu (recentf-make-menu-items))
