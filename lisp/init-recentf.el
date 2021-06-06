@@ -6,6 +6,8 @@
 
 ;;; Code:
 
+(require 'recentf)
+
 (add-hook 'after-init-hook #'recentf-mode)
 
 (setq recentf-max-menu-items 100

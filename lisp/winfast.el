@@ -111,8 +111,8 @@ called again."
     (define-key map "\M-k" #'kill-buffer-and-window)
     (define-key map "\M-M" #'maximize-window)
     (define-key map "\M-=" #'balance-windows)
-    (define-key map "\M-p" #'previous-buffer)
-    (define-key map "\M-n" #'next-buffer)
+    (define-key map "\M-P" #'previous-buffer)
+    (define-key map "\M-N" #'next-buffer)
 
     (define-key map "\M-f" #'winfast-toggle-fullscreen-window)
     (define-key map "\M-s" #'winfast-swap-window-with-other)
