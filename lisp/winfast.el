@@ -19,13 +19,30 @@
     (set-window-buffer (selected-window) current-buffer)))
 
 (defun winfast-swap-window-with-largest ()
-  "Exchange the selected window with the frame's largest window."
+  "Exchange the selected window with the frame's largest window.
+
+If the selected window is already the largest, exchange it
+instead with the most recently used window."
   (interactive)
-  (let* ((original-window (selected-window))
-         (current-buffer (window-buffer (selected-window))))
-    (select-window (get-largest-window))
-    (set-window-buffer original-window (window-buffer (selected-window)))
-    (set-window-buffer (selected-window) current-buffer)))
+  (let* ((current-window (selected-window))
+         (current-buffer (window-buffer current-window))
+         (largest-window (get-largest-window))
+         (mru-window (get-mru-window nil nil t))
+         (swap-current-with-largest
+          (lambda ()
+            (set-window-buffer current-window (window-buffer largest-window))
+            (set-window-buffer largest-window current-buffer)
+            (select-window largest-window)))
+         (swap-largest-with-recent
+          (lambda()
+            (set-window-buffer current-window (window-buffer mru-window))
+            (set-window-buffer mru-window current-buffer)
+            (select-window largest-window))))
+
+    (funcall (if (eq current-window largest-window)
+                 swap-largest-with-recent
+               swap-current-with-largest))
+    (recenter)))
 
 (defun winfast-put-buffer-to-recent-window ()
   "Puts the current buffer to the most recent window selected.
