@@ -48,6 +48,7 @@ collection.  Use revert-gc-cons-percentage to restore the value."
 (put 'upcase-region 'disabled nil)
 (put 'dired-find-alternate-file 'disabled nil)
 (put 'narrow-to-region 'disabled nil)
+(put 'set-goal-column 'disabled nil)
 
 (winner-mode 1)
 (fset 'yes-or-no-p 'y-or-n-p)
