@@ -32,7 +32,11 @@ Useful for completion style 'partial-completion."
  ((>= emacs-major-version 27)
   ;; fido-mode matches most of my icomplete preferences and it also
   ;; sets the same vars in the `t' condition
-  (fido-mode t)
+
+  ;; Emacs 28 introduces `fido-vertical-mode'
+  (if (= emacs-major-version 27)
+      (fido-mode t)
+    (fido-vertical-mode t))
 
   (defun prefer-pcm-before-flex ()
     (setq-local completion-styles '(partial-completion flex)))
@@ -43,8 +47,9 @@ Useful for completion style 'partial-completion."
       (define-key map (kbd "C-S-j") #'icomplete-force-complete)
       (define-key map (kbd "C-n") #'icomplete-forward-completions)
       (define-key map (kbd "C-p") #'icomplete-backward-completions)
-      (when (>= emacs-major-version 28)
-        (define-key map (kbd "C-c m l") #'icomplete-vertical-mode))))
+      (define-key map (kbd "C-?") (lambda ()
+                                    (interactive)
+                                    (minibuffer-hide-completions)))))
 
   (add-hook 'icomplete-minibuffer-setup-hook #'prefer-pcm-before-flex)
   (add-hook 'icomplete-minibuffer-setup-hook #'icomplete-my-custom-keys))
