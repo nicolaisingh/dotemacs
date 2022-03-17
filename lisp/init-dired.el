@@ -106,7 +106,9 @@ ring."
   (define-key dired-mode-map (kbd "C-c m g") #'current-directory-find-grep-dired)
   (define-key dired-mode-map (kbd "C-c m d") #'ediff-marked-files)
   (define-key dired-mode-map (kbd "C-c m !") #'apply-to-marked-files)
-  (define-key dired-mode-map (kbd "C-c m k") #'dired-dir-to-kill-ring))
+  (define-key dired-mode-map (kbd "C-c m k") #'dired-dir-to-kill-ring)
+  (define-key dired-mode-map (kbd "<tab>") #'origami-toggle-node)
+  (define-key dired-mode-map (kbd "<backtab>") #'origami-toggle-all-nodes))
 
 (add-hook 'dired-mode-hook #'dired-mode-my-custom-keys)
 (add-hook 'dired-mode-hook #'hl-line-mode)
