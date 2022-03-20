@@ -6,6 +6,8 @@
 
 ;;; Code:
 
+(require 'bs)
+
 (defvar winfast--fullscreen-p nil)
 (defvar winfast--last-window-configuration nil)
 
@@ -117,6 +119,16 @@ called again."
   (remove-hook 'pre-command-hook #'winfast-pre-command-hook)
   (winfast-mode -1))
 
+(defun winfast-cycle-previous-window ()
+  (interactive)
+  (bs-message-without-log "%s" (mapcar #'buffer-name (bs-previous-buffer)))
+  (bs-cycle-previous))
+
+(defun winfast-cycle-next-window ()
+  (interactive)
+  (bs-message-without-log "%s" (mapcar #'buffer-name (bs-next-buffer)))
+  (bs-cycle-next))
+
 (defvar winfast-mode-map
   (let ((map (make-sparse-keymap)))
     (define-key map "\M-o" #'other-window)
@@ -128,8 +140,8 @@ called again."
     (define-key map "\M-k" #'kill-buffer-and-window)
     (define-key map "\M-M" #'maximize-window)
     (define-key map "\M-=" #'balance-windows)
-    (define-key map "\M-P" #'previous-buffer)
-    (define-key map "\M-N" #'next-buffer)
+    (define-key map "\M-P" #'winfast-cycle-previous-window)
+    (define-key map "\M-N" #'winfast-cycle-next-window)
 
     (define-key map "\M-f" #'winfast-toggle-fullscreen-window)
     (define-key map "\M-s" #'winfast-swap-window-with-other)
