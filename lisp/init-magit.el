@@ -8,8 +8,13 @@
 
 (require 'magit)
 
-(global-set-key (kbd "C-c g") #'magit-status)
-(global-set-key (kbd "C-c M-g") #'magit-dispatch-popup)
+(defvar magit-my-global-map
+  (let ((map (make-sparse-keymap)))
+    (define-key map (kbd "g") #'magit-status)
+    (define-key map (kbd "l") #'magit-log-current)
+    (define-key map (kbd "M-g") #'magit-dispatch)
+    map))
+(define-key global-map (kbd "C-c g") magit-my-global-map)
 
 (setq magit-repository-directories
       '(("~/prj/emacs-config/" . 0)
