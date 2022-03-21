@@ -15,16 +15,24 @@
 
 (setq org-capture-templates '(("i" "Just some item" entry
                                (file+headline "~/org/gtd.org" "Inbox")
-                               "* %?")))
+                               "* %?")
+                              ("D" "Distraction" item
+                               (file "~/org/distraction.org")
+                               "- %? %U")))
 
 (setq org-tag-alist '(("@dev" . ?d)
                       ("@idea" . ?i)
                       ("@learn" . ?l)
                       ("@home" . ?h)))
 
+(defun org-insert-filetags ()
+  (interactive)
+  (insert "#+FILETAGS: "))
+
 (defun org-mode-my-custom-keys ()
   (define-key org-mode-map (kbd "C-c C--") #'org-ctrl-c-minus)
-  (define-key org-mode-map (kbd "C-c C-8") #'org-ctrl-c-star))
+  (define-key org-mode-map (kbd "C-c C-8") #'org-ctrl-c-star)
+  (define-key org-mode-map (kbd "C-c o f") #'org-insert-filetags))
 (add-hook 'org-mode-hook #'org-mode-my-custom-keys)
 
 (global-set-key (kbd "C-c o l") #'org-store-link)
