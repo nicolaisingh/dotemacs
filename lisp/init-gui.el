@@ -25,7 +25,6 @@
 ;; C-u s	Specify custom dired listing switches (-S=size; -X=extension)
 
 ;; Navigation:
-;; i
 ;; C-M-d	dired-tree-down
 ;; C-M-u	dired-tree-up
 ;; C-M-n	dired-next-subdir
@@ -41,7 +40,6 @@
 ;; * .		dired-mark-extension
 ;; * ! or U	dired-unmark-all-marks
 
-(my-find-init-file)
 ")
 
 (setq initial-scratch-message my-scratch-message)
