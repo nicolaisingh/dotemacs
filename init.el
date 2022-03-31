@@ -41,7 +41,7 @@ collection.  Use revert-gc-cons-percentage to restore the value."
 
 ;;;; Emacs-wide initializations
 
-(add-hook 'after-init-hook #'server-start)
+;; (add-hook 'after-init-hook #'server-start)
 
 ;; Always enable the following functions
 (put 'downcase-region 'disabled nil)
