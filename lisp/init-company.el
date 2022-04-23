@@ -18,6 +18,7 @@
                              company-sort-by-backend-importance))
 
 (add-to-list 'company-backends 'company-native-complete)
+(add-to-list 'company-backends 'company-go)
 
 (define-key company-active-map (kbd "C-n") #'company-select-next)
 (define-key company-active-map (kbd "C-p") #'company-select-previous)

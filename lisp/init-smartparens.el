@@ -61,6 +61,7 @@
 (add-hook 'eval-expression-minibuffer-setup-hook #'setup-smartparens-lisp)
 
 (add-hook 'kotlin-mode-hook #'smartparens-mode)
+(add-hook 'go-mode-hook #'smartparens-mode)
 
 (add-hook 'smartparens-mode-hook #'smartparens-mode-my-custom-keys)
 

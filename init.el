@@ -196,6 +196,7 @@ collection.  Use revert-gc-cons-percentage to restore the value."
 (require 'init-which-key)
 
 (require 'init-clojurescript)
+(require 'init-go)
 (require 'init-kotlin)
 (require 'init-nix)
 (require 'init-scheme)
