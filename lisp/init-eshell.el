@@ -13,11 +13,17 @@
   ;; (eshell/alias "cp" "cp -i $*")
   (eshell/alias "df" "df -h"))
 
+(defun eshell-load-visual-options ()
+  (add-to-list 'eshell-visual-options
+               '("nix-env" "--help" "-q" "-qa"))
+  (add-to-list 'eshell-visual-subcommands '("git" "log" "diff" "show")))
+
 (defun eshell-set-config ()
   (setq-local completion-auto-help t)
   (company-mode -1)
 
   (eshell-define-aliases)
+  (eshell-load-visual-options)
 
   (define-key eshell-mode-map (kbd "C-c m l s")
     (lambda ()
