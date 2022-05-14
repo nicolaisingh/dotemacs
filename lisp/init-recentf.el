@@ -12,10 +12,13 @@
 
 (setq recentf-max-menu-items 100
       recentf-max-saved-items 1000
-      recentf-auto-cleanup 'never
+      recentf-auto-cleanup 120
       recentf-menu-filter 'recentf-show-basenames-ascending)
 
 (add-to-list 'recentf-exclude "\\/sudoedit:root")
+
+;; Save the recentf list every 10 minutes
+(run-at-time nil (* 10 60) 'recentf-save-list)
 
 (defun recentf-open-files-completing-read ()
   (interactive)
