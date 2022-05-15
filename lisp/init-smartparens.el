@@ -47,7 +47,13 @@
   (define-key smartparens-mode-map (kbd "M-D") #'sp-kill-symbol)
   (define-key smartparens-mode-map (kbd "M-S-<backspace>") #'sp-backward-kill-symbol)
 
-  (define-key smartparens-mode-map (kbd "M-<return>") #'eval-last-sexp))
+  (define-key smartparens-mode-map (kbd "C-M-<backspace>") #'backward-kill-sexp)
+  (define-key smartparens-mode-map (kbd "C-M-f") #'sp-forward-sexp)
+  (define-key smartparens-mode-map (kbd "C-M-b") #'sp-backward-sexp)
+  (define-key smartparens-mode-map (kbd "C-M-n") #'sp-next-sexp)
+  (define-key smartparens-mode-map (kbd "C-M-p") #'sp-previous-sexp)
+  (define-key smartparens-mode-map (kbd "C-M-u") #'sp-up-sexp)
+  (define-key smartparens-mode-map (kbd "C-M-d") #'sp-down-sexp))
 
 (defun setup-smartparens-lisp ()
   (show-paren-mode)
