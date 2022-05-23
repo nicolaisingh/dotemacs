@@ -183,6 +183,7 @@ collection.  Use revert-gc-cons-percentage to restore the value."
 (require 'init-multiple-cursors)
 (require 'init-native-complete)
 (require 'init-nav-flash)
+(require 'init-newsticker)
 (require 'init-nov)
 (require 'init-org)
 (require 'init-origami)

@@ -13,7 +13,7 @@
       org-refile-targets '((nil :maxlevel . 3)
                            (org-agenda-files :maxlevel . 2)))
 
-(setq org-capture-templates '(("i" "Just some item" entry
+(setq org-capture-templates '(("c" "Just some item" entry
                                (file+headline "~/org/gtd.org" "Inbox")
                                "* %?")
                               ("D" "Distraction" item
