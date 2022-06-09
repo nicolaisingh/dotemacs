@@ -80,13 +80,20 @@ reasons.  Use this if it is available.  Otherwise, use `/sudo'."
   (setq-default indent-tabs-mode nil)
   (untabify (point-min) (point-max)))
 
+(defun indent-tab-width-2 ()
+  (interactive)
+  (setq-local tab-width 2)
+  (message "Tab width set to 2.  C-l to refresh the display."))
+
 (defun indent-tab-width-4 ()
   (interactive)
-  (setq-local tab-width 4))
+  (setq-local tab-width 4)
+  (message "Tab width set to 4.  C-l to refresh the display."))
 
 (defun indent-tab-width-8 ()
   (interactive)
-  (setq-local tab-width 8))
+  (setq-local tab-width 8)
+  (message "Tab width set to 8.  C-l to refresh the display."))
 
 (defun indent-spaces ()
   (interactive)
@@ -160,6 +167,7 @@ times."
 (global-set-key (kbd "C-x C-f") #'my-find-file)
 (global-set-key (kbd "C-c i TAB") #'indent-using-tabs)
 (global-set-key (kbd "C-c i SPC") #'indent-using-spaces)
+(global-set-key (kbd "C-c i 2") #'indent-tab-width-2)
 (global-set-key (kbd "C-c i 4") #'indent-tab-width-4)
 (global-set-key (kbd "C-c i 8") #'indent-tab-width-8)
 (global-set-key (kbd "C-c f #") #'sudo-find-alternate-file)

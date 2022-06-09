@@ -51,8 +51,12 @@ Useful for completion style 'partial-completion."
                                     (interactive)
                                     (minibuffer-hide-completions)))))
 
+  (defun icomplete-set-vertical-height ()
+    (setq-local max-mini-window-height 0.15))
+
   (add-hook 'icomplete-minibuffer-setup-hook #'prefer-pcm-before-flex)
-  (add-hook 'icomplete-minibuffer-setup-hook #'icomplete-my-custom-keys))
+  (add-hook 'icomplete-minibuffer-setup-hook #'icomplete-my-custom-keys)
+  (add-hook 'icomplete-minibuffer-setup-hook #'icomplete-set-vertical-height))
 
  (t
   ;; Original preferences prior to Emacs 27
