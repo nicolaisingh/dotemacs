@@ -8,6 +8,7 @@
 
 (require 'dired-x)
 (require 'find-dired)
+(require 'grep)
 
 (setq dired-listing-switch-A ""
       dired-isearch-filenames t
@@ -54,6 +55,24 @@
             " -i"))
          (find-grep-options (concat find-grep-options grep-ignore-case-flag)))
     (find-grep-dired (dired-current-directory) regexp)))
+
+(defun current-directory-rgrep-dired (regexp files)
+  "Run `rgrep' in dired's current directory."
+  (interactive "srgrep regexp: \nsfilename wildcard (blank for `*'): ")
+  (let* ((case-fold-search (if current-prefix-arg nil t))
+         (files (if (equal files "") "*" files)))
+    (when (eq grep-find-template nil)
+      (grep-compute-defaults))
+    (rgrep regexp files (dired-current-directory) nil)))
+
+(defun current-directory-lgrep-dired (regexp files)
+  "Run `lgrep' in dired's current directory."
+  (interactive "slgrep regexp: \nsfilename wildcard (blank for `*'): ")
+  (let* ((case-fold-search (if current-prefix-arg nil t))
+         (files (if (equal files "") "*" files)))
+    (when (eq grep-find-template nil)
+      (grep-compute-defaults))
+    (lgrep regexp files (dired-current-directory) nil)))
 
 (defun ediff-marked-files ()
   "Run ediff-files on 2 marked files in dired.  Inspired by
@@ -103,12 +122,18 @@ ring."
   (define-key dired-mode-map (kbd "C-c m .") #'toggle-other-files)
   (define-key dired-mode-map (kbd "C-c m e") #'dired-create-empty-file)
   (define-key dired-mode-map (kbd "C-c m f") #'current-directory-find-name-dired)
-  (define-key dired-mode-map (kbd "C-c m g") #'current-directory-find-grep-dired)
+  (define-key dired-mode-map (kbd "C-c m g g") #'current-directory-find-grep-dired)
+  (define-key dired-mode-map (kbd "C-c m g r") #'current-directory-rgrep-dired)
+  (define-key dired-mode-map (kbd "C-c m g l") #'current-directory-lgrep-dired)
   (define-key dired-mode-map (kbd "C-c m d") #'ediff-marked-files)
   (define-key dired-mode-map (kbd "C-c m !") #'apply-to-marked-files)
   (define-key dired-mode-map (kbd "C-c m k") #'dired-dir-to-kill-ring)
   (define-key dired-mode-map (kbd "<tab>") #'origami-toggle-node)
   (define-key dired-mode-map (kbd "<backtab>") #'origami-toggle-all-nodes))
+
+(eval-after-load 'grep
+  '(progn
+     (add-to-list 'grep-find-ignored-directories "node_modules")))
 
 (add-hook 'dired-mode-hook #'dired-mode-my-custom-keys)
 (add-hook 'dired-mode-hook #'hl-line-mode)
