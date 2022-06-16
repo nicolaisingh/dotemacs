@@ -10,8 +10,8 @@
 
 (add-hook 'after-init-hook #'recentf-mode)
 
-(setq recentf-max-menu-items 100
-      recentf-max-saved-items 1000
+(setq recentf-max-menu-items 1000
+      recentf-max-saved-items 10000
       recentf-auto-cleanup 120
       recentf-menu-filter 'recentf-show-basenames-ascending)
 

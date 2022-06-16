@@ -10,7 +10,7 @@
 (require 'find-dired)
 (require 'grep)
 
-(setq dired-listing-switch-A ""
+(setq dired-listing-switch-A "a"
       dired-isearch-filenames t
       dired-hide-details-hide-symlink-targets nil
       dired-hide-details-hide-information-lines nil)
