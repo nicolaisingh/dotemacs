@@ -176,7 +176,6 @@ collection.  Use revert-gc-cons-percentage to restore the value."
 (require 'init-imenu-list)
 (require 'init-isearch)
 ;; (require 'init-ivy)
-(require 'init-js2-mode)
 (require 'init-json-navigator)
 (require 'init-latex)
 (require 'init-magit)
@@ -198,6 +197,7 @@ collection.  Use revert-gc-cons-percentage to restore the value."
 
 (require 'init-clojurescript)
 (require 'init-go)
+(require 'init-javascript)
 (require 'init-kotlin)
 (require 'init-nix)
 (require 'init-scheme)

@@ -68,6 +68,7 @@
 
 (add-hook 'kotlin-mode-hook #'smartparens-mode)
 (add-hook 'go-mode-hook #'smartparens-mode)
+(add-hook 'js2-mode-hook #'smartparens-mode)
 
 (add-hook 'smartparens-mode-hook #'smartparens-mode-my-custom-keys)
 
