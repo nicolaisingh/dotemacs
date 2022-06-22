@@ -11,11 +11,10 @@
 (defun newsticker-my-custom-keys ()
   (define-key newsticker-mode-map (kbd "<tab>") 'newsticker-show-entry))
 
-(defun newsticker-close-buffer ()
-  "Close the newsticker buffer."
-  (interactive)
-  ;; (newsticker--cache-update t)
-  (bury-buffer))
+(defun newsticker--cache-update-advice (orig-fun &rest args)
+  (message "newsticker--cache-update called, doing nothing"))
+
+(advice-add 'newsticker--cache-update :around #'newsticker--cache-update-advice)
 
 (add-hook 'newsticker-mode-hook #'newsticker-my-custom-keys)
 (add-hook 'newsticker-mode-hook #'hl-line-mode)

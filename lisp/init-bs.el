@@ -115,7 +115,8 @@ the configuration 'files-plus-some-buffers-and-modes."
     (lambda ()
       (interactive)
       (apply #'bs-custom-set-configuration-and-refresh
-             '("all")))))
+             '("all"))))
+  (define-key bs-mode-map (kbd "/") #'isearch-forward))
 
 (defun bs-mode-my-config ()
   (bs-mode-my-custom-keys)
