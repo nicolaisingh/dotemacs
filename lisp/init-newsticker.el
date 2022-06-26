@@ -18,7 +18,7 @@
 
 (add-hook 'newsticker-mode-hook #'newsticker-my-custom-keys)
 (add-hook 'newsticker-mode-hook #'hl-line-mode)
-(add-hook 'newsticker-select-feed-hook #'reposition-window)
+(add-hook 'newsticker-select-feed-hook (lambda () (recenter-top-bottom 2)))
 
 (provide 'init-newsticker)
 ;;; init-newsticker.el ends here
