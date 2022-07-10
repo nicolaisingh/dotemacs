@@ -31,7 +31,7 @@
 ;; e5e5e5=gray90
 ;; dbdbdb=gray86
 ;; d1d1d1=gray82
-(setq my-bg-color "#f0f0f0"
+(setq my-bg-color "#f7f7f7"
       my-bg-hl1-color "#e5e5e5"
       my-bg-hl2-color "#dbdbdb"
       my-bg-hl3-color "#d1d1d1")

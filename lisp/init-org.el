@@ -32,7 +32,8 @@
 (defun org-mode-my-custom-keys ()
   (define-key org-mode-map (kbd "C-c C--") #'org-ctrl-c-minus)
   (define-key org-mode-map (kbd "C-c C-8") #'org-ctrl-c-star)
-  (define-key org-mode-map (kbd "C-c o f") #'org-insert-filetags))
+  (define-key org-mode-map (kbd "C-c o f") #'org-insert-filetags)
+  (define-key org-mode-map (kbd "C-c C-SPC") #'org-table-blank-field))
 (add-hook 'org-mode-hook #'org-mode-my-custom-keys)
 
 (global-set-key (kbd "C-c o l") #'org-store-link)

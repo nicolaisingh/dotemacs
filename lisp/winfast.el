@@ -10,6 +10,8 @@
 
 (defvar winfast--fullscreen-p nil)
 (defvar winfast--last-window-configuration nil)
+(defvar winfast--mode-line-color nil)
+(defvar winfast--winfast-mode-line-color "khaki")
 
 (defun winfast-swap-window-with-other (count)
   "Exchange the selected window with the next one."
@@ -117,6 +119,8 @@ called again."
 (defun winfast-mode-done ()
   "Cleanup before fully turning off winfast-mode."
   (remove-hook 'pre-command-hook #'winfast-pre-command-hook)
+  (set-face-attribute 'mode-line nil
+                      :background winfast--mode-line-color)
   (winfast-mode -1))
 
 (defun winfast-cycle-previous-window ()
@@ -128,6 +132,22 @@ called again."
   (interactive)
   (bs-message-without-log "%s" (mapcar #'buffer-name (bs-next-buffer)))
   (bs-cycle-next))
+
+(defun winfast-enlarge-window-horizontally ()
+  (interactive)
+  (enlarge-window-horizontally 10))
+
+(defun winfast-shrink-window-horizontally ()
+  (interactive)
+  (shrink-window-horizontally 10))
+
+(defun winfast-shrink-window ()
+  (interactive)
+  (shrink-window 5))
+
+(defun winfast-enlarge-window ()
+  (interactive)
+  (enlarge-window 5))
 
 (defvar winfast-mode-map
   (let ((map (make-sparse-keymap)))
@@ -142,14 +162,21 @@ called again."
     (define-key map "\M-=" #'balance-windows)
     (define-key map "\M-P" #'winfast-cycle-previous-window)
     (define-key map "\M-N" #'winfast-cycle-next-window)
+    (define-key map "\M-b" #'bs-show)
 
     (define-key map "\M-f" #'winfast-toggle-fullscreen-window)
     (define-key map "\M-s" #'winfast-swap-window-with-other)
     (define-key map [M-return] #'winfast-swap-window-with-largest)
     (define-key map "\M-\r" #'winfast-swap-window-with-largest)
 
-    (define-key map "br" #'winfast-put-buffer-to-recent-window)
-    (define-key map "bo" #'winfast-put-buffer-to-other-window)
+    (define-key map "\M-]" #'winfast-enlarge-window)
+    (define-key map "\M-[" #'winfast-shrink-window)
+    (define-key map "\M-}" #'winfast-enlarge-window-horizontally)
+    (define-key map "\M-{" #'winfast-shrink-window-horizontally)
+
+    ;; TODO
+    ;; (define-key map "br" #'winfast-put-buffer-to-recent-window)
+    ;; (define-key map "bo" #'winfast-put-buffer-to-other-window)
     map)
   "Keymap for `winfast-mode'.
 Any other key binding used which is not in the map will turn off
@@ -163,7 +190,9 @@ Any other key binding used which is not in the map will turn off
   :keymap winfast-mode-map
 
   (when winfast-mode
-    (add-hook 'pre-command-hook #'winfast-pre-command-hook)))
+    (add-hook 'pre-command-hook #'winfast-pre-command-hook)
+    (setq winfast--mode-line-color (face-attribute 'mode-line :background))
+    (set-face-attribute 'mode-line nil :background winfast--winfast-mode-line-color)))
 
 (provide 'winfast)
 ;;; winfast.el ends here
