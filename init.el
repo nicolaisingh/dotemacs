@@ -201,6 +201,7 @@ collection.  Use revert-gc-cons-percentage to restore the value."
 (require 'init-kotlin)
 (require 'init-nix)
 (require 'init-scheme)
+(require 'init-solidity)
 (require 'init-typescript)
 
 (provide 'init)

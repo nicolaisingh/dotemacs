@@ -12,7 +12,8 @@
       company-minimum-prefix-length 2
       company-idle-delay 0.3
       company-selection-wrap-around 1
-      company-require-match nil)
+      company-require-match nil
+      company-dabbrev-downcase nil)
 
 (setq company-transformers '(company-sort-by-occurrence
                              company-sort-by-backend-importance))
