@@ -6,7 +6,7 @@
 
 ;;; Code:
 
-(setq plantuml-jar-path "/usr/share/java/plantuml.jar"
+(setq plantuml-jar-path "/home/nas/.nix-profile/bin/plantuml"
       plantuml-output-type "png")
 
 (add-to-list 'auto-mode-alist '("\\.plantuml\\'" . plantuml-mode))

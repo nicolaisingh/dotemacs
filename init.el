@@ -139,6 +139,16 @@ collection.  Use revert-gc-cons-percentage to restore the value."
 (when (file-exists-p custom-file)
   (load custom-file))
 
+;;;; Macros
+(fset 'nft-fix-jsons
+      (kmacro-lambda-form [?w return ?\C-x ?h backspace ?\{
+                              return ?\" ?n ?a ?m ?e ?: S-backspace ?\" ?: ?\S- ?\" ?\C-y
+                              ?\C-b ?\C-b ?\C-b ?\C-b ?\C-b ?\C-d ?\C-d ?\C-d ?\C-d ?\C-d
+                              ?\" ?, return ?\" ?d ?e ?s ?c ?r ?i ?p ?t ?i ?o ?n ?\" ?:
+                              ?\S- ?\" ?T ?h ?i ?s ?  ?i ?s ?  ?m ?y ?  ?d ?e ?s ?c ?r ?t
+                              ?i ?p backspace backspace backspace ?i ?p ?t ?i ?o ?n ?\"
+                              return ?\} ?\C-x ?\C-s ?\C-x ?k return ?n ?n] 0 "%d"))
+
 ;;;; Package initializations
 
 (add-to-list 'load-path (expand-file-name "lisp" user-emacs-directory))
