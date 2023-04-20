@@ -7,6 +7,7 @@
 ;;; Code:
 
 (require 'magit)
+(require 'project)
 
 (defvar magit-my-global-map
   (let ((map (make-sparse-keymap)))
@@ -15,6 +16,9 @@
     (define-key map (kbd "M-g") #'magit-dispatch)
     map))
 (define-key global-map (kbd "C-c g") magit-my-global-map)
+
+(define-key project-prefix-map "m" #'magit-project-status)
+(add-to-list 'project-switch-commands '(magit-project-status "Magit") t)
 
 (setq magit-repository-directories
       '(("~/prj/emacs-config/" . 0)
