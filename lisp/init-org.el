@@ -13,17 +13,21 @@
       org-refile-targets '((nil :maxlevel . 3)
                            (org-agenda-files :maxlevel . 2)))
 
-(setq org-capture-templates '(("c" "Just some item" entry
+(setq org-capture-templates '(("c" "Capture something" entry
                                (file+headline "~/org/gtd.org" "Inbox")
-                               "* %?")
+                               "* %^{Topic|Capture} %U
+
+%?")
                               ("D" "Distraction" item
                                (file "~/org/distraction.org")
                                "- %? %U")))
 
 (setq org-tag-alist '(("@dev" . ?d)
                       ("@idea" . ?i)
+                      ("@home" . ?h)
                       ("@learn" . ?l)
-                      ("@home" . ?h)))
+                      ("@project" . ?p)
+                      ("@task" . ?t)))
 
 (defun org-insert-filetags ()
   (interactive)
