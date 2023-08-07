@@ -11,7 +11,8 @@
 (setq org-startup-indented 1
       org-default-notes-file (concat org-directory "/notes.org")
       org-refile-targets '((nil :maxlevel . 3)
-                           (org-agenda-files :maxlevel . 2)))
+                           (org-agenda-files :maxlevel . 2))
+      org-complete-tags-always-offer-all-agenda-tags t)
 
 (setq org-capture-templates '(("c" "Capture something" entry
                                (file+headline "~/org/gtd.org" "Inbox")

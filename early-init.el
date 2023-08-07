@@ -77,8 +77,7 @@
 (add-to-list 'default-frame-alist '(width . 180))
 
 ;; Load a nice font
-(setq my-font "DejaVu Sans Mono-9:weight=normal:width=regular")
-;; (setq my-font "Source Code Pro-10:weight=normal:width=regular")
+(setq my-font "Inconsolata-11:weight=normal:width=regular")
 (when (bound-and-true-p my-font)
   (set-face-attribute 'default t :font my-font)
   (add-to-list 'default-frame-alist `(font . ,my-font)))

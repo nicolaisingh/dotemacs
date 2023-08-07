@@ -10,19 +10,10 @@
  '(eshell-ls-dired-initial-args '("-h"))
  '(eshell-ls-initial-args '("-h"))
  '(ibuffer-saved-filter-groups
-   '(("nas"
-      ("Kotlin"
-       (mode . kotlin-mode))
-      ("Emacs Lisp"
-       (mode . emacs-lisp-mode))
-      ("Org"
-       (mode . org-mode))
-      ("Magit"
-       (name . "^magit.*:"))
-      ("Dired"
-       (mode . dired-mode))
-      ("Shell"
-       (mode . shell-mode)))))
+   '(("nas" ("Kotlin" (mode . kotlin-mode))
+      ("Emacs Lisp" (mode . emacs-lisp-mode))
+      ("Org" (mode . org-mode)) ("Magit" (name . "^magit.*:"))
+      ("Dired" (mode . dired-mode)) ("Shell" (mode . shell-mode)))))
  '(ibuffer-show-empty-filter-groups nil)
  '(kotlin-tab-width 4)
  '(mode-line-percent-position nil)
@@ -33,27 +24,58 @@
  '(newsticker-scroll-smoothly t)
  '(newsticker-statistics-format "[new-%n imm-%i old-%o obs-%O tot-%a]")
  '(newsticker-url-list
-   '(("Planet EmacsLife" "https://planet.emacslife.com/atom.xml" nil nil nil)
+   '(("Planet EmacsLife" "https://planet.emacslife.com/atom.xml" nil nil
+      nil)
      ("Mattia Gheda" "http://ghedam.at/feed.xml" nil nil nil)
-     ("null program - Chris Wellons" "https://nullprogram.com/tags/emacs/feed/" nil nil nil)
-     ("Nintendo Life" "https://www.nintendolife.com/feeds/latest" nil nil nil)
-     ("NixOS Weekly" "https://weekly.nixos.org/feeds/all.rss.xml" nil nil nil)
+     ("null program - Chris Wellons"
+      "https://nullprogram.com/tags/emacs/feed/" nil nil nil)
+     ("Nintendo Life" "https://www.nintendolife.com/feeds/latest" nil
+      nil nil)
+     ("NixOS Weekly" "https://weekly.nixos.org/feeds/all.rss.xml" nil
+      nil nil)
      ("FSF GNU" "http://www.gnu.org/rss/whatsnew.rss" nil nil nil)
-     ("FSF News" "https://www.fsf.org/static/fsforg/rss/news.xml" nil nil nil)
-     ("FSF Blog" "https://www.fsf.org/static/fsforg/rss/blogs.xml" nil nil nil)))
+     ("FSF News" "https://www.fsf.org/static/fsforg/rss/news.xml" nil
+      nil nil)
+     ("FSF Blog" "https://www.fsf.org/static/fsforg/rss/blogs.xml" nil
+      nil nil)))
  '(newsticker-url-list-defaults
    '(("LWN (Linux Weekly News)" "https://lwn.net/headlines/rss")
-     ("Quote of the day" "http://feeds.feedburner.com/quotationspage/qotd" "07:00" 86400)
+     ("Quote of the day"
+      "http://feeds.feedburner.com/quotationspage/qotd" "07:00" 86400)
      ("Wired News" "https://www.wired.com/feed/rss")))
  '(org-agenda-files '("~/org"))
  '(package-selected-packages
-   '(csv-mode atomic-chrome solidity-mode dockerfile-mode yaml-imenu yaml-mode dash ag js2-refactor xref-js2 typescript-mode company-go lsp-treemacs lsp-mode go-mode ztree nav-flash company-nixos-options nix-mode nixos-options dap-mode bui nov highlight-numbers lorem-ipsum command-log-mode imenu-list yasnippet package-lint currency-convert company-native-complete native-complete saveplace-pdf-view graphviz-dot-mode company-restclient restclient know-your-http-well multiple-cursors inf-clojure clojure-mode aggressive-indent tree-mode json-navigator prism find-file-in-repository dired-toggle diminish transpose-frame amx unfill readline-complete writeroom-mode magit htmlize discover-my-major flycheck flycheck-kotlin typing company edit-server js2-mode kotlin-mode smartparens json-mode origami browse-kill-ring which-key plantuml-mode centered-cursor-mode expand-region pdf-tools))
+   '(saveplace-pdf-view flycheck-package csv-mode atomic-chrome
+                        solidity-mode dockerfile-mode yaml-imenu
+                        yaml-mode dash ag js2-refactor xref-js2
+                        typescript-mode company-go lsp-treemacs
+                        lsp-mode go-mode ztree nav-flash
+                        company-nixos-options nix-mode nixos-options
+                        dap-mode bui nov highlight-numbers lorem-ipsum
+                        command-log-mode imenu-list yasnippet
+                        package-lint currency-convert
+                        company-native-complete native-complete
+                        graphviz-dot-mode company-restclient
+                        restclient know-your-http-well
+                        multiple-cursors inf-clojure clojure-mode
+                        aggressive-indent tree-mode json-navigator
+                        prism find-file-in-repository dired-toggle
+                        diminish transpose-frame amx unfill
+                        readline-complete writeroom-mode magit htmlize
+                        discover-my-major flycheck flycheck-kotlin
+                        typing company edit-server js2-mode
+                        kotlin-mode smartparens json-mode origami
+                        browse-kill-ring which-key plantuml-mode
+                        centered-cursor-mode expand-region pdf-tools))
  '(plantuml-default-exec-mode 'jar)
  '(window-divider-default-right-width 3)
  '(window-divider-mode t)
  '(writeroom-extra-line-spacing 0.3)
  '(writeroom-global-effects
-   '(writeroom-set-alpha writeroom-set-menu-bar-lines writeroom-set-tool-bar-lines writeroom-set-vertical-scroll-bars writeroom-set-bottom-divider-width))
+   '(writeroom-set-alpha writeroom-set-menu-bar-lines
+                         writeroom-set-tool-bar-lines
+                         writeroom-set-vertical-scroll-bars
+                         writeroom-set-bottom-divider-width))
  '(writeroom-maximize-window nil)
  '(x-stretch-cursor t))
 (custom-set-faces
