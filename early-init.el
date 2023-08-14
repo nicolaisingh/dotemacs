@@ -27,7 +27,7 @@
 
 (load-theme 'tsdh-light)
 
-;; f0f0f0=gray94
+;; f7f7f7=gray97
 ;; e5e5e5=gray90
 ;; dbdbdb=gray86
 ;; d1d1d1=gray82

@@ -9,10 +9,12 @@
 (require 'init-etc)
 (require 'js2-mode)
 (require 'js2-refactor)
+(require 'xref-js2)
 
 (add-to-list 'auto-mode-alist '("\\.js\\'" . js2-mode))
 
 (setq js-indent-level 2
+      js-switch-indent-offset 2
       js2-strict-missing-semi-warning nil)
 
 (defun js2-mode-my-custom-keys ()

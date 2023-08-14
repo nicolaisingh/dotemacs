@@ -53,6 +53,9 @@ collection.  Use revert-gc-cons-percentage to restore the value."
 (winner-mode 1)
 (fset 'yes-or-no-p 'y-or-n-p)
 
+;; Confirm when exiting emacs
+(setq confirm-kill-emacs #'yes-or-no-p)
+
 ;; Do not ask to follow symlinks; always follow
 (setq vc-follow-symlinks t)
 
