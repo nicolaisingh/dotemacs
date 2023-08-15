@@ -146,10 +146,17 @@ times."
     (set-transient-map
      (let ((map (make-sparse-keymap)))
        (define-key map (vector repeat-char)
-         (lambda ()
-           (interactive)
-           (repeatkey-repeatable-call repeatkey-last-command)))
+                   (lambda ()
+                     (interactive)
+                     (repeatkey-repeatable-call repeatkey-last-command)))
        map))))
+
+(defun toggle-hscroll-mode ()
+  "Toggle `auto-hscroll-mode' between t and 'current-line."
+  (interactive)
+  (let ((value (if (eq auto-hscroll-mode t) 'current-line t)))
+    (setq auto-hscroll-mode value)
+    (message "auto-hscroll-mode: %s" value)))
 
 (defun empty-command ()
   "A command that doesn't do anything."
@@ -175,6 +182,7 @@ times."
 (global-set-key (kbd "C-c m l") #'mark-line)
 (global-set-key (kbd "C-c l n") #'toggle-line-and-column-numbers)
 (global-set-key (kbd "C-c h n") #'highlight-numbers-mode)
+(global-set-key (kbd "C-c h s") #'toggle-hscroll-mode)
 (global-set-key (kbd "C-c P P") #'profiler-toggle)
 (global-set-key (kbd "C-c P R") #'profiler-report)
 

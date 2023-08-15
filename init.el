@@ -43,6 +43,50 @@ collection.  Use revert-gc-cons-percentage to restore the value."
 
 ;; (add-hook 'after-init-hook #'server-start)
 
+;; General emacs settings
+(setq
+ ;; Timeout in seconds before auto-save
+ auto-save-timeout 5
+
+ ;; Show paren matches instantly
+ show-paren-delay 0
+
+ ;; Show N lines of text on top/bottom when scrolling
+ scroll-margin 0
+
+ ;; Allow C-SPC to continue popping the mark after C-u C-SPC
+ set-mark-command-repeat-pop t
+
+ ;; Ask when exiting emacs
+ confirm-kill-emacs #'yes-or-no-p
+
+ ;; Do not ask to follow symlinks; always follow
+ vc-follow-symlinks t
+
+ ;; Save bookmarks immediately
+ bookmark-save-flag t
+
+ ;; Horizontal scroll the current line only
+ auto-hscroll-mode 'current-line
+
+ ;; Don't save if it duplicates the last one in the kill ring
+ kill-do-not-save-duplicates t
+
+ ;; Kill whole lines
+ kill-whole-line t
+
+ ;; C-n adds new lines at eof
+ next-line-add-newlines t
+
+ ;; Save clipboard contents before killing
+ save-interprogram-paste-before-kill t)
+
+;; Don't ask when reverting for the following regex
+(setq revert-without-query '("^.*\\.pdf$"))
+
+;; Display long lines as is
+(setq-default truncate-lines t)
+
 ;; Always enable the following functions
 (put 'downcase-region 'disabled nil)
 (put 'upcase-region 'disabled nil)
@@ -52,15 +96,6 @@ collection.  Use revert-gc-cons-percentage to restore the value."
 
 (winner-mode 1)
 (fset 'yes-or-no-p 'y-or-n-p)
-
-;; Confirm when exiting emacs
-(setq confirm-kill-emacs #'yes-or-no-p)
-
-;; Do not ask to follow symlinks; always follow
-(setq vc-follow-symlinks t)
-
-;; Save bookmarks immediately
-(setq bookmark-save-flag 1)
 
 ;; Enable recursive minibuffers
 (setq enable-recursive-minibuffers 1)
@@ -72,36 +107,14 @@ collection.  Use revert-gc-cons-percentage to restore the value."
       auto-save-file-name-transforms
       `((".*" ,(concat user-emacs-directory "autosaves/") t)))
 
-;; Allow C-SPC to continue popping the mark after C-u C-SPC
-(setq-default set-mark-command-repeat-pop 1)
-
-;; Show N lines of text on top/bottom when scrolling
-(setq-default scroll-margin 2)
-
-;; Display long lines as is
-(setq-default truncate-lines t)
-
-;; Show paren matches instantly
-(setq show-paren-delay 0)
-
 ;; Tabs and spaces handling
 (setq-default tab-width 4)
 (add-hook 'shell-mode-hook #'indent-tab-width-8)
 (add-hook 'emacs-lisp-mode-hook #'indent-tab-width-8)
 (add-hook 'kotlin-mode-hook #'indent-spaces)
-
-;; Don't ask when reverting for the following regex
-(setq revert-without-query '("^.*\\.pdf$"))
-
-(defun turn-off-indent-tabs-mode () (setq indent-tabs-mode nil))
 (add-hook 'emacs-lisp-mode-hook #'turn-off-indent-tabs-mode)
 (add-hook 'scheme-mode-hook #'turn-off-indent-tabs-mode)
-
 (add-hook 'before-save-hook #'delete-trailing-whitespace)
-
-;; Line display
-(global-set-key (kbd "C-c t l") #'toggle-truncate-lines)
-(global-set-key (kbd "C-c h l") #'hl-line-mode)
 
 ;; Allow repeating keys for previous
 (defun previous-buffer-repeatable ()
@@ -115,6 +128,8 @@ collection.  Use revert-gc-cons-percentage to restore the value."
   (repeatkey-repeatable-call #'next-buffer))
 
 ;; Other key bindings
+(global-set-key (kbd "C-c t l") #'toggle-truncate-lines)
+(global-set-key (kbd "C-c h l") #'hl-line-mode)
 (global-set-key (kbd "C-x C-S-c") #'save-buffers-kill-emacs)
 (global-set-key (kbd "M-SPC") #'cycle-spacing)
 (global-set-key (kbd "C-x C-m") (key-binding (kbd "M-x")))
