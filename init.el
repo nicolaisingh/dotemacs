@@ -116,17 +116,6 @@ collection.  Use revert-gc-cons-percentage to restore the value."
 (add-hook 'scheme-mode-hook #'turn-off-indent-tabs-mode)
 (add-hook 'before-save-hook #'delete-trailing-whitespace)
 
-;; Allow repeating keys for previous
-(defun previous-buffer-repeatable ()
-  "Call `previous-buffer' using `repeatkey-repeatable-call'."
-  (interactive)
-  (repeatkey-repeatable-call #'previous-buffer))
-
-(defun next-buffer-repeatable ()
-  "Call `next-buffer' using `repeatkey-repeatable-call'."
-  (interactive)
-  (repeatkey-repeatable-call #'next-buffer))
-
 ;; Other key bindings
 (global-set-key (kbd "C-c t l") #'toggle-truncate-lines)
 (global-set-key (kbd "C-c h l") #'hl-line-mode)

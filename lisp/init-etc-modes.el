@@ -6,6 +6,8 @@
 
 ;;; Code:
 
+(require 'init-etc-modes-repeatkey)
+
 (define-minor-mode reader-mode
   "Make a reader-friendly view by removing screen distractions
 and adding margins."
@@ -35,45 +37,6 @@ From https://www.emacswiki.org/emacs/XModMapMode")
   nil
   nil
   "Generic major mode for the Miranda programming language.")
-
-;; prevnext-buffer-mode
-
-(defun prevnext-buffer-mode-done ()
-  "Cleanup before fully turning off prevnext-buffer-mode."
-  (remove-hook 'pre-command-hook #'prevnext-buffer-pre-command-hook)
-  (prevnext-buffer-mode -1))
-
-(defun prevnext-buffer-pre-command-hook ()
-  (let* ((key (this-single-command-keys))
-         (prevnext-buffer-key (lookup-key prevnext-buffer-mode-map key nil)))
-    (unless (commandp prevnext-buffer-key)
-      (prevnext-buffer-mode-done))))
-
-(define-minor-mode prevnext-buffer-mode
-  "Minor mode for better previous and next buffer switching (C-x left and C-x right bindings)."
-  :global t
-  :init-value nil
-  :lighter nil
-  :keymap (let ((map (make-sparse-keymap)))
-            (define-key map [left] #'previous-buffer)
-            (define-key map [right] #'next-buffer)
-            map)
-
-  (when prevnext-buffer-mode
-    (add-hook 'pre-command-hook #'prevnext-buffer-pre-command-hook)))
-
-(defun prevnext-buffer-mode-switch-next-then-start ()
-  (interactive)
-  (next-buffer)
-  (prevnext-buffer-mode 1))
-
-(defun prevnext-buffer-mode-switch-previous-then-start ()
-  (interactive)
-  (previous-buffer)
-  (prevnext-buffer-mode 1))
-
-(global-set-key (kbd "C-x <left>") #'prevnext-buffer-mode-switch-previous-then-start)
-(global-set-key (kbd "C-x <right>") #'prevnext-buffer-mode-switch-next-then-start)
 
 (provide 'init-etc-modes)
 ;;; init-etc-modes.el ends here
