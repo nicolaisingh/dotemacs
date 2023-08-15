@@ -76,11 +76,5 @@
 (add-to-list 'default-frame-alist '(height . 60))
 (add-to-list 'default-frame-alist '(width . 180))
 
-;; Load a nice font
-(setq my-font "Inconsolata-11:weight=normal:width=regular")
-(when (bound-and-true-p my-font)
-  (set-face-attribute 'default t :font my-font)
-  (add-to-list 'default-frame-alist `(font . ,my-font)))
-
 (provide 'early-init)
 ;;; early-init.el ends here

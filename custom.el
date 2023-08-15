@@ -83,6 +83,7 @@
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
+ '(default ((t (:font "Inconsolata-11"))))
  '(hl-line ((t (:background "gray92"))))
  '(magit-diff-context-highlight ((t (:extend t :background "grey98" :foreground "grey50"))))
  '(magit-diff-hunk-heading-highlight ((t (:extend t :background "grey88"))))
@@ -90,6 +91,7 @@
  '(mode-line-highlight ((t (:underline t))))
  '(newsticker-new-item-face ((t (:foreground "DarkGreen" :weight bold))))
  '(newsticker-old-item-face ((t (:weight bold))))
+ '(variable-pitch ((t (:height 1.1 :family "Source Serif Pro"))))
  '(window-divider ((t (:distant-foreground "gray50" :foreground "gray94"))))
  '(window-divider-first-pixel ((t (:foreground "gray94"))))
  '(window-divider-last-pixel ((t (:foreground "gray94")))))
