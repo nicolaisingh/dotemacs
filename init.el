@@ -196,6 +196,7 @@ collection.  Use revert-gc-cons-percentage to restore the value."
 (require 'init-json-navigator)
 (require 'init-latex)
 (require 'init-magit)
+(require 'init-marginalia)
 (require 'init-multiple-cursors)
 (require 'init-native-complete)
 (require 'init-nav-flash)
