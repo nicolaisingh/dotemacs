@@ -25,23 +25,23 @@ current command.")
   (let ((map (make-sparse-keymap)))
     (define-key map [left] #'previous-buffer)
     (define-key map [right] #'next-buffer)
-	(define-key map "o" #'other-window)
-	(define-key map "{" #'shrink-window-horizontally)
-	(define-key map "}" #'enlarge-window-horizontally)
-	(define-key map "^" #'enlarge-window)
-	(define-key map "6" #'shrink-window)
+    (define-key map "o" #'other-window)
+    (define-key map "{" #'shrink-window-horizontally)
+    (define-key map "}" #'enlarge-window-horizontally)
+    (define-key map "^" #'enlarge-window)
+    (define-key map "6" #'shrink-window)
     map))
 
 (defun repeatkey-pre-command-hook ()
   (let* ((mapped-p (where-is-internal this-command `(,(repeatkey-keymap)) t)))
-	(if mapped-p
-		(setq repeatkey-load-map-p t)
-	  (setq repeatkey-load-map-p nil)
-	  (repeatkey-update-map nil))))
+    (if mapped-p
+        (setq repeatkey-load-map-p t)
+      (setq repeatkey-load-map-p nil)
+      (repeatkey-update-map nil))))
 
 (defun repeatkey-post-command-hook ()
   (when repeatkey-load-map-p
-	(repeatkey-update-map (repeatkey-keymap))))
+    (repeatkey-update-map (repeatkey-keymap))))
 
 (define-minor-mode repeatkey-mode
   "Minor mode for better previous and next buffer switching (C-x left and C-x right bindings)."
@@ -51,11 +51,11 @@ current command.")
   :keymap (make-sparse-keymap)
 
   (when repeatkey-mode
-	(add-hook 'pre-command-hook #'repeatkey-pre-command-hook)
-	(add-hook 'post-command-hook #'repeatkey-post-command-hook))
+    (add-hook 'pre-command-hook #'repeatkey-pre-command-hook)
+    (add-hook 'post-command-hook #'repeatkey-post-command-hook))
   (unless repeatkey-mode
-	(remove-hook 'pre-command-hook #'repeatkey-pre-command-hook)
-	(remove-hook 'post-command-hook #'repeatkey-post-command-hook)))
+    (remove-hook 'pre-command-hook #'repeatkey-pre-command-hook)
+    (remove-hook 'post-command-hook #'repeatkey-post-command-hook)))
 
 ;; Enable this minor mode
 (repeatkey-mode t)

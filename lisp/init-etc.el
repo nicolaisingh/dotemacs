@@ -70,12 +70,12 @@ reasons.  Use this if it is available.  Otherwise, use `/sudo'."
       (find-file-in-repository)
     (call-interactively #'find-file)))
 
-(defun indent-using-tabs ()
+(defun indent-using-tabs-and-fixup ()
   (interactive)
   (setq-default indent-tabs-mode t)
   (tabify (point-min) (point-max)))
 
-(defun indent-using-spaces ()
+(defun indent-using-spaces-and-fixup ()
   (interactive)
   (setq-default indent-tabs-mode nil)
   (untabify (point-min) (point-max)))
@@ -98,6 +98,10 @@ reasons.  Use this if it is available.  Otherwise, use `/sudo'."
 (defun indent-spaces ()
   (interactive)
   (setq-local indent-tabs-mode nil))
+
+(defun indent-tabs ()
+  (interactive)
+  (setq-local indent-tabs-mode t))
 
 (defun mark-line (&optional arg)
   (interactive "p")
@@ -172,8 +176,8 @@ times."
 (add-hook 'find-file-hook #'handle-large-file)
 
 (global-set-key (kbd "C-x C-f") #'my-find-file)
-(global-set-key (kbd "C-c i TAB") #'indent-using-tabs)
-(global-set-key (kbd "C-c i SPC") #'indent-using-spaces)
+(global-set-key (kbd "C-c i TAB") #'indent-using-tabs-and-fixup)
+(global-set-key (kbd "C-c i SPC") #'indent-using-spaces-and-fixup)
 (global-set-key (kbd "C-c i 2") #'indent-tab-width-2)
 (global-set-key (kbd "C-c i 4") #'indent-tab-width-4)
 (global-set-key (kbd "C-c i 8") #'indent-tab-width-8)

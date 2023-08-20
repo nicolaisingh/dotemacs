@@ -19,21 +19,21 @@
  org-adapt-indentation t)
 
 (setq org-capture-templates '(("n" "Notes inbox" entry
-							   (file+headline "~/org/inbox.org" "Notes")
-							   "* %^{Content|Reminder}\n\n%U\n%?" :empty-lines 1)
-							  ("p" "Projects inbox" entry
-							   (file+headline "~/org/inbox.org" "Projects")
-							   "* %^{Content|Reminder}\n\n%U\n%?" :empty-lines 1)
-							  ("l" "Log" entry
-							   (file+olp+datetree "~/org/log.org")
-							   "* %?" :empty-lines 1)
+                               (file+headline "~/org/inbox.org" "Notes")
+                               "* %^{Content|Reminder}\n\n%U\n%?" :empty-lines 1)
+                              ("p" "Projects inbox" entry
+                               (file+headline "~/org/inbox.org" "Projects")
+                               "* %^{Content|Reminder}\n\n%U\n%?" :empty-lines 1)
+                              ("l" "Log" entry
+                               (file+olp+datetree "~/org/log.org")
+                               "* %?" :empty-lines 1)
                               ("D" "Distraction" item
-							   (file "~/org/distraction.org")
-							   "- %? %U")))
+                               (file "~/org/distraction.org")
+                               "- %? %U")))
 
-(setq org-tag-alist '(("@bib" . ?b)
-					  ("@project" . ?p)
-					  ("@task" . ?t)))
+(setq org-tag-alist '(("@Lit" . ?l)
+                      ("@Project" . ?p)
+                      ("@Task" . ?t)))
 
 (defun org-fixup-indents ()
   (interactive)
@@ -48,7 +48,7 @@
   (define-key org-mode-map (kbd "C-c C-SPC") #'org-table-blank-field))
 (add-hook 'org-mode-hook #'org-mode-my-custom-keys)
 (add-hook 'org-mode-hook #'turn-on-auto-fill)
-(add-hook 'org-mode-hook #'indent-using-spaces)
+(add-hook 'org-mode-hook #'indent-spaces)
 
 (global-set-key (kbd "C-c o l") #'org-store-link)
 (global-set-key (kbd "C-c o c") #'org-capture)

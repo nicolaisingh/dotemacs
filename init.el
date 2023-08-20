@@ -112,8 +112,8 @@ collection.  Use revert-gc-cons-percentage to restore the value."
 (add-hook 'shell-mode-hook #'indent-tab-width-8)
 (add-hook 'emacs-lisp-mode-hook #'indent-tab-width-8)
 (add-hook 'kotlin-mode-hook #'indent-spaces)
-(add-hook 'emacs-lisp-mode-hook #'turn-off-indent-tabs-mode)
-(add-hook 'scheme-mode-hook #'turn-off-indent-tabs-mode)
+(add-hook 'emacs-lisp-mode-hook #'indent-spaces)
+(add-hook 'scheme-mode-hook #'indent-spaces)
 (add-hook 'before-save-hook #'delete-trailing-whitespace)
 
 ;; Other key bindings
