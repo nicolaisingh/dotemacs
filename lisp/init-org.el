@@ -16,14 +16,15 @@
  org-complete-tags-always-offer-all-agenda-tags t
  org-refile-use-outline-path 'file
  org-outline-path-complete-in-steps nil
- org-adapt-indentation t)
+ org-adapt-indentation t
+ org-agenda-start-with-follow-mode t)
 
 (setq org-capture-templates '(("n" "Notes inbox" entry
                                (file+headline "~/org/inbox.org" "Notes")
-                               "* %^{Content|Reminder}\n\n%U\n%?" :empty-lines 1)
+                               "* %?\n  %U" :empty-lines-before 1)
                               ("p" "Projects inbox" entry
                                (file+headline "~/org/inbox.org" "Projects")
-                               "* %^{Content|Reminder}\n\n%U\n%?" :empty-lines 1)
+                               "* %^{Content|Reminder}\n  %U  %?" :empty-lines-before 1)
                               ("l" "Log" entry
                                (file+olp+datetree "~/org/log.org")
                                "* %?" :empty-lines 1)
@@ -45,10 +46,13 @@
 (defun org-mode-my-custom-keys ()
   (define-key org-mode-map (kbd "C-c C--") #'org-ctrl-c-minus)
   (define-key org-mode-map (kbd "C-c C-8") #'org-ctrl-c-star)
-  (define-key org-mode-map (kbd "C-c C-SPC") #'org-table-blank-field))
+  (define-key org-mode-map (kbd "C-c C-SPC") #'org-table-blank-field)
+  ;; requires consult
+  (define-key org-mode-map (kbd "C-c *") #'consult-org-heading))
 (add-hook 'org-mode-hook #'org-mode-my-custom-keys)
 (add-hook 'org-mode-hook #'turn-on-auto-fill)
 (add-hook 'org-mode-hook #'indent-spaces)
+(add-hook 'org-agenda-mode-hook #'hl-line-mode)
 
 (global-set-key (kbd "C-c o l") #'org-store-link)
 (global-set-key (kbd "C-c o c") #'org-capture)
