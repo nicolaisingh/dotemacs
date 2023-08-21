@@ -64,12 +64,6 @@ reasons.  Use this if it is available.  Otherwise, use `/sudo'."
   (buffer-disable-undo)
   (buffer-enable-undo))
 
-(defun my-find-file ()
-  (interactive)
-  (if current-prefix-arg
-      (find-file-in-repository)
-    (call-interactively #'find-file)))
-
 (defun indent-using-tabs-and-fixup ()
   (interactive)
   (setq-default indent-tabs-mode t)
@@ -175,7 +169,6 @@ times."
 
 (add-hook 'find-file-hook #'handle-large-file)
 
-(global-set-key (kbd "C-x C-f") #'my-find-file)
 (global-set-key (kbd "C-c i TAB") #'indent-using-tabs-and-fixup)
 (global-set-key (kbd "C-c i SPC") #'indent-using-spaces-and-fixup)
 (global-set-key (kbd "C-c i 2") #'indent-tab-width-2)

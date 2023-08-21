@@ -49,7 +49,12 @@ Useful for completion style 'partial-completion."
       (define-key map (kbd "C-p") #'icomplete-backward-completions)
       (define-key map (kbd "C-?") (lambda ()
                                     (interactive)
-                                    (minibuffer-hide-completions)))))
+                                    (minibuffer-hide-completions)))
+      (define-key map (kbd "C-^") (lambda ()
+                                    (interactive)
+                                    (setq-local max-mini-window-height
+                                                (if (< max-mini-window-height 0.3)
+                                                    0.3 0.75))))))
 
   (defun icomplete-set-vertical-height ()
     (setq-local max-mini-window-height 0.15))

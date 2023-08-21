@@ -38,7 +38,9 @@
 
 (defun org-fixup-indents ()
   (interactive)
-  (org-indent-region (point-min) (point-max))
+  (if (region-active-p)
+      (org-indent-region (region-beginning) (region-end))
+    (org-indent-region (point-min) (point-max)))
   ;; Call with a C-u prefix to fixup tag indentation
   (let ((current-prefix-arg '(4)))
     (call-interactively #'org-set-tags-command)))

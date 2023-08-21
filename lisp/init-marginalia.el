@@ -7,8 +7,9 @@
 ;;; Code:
 
 (require 'marginalia)
-(marginalia-mode)
+
 (define-key minibuffer-local-map (kbd "C-c m m") #'marginalia-cycle)
+(marginalia-mode)
 
 (provide 'init-marginalia)
 ;;; init-marginalia.el ends here
