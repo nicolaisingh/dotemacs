@@ -45,10 +45,16 @@
   (let ((current-prefix-arg '(4)))
     (call-interactively #'org-set-tags-command)))
 
+(defun org-refile-within-file ()
+  (interactive)
+  (let ((org-refile-targets '((nil :maxlevel . 3))))
+    (call-interactively #'org-refile)))
+
 (defun org-mode-my-custom-keys ()
   (define-key org-mode-map (kbd "C-c C--") #'org-ctrl-c-minus)
   (define-key org-mode-map (kbd "C-c C-8") #'org-ctrl-c-star)
   (define-key org-mode-map (kbd "C-c C-SPC") #'org-table-blank-field)
+  (define-key org-mode-map (kbd "C-c W") #'org-refile-within-file)
   ;; requires consult
   (define-key org-mode-map (kbd "C-c *") #'consult-org-heading))
 (add-hook 'org-mode-hook #'org-mode-my-custom-keys)
