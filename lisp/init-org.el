@@ -19,9 +19,6 @@
  org-adapt-indentation t
  org-agenda-start-with-follow-mode t)
 
-(setq-mode-local org-mode
-                 require-final-newline nil)
-
 (setq org-capture-templates '(("i" "Inbox" entry
                                (file+headline "~/org/inbox.org" "Inbox")
                                "* %?\n  %U" :empty-lines-before 1)
@@ -71,6 +68,7 @@
 (add-hook 'org-mode-hook #'org-mode-my-custom-keys)
 (add-hook 'org-mode-hook #'turn-on-auto-fill)
 (add-hook 'org-mode-hook #'indent-spaces)
+(add-hook 'org-mode-hook #'final-newline)
 (add-hook 'org-agenda-mode-hook #'hl-line-mode)
 
 (global-set-key (kbd "C-c o l") #'org-store-link)

@@ -93,6 +93,10 @@ reasons.  Use this if it is available.  Otherwise, use `/sudo'."
   (interactive)
   (setq-local indent-tabs-mode nil))
 
+(defun final-newline ()
+  (interactive)
+  (setq-local require-final-newline t))
+
 (defun indent-tabs ()
   (interactive)
   (setq-local indent-tabs-mode t))
