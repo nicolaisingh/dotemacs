@@ -19,12 +19,12 @@
  org-adapt-indentation t
  org-agenda-start-with-follow-mode t)
 
-(setq org-capture-templates '(("n" "Notes inbox" entry
-                               (file+headline "~/org/inbox.org" "Notes")
+(setq-mode-local org-mode
+                 require-final-newline nil)
+
+(setq org-capture-templates '(("i" "Inbox" entry
+                               (file+headline "~/org/inbox.org" "Inbox")
                                "* %?\n  %U" :empty-lines-before 1)
-                              ("p" "Projects inbox" entry
-                               (file+headline "~/org/inbox.org" "Projects")
-                               "* %^{Content|Reminder}\n  %U  %?" :empty-lines-before 1)
                               ("l" "Log" entry
                                (file+olp+datetree "~/org/log.org")
                                "* %?" :empty-lines 1)
@@ -32,11 +32,14 @@
                                (file "~/org/distraction.org")
                                "- %? %U")))
 
+(setq org-agenda-custom-commands
+      '(("Z" "MAtch blabla" tags "" ((org-use-tag-inheritance nil)))))
+
 (setq org-tag-alist '(("@Lit" . ?l)
                       ("@Project" . ?p)
-                      ("@Task" . ?t)))
+                      ("@Ref" . ?r)))
 
-(defun org-fixup-indents ()
+(defun org-fixup-whitespace ()
   (interactive)
   (if (region-active-p)
       (org-indent-region (region-beginning) (region-end))
@@ -44,6 +47,13 @@
   ;; Call with a C-u prefix to fixup tag indentation
   (let ((current-prefix-arg '(4)))
     (call-interactively #'org-set-tags-command)))
+
+(defun org-save-dest-buffer-after-refile ()
+  (interactive)
+  (save-window-excursion
+    (org-refile-goto-last-stored)
+    (call-interactively #'save-buffer)))
+(add-hook 'org-after-refile-insert-hook #'org-save-dest-buffer-after-refile)
 
 (defun org-refile-within-file ()
   (interactive)
@@ -55,6 +65,7 @@
   (define-key org-mode-map (kbd "C-c C-8") #'org-ctrl-c-star)
   (define-key org-mode-map (kbd "C-c C-SPC") #'org-table-blank-field)
   (define-key org-mode-map (kbd "C-c W") #'org-refile-within-file)
+  (define-key org-mode-map (kbd "C-M-q") #'org-fixup-whitespace)
   ;; requires consult
   (define-key org-mode-map (kbd "C-c *") #'consult-org-heading))
 (add-hook 'org-mode-hook #'org-mode-my-custom-keys)
