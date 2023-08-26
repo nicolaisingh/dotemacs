@@ -48,8 +48,8 @@ collection.  Use revert-gc-cons-percentage to restore the value."
  ;; Timeout in seconds before auto-save
  auto-save-timeout 5
 
- ;; Show paren matches instantly
- show-paren-delay 0
+ ;; Seconds before paren matches are highlighted
+ show-paren-delay 1
 
  ;; Show N lines of text on top/bottom when scrolling
  scroll-margin 0
@@ -166,6 +166,8 @@ collection.  Use revert-gc-cons-percentage to restore the value."
 (require 'init-gui)
 (require 'init-etc)
 
+(require 'init-treesit)
+
 (require 'esh-toggle)
 (define-key global-map (kbd "C-c e t") #'eshell-toggle)
 (require 'winfast)
@@ -214,6 +216,7 @@ collection.  Use revert-gc-cons-percentage to restore the value."
 (require 'init-transpose-frame)
 (require 'init-which-key)
 
+;; Languages
 (require 'init-clojurescript)
 (require 'init-go)
 (require 'init-javascript)

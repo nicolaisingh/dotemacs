@@ -56,7 +56,7 @@
   (define-key smartparens-mode-map (kbd "C-M-d") #'sp-down-sexp))
 
 (defun setup-smartparens-lisp ()
-  (show-paren-mode)
+  (show-paren-local-mode)
   (smartparens-mode)
   (smartparens-strict-mode))
 

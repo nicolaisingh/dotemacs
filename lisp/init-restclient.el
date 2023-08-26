@@ -18,7 +18,7 @@
   (garbage-collect))
 
 (defun restclient-format-response ()
-  (show-paren-mode -1)
+  (show-paren-local-mode -1)
   (font-lock-mode -1)
   (buffer-disable-undo)
   (buffer-enable-undo))
