@@ -32,9 +32,9 @@
 (setq org-agenda-custom-commands
       '(("Z" "MAtch blabla" tags "" ((org-use-tag-inheritance nil)))))
 
-(setq org-tag-alist '(("@Lit" . ?l)
-                      ("@Project" . ?p)
-                      ("@Ref" . ?r)))
+(setq org-tag-alist '(("@lit" . ?l)
+                      ("@project" . ?p)
+                      ("@ref" . ?r)))
 
 (defun org-fixup-whitespace ()
   (interactive)

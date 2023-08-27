@@ -7,6 +7,10 @@
 ;;; Code:
 
 (require 'ibuffer)
+(require 'ibuf-ext)
+
+(setq ibuffer-use-other-window t
+      ibuffer-show-empty-filter-groups nil)
 
 (add-hook 'ibuffer-mode-hook
           (lambda ()
