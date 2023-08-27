@@ -175,7 +175,7 @@ collection.  Use revert-gc-cons-percentage to restore the value."
 
 (require 'init-aggressive-indent)
 (require 'init-browse-kill-ring)
-(require 'init-bs)
+;; (require 'init-bs)
 (require 'init-command-log)
 (require 'init-company)
 (require 'init-consult)
@@ -190,7 +190,7 @@ collection.  Use revert-gc-cons-percentage to restore the value."
 (require 'init-flycheck)
 (require 'init-graphviz-dot-mode)
 (require 'init-hippie-expand)
-;; (require 'init-ibuffer)
+(require 'init-ibuffer)
 (require 'init-icomplete)
 ;; (require 'init-ido)
 (require 'init-imenu-list)
