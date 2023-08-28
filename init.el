@@ -117,7 +117,6 @@ collection.  Use revert-gc-cons-percentage to restore the value."
 (add-hook 'before-save-hook #'delete-trailing-whitespace)
 
 ;; Other key bindings
-(global-set-key (kbd "C-c t l") #'toggle-truncate-lines)
 (global-set-key (kbd "C-c h l") #'hl-line-mode)
 (global-set-key (kbd "C-x C-S-c") #'save-buffers-kill-emacs)
 (global-set-key (kbd "M-SPC") #'cycle-spacing)
@@ -129,7 +128,8 @@ collection.  Use revert-gc-cons-percentage to restore the value."
 (global-set-key (kbd "H-d") (lambda ()
                               (interactive)
                               (dired "~/Downloads")))
-
+(global-set-key (kbd "C-h u f") #'find-library)
+(global-set-key (kbd "C-h u p") #'list-packages)
 
 ;; Move facemenu-keymap to another binding
 (require 'facemenu)
