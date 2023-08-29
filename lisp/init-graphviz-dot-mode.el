@@ -6,13 +6,7 @@
 
 ;;; Code:
 
-;;; init-graphviz-dot-mode.el ends here
-
 (require 'graphviz-dot-mode)
-
-;; Completion using company
-(require 'company-graphviz-dot)
-
 
 (provide 'init-graphviz-dot-mode)
 ;;; init-graphviz-dot-mode.el ends here
