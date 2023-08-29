@@ -8,6 +8,11 @@
 
 (require 'consult)
 
+(setq consult-preview-key "C-SPC")
+
+(global-set-key [remap switch-to-buffer] #'consult-buffer)
+(global-set-key [remap switch-to-buffer-other-frame] #'consult-buffer-other-frame)
+(global-set-key [remap switch-to-buffer-other-window] #'consult-buffer-other-window)
 (global-set-key [remap yank-pop] #'consult-yank-pop)
 (global-set-key [remap repeat-complex-command] #'consult-complex-command)
 (global-set-key (kbd "C-c m M-x") #'consult-mode-command)
