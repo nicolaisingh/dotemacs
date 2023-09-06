@@ -36,6 +36,11 @@
                       ("@project" . ?p)
                       ("@ref" . ?r)))
 
+(with-eval-after-load 'org
+  (require 'ox-md)
+  (require 'ox-gfm)
+  (require 'ox-slack))
+
 (defun org-fixup-whitespace ()
   (interactive)
   (if (region-active-p)
@@ -63,6 +68,7 @@
   (define-key org-mode-map (kbd "C-c C-SPC") #'org-table-blank-field)
   (define-key org-mode-map (kbd "C-c W") #'org-refile-within-file)
   (define-key org-mode-map (kbd "C-M-q") #'org-fixup-whitespace)
+  (define-key org-mode-map (kbd "C-M-h") #'org-mark-subtree)
   ;; requires consult
   (define-key org-mode-map (kbd "C-c *") #'consult-org-heading))
 (add-hook 'org-mode-hook #'org-mode-my-custom-keys)
