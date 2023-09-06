@@ -33,6 +33,7 @@
 (add-hook 'js2-mode-hook #'indent-spaces)
 (add-hook 'js2-mode-hook #'js2-mode-my-custom-keys)
 (add-hook 'js2-mode-hook #'js2-imenu-extras-mode)
+(add-hook 'js2-mode-hook #'subword-mode)
 (add-hook 'json-mode-hook #'json-mode-my-custom-keys)
 
 ;; js2-refactor

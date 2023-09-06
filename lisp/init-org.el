@@ -17,7 +17,8 @@
  org-refile-use-outline-path 'file
  org-outline-path-complete-in-steps nil
  org-adapt-indentation t
- org-agenda-start-with-follow-mode t)
+ org-agenda-start-with-follow-mode t
+ org-agenda-search-view-max-outline-level 2)
 
 (setq org-capture-templates '(("i" "Inbox" entry
                                (file+headline "~/org/inbox.org" "Inbox")
