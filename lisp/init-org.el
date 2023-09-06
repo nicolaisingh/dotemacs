@@ -40,6 +40,7 @@
 (with-eval-after-load 'org
   (require 'ox-md)
   (require 'ox-gfm)
+  (require 'ox-jira)
   (require 'ox-slack))
 
 (defun org-fixup-whitespace ()
