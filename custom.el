@@ -9,13 +9,6 @@
  '(eshell-list-files-after-cd t)
  '(eshell-ls-dired-initial-args '("-h"))
  '(eshell-ls-initial-args '("-h"))
- '(ibuffer-saved-filter-groups
-   '(("nas" ("Dired" (mode . dired-mode))
-      ("Emacs Lisp" (mode . emacs-lisp-mode))
-      ("Kotlin" (mode . kotlin-mode)) ("Magit" (name . "^magit.*:"))
-      ("Org" (mode . org-mode)) ("Nix" (mode . nix-mode))
-      ("Shell" (mode . shell-mode)) ("xref" (name . "^\\*xref\\*$")))))
- '(ibuffer-show-empty-filter-groups nil)
  '(kotlin-tab-width 4)
  '(mode-line-percent-position nil)
  '(newsticker-date-format "(%A, %H:%M, %b %d %Y)")
