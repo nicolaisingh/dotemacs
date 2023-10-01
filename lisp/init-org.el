@@ -64,6 +64,10 @@
   (let ((org-refile-targets '((nil :maxlevel . 3))))
     (call-interactively #'org-refile)))
 
+(defun org-dired-open-notes ()
+  (interactive)
+  (dired "~/org/"))
+
 (defun org-mode-my-custom-keys ()
   (define-key org-mode-map (kbd "C-c C--") #'org-ctrl-c-minus)
   (define-key org-mode-map (kbd "C-c C-8") #'org-ctrl-c-star)
@@ -84,6 +88,7 @@
 (global-set-key (kbd "C-c o a") #'org-agenda)
 (global-set-key (kbd "C-c o b") #'org-switchb)
 (global-set-key (kbd "C-c o v") #'visible-mode)
+(global-set-key (kbd "C-c o d") #'org-dired-open-notes)
 
 (provide 'init-org)
 ;;; init-org.el ends here

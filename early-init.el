@@ -53,12 +53,12 @@
 (set-face-attribute 'mode-line t
                     :foreground "gray30"
                     :background "slategray2"
-                    :box '(:line-width 1 :color "slategray4" :style released-button))
+                    :box '(:line-width 1 :color "slategray4" :style flat-button))
 
 (set-face-attribute 'mode-line-inactive t
                     :foreground "gray60"
                     :background my-bg-hl1-color
-                    :box '(:line-width 1 :color "gray60" :style released-button))
+                    :box '(:line-width 1 :color "gray60" :style flat-button))
 
 (set-face-attribute 'minibuffer-prompt t
                     :foreground "#ffffff"
