@@ -11,8 +11,9 @@
 (setq
  org-startup-indented nil
  org-default-notes-file "~/org/inbox.org"
- org-refile-targets '((nil :maxlevel . 3)
-                      (org-agenda-files :maxlevel . 2))
+ org-refile-targets '((nil :maxlevel . 2)
+                      (org-agenda-files :maxlevel . 2)
+                      ("~/org/log.org" :maxlevel . 3))
  org-complete-tags-always-offer-all-agenda-tags t
  org-refile-use-outline-path 'file
  org-outline-path-complete-in-steps nil

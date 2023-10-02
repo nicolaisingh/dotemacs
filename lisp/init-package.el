@@ -15,6 +15,9 @@
 (when (< emacs-major-version 27)
   (package-initialize))
 
+(when (memq window-system '(mac ns))
+  (exec-path-from-shell-initialize))
+
 (defun ensure-all-packages-installed ()
   (dolist (package package-selected-packages)
     (unless (package-installed-p package)

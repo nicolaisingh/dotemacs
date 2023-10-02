@@ -15,9 +15,13 @@
       dired-hide-details-hide-symlink-targets nil
       dired-hide-details-hide-information-lines nil)
 
+;; Don't forget `brew install coreutils' in mac
+(when (eq system-type 'darwin)
+  (setq insert-directory-program "gls"))
+
 (defun dired-set-listing-switches ()
   (setq dired-listing-switches
-        (concat "--group-directories-first -lh" dired-listing-switch-A)))
+        (concat "--group-directories-first -lhv" dired-listing-switch-A)))
 
 (defun message-other-files-state ()
   (message "%s other files"
