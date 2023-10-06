@@ -12,25 +12,22 @@
               (lambda () (require 'multiple-cursors)))
   (require 'multiple-cursors))
 
+(global-set-key (kbd "C-c mc e") #'mc/edit-lines)
 (global-set-key (kbd "C-c mc C-a") #'mc/edit-beginnings-of-lines)
 (global-set-key (kbd "C-c mc C-e") #'mc/edit-ends-of-lines)
-(global-set-key (kbd "C-c mc *") #'mc/mark-all-like-this)
-(global-set-key (kbd "C-c mc c") #'mc/mark-more-like-this-extended)
-(global-set-key (kbd "C-c mc r") #'mc/mark-all-in-region)
-(global-set-key (kbd "C-c mc e") #'mc/edit-lines)
+(global-set-key (kbd "C-c mc C-SPC") #'mc/mark-all-in-region)
+(global-set-key (kbd "C-c mc C-M-SPC") #'mc/mark-all-in-region-regexp)
+(global-set-key (kbd "C-c mc i n") #'mc/insert-numbers)
+(global-set-key (kbd "C-c mc i l") #'mc/insert-letters)
+(global-set-key (kbd "C-c mc C-n") #'mc/mark-next-like-this)
+(global-set-key (kbd "C-c mc C-p") #'mc/mark-previous-like-this)
 
-;; Override the default keys for mmlte (mark-more-like-this-extended)
-(defun mc/mmlte--message ()
-  (if (eq mc/mark-more-like-this-extended-direction 'up)
-      (message "<C-p> to mark previous, <C-n> to mark next, <C-P> to remove, <C-N> to skip")
-    (message "<C-n> to mark next, <C-p> to mark previous, <C-N> to remove, <C-P> to skip")))
+(define-key mc/keymap (kbd "C-c .") #'mc/mark-next-like-this)
+(define-key mc/keymap (kbd "C-c ,") #'mc/mark-previous-like-this)
+(define-key mc/keymap (kbd "C-c >") #'mc/skip-to-next-like-this)
+(define-key mc/keymap (kbd "C-c <") #'mc/skip-to-previous-like-this)
 
 (defun multiple-cursors-mode-my-custom-keys ()
-  (define-key mc/mark-more-like-this-extended-keymap (kbd "C-p") #'mc/mmlte--up)
-  (define-key mc/mark-more-like-this-extended-keymap (kbd "C-n") #'mc/mmlte--down)
-  (define-key mc/mark-more-like-this-extended-keymap (kbd "C-S-n") #'mc/mmlte--left)
-  (define-key mc/mark-more-like-this-extended-keymap (kbd "C-S-p") #'mc/mmlte--right)
-
   ;; Enable enter key while having multiple cursors
   (define-key mc/keymap (kbd "<return>") nil))
 
