@@ -1,0 +1,5 @@
+# -*- mode: snippet -*-
+# name: time12h
+# key: time12h
+# --
+`(format-time-string "%I:%M:%S %p")`

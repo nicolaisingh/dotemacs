@@ -217,6 +217,7 @@ collection.  Use revert-gc-cons-percentage to restore the value."
 (require 'init-transpose-frame)
 (require 'init-which-key)
 (require 'init-xref)
+(require 'init-yasnippet)
 
 ;; Languages
 (require 'init-clojurescript)

@@ -15,6 +15,8 @@
     '(diminish 'subword-mode "subWord"))
   (eval-after-load 'smartparens
     '(diminish 'smartparens-mode))
+  (eval-after-load 'yasnippet
+    '(diminish 'yas-minor-mode))
   (diminish 'auto-revert-mode))
 (add-hook 'after-init-hook #'load-diminish)
 
