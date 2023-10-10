@@ -34,8 +34,10 @@
   (define-key smartparens-mode-map (kbd "C-c s )") #'sp-forward-barf-sexp-repeatable)
   (define-key smartparens-mode-map (kbd "C-c s (") #'sp-backward-barf-sexp-repeatable)
 
+  (define-key smartparens-mode-map (kbd "C-c s a") #'sp-absorb-sexp)
+  (define-key smartparens-mode-map (kbd "C-c s e") #'sp-emit-sexp)
   (define-key smartparens-mode-map (kbd "C-c s r") #'sp-raise-sexp)
-  (define-key smartparens-mode-map (kbd "C-c s c") #'sp-change-enclosing)
+  (define-key smartparens-mode-map (kbd "C-c s c") #'sp-change-inner)
   (define-key smartparens-mode-map (kbd "C-c s j") #'sp-join-sexp)
   (define-key smartparens-mode-map (kbd "C-c s s") #'sp-split-sexp)
 
@@ -69,6 +71,8 @@
 (add-hook 'kotlin-mode-hook #'smartparens-mode)
 (add-hook 'go-mode-hook #'smartparens-mode)
 (add-hook 'js2-mode-hook #'smartparens-mode)
+(add-hook 'prog-mode-hook #'smartparens-mode)
+(add-hook 'org-mode-hook #'smartparens-mode)
 
 (add-hook 'smartparens-mode-hook #'smartparens-mode-my-custom-keys)
 

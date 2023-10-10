@@ -130,6 +130,8 @@ collection.  Use revert-gc-cons-percentage to restore the value."
                               (dired "~/Downloads")))
 (global-set-key (kbd "C-h u f") #'find-library)
 (global-set-key (kbd "C-h u p") #'list-packages)
+(global-set-key (kbd "C-c w '") #'insert-pair)
+(global-set-key (kbd "C-c w \"") #'insert-pair)
 
 ;; Move facemenu-keymap to another binding
 (require 'facemenu)
