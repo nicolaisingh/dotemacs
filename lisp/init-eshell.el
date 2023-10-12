@@ -6,32 +6,36 @@
 
 ;;; Code:
 
-(defun eshell-define-aliases ()
-  (eshell/alias "1" "ls -1 $*")
-  (eshell/alias "ll" "ls -l $*")
-  ;; (eshell/alias "mv" "mv -i $*")
-  ;; (eshell/alias "cp" "cp -i $*")
-  (eshell/alias "df" "df -h"))
+(require 'eshell)
 
-(defun eshell-load-visual-options ()
-  (add-to-list 'eshell-visual-options
-               '("nix-env" "--help" "-q" "-qa"))
-  (add-to-list 'eshell-visual-subcommands '("git" "log" "diff" "show")))
+(setq eshell-hist-ignoredups t
+      eshell-history-size 10000
+      eshell-ls-dired-initial-args '("-h")
+      eshell-ls-initial-args '("-h")
+      eshell-visual-subcommands '(("git" "log" "diff" "show" "shortlog")))
 
-(defun eshell-set-config ()
+(add-to-list 'eshell-modules-list 'eshell-rebind)
+(add-to-list 'eshell-modules-list 'eshell-xtra)
+
+(defun eshell-config ()
   (setq-local completion-auto-help t)
   (company-mode -1)
 
-  (eshell-define-aliases)
-  (eshell-load-visual-options)
+  (define-key eshell-mode-map (kbd "C-c l") (lambda ()
+                                              (interactive)
+                                              (eshell/clear-scrollback))))
+(add-hook 'eshell-mode-hook #'eshell-config)
 
-  (define-key eshell-mode-map (kbd "C-c m l s")
-    (lambda ()
-      (interactive)
-      (setq eshell-list-files-after-cd (not eshell-list-files-after-cd))
-      (message "Eshell list files after cd: %S" eshell-list-files-after-cd))))
+;; eshell-help
+(require 'esh-help)
+(setup-esh-help-eldoc)
 
-(add-hook 'eshell-mode-hook #'eshell-set-config)
+;;eshell-up
+(require 'eshell-up)
+
+;; eshell-z
+(with-eval-after-load 'eshell
+  (require 'eshell-z))
 
 (provide 'init-eshell)
 ;;; init-eshell.el ends here

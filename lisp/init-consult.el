@@ -25,6 +25,7 @@
 (define-key goto-map (kbd "I") #'consult-imenu-multi)
 (define-key goto-map (kbd "m") #'consult-mark)
 (define-key goto-map (kbd "M") #'consult-global-mark)
+(define-key goto-map (kbd "h") #'consult-history)
 
 ;; minibuffer
 (define-key minibuffer-local-map (kbd "M-s") #'consult-history)
