@@ -15,10 +15,12 @@
       ibuffer-saved-filter-groups
       '(("nas"
          ("Emacs Lisp" (mode . emacs-lisp-mode))
+         ("Shell/Term" (or (mode . shell-mode)
+                           (mode . eshell-mode)
+                           (mode . term-mode)))
          ("Kotlin" (mode . kotlin-mode))
-         ("Org" (mode . org-mode))
          ("Nix" (mode . nix-mode))
-         ("Shell" (mode . shell-mode))
+         ("Org" (mode . org-mode))
          ("Dired" (mode . dired-mode))
          ("Magit" (name . "^magit.*:"))
          ("xref" (name . "^\\*xref\\*$"))

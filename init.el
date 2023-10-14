@@ -170,8 +170,6 @@ collection.  Use revert-gc-cons-percentage to restore the value."
 
 (require 'init-treesit)
 
-(require 'esh-toggle)
-(define-key global-map (kbd "C-c e t") #'eshell-toggle)
 (require 'winfast)
 (define-key global-map (kbd "M-o") #'winfast-mode)
 
@@ -202,6 +200,7 @@ collection.  Use revert-gc-cons-percentage to restore the value."
 (require 'init-latex)
 (require 'init-magit)
 (require 'init-marginalia)
+(require 'init-multi-term)
 (require 'init-multiple-cursors)
 (require 'init-native-complete)
 (require 'init-nav-flash)

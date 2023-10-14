@@ -26,9 +26,19 @@
                                               (eshell/clear-scrollback))))
 (add-hook 'eshell-mode-hook #'eshell-config)
 
-;; eshell-help
+(global-set-key (kbd "C-c e e") #'eshell)
+(global-set-key (kbd "C-c e E") (defun eshell-new ()
+                                  (interactive)
+                                  (let ((current-prefix-arg '(4)))
+                                    (call-interactively #'eshell))))
+
+;; esh-help
 (require 'esh-help)
 (setup-esh-help-eldoc)
+
+;; esh-toggle
+(require 'esh-toggle)
+(define-key global-map (kbd "C-c e t") #'eshell-toggle)
 
 ;;eshell-up
 (require 'eshell-up)

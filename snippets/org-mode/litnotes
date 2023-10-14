@@ -1,0 +1,11 @@
+# key: litnotes
+# name: litnotes
+# --
+#+TITLE: $1
+#+FILETAGS: :@lit:$2:
+
+* Literature details
+  Title: $1
+  Author: $3
+
+$0
