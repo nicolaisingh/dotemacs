@@ -26,7 +26,13 @@
                                               (eshell/clear-scrollback))))
 (add-hook 'eshell-mode-hook #'eshell-config)
 
+(defun eshell-other ()
+  (interactive)
+  (let ((eshell-buffer-name "*eshell-other*"))
+    (eshell)))
+
 (global-set-key (kbd "C-c e e") #'eshell)
+(global-set-key (kbd "C-c e 1") #'eshell-other)
 (global-set-key (kbd "C-c e E") (defun eshell-new ()
                                   (interactive)
                                   (let ((current-prefix-arg '(4)))
