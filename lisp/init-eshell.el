@@ -31,13 +31,33 @@
   (let ((eshell-buffer-name "*eshell-other*"))
     (eshell)))
 
+(setq eshell-names-list
+      '(("nix-config" . "~/prj/nix-config")
+        ("bash-scripts" . "~/prj/bash-scripts")
+        ("other")))
+
+(defun eshell-ask ()
+  (interactive)
+  (let* ((eshell-names (mapcar #'car eshell-names-list))
+         (choice (completing-read "Eshell: " eshell-names))
+         (eshell-buffer-name (concat "*eshell-" choice "*"))
+         (eshell-buffer (get-buffer eshell-buffer-name))
+         (path-to-cd (cdr (assoc choice eshell-names-list))))
+    (eshell)
+    (unless eshell-buffer
+      (when path-to-cd
+        (insert (concat "cd " path-to-cd))
+        (eshell-send-input)))))
+
 (global-set-key (kbd "C-c e e") #'eshell)
 (global-set-key (kbd "C-c e 1") #'eshell-other)
+(global-set-key (kbd "C-c e 0") #'eshell-ask)
 (global-set-key (kbd "C-c e E") (defun eshell-new ()
                                   (interactive)
                                   (let ((current-prefix-arg '(4)))
                                     (call-interactively #'eshell))))
 
+;; (setq eshell-after-prompt-hook nil)
 ;; esh-help
 (require 'esh-help)
 (setup-esh-help-eldoc)

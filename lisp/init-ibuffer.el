@@ -15,6 +15,7 @@
       ibuffer-saved-filter-groups
       '(("nas"
          ("Emacs Lisp" (mode . emacs-lisp-mode))
+         ("Javascript" (mode . js2-mode))
          ("Shell/Term" (or (mode . shell-mode)
                            (mode . eshell-mode)
                            (mode . term-mode)))
@@ -31,7 +32,8 @@
                    (name . "^\\*Backtrace\\*$")
                    (name . "^\\*Help\\*$")
                    (name . "^\\*RE-Builder\\*$")
-                   (name . "^\\*Async-native-compile-log\\*$"))))))
+                   (name . "^\\*Async-native-compile-log\\*$")
+                   (name . "^\\*Packages\\*$"))))))
 
 (add-hook 'ibuffer-mode-hook
           (lambda ()
