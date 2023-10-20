@@ -27,14 +27,9 @@
 
 (load-theme 'tsdh-light)
 
-;; f7f7f7=gray97
-;; e5e5e5=gray90
-;; dbdbdb=gray86
-;; d1d1d1=gray82
-(setq my-bg-color "#f7f7f7"
-      my-bg-hl1-color "#e5e5e5"
-      my-bg-hl2-color "#dbdbdb"
-      my-bg-hl3-color "#d1d1d1")
+(setq my-bg-color "gray97"
+      my-mode-line-active-color "slategray2"
+      my-mode-line-inactive-color "gray90")
 
 ;; tsdh-light's #a0a1a7 is too light for me
 (set-face-attribute 'font-lock-comment-face t
@@ -45,20 +40,20 @@
 
 (set-face-attribute 'show-paren-match t
                     :weight 'bold
-                    :background my-bg-hl2-color)
+                    :background "gray85")
 
 (set-face-attribute 'fringe t
                     :background my-bg-color)
 
 (set-face-attribute 'mode-line t
                     :foreground "gray30"
-                    :background "slategray2"
-                    :box '(:line-width 1 :color "slategray4" :style flat-button))
+                    :background my-mode-line-active-color
+                    :box `(:line-width 2 :color ,my-mode-line-active-color :style released-button))
 
 (set-face-attribute 'mode-line-inactive t
-                    :foreground "gray60"
-                    :background my-bg-hl1-color
-                    :box '(:line-width 1 :color "gray60" :style flat-button))
+                    :foreground "gray50"
+                    :background my-mode-line-inactive-color
+                    :box `(:line-width 2 :color ,my-mode-line-inactive-color :style released-button))
 
 (set-face-attribute 'minibuffer-prompt t
                     :foreground "#ffffff"

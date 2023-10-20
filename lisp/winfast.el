@@ -11,7 +11,10 @@
 (defvar winfast--fullscreen-p nil)
 (defvar winfast--last-window-configuration nil)
 (defvar winfast--mode-line-color nil)
+(defvar winfast--mode-line-box-style nil)
 (defvar winfast--winfast-mode-line-color "khaki")
+(defvar winfast--winfast-mode-line-box-style
+  `(:line-width 2 :color ,winfast--winfast-mode-line-color :style released-button))
 
 (defun winfast-swap-window-with-other (count)
   "Exchange the selected window with the next one."
@@ -120,7 +123,8 @@ called again."
   "Cleanup before fully turning off winfast-mode."
   (remove-hook 'pre-command-hook #'winfast-pre-command-hook)
   (set-face-attribute 'mode-line nil
-                      :background winfast--mode-line-color)
+                      :background winfast--mode-line-color
+                      :box winfast--mode-line-box-style)
   (winfast-mode -1))
 
 (defun winfast-cycle-previous-window ()
@@ -192,7 +196,10 @@ Any other key binding used which is not in the map will turn off
   (when winfast-mode
     (add-hook 'pre-command-hook #'winfast-pre-command-hook)
     (setq winfast--mode-line-color (face-attribute 'mode-line :background))
-    (set-face-attribute 'mode-line nil :background winfast--winfast-mode-line-color)))
+    (setq winfast--mode-line-box-style (face-attribute 'mode-line :box))
+    (set-face-attribute 'mode-line nil
+                        :background winfast--winfast-mode-line-color
+                        :box winfast--winfast-mode-line-box-style)))
 
 (provide 'winfast)
 ;;; winfast.el ends here

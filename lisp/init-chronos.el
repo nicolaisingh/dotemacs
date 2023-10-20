@@ -16,9 +16,7 @@
       chronos-expiry-functions '(chronos-message-notify
                                  chronos-desktop-notifications-notify))
 
-(global-set-key (kbd "C-c T a") #'chronos-add-timer)
-(global-set-key (kbd "C-c T s") #'chronos-select-timer)
-(global-set-key (kbd "C-c T b") #'chronos-initialize)
+(global-set-key (kbd "C-c T") #'chronos-initialize)
 
 (provide 'init-chronos)
 ;;; init-chronos.el ends here
