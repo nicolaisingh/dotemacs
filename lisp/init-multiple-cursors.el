@@ -6,11 +6,7 @@
 
 ;;; Code:
 
-;; Faces don't load properly when Emacs is started as a daemon
-(if (daemonp)
-    (add-hook 'server-after-make-frame-hook
-              (lambda () (require 'multiple-cursors)))
-  (require 'multiple-cursors))
+(require 'multiple-cursors)
 
 (global-set-key (kbd "C-c mc e") #'mc/edit-lines)
 (global-set-key (kbd "C-c mc C-a") #'mc/edit-beginnings-of-lines)

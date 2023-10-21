@@ -15,18 +15,25 @@
       completion-cycle-threshold nil
       completion-pcm-complete-word-inserts-delimiters t)
 
-(define-key minibuffer-local-filename-completion-map (kbd "SPC")
-  #'minibuffer-complete-word)
-
 (defun star-before-word-completion ()
   "Insert a literal `*' on the first invocation, then runs minibuffer-complete-word if invoked again.
 Useful for completion style 'partial-completion."
   (interactive)
-  (let ((prev-char (buffer-substring (- (point) 1) (point)))
-        (replace-prev-char (lambda (char) (delete-char -1) (insert-char char))))
+  (let ((prev-char (buffer-substring (- (point) 1) (point))))
     (if (or (equal prev-char "-") (equal prev-char "*"))
         (minibuffer-complete-word)
       (insert-char ?*))))
+
+(defun dash-then-star ()
+  "Insert a literal `-', but if a `-' is found before point, replace
+it with `*' instead and vice versa."
+  (interactive)
+  (let ((prev-char (buffer-substring (- (point) 1) (point)))
+        (replace-prev-char (lambda (char) (delete-char -1) (insert char))))
+    (cond
+     ((equal prev-char "-") (funcall replace-prev-char "*"))
+     ((equal prev-char "*") (funcall replace-prev-char "-"))
+     (t (insert "-")))))
 
 (cond
  ((>= emacs-major-version 27)
@@ -38,12 +45,14 @@ Useful for completion style 'partial-completion."
       (fido-mode t)
     (fido-vertical-mode t))
 
-  (defun prefer-pcm-before-flex ()
-    (setq-local completion-styles '(partial-completion flex)))
+  (defun icomplete-my-config ()
+    (setq-local completion-styles '(flex partial-completion)
+                max-mini-window-height 0.15)
 
-  (defun icomplete-my-custom-keys ()
     (let ((map icomplete-minibuffer-map))
-      (define-key map (kbd "SPC") #'star-before-word-completion)
+      ;; (define-key map (kbd "SPC") #'star-before-word-completion)
+      (define-key map (kbd "SPC") #'dash-then-star)
+      (define-key map (kbd "S-SPC") (lambda () (interactive) (self-insert-command 1 ? )))
       (define-key map (kbd "C-S-j") #'icomplete-force-complete)
       (define-key map (kbd "C-n") #'icomplete-forward-completions)
       (define-key map (kbd "C-p") #'icomplete-backward-completions)
@@ -56,12 +65,7 @@ Useful for completion style 'partial-completion."
                                                 (if (< max-mini-window-height 0.3)
                                                     0.3 0.75))))))
 
-  (defun icomplete-set-vertical-height ()
-    (setq-local max-mini-window-height 0.15))
-
-  (add-hook 'icomplete-minibuffer-setup-hook #'prefer-pcm-before-flex)
-  (add-hook 'icomplete-minibuffer-setup-hook #'icomplete-my-custom-keys)
-  (add-hook 'icomplete-minibuffer-setup-hook #'icomplete-set-vertical-height))
+  (add-hook 'icomplete-minibuffer-setup-hook #'icomplete-my-config))
 
  (t
   ;; Original preferences prior to Emacs 27
