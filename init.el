@@ -231,5 +231,8 @@ collection.  Use revert-gc-cons-percentage to restore the value."
 (require 'init-solidity)
 (require 'init-typescript)
 
+(with-eval-after-load 'init-org
+  (require 'init-org-roam))
+
 (provide 'init)
 ;;; init.el ends here

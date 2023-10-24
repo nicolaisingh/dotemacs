@@ -7,6 +7,7 @@
 ;;; Code:
 
 (require 'icomplete)
+(require 'orderless)
 
 (setq icomplete-prospects-height 1
       icomplete-separator (propertize "  |  " 'face 'font-lock-variable-name-face)
@@ -24,16 +25,17 @@ Useful for completion style 'partial-completion."
         (minibuffer-complete-word)
       (insert-char ?*))))
 
-(defun dash-then-star ()
+(defun space-dash-star ()
   "Insert a literal `-', but if a `-' is found before point, replace
 it with `*' instead and vice versa."
   (interactive)
   (let ((prev-char (buffer-substring (- (point) 1) (point)))
         (replace-prev-char (lambda (char) (delete-char -1) (insert char))))
     (cond
+     ((equal prev-char " ") (funcall replace-prev-char "-"))
      ((equal prev-char "-") (funcall replace-prev-char "*"))
-     ((equal prev-char "*") (funcall replace-prev-char "-"))
-     (t (insert "-")))))
+     ((equal prev-char "*") (funcall replace-prev-char " "))
+     (t (insert " ")))))
 
 (cond
  ((>= emacs-major-version 27)
@@ -46,12 +48,18 @@ it with `*' instead and vice versa."
     (fido-vertical-mode t))
 
   (defun icomplete-my-config ()
-    (setq-local completion-styles '(flex partial-completion)
-                max-mini-window-height 0.15)
+    (setq-local max-mini-window-height 0.15
+                completion-styles '(orderless basic)
+                ;; completion-styles '(flex partial-completion basic)
+                ;; Completion falls back to using completion-styles if
+                ;; completion-category-overrides doesn't yield a
+                ;; result
+                completion-category-overrides '((file (styles . (basic flex partial-completion)))
+                                                (buffer (styles . (basic flex partial-completion)))))
 
     (let ((map icomplete-minibuffer-map))
       ;; (define-key map (kbd "SPC") #'star-before-word-completion)
-      (define-key map (kbd "SPC") #'dash-then-star)
+      (define-key map (kbd "SPC") #'space-dash-star)
       (define-key map (kbd "S-SPC") (lambda () (interactive) (self-insert-command 1 ? )))
       (define-key map (kbd "C-S-j") #'icomplete-force-complete)
       (define-key map (kbd "C-n") #'icomplete-forward-completions)
