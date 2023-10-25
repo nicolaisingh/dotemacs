@@ -39,7 +39,11 @@
      ("Quote of the day"
       "http://feeds.feedburner.com/quotationspage/qotd" "07:00" 86400)
      ("Wired News" "https://www.wired.com/feed/rss")))
- '(org-agenda-files '("~/org"))
+ '(org-agenda-files
+   '("~/org/inbox.org"
+     "~/org/roam/ideate/20231024140843-ideate_development.org"
+     "~/org/roam/ideate/20231024135925-ideate_releases.org"
+     "~/org/projects.org"))
  '(package-selected-packages
    '(orderless virtual-auto-fill org-roam alert chronos multi-term
                esh-help eshell-up eshell-z exec-path-from-shell slime

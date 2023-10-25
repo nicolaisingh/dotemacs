@@ -9,7 +9,7 @@
 (require 'org)
 
 (setq
- org-startup-indented t
+ org-startup-indented nil
  org-indent-mode-turns-on-hiding-stars nil
  org-default-notes-file "~/org/inbox.org"
  org-archive-location "archive/%s::"
@@ -28,19 +28,19 @@
 (setq org-capture-templates '(("i" "Inbox" entry
                                (file+headline "~/org/inbox.org" "Inbox")
                                "* %?\n  %U" :empty-lines-before 1)
-                              ("l" "Log" entry
-                               (file+olp+datetree "~/org/log.org")
-                               "* %?" :empty-lines 1)
+                              ("p" "Project" entry
+                               (file "~/org/projects.org")
+                               "* TODO %?\n  %U" :empty-lines-before 1)
                               ("D" "Distraction" item
                                (file "~/org/distraction.org")
                                "- %? %U")))
 
 (setq org-agenda-custom-commands
-      '(("Z" "MAtch blabla" tags "" ((org-use-tag-inheritance nil)))))
+      '(("I" "Ideate TODOs" tags-todo "ideate")
+        ("P" "All project TODOs" tags-todo "@project")))
 
-(setq org-tag-alist '(("@lit" . ?l)
-                      ("@project" . ?p)
-                      ("@ref" . ?r)))
+(set-face-attribute 'org-level-1 t :height 1.15)
+(set-face-attribute 'org-level-2 t :height 1.1)
 
 (with-eval-after-load 'org
   (require 'ox-md)

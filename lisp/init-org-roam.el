@@ -29,6 +29,11 @@
                                                      "#+title: ${title}\n")
          :empty-lines-before 1
          :unnarrowed t)
+        ("D" "default immediate" plain "%?" :target (file+head "%<%Y%m%d%H%M%S>-${slug}.org"
+                                                               "#+title: ${title}\n")
+         :immediate-finish t
+         :empty-lines-before 1
+         :unnarrowed t)
         ("l" "literature" plain "%?"
          :target (file+head "literature/%<%Y%m%d%H%M%S>-${slug}.org"
                             "#+filetags: :@lit:\n#+title: ${title}")
@@ -72,6 +77,8 @@
   (define-key map (kbd "C-c n t") #'org-roam-tag-add)
   (define-key map (kbd "C-c n T") #'org-roam-tag-remove)
   (define-key map (kbd "C-c n I") #'org-id-get-create)
+  (define-key map (kbd "C-c n r") #'org-roam-ref-add)
+  (define-key map (kbd "C-c n R") #'org-roam-ref-remove)
   ;; Dailies
   (define-key map (kbd "C-c n j") #'org-roam-dailies-capture-today))
 
