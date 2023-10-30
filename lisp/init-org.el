@@ -10,7 +10,7 @@
 
 (setq
  org-startup-indented nil
- org-indent-mode-turns-on-hiding-stars nil
+ org-indent-mode-turns-on-hiding-stars t
  org-default-notes-file "~/org/inbox.org"
  org-archive-location "archive/%s::"
  org-refile-targets '((nil :maxlevel . 2)
@@ -23,7 +23,13 @@
  org-agenda-start-with-follow-mode t
  org-agenda-search-view-max-outline-level 2
  org-src-fontify-natively nil
- org-edit-src-content-indentation 0)
+ org-edit-src-content-indentation 0
+ org-tags-column 0
+ org-auto-align-tags nil
+ org-special-ctrl-a/e t
+ org-special-ctrl-k t
+ org-hide-emphasis-markers t
+ org-hide-leading-stars t)
 
 (setq org-capture-templates '(("i" "Inbox" entry
                                (file+headline "~/org/inbox.org" "Inbox")

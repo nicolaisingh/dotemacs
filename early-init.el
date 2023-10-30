@@ -67,6 +67,9 @@
 (set-face-attribute 'highlight t
                     :background "azure3")
 
+(set-face-attribute 'secondary-selection t
+                    :background "gray90")
+
 (add-to-list 'initial-frame-alist '(fullscreen . maximized))
 (add-to-list 'default-frame-alist '(height . 60))
 (add-to-list 'default-frame-alist '(width . 180))

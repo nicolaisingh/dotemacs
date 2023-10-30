@@ -79,6 +79,7 @@
   (define-key map (kbd "C-c n I") #'org-id-get-create)
   (define-key map (kbd "C-c n r") #'org-roam-ref-add)
   (define-key map (kbd "C-c n R") #'org-roam-ref-remove)
+  (define-key map (kbd "C-c n x") #'org-roam-extract-subtree)
   ;; Dailies
   (define-key map (kbd "C-c n j") #'org-roam-dailies-capture-today))
 

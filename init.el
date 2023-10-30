@@ -183,7 +183,6 @@ collection.  Use revert-gc-cons-percentage to restore the value."
 (require 'init-diminish)
 (require 'init-dired)
 (require 'init-dired-toggle)
-(require 'init-discover-my-major)
 (require 'init-ediff)
 (require 'init-erc)
 (require 'init-eshell)
@@ -208,6 +207,7 @@ collection.  Use revert-gc-cons-percentage to restore the value."
 (require 'init-newsticker)
 (require 'init-nov)
 (require 'init-org)
+(require 'init-org-modern)
 (require 'init-origami)
 (require 'init-pdf)
 (require 'init-plantuml)
@@ -231,6 +231,8 @@ collection.  Use revert-gc-cons-percentage to restore the value."
 (require 'init-solidity)
 (require 'init-typescript)
 
+(with-eval-after-load 'init-org
+  (require 'init-org-modern))
 (with-eval-after-load 'init-org
   (require 'init-org-roam))
 
