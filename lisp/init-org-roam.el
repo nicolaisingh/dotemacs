@@ -7,13 +7,19 @@
 ;;; Code:
 
 (require 'org-roam)
+(require 'org-roam-dailies)
 
 (setq org-roam-directory "~/org/roam"
       org-roam-completion-everywhere t
       org-roam-node-display-template (concat
                                       "${title:100} "
                                       (propertize "${tags}" 'face 'org-tag)
-                                      "${mytodo}"))
+                                      "${mytodo}")
+      org-roam-dailies-capture-templates '(("d" "default" entry "* %?"
+                                            :target (file+head "%<%Y-%m-%d>.org" "#+title: %<%Y-%m-%d>\n")
+                                            :empty-lines-before 1)))
+
+(set-face-attribute 'org-roam-dailies-calendar-note nil :weight 'bold)
 
 (cl-defmethod org-roam-node-mytodo ((node org-roam-node))
   (let ((todo (org-roam-node-todo node)))
@@ -80,8 +86,8 @@
   (define-key map (kbd "C-c n r") #'org-roam-ref-add)
   (define-key map (kbd "C-c n R") #'org-roam-ref-remove)
   (define-key map (kbd "C-c n x") #'org-roam-extract-subtree)
-  ;; Dailies
-  (define-key map (kbd "C-c n j") #'org-roam-dailies-capture-today))
+  (define-key map (kbd "C-c n j") #'org-roam-dailies-capture-today)
+  (define-key map (kbd "C-c n J") #'org-roam-dailies-capture-date))
 
 (provide 'init-org-roam)
 ;;; init-org-roam.el ends here
