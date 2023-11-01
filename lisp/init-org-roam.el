@@ -7,7 +7,10 @@
 ;;; Code:
 
 (require 'org-roam)
+
+;; For customizing the faces
 (require 'org-roam-dailies)
+(require 'org-roam-mode)
 
 (setq org-roam-directory "~/org/roam"
       org-roam-db-location "~/org/org-roam.db"
@@ -21,6 +24,10 @@
                                             :empty-lines-before 1)))
 
 (set-face-attribute 'org-roam-dailies-calendar-note nil :weight 'bold)
+(set-face-attribute 'org-roam-title nil
+                    :weight 'bold
+                    :box '(:style released-button)
+                    :foreground "slate blue")
 
 (cl-defmethod org-roam-node-mytodo ((node org-roam-node))
   (let ((todo (org-roam-node-todo node)))
