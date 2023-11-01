@@ -85,9 +85,6 @@
  ;; If there is more than one, they won't work right.
  '(default ((t (:font "Inconsolata-11"))))
  '(hl-line ((t (:background "gray92"))))
- '(magit-diff-context-highlight ((t (:extend t :background "grey98" :foreground "grey50"))))
- '(magit-diff-hunk-heading-highlight ((t (:extend t :background "grey88"))))
- '(magit-section-highlight ((t (:extend t :background "grey98"))))
  '(mode-line-highlight ((t (:underline t))))
  '(newsticker-new-item-face ((t (:foreground "DarkGreen" :weight bold))))
  '(newsticker-old-item-face ((t (:weight bold))))

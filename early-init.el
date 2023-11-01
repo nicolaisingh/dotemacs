@@ -27,48 +27,38 @@
 
 (load-theme 'tsdh-light)
 
-(setq my-bg-color "gray97"
-      my-mode-line-active-color "slategray2"
-      my-mode-line-inactive-color "gray90")
-
 ;; tsdh-light's #a0a1a7 is too light for me
 (set-face-attribute 'font-lock-comment-face t
                     :foreground "#8c8d91")
 
 (set-face-attribute 'default t
-                    :background my-bg-color)
+                    :background "white")
 
 (set-face-attribute 'show-paren-match t
                     :weight 'bold
-                    :background "gray85")
+                    :background "gray90")
 
 (set-face-attribute 'fringe t
-                    :background my-bg-color)
+                    :background "#f5f5f5")
 
 (set-face-attribute 'mode-line t
-                    :foreground "gray30"
-                    :background my-mode-line-active-color
-                    :box `(:line-width 2 :color ,my-mode-line-active-color :style released-button))
+                    :foreground "#383a42"
+                    :background "slategray1"
+                    :box '(:line-width 2 :color "slategray1" :style released-button))
 
 (set-face-attribute 'mode-line-inactive t
                     :foreground "gray50"
-                    :background my-mode-line-inactive-color
-                    :box `(:line-width 2 :color ,my-mode-line-inactive-color :style released-button))
-
-(set-face-attribute 'minibuffer-prompt t
-                    :foreground "#ffffff"
-                    :background "slategray4"
-                    :box nil
-                    :weight 'normal)
+                    :background "gray90"
+                    :box '(:line-width 2 :color "gray90" :style released-button))
 
 (set-face-attribute 'region t
-                    :background "pale goldenrod")
+                    :background "lightgoldenrod1")
 
 (set-face-attribute 'highlight t
-                    :background "azure3")
+                    :background "khaki1")
 
 (set-face-attribute 'secondary-selection t
-                    :background "gray90")
+                    :background "khaki2")
 
 (add-to-list 'initial-frame-alist '(fullscreen . maximized))
 (add-to-list 'default-frame-alist '(height . 60))
