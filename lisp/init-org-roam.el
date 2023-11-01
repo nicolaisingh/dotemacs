@@ -76,12 +76,17 @@
     (call-interactively #'org-roam-node-insert)))
 
 (let ((map global-map))
-  (define-key map (kbd "C-c n l") #'org-roam-buffer-toggle)
   (define-key map (kbd "C-c n f") #'org-roam-node-find)
-  (define-key map (kbd "C-c n i") #'org-roam-node-insert)
-  (define-key map (kbd "C-c n I") #'org-roam-node-insert-immediate-finish)
   (define-key map (kbd "C-c n c") #'org-roam-capture)
   (define-key map (kbd "C-c n g") #'org-roam-graph)
+  (define-key map (kbd "C-c n %") #'org-roam-node-random)
+  (define-key map (kbd "C-c n j") #'org-roam-dailies-capture-today)
+  (define-key map (kbd "C-c n J") #'org-roam-dailies-capture-date))
+
+(let ((map org-mode-map))
+  (define-key map (kbd "C-c n l") #'org-roam-buffer-toggle)
+  (define-key map (kbd "C-c n i") #'org-roam-node-insert)
+  (define-key map (kbd "C-c n I") #'org-roam-node-insert-immediate-finish)
   (define-key map (kbd "C-c n a") #'org-roam-alias-add)
   (define-key map (kbd "C-c n A") #'org-roam-alias-remove)
   (define-key map (kbd "C-c n t") #'org-roam-tag-add)
@@ -89,9 +94,7 @@
   (define-key map (kbd "C-c n n") #'org-id-get-create)
   (define-key map (kbd "C-c n r") #'org-roam-ref-add)
   (define-key map (kbd "C-c n R") #'org-roam-ref-remove)
-  (define-key map (kbd "C-c n x") #'org-roam-extract-subtree)
-  (define-key map (kbd "C-c n j") #'org-roam-dailies-capture-today)
-  (define-key map (kbd "C-c n J") #'org-roam-dailies-capture-date))
+  (define-key map (kbd "C-c n x") #'org-roam-extract-subtree))
 
 (provide 'init-org-roam)
 ;;; init-org-roam.el ends here
