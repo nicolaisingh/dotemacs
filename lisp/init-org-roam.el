@@ -8,6 +8,8 @@
 
 (require 'org-roam)
 
+(defvar org-roam-content-width 50)
+
 ;; For customizing the faces
 (require 'org-roam-dailies)
 (require 'org-roam-mode)
@@ -67,10 +69,10 @@
          :unnarrowed t)))
 
 (add-to-list 'display-buffer-alist
-             '("\\*org-roam\\*"
+             `("\\*org-roam\\*"
                (display-buffer-in-direction)
                (direction . left)
-               (window-width . 0.40)
+               (window-width . ,(+ 5 org-roam-content-width))
                (window-height . fit-window-to-buffer)))
 
 (org-roam-db-autosync-mode)
@@ -102,6 +104,13 @@
   (define-key map (kbd "C-c n r") #'org-roam-ref-add)
   (define-key map (kbd "C-c n R") #'org-roam-ref-remove)
   (define-key map (kbd "C-c n x") #'org-roam-extract-subtree))
+
+(let ((map org-roam-mode-map))
+  (define-key map (kbd "C-c n l") #'org-roam-buffer-toggle))
+
+(add-hook 'org-roam-mode-hook (lambda ()
+                                (virtual-auto-fill-mode)
+                                (set-fill-column org-roam-content-width)))
 
 (provide 'init-org-roam)
 ;;; init-org-roam.el ends here
