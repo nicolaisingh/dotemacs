@@ -208,6 +208,7 @@ collection.  Use revert-gc-cons-percentage to restore the value."
 (require 'init-nov)
 (require 'init-org)
 (require 'init-org-modern)
+(require 'init-org-present)
 (require 'init-origami)
 (require 'init-pdf)
 (require 'init-plantuml)
