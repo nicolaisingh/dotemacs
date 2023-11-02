@@ -116,6 +116,9 @@ collection.  Use revert-gc-cons-percentage to restore the value."
 (add-hook 'scheme-mode-hook #'indent-spaces)
 (add-hook 'before-save-hook #'delete-trailing-whitespace)
 
+;; easy-kill
+(global-set-key [remap kill-ring-save] 'easy-kill)
+
 ;; Other key bindings
 (global-set-key (kbd "C-c h l") #'hl-line-mode)
 (global-set-key (kbd "C-x C-S-c") #'save-buffers-kill-emacs)
@@ -163,11 +166,11 @@ collection.  Use revert-gc-cons-percentage to restore the value."
 (add-to-list 'load-path (expand-file-name "lisp" user-emacs-directory))
 
 (require 'init-package)
+(require 'init-etc)
+
 (ensure-all-packages-installed)
 
 (require 'init-gui)
-(require 'init-etc)
-
 (require 'init-treesit)
 
 (require 'winfast)
