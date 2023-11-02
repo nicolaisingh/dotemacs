@@ -118,6 +118,28 @@ ring."
   (let ((message-log-max nil))
     (message "Current directory inserted to the kill ring (%s)" dired-directory)))
 
+(defvar dired-ediff-file-a nil "File A to compare in ediff using dired-ediff-a-b")
+(defvar dired-ediff-file-b nil "File B to compare in ediff using dired-ediff-a-b")
+
+(defun dired-ediff-a-b ()
+  "Run ediff on 2 files from any dired buffer. The first time this
+is called the selected file in dired is treated as file A, and
+the file selected during second call will be file B."
+  (interactive)
+  (let ((file (dired-get-filename)))
+    (if (or current-prefix-arg (not dired-ediff-file-a))
+        (progn
+          (setq dired-ediff-file-a file)
+          (message "dired-ediff-a-b: File A set"))
+      (setq dired-ediff-file-b file)
+      (add-hook 'ediff-quit-hook #'dired-ediff-a-b-cleanup)
+      (ediff-files dired-ediff-file-a dired-ediff-file-b))))
+
+(defun dired-ediff-a-b-cleanup ()
+  (setq dired-ediff-file-a nil
+        dired-ediff-file-b nil)
+  (remove-hook 'ediff-quit-hook #'dired-ediff-a-b-cleanup))
+
 (dired-set-listing-switches)
 
 (defun dired-mode-my-custom-keys ()
@@ -133,7 +155,8 @@ ring."
   (define-key dired-mode-map (kbd "C-c m !") #'apply-to-marked-files)
   (define-key dired-mode-map (kbd "C-c m k") #'dired-dir-to-kill-ring)
   (define-key dired-mode-map (kbd "<tab>") #'origami-toggle-node)
-  (define-key dired-mode-map (kbd "<backtab>") #'origami-toggle-all-nodes))
+  (define-key dired-mode-map (kbd "<backtab>") #'origami-toggle-all-nodes)
+  (define-key dired-mode-map (kbd "C-c d d") #'dired-ediff-a-b))
 
 (eval-after-load 'grep
   '(progn
