@@ -187,6 +187,7 @@ collection.  Use revert-gc-cons-percentage to restore the value."
 (require 'init-dired)
 (require 'init-dired-toggle)
 (require 'init-ediff)
+(require 'init-emms)
 (require 'init-erc)
 (require 'init-eshell)
 (require 'init-expand-region)

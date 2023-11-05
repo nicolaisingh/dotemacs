@@ -33,7 +33,10 @@
                    (name . "^\\*Help\\*$")
                    (name . "^\\*RE-Builder\\*$")
                    (name . "^\\*Async-native-compile-log\\*$")
-                   (name . "^\\*Packages\\*$"))))))
+                   (name . "^\\*Packages\\*$")))
+         ("EMMS" (or (mode . emms-playlist-mode)
+                     (mode . emms-browser-mode)
+                     (mode . emms-show-all-mode))))))
 
 (add-hook 'ibuffer-mode-hook
           (lambda ()
