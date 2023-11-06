@@ -40,7 +40,7 @@
   (interactive)
   (let* ((eshell-names (mapcar #'car eshell-names-list))
          (choice (completing-read "Eshell: " eshell-names))
-         (eshell-buffer-name (concat "*eshell-" choice "*"))
+         (eshell-buffer-name (concat "*" choice "-eshell*"))
          (eshell-buffer (get-buffer eshell-buffer-name))
          (path-to-cd (cdr (assoc choice eshell-names-list))))
     (eshell)

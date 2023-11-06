@@ -90,7 +90,8 @@
   (define-key map (kbd "C-c n g") #'org-roam-graph)
   (define-key map (kbd "C-c n %") #'org-roam-node-random)
   (define-key map (kbd "C-c n j") #'org-roam-dailies-capture-today)
-  (define-key map (kbd "C-c n J") #'org-roam-dailies-capture-date))
+  (define-key map (kbd "C-c n J") #'org-roam-dailies-capture-date)
+  (define-key map (kbd "C-c n y") #'org-roam-dailies-goto-yesterday))
 
 (let ((map org-mode-map))
   (define-key map (kbd "C-c n l") #'org-roam-buffer-toggle)
