@@ -21,7 +21,7 @@
 
 (defun chronos-alert (c)
   (alert (chronos--message c)
-         :title (concat (chronos--timerp c) ": Timer expired")
+         :title (concat (chronos--time-string c) ": Timer expired")
          :style 'osx-notifier))
 
 (setq chronos-standard-timers '("0:0:30/30-second finished"
