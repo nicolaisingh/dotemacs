@@ -60,12 +60,12 @@
                     emms-player-alsaplayer
                     emms-player-mpg321
                     emms-player-ogg123)
- emms-info-functions '(emms-info-exiftool)
- ;; emms-info-functions '(emms-info-native emms-info-cueinfo)
+ ;; emms-info-functions '(emms-info-exiftool)
+ emms-info-functions '(emms-info-native emms-info-cueinfo)
  emms-repeat-playlist t
  emms-info-asynchronously nil
  emms-playlist-mode-open-playlists t
- emms-source-playlist-default-format nil ;; 'm3u
+ emms-source-playlist-default-format 'm3u
  emms-track-description-function #'emms-info-my-track-description
  emms-mode-line-mode-line-function #'emms-my-mode-line-display)
 
@@ -111,6 +111,19 @@
     (emms-playlist-set-playlist-buffer playlist-name)
     (emms-play-playlist file)))
 
+(defun emms-metaplaylist-my-find-playlist (file)
+  (interactive (list (read-file-name "Find playlist file: "
+                                     my-emms-playlist-directory
+                                     my-emms-playlist-directory
+                                     t)))
+  (let* ((filename (file-name-nondirectory file))
+         (current-playlist emms-playlist-buffer)
+         (playlist-name (concat " *EMMS Playlist: " filename "*")))
+    (unless (get-buffer playlist-name)
+      (emms-metaplaylist-mode-new-buffer playlist-name))
+    (with-current-buffer playlist-name
+      (emms-insert-playlist file))))
+
 (defun emms-my-playlist-save ()
   (interactive)
   (let ((emms-source-file-default-directory my-emms-playlist-directory))
@@ -149,11 +162,18 @@
 (let ((map emms-playlist-mode-map))
   (define-key map (kbd "F") #'emms-show-all)
   (define-key map (kbd "z") #'emms-metaplaylist-mode-go)
-  (define-key map (kbd "%") #'emms-shuffle))
+  (define-key map (kbd "%") #'emms-shuffle)
+  (define-key map (kbd "M") #'emms-mark-mode))
+
+(let ((map emms-mark-mode-map))
+  (define-key map (kbd "M") #'emms-mark-mode-disable))
 
 (let ((map emms-browser-mode-map))
   (define-key map (kbd "R") #'emms-browser-replace-playlist)
   (define-key map (kbd "a") #'emms-add-directory-tree))
+
+(let ((map emms-metaplaylist-mode-map))
+  (define-key map (kbd "f") #'emms-metaplaylist-my-find-playlist))
 
 (let ((map dired-mode-map))
   (define-key map (kbd "C-c M a") #'emms-add-dired)
