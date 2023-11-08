@@ -7,19 +7,24 @@
 ;;; Code:
 
 (require 'company)
+(require 'mode-local)
 
 (setq company-lighter nil
       company-minimum-prefix-length 2
       company-idle-delay 0.3
       company-selection-wrap-around 1
       company-require-match nil
-      company-dabbrev-downcase nil)
-
-(setq company-transformers '(company-sort-by-occurrence
+      company-dabbrev-downcase nil
+      company-transformers '(company-sort-by-occurrence
                              company-sort-by-backend-importance))
 
-(add-to-list 'company-backends 'company-native-complete)
-(add-to-list 'company-backends 'company-go)
+(setq-mode-local prog-mode
+                 company-minimum-prefix-length 2
+                 company-idle-delay 0.1)
+
+(add-to-list 'company-backends 'company-native-complete t)
+(add-to-list 'company-backends 'company-go t)
+(add-to-list 'company-backends 'company-nixos-options t)
 
 (define-key company-active-map (kbd "C-n") #'company-select-next)
 (define-key company-active-map (kbd "C-p") #'company-select-previous)

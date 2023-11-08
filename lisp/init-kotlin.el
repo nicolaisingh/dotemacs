@@ -14,12 +14,6 @@
 
 ;;; Code:
 
-(require 'mode-local)
-
-(setq-mode-local kotlin-mode
-                 company-minimum-prefix-length 1
-                 company-idle-delay 0.1)
-
 (defun init-kotlin-lsp ()
   (require 'yasnippet)
   (require 'lsp-mode)

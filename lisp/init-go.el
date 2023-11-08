@@ -6,12 +6,7 @@
 
 ;;; Code:
 
-(require 'mode-local)
 (require 'go-mode)
-
-(setq-mode-local go-mode
-                 company-minimum-prefix-length 1
-                 company-idle-delay 0.1)
 
 (defun init-go-lsp ()
   (require 'lsp-mode)
