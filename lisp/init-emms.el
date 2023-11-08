@@ -129,6 +129,29 @@
   (let ((emms-source-file-default-directory my-emms-playlist-directory))
     (call-interactively #'emms-playlist-save)))
 
+(defun emms-playlist-write (format file)
+  "Store the current playlist to FILE as the type FORMAT.
+The default format is specified by `emms-source-playlist-default-format'."
+  (interactive (list (emms-source-playlist-read-format)
+                     (read-file-name "Store as: "
+                                     emms-source-file-default-directory
+                                     emms-source-file-default-directory
+                                     nil)))
+  (if emms-playlist-buffer-p
+      (let ((emms-playlist-buffer-to-write (current-buffer)))
+        (with-temp-buffer
+          (emms-source-playlist-unparse format
+                                        emms-playlist-buffer-to-write
+                                        (current-buffer))
+          (let ((backup-inhibited t))
+	    (write-file file emms-source-playlist-ask-before-overwrite))))
+    (message "aborting save")))
+
+(defun emms-my-playlist-write ()
+  (interactive)
+  (let ((emms-source-file-default-directory my-emms-playlist-directory))
+    (call-interactively #'emms-playlist-write)))
+
 (defun emms-my-toggle-random-playlist ()
   (interactive)
   (emms-toggle-random-playlist)
@@ -163,7 +186,8 @@
   (define-key map (kbd "F") #'emms-show-all)
   (define-key map (kbd "z") #'emms-metaplaylist-mode-go)
   (define-key map (kbd "%") #'emms-shuffle)
-  (define-key map (kbd "M") #'emms-mark-mode))
+  (define-key map (kbd "M") #'emms-mark-mode)
+  (define-key map (kbd "C-x C-w") #'emms-my-playlist-write))
 
 (let ((map emms-mark-mode-map))
   (define-key map (kbd "M") #'emms-mark-mode-disable))
