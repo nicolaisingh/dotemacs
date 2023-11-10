@@ -39,10 +39,11 @@
   (define-key smartparens-mode-map (kbd "C-c s r") #'sp-raise-sexp)
   (define-key smartparens-mode-map (kbd "C-c s c") #'sp-change-inner)
   (define-key smartparens-mode-map (kbd "C-c s j") #'sp-join-sexp)
-  (define-key smartparens-mode-map (kbd "C-c s s") #'sp-split-sexp)
+  (define-key smartparens-mode-map (kbd "C-c s s") #'sp-splice-sexp)
+  (define-key smartparens-mode-map (kbd "C-c s S") #'sp-split-sexp)
 
   (define-key smartparens-mode-map (kbd "M-W") #'sp-wrap-round)
-  (define-key smartparens-mode-map (kbd "M-U") #'sp-splice-sexp)
+  (define-key smartparens-mode-map (kbd "M-U") #'sp-unwrap-sexp)
   (define-key smartparens-mode-map (kbd "M-F") #'sp-forward-symbol)
   (define-key smartparens-mode-map (kbd "M-B") #'sp-backward-symbol)
 
