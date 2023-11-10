@@ -6,19 +6,23 @@
 
 ;;; Code:
 
+(require 'nov)
 (add-to-list 'auto-mode-alist '("\\.epub\\'" . nov-mode))
 
 (defun nov-font-setup ()
-  (face-remap-add-relative 'default :height 1.2)
-  (face-remap-add-relative 'variable-pitch :family "Serif" :height 1.2)
-  (centered-cursor-mode t)
-  (setq nov-text-width 70
-        line-spacing 0.3
-        visual-fill-column-center-text t))
+  (face-remap-add-relative 'default :height 1.1)
+  (setq-local nov-text-width 80)
+  (nov-render-document))
 (add-hook 'nov-mode-hook #'nov-font-setup)
 
-(add-hook 'nov-mode-hook #'visual-line-mode)
-(add-hook 'nov-mode-hook #'visual-fill-column-mode)
+(defun nov-update-text-width (n)
+  (interactive (list (or current-prefix-arg
+                         (read-number (format "Change nov-text-width from %s to: " nov-text-width)
+                                      (current-column)))))
+  (setq-local nov-text-width n)
+  (nov-render-document))
+
+(define-key nov-mode-map (kbd "f") #'nov-update-text-width)
 
 (provide 'init-nov)
 ;;; init-nov.el ends here

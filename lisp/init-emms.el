@@ -120,9 +120,22 @@
          (current-playlist emms-playlist-buffer)
          (playlist-name (concat " *EMMS Playlist: " filename "*")))
     (unless (get-buffer playlist-name)
-      (emms-metaplaylist-mode-new-buffer playlist-name))
-    (with-current-buffer playlist-name
-      (emms-insert-playlist file))))
+      (emms-metaplaylist-mode-new-buffer playlist-name)
+      (with-current-buffer playlist-name
+        (emms-insert-playlist file)))))
+
+(defun emms-metaplaylist-my-load-all-playlists (directory)
+  (interactive (list (read-directory-name "Load all playlists in: "
+                                          my-emms-playlist-directory
+                                          my-emms-playlist-directory
+                                          t)))
+  (dolist (file (directory-files directory t directory-files-no-dot-files-regexp))
+    (emms-metaplaylist-my-find-playlist file))
+  (emms-metaplaylist-mode-update))
+
+(dolist (playlist (directory-files my-emms-playlist-directory t directory-files-no-dot-files-regexp))
+  (message "%s" playlist))
+(directory-files my-emms-playlist-directory t directory-files-no-dot-files-regexp)
 
 (defun emms-my-playlist-save ()
   (interactive)
@@ -197,7 +210,9 @@ The default format is specified by `emms-source-playlist-default-format'."
   (define-key map (kbd "a") #'emms-add-directory-tree))
 
 (let ((map emms-metaplaylist-mode-map))
-  (define-key map (kbd "f") #'emms-metaplaylist-my-find-playlist))
+  (define-key map (kbd "f") #'emms-metaplaylist-my-find-playlist)
+  (define-key map (kbd "z") #'emms-playlist-mode-go)
+  (define-key map (kbd "G") #'emms-metaplaylist-my-load-all-playlists))
 
 (let ((map dired-mode-map))
   (define-key map (kbd "C-c M a") #'emms-add-dired)

@@ -178,6 +178,7 @@ collection.  Use revert-gc-cons-percentage to restore the value."
 
 (require 'init-aggressive-indent)
 (require 'init-browse-kill-ring)
+(require 'init-calibre)
 ;; (require 'init-bs)
 (require 'init-chronos)
 (require 'init-command-log)
