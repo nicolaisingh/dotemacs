@@ -133,10 +133,6 @@
     (emms-metaplaylist-my-find-playlist file))
   (emms-metaplaylist-mode-update))
 
-(dolist (playlist (directory-files my-emms-playlist-directory t directory-files-no-dot-files-regexp))
-  (message "%s" playlist))
-(directory-files my-emms-playlist-directory t directory-files-no-dot-files-regexp)
-
 (defun emms-my-playlist-save ()
   (interactive)
   (let ((emms-source-file-default-directory my-emms-playlist-directory))
