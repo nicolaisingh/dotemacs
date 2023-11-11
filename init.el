@@ -227,6 +227,7 @@ collection.  Use revert-gc-cons-percentage to restore the value."
 (require 'init-prism)
 (require 'init-recentf)
 (require 'init-restclient)
+(require 'init-selected)
 (require 'init-slime)
 (require 'init-smartparens)
 (require 'init-transpose-frame)
