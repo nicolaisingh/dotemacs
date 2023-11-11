@@ -84,6 +84,7 @@
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
  '(default ((t (:font "Inconsolata-11"))))
+ '(cursor ((t (:background "firebrick"))))
  '(hl-line ((t (:background "gray95"))))
  '(mode-line-highlight ((t (:underline t))))
  '(newsticker-new-item-face ((t (:foreground "DarkGreen" :weight bold))))

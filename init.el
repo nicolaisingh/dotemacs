@@ -107,6 +107,11 @@ collection.  Use revert-gc-cons-percentage to restore the value."
       auto-save-file-name-transforms
       `((".*" ,(concat user-emacs-directory "autosaves/") t)))
 
+;; Buffer placement
+(setq same-window-regexps
+      '("^magit: .*$"
+        "^magit-status: .*$"))
+
 ;; Tabs and spaces handling
 (setq-default tab-width 4)
 (add-hook 'shell-mode-hook #'indent-tab-width-8)
