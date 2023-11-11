@@ -6,8 +6,6 @@
 
 ;;; Code:
 
-(require 'bs)
-
 (defvar winfast--fullscreen-p nil)
 (defvar winfast--last-window-configuration nil)
 (defvar winfast--mode-line-color nil)
@@ -50,33 +48,6 @@ instead with the most recently used window."
                  swap-largest-with-recent
                swap-current-with-largest))
     (recenter)))
-
-(defun winfast-put-buffer-to-recent-window ()
-  "Puts the current buffer to the most recent window selected.
-
-Similar to `put-buffer-to-next-window', but puts it instead on
-the most recent one.  Useful when you expect a new buffer to
-appear in the current window, but instead it pops up in the next
-one."
-  (interactive)
-  (let* ((current-buffer (window-buffer (selected-window)))
-         (recent-window (get-mru-window nil nil t)))
-    (when recent-window
-      (previous-buffer)
-      (set-window-buffer recent-window current-buffer)
-      (select-window recent-window))))
-
-(defun winfast-put-buffer-to-other-window (count)
-  "Puts the current buffer to the next window.
-
-The previous window will show its previous buffer.  Useful when
-you expect a new buffer to appear in the next window, but instead
-it pops up in the current one, replacing your current buffer."
-  (interactive "p")
-  (let* ((current-buffer (current-buffer)))
-    (previous-buffer)
-    (other-window count)
-    (set-window-buffer (selected-window) current-buffer)))
 
 (defun winfast-fullscreen-window-layout ()
   "Delete the other windows to make the current window fullscreen.
@@ -127,16 +98,6 @@ called again."
                       :box winfast--mode-line-box-style)
   (winfast-mode -1))
 
-(defun winfast-cycle-previous-window ()
-  (interactive)
-  (bs-message-without-log "%s" (mapcar #'buffer-name (bs-previous-buffer)))
-  (bs-cycle-previous))
-
-(defun winfast-cycle-next-window ()
-  (interactive)
-  (bs-message-without-log "%s" (mapcar #'buffer-name (bs-next-buffer)))
-  (bs-cycle-next))
-
 (defun winfast-enlarge-window-horizontally ()
   (interactive)
   (enlarge-window-horizontally 10))
@@ -164,9 +125,9 @@ called again."
     (define-key map "\M-k" #'kill-current-buffer)
     (define-key map "\M-M" #'maximize-window)
     (define-key map "\M-=" #'balance-windows)
-    (define-key map "\M-P" #'winfast-cycle-previous-window)
-    (define-key map "\M-N" #'winfast-cycle-next-window)
-    (define-key map "\M-b" #'bs-show)
+    (define-key map "\M-P" #'previous-buffer)
+    (define-key map "\M-N" #'next-buffer)
+    (define-key map "\M-b" #'switch-to-buffer)
 
     (define-key map "\M-f" #'winfast-toggle-fullscreen-window)
     (define-key map "\M-s" #'winfast-swap-window-with-other)
@@ -177,10 +138,6 @@ called again."
     (define-key map "\M-[" #'winfast-shrink-window)
     (define-key map "\M-}" #'winfast-enlarge-window-horizontally)
     (define-key map "\M-{" #'winfast-shrink-window-horizontally)
-
-    ;; TODO
-    ;; (define-key map "br" #'winfast-put-buffer-to-recent-window)
-    ;; (define-key map "bo" #'winfast-put-buffer-to-other-window)
     map)
   "Keymap for `winfast-mode'.
 Any other key binding used which is not in the map will turn off

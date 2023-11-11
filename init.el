@@ -143,7 +143,7 @@ collection.  Use revert-gc-cons-percentage to restore the value."
 
 ;; Move facemenu-keymap to another binding
 (require 'facemenu)
-(define-key global-map (kbd "M-o") nil)
+(define-key global-map (kbd "M-o") nil) ;; winfast and other-window will occupy M-o
 (define-key global-map (kbd "C-c f m") 'facemenu-keymap)
 
 (add-hook 'emacs-startup-hook
@@ -179,7 +179,8 @@ collection.  Use revert-gc-cons-percentage to restore the value."
 (require 'init-treesit)
 
 (require 'winfast)
-(define-key global-map (kbd "M-o") #'winfast-mode)
+(define-key global-map (kbd "M-o") #'other-window)
+(define-key global-map (kbd "M-O") #'winfast-mode)
 
 (require 'init-aggressive-indent)
 (require 'init-browse-kill-ring)
