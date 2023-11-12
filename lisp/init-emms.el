@@ -77,6 +77,7 @@
 
 (defvar my-emms-playlist-directory "~/Music/playlists/")
 (defvar my-emms-library-directory "~/Music/library/")
+(defvar my-emms-flac-directory "~/Music/flac/")
 
 (defun emms-metaplaylist-mode-new-buffer-no-update (buffer-name)
   "Creates a new buffer playlist buffer BUFFER-NAME but skip `emms-metaplaylist-mode-update'."
@@ -174,6 +175,14 @@ The default format is specified by `emms-source-playlist-default-format'."
     (customize-set-variable 'emms-random-playlist nil))
   (emms-mode-line-alter))
 
+;; track filters
+(emms-browser-make-filter "all" 'ignore)
+(emms-browser-make-filter "flac" (emms-browser-filter-only-dir my-emms-flac-directory))
+(emms-browser-make-filter "library" (emms-browser-filter-only-dir my-emms-library-directory))
+
+(emms-browser-set-filter (assoc "library" emms-browser-filters))
+
+;; bindings
 (let ((map global-map))
   (define-key map (kbd "C-c M L") #'emms-metaplaylist-my-load-playlist)
   (define-key map (kbd "C-c M b") #'emms-metaplaylist-mode-go)

@@ -9,8 +9,7 @@
 (require 'ibuffer)
 (require 'ibuf-ext)
 
-(setq ibuffer-use-other-window t
-      ibuffer-show-empty-filter-groups nil
+(setq ibuffer-show-empty-filter-groups nil
       ibuffer-show-empty-filter-groups nil
       ibuffer-saved-filter-groups
       '(("nas"
