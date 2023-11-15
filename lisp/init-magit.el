@@ -9,6 +9,10 @@
 (require 'magit)
 (require 'project)
 
+(setq magit-diff-refine-hunk t
+      magit-status-goto-file-position t
+      magit-status-show-hashes-in-headers t)
+
 (defvar magit-my-global-map
   (let ((map (make-sparse-keymap)))
     (define-key map (kbd "g") #'magit-status)
