@@ -13,7 +13,10 @@
 (setq dired-listing-switch-A "a"
       dired-isearch-filenames t
       dired-hide-details-hide-symlink-targets nil
-      dired-hide-details-hide-information-lines nil)
+      dired-hide-details-hide-information-lines nil
+      dired-dwim-target t
+      dired-recursive-copies 'always
+      dired-recursive-deletes 'always)
 
 ;; Don't forget `brew install coreutils' in mac
 (when (eq system-type 'darwin)
@@ -165,6 +168,9 @@ the file selected during second call will be file B."
 (add-hook 'dired-mode-hook #'dired-mode-my-custom-keys)
 (add-hook 'dired-mode-hook #'hl-line-mode)
 ;; (add-hook 'dired-mode-hook #'dired-hide-details-mode)
+
+;; dired-recent
+(dired-recent-mode 1)
 
 (provide 'init-dired)
 ;;; init-dired.el ends here

@@ -45,28 +45,30 @@
      "~/org/roam/ideate/20231024135925-ideate_releases.org"
      "~/org/projects.org"))
  '(package-selected-packages
-   '(selected calibre emms osm easy-kill org-present org-modern orderless
-              virtual-auto-fill org-roam alert chronos multi-term
-              esh-help eshell-up eshell-z exec-path-from-shell slime
-              ox-jira ox-gfm ox-slack git-timemachine consult
-              marginalia saveplace-pdf-view flycheck-package csv-mode
-              atomic-chrome solidity-mode dockerfile-mode yaml-imenu
-              yaml-mode dash ag js2-refactor xref-js2 typescript-mode
-              company-go lsp-treemacs lsp-mode go-mode ztree nav-flash
-              company-nixos-options nix-mode nixos-options dap-mode
-              bui nov highlight-numbers lorem-ipsum command-log-mode
-              imenu-list yasnippet package-lint currency-convert
-              company-native-complete native-complete
-              graphviz-dot-mode company-restclient restclient
-              know-your-http-well multiple-cursors inf-clojure
-              clojure-mode aggressive-indent tree-mode json-navigator
-              prism find-file-in-repository dired-toggle diminish
-              transpose-frame amx unfill readline-complete
-              writeroom-mode magit htmlize flycheck flycheck-kotlin
-              typing company edit-server js2-mode kotlin-mode
-              smartparens json-mode origami browse-kill-ring which-key
-              plantuml-mode centered-cursor-mode expand-region
-              pdf-tools))
+   '(dired-recent selected calibre emms osm easy-kill org-present
+                  org-modern orderless virtual-auto-fill org-roam
+                  alert chronos multi-term esh-help eshell-up eshell-z
+                  exec-path-from-shell slime ox-jira ox-gfm ox-slack
+                  git-timemachine consult marginalia
+                  saveplace-pdf-view flycheck-package csv-mode
+                  atomic-chrome solidity-mode dockerfile-mode
+                  yaml-imenu yaml-mode dash ag js2-refactor xref-js2
+                  typescript-mode company-go lsp-treemacs lsp-mode
+                  go-mode ztree nav-flash company-nixos-options
+                  nix-mode nixos-options dap-mode bui nov
+                  highlight-numbers lorem-ipsum command-log-mode
+                  imenu-list yasnippet package-lint currency-convert
+                  company-native-complete native-complete
+                  graphviz-dot-mode company-restclient restclient
+                  know-your-http-well multiple-cursors inf-clojure
+                  clojure-mode aggressive-indent tree-mode
+                  json-navigator prism find-file-in-repository
+                  dired-toggle diminish transpose-frame amx unfill
+                  readline-complete writeroom-mode magit htmlize
+                  flycheck flycheck-kotlin typing company edit-server
+                  js2-mode kotlin-mode smartparens json-mode origami
+                  browse-kill-ring which-key plantuml-mode
+                  centered-cursor-mode expand-region pdf-tools))
  '(plantuml-default-exec-mode 'jar)
  '(window-divider-default-right-width 3)
  '(window-divider-mode t)
