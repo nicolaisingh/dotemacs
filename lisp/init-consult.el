@@ -26,9 +26,12 @@
 (define-key goto-map (kbd "m") #'consult-mark)
 (define-key goto-map (kbd "M") #'consult-global-mark)
 (define-key goto-map (kbd "h") #'consult-history)
+(define-key goto-map (kbd "d") #'consult-dir)
 
 ;; minibuffer
 (define-key minibuffer-local-map (kbd "M-s") #'consult-history)
+(define-key minibuffer-local-map (kbd "M-g d") #'consult-dir)
+(define-key minibuffer-local-map (kbd "M-g f") #'consult-dir-jump-file)
 
 (provide 'init-consult)
 ;;; init-consult.el ends here

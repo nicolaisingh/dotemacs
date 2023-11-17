@@ -167,7 +167,7 @@ the file selected during second call will be file B."
 
 (add-hook 'dired-mode-hook #'dired-mode-my-custom-keys)
 (add-hook 'dired-mode-hook #'hl-line-mode)
-;; (add-hook 'dired-mode-hook #'dired-hide-details-mode)
+(add-hook 'dired-mode-hook #'dired-hide-details-mode)
 
 ;; dired-recent
 (dired-recent-mode 1)
