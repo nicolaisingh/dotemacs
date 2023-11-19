@@ -66,12 +66,12 @@ reasons.  Use this if it is available.  Otherwise, use `/sudo'."
 
 (defun indent-using-tabs-and-fixup ()
   (interactive)
-  (setq-default indent-tabs-mode t)
+  (setq-local indent-tabs-mode t)
   (tabify (point-min) (point-max)))
 
 (defun indent-using-spaces-and-fixup ()
   (interactive)
-  (setq-default indent-tabs-mode nil)
+  (setq-local indent-tabs-mode nil)
   (untabify (point-min) (point-max)))
 
 (defun indent-tab-width-2 ()

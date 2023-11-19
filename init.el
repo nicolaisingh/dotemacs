@@ -211,6 +211,7 @@ collection.  Use revert-gc-cons-percentage to restore the value."
 (require 'init-latex)
 (require 'init-magit)
 (require 'init-marginalia)
+(require 'init-markdown)
 (require 'init-multi-term)
 (require 'init-multiple-cursors)
 (require 'init-native-complete)
