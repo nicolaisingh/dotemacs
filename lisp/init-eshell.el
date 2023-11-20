@@ -36,13 +36,11 @@
         ("bash-scripts" . "~/prj/bash-scripts")
         ("other")))
 
-(defun eshell-ask ()
-  (interactive)
-  (let* ((eshell-names (mapcar #'car eshell-names-list))
-         (choice (completing-read "Eshell: " eshell-names))
-         (eshell-buffer-name (concat "*" choice "-eshell*"))
+(defun eshell-ask (eshell-name)
+  (interactive (list (completing-read "Eshell: " (mapcar #'car eshell-names-list))))
+  (let* ((eshell-buffer-name (concat "*" eshell-name "-eshell*"))
          (eshell-buffer (get-buffer eshell-buffer-name))
-         (path-to-cd (cdr (assoc choice eshell-names-list))))
+         (path-to-cd (cdr (assoc eshell-name eshell-names-list))))
     (eshell)
     (unless eshell-buffer
       (when path-to-cd
