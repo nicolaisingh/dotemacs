@@ -1,0 +1,8 @@
+# key: var-multiline
+# name: var-multiline
+# --
+:var = <<
+Content-Type: application/json
+Authorization: :token-var
+Multiline: variable
+#

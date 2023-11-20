@@ -1,0 +1,6 @@
+# key: var-multiline-elisp
+# name: var-multiline-elisp
+# --
+:var = <<
+(elisp (code (here)))
+#

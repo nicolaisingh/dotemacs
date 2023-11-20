@@ -1,0 +1,4 @@
+# key: var-elisp
+# name: var-elisp
+# --
+:var := (value (using (elisp)))

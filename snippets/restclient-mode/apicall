@@ -1,0 +1,12 @@
+# key: apicall
+# name: apicall
+# --
+# ${1:Commentary}
+${2:VERB} https://${3:URL}
+Content-Type: application/json
+${4:Headers: Values}
+
+${5:{
+BODY
+}}
+$0

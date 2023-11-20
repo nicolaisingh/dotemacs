@@ -24,9 +24,10 @@
                  company-minimum-prefix-length 2
                  company-idle-delay 0.1)
 
-(add-to-list 'company-backends 'company-native-complete t)
-(add-to-list 'company-backends 'company-go t)
-(add-to-list 'company-backends 'company-nixos-options t)
+(add-to-list 'company-backends 'company-native-complete)
+(add-to-list 'company-backends 'company-go)
+(add-to-list 'company-backends 'company-nixos-options)
+(add-to-list 'company-backends 'company-restclient)
 
 (define-key company-active-map (kbd "C-n") #'company-select-next)
 (define-key company-active-map (kbd "C-p") #'company-select-previous)
