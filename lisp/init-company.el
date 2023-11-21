@@ -26,8 +26,13 @@
 
 (add-to-list 'company-backends 'company-native-complete)
 (add-to-list 'company-backends 'company-go)
-(add-to-list 'company-backends 'company-nixos-options)
 (add-to-list 'company-backends 'company-restclient)
+
+(with-eval-after-load 'nix-mode
+  (add-hook 'nix-mode-hook (lambda ()
+                             (interactive)
+                             (make-local-variable 'company-backends)
+                             (add-to-list 'company-backends 'company-nixos-options))))
 
 (define-key company-active-map (kbd "C-n") #'company-select-next)
 (define-key company-active-map (kbd "C-p") #'company-select-previous)
