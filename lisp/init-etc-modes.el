@@ -6,7 +6,7 @@
 
 ;;; Code:
 
-(require 'init-etc-modes-repeatkey)
+;; (require 'init-etc-modes-repeatkey)
 
 (define-minor-mode reader-mode
   "Make a reader-friendly view by removing screen distractions

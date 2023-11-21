@@ -94,6 +94,7 @@ collection.  Use revert-gc-cons-percentage to restore the value."
 (put 'narrow-to-region 'disabled nil)
 (put 'set-goal-column 'disabled nil)
 
+(repeat-mode 1)
 (winner-mode 1)
 (fset 'yes-or-no-p 'y-or-n-p)
 
