@@ -15,7 +15,8 @@
       org-modern-keyword nil
       org-modern-list nil
       org-modern-progress nil
-      org-modern-star nil)
+      org-modern-star nil
+      org-modern-radio-target '("「" t "」"))
 
 (defun toggle-org-modern-mode ()
   (interactive)
@@ -26,8 +27,8 @@
 
 (define-key org-mode-map (kbd "C-c o m") #'toggle-org-modern-mode)
 
-(set-face-attribute 'org-modern-label  nil
-                    :height 0.9)
+(set-face-attribute 'org-modern-label nil
+                    :height 0.8)
 
 (add-hook 'org-mode-hook #'toggle-org-modern-mode)
 
