@@ -48,6 +48,18 @@
 (set-face-attribute 'org-level-1 t :height 1.15)
 (set-face-attribute 'org-level-2 t :height 1.1)
 
+(set-face-attribute 'org-drawer t
+                    :inherit 'org-modern-label
+                    :foreground "gray50")
+
+(set-face-attribute 'org-special-keyword t
+                    :height 0.8)
+
+(set-face-attribute 'org-property-value t
+                    :height 0.8
+                    :foreground "gray50")
+
+
 (with-eval-after-load 'org
   (require 'ox-md)
   (require 'ox-gfm)
