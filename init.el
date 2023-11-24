@@ -45,6 +45,9 @@ collection.  Use revert-gc-cons-percentage to restore the value."
 
 ;; General emacs settings
 (setq
+ user-full-name "Nicolai Singh"
+ user-mail-address "nicolaisingh@pm.me"
+
  ;; Timeout in seconds before auto-save
  auto-save-timeout 5
 
@@ -79,7 +82,14 @@ collection.  Use revert-gc-cons-percentage to restore the value."
  next-line-add-newlines t
 
  ;; Save clipboard contents before killing
- save-interprogram-paste-before-kill t)
+ save-interprogram-paste-before-kill t
+
+ ;; Mail
+ smtpmail-smtp-server "127.0.0.1"
+ smtpmail-smtp-service 1025
+ smtpmail-stream-type 'starttls
+ smtpmail-servers-requiring-authorization "127.0.0.1"
+ send-mail-function 'smtpmail-send-it)
 
 ;; Don't ask when reverting for the following regex
 (setq revert-without-query '("^.*\\.pdf$"))
@@ -183,6 +193,9 @@ collection.  Use revert-gc-cons-percentage to restore the value."
 (define-key global-map (kbd "M-o") #'other-window)
 (define-key global-map (kbd "M-O") #'winfast-mode)
 
+(require 'alert)
+(setq alert-fade-time 60)
+
 (require 'init-aggressive-indent)
 (require 'init-browse-kill-ring)
 (require 'init-calibre)
@@ -220,6 +233,7 @@ collection.  Use revert-gc-cons-percentage to restore the value."
 (require 'init-newsticker)
 (require 'init-nov)
 (require 'init-org)
+(require 'init-org-alert)
 (require 'init-org-crypt)
 (require 'init-org-modern)
 (require 'init-org-present)

@@ -46,9 +46,9 @@
                     :box '(:line-width 2 :color "slategray1" :style released-button))
 
 (set-face-attribute 'mode-line-inactive t
-                    :foreground "gray50"
-                    :background "gray90"
-                    :box '(:line-width 2 :color "gray90" :style released-button))
+                    :foreground "gray70"
+                    :background "gray95"
+                    :box '(:line-width 2 :color "white" :style released-button))
 
 (set-face-attribute 'region t
                     :background "lightgoldenrod1")

@@ -11,6 +11,7 @@
 (setq org-modern-tag t
       org-modern-block-name t
       org-modern-todo t
+      org-modern-priority t
       org-modern-checkbox nil
       org-modern-keyword nil
       org-modern-list nil

@@ -23,6 +23,8 @@
  org-agenda-start-with-follow-mode t
  org-agenda-search-view-max-outline-level 2
  org-src-fontify-natively nil
+ org-fontify-done-headline nil
+ org-fontify-todo-headline nil
  org-edit-src-content-indentation 0
  org-tags-column 0
  org-auto-align-tags nil
@@ -43,7 +45,8 @@
 
 (setq org-agenda-custom-commands
       '(("I" "Ideate TODOs" tags-todo "ideate")
-        ("P" "All project TODOs" tags-todo "@project")))
+        ("P" "All project TODOs" tags-todo "@project")
+        ("R" "All routines" ((tags-todo "+CATEGORY=\"routine\"")))))
 
 (set-face-attribute 'org-level-1 t :height 1.15)
 (set-face-attribute 'org-level-2 t :height 1.1)
@@ -59,6 +62,18 @@
                     :height 0.8
                     :foreground "gray50")
 
+(set-face-attribute 'org-block-begin-line t
+                    :inherit 'shadow
+                    :background "gray96")
+
+(set-face-attribute 'org-block-end-line t
+                    :background "gray99")
+
+(set-face-attribute 'org-block t
+                    :background "gray99")
+
+(set-face-attribute 'org-todo t
+                    :foreground "coral3")
 
 (with-eval-after-load 'org
   (require 'ox-md)
