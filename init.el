@@ -82,14 +82,7 @@ collection.  Use revert-gc-cons-percentage to restore the value."
  next-line-add-newlines t
 
  ;; Save clipboard contents before killing
- save-interprogram-paste-before-kill t
-
- ;; Mail
- smtpmail-smtp-server "127.0.0.1"
- smtpmail-smtp-service 1025
- smtpmail-stream-type 'starttls
- smtpmail-servers-requiring-authorization "127.0.0.1"
- send-mail-function 'smtpmail-send-it)
+ save-interprogram-paste-before-kill t)
 
 ;; Don't ask when reverting for the following regex
 (setq revert-without-query '("^.*\\.pdf$"))
@@ -193,8 +186,7 @@ collection.  Use revert-gc-cons-percentage to restore the value."
 (define-key global-map (kbd "M-o") #'other-window)
 (define-key global-map (kbd "M-O") #'winfast-mode)
 
-(require 'alert)
-(setq alert-fade-time 60)
+(require 'init-alert)
 
 (require 'init-aggressive-indent)
 (require 'init-browse-kill-ring)
@@ -224,6 +216,7 @@ collection.  Use revert-gc-cons-percentage to restore the value."
 (require 'init-json-navigator)
 (require 'init-latex)
 (require 'init-magit)
+(require 'init-mail)
 (require 'init-marginalia)
 (require 'init-markdown)
 (require 'init-multi-term)
