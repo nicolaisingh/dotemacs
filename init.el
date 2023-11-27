@@ -133,6 +133,7 @@ collection.  Use revert-gc-cons-percentage to restore the value."
 (global-set-key (kbd "C-x C-S-c") #'save-buffers-kill-emacs)
 (global-set-key (kbd "M-SPC") #'cycle-spacing)
 (global-set-key (kbd "C-x C-m") (key-binding (kbd "M-x")))
+(global-set-key (kbd "C-x B") #'bury-buffer)
 (global-set-key (kbd "C-z") #'repeat)
 (global-set-key (kbd "H-D") (lambda ()
                               (interactive)
