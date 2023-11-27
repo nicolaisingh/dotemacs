@@ -139,7 +139,7 @@ times."
                form
                (eval `(benchmark-run ,repetitions ,form))))))
 
-(defun repeatkey-repeatable-call (f)
+(defun repeatkey-repeatable-call (f &optional other-bindings)
   "Call function F interactively, then allow the last key used to
   repeat the call, similar to C-x z z z in `repeat'."
   (setq repeatkey-last-command f)
@@ -151,6 +151,8 @@ times."
                    (lambda ()
                      (interactive)
                      (repeatkey-repeatable-call repeatkey-last-command)))
+       (dolist (binding other-bindings)
+         (define-key map (kbd (car binding)) (cdr binding)))
        map))))
 
 (defun toggle-hscroll-mode ()

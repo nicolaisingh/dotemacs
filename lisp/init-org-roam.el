@@ -84,6 +84,20 @@
                                             org-roam-capture-templates)))
     (call-interactively #'org-roam-node-insert)))
 
+(defun org-roam-dailies-goto-previous-note-repeatable ()
+  "Call `org-roam-dailies-goto-previous-note' using `repeatkey-repeatable-call'."
+  (interactive)
+  (repeatkey-repeatable-call #'org-roam-dailies-goto-previous-note
+                             '(("." . org-roam-dailies-goto-next-note-repeatable)
+                               ("," . org-roam-dailies-goto-previous-note-repeatable))))
+
+(defun org-roam-dailies-goto-next-note-repeatable ()
+  "Call `org-roam-dailies-goto-next-note' using `repeatkey-repeatable-call'."
+  (interactive)
+  (repeatkey-repeatable-call #'org-roam-dailies-goto-next-note
+                             '(("." . org-roam-dailies-goto-next-note-repeatable)
+                               ("," . org-roam-dailies-goto-previous-note-repeatable))))
+
 (let ((map global-map))
   (define-key map (kbd "C-c n f") #'org-roam-node-find)
   (define-key map (kbd "C-c n c") #'org-roam-capture)
@@ -91,7 +105,9 @@
   (define-key map (kbd "C-c n %") #'org-roam-node-random)
   (define-key map (kbd "C-c n j") #'org-roam-dailies-capture-today)
   (define-key map (kbd "C-c n J") #'org-roam-dailies-capture-date)
-  (define-key map (kbd "C-c n y") #'org-roam-dailies-goto-yesterday))
+  (define-key map (kbd "C-c n y") #'org-roam-dailies-goto-yesterday)
+  (define-key map (kbd "C-c n .") #'org-roam-dailies-goto-next-note-repeatable)
+  (define-key map (kbd "C-c n ,") #'org-roam-dailies-goto-previous-note-repeatable))
 
 (let ((map org-mode-map))
   (define-key map (kbd "C-c n l") #'org-roam-buffer-toggle)
