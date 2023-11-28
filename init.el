@@ -125,6 +125,9 @@ collection.  Use revert-gc-cons-percentage to restore the value."
 (add-hook 'scheme-mode-hook #'indent-spaces)
 (add-hook 'before-save-hook #'delete-trailing-whitespace)
 
+;; Don't wrap minibuffer entries
+(add-hook 'minibuffer-setup-hook (lambda () (setq-local truncate-lines t)))
+
 ;; easy-kill
 (global-set-key [remap kill-ring-save] 'easy-kill)
 
