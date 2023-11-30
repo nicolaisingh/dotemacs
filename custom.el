@@ -70,6 +70,11 @@
                browse-kill-ring which-key plantuml-mode
                centered-cursor-mode expand-region pdf-tools))
  '(plantuml-default-exec-mode 'jar)
+ '(tab-bar-auto-width-max '(200 20))
+ '(tab-bar-close-button-show nil)
+ '(tab-bar-format
+   '(tab-bar-format-history tab-bar-format-tabs tab-bar-separator))
+ '(tab-bar-show 1)
  '(window-divider-default-right-width 3)
  '(window-divider-mode t)
  '(writeroom-extra-line-spacing 0.3)
@@ -91,6 +96,10 @@
  '(mode-line-highlight ((t (:underline t))))
  '(newsticker-new-item-face ((t (:foreground "DarkGreen" :weight bold))))
  '(newsticker-old-item-face ((t (:weight bold))))
+ '(tab-bar ((t (:inherit default :background "grey96"))))
+ '(tab-bar-tab ((t (:inherit tab-bar :background "azure3" :box (:line-width (1 . 1) :style released-button)))))
+ '(tab-bar-tab-group-inactive ((t nil)))
+ '(tab-bar-tab-inactive ((t (:inherit tab-bar-tab :background "grey96"))))
  '(variable-pitch ((t (:height 1.1 :family "Source Serif Pro"))))
  '(window-divider ((t (:distant-foreground "gray40" :foreground "gray90"))))
  '(window-divider-first-pixel ((t (:foreground "gray85"))))

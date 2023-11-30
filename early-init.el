@@ -38,17 +38,17 @@
                     :background "gray90")
 
 (set-face-attribute 'fringe t
-                    :background "#f5f5f5")
+                    :background "gray96")
 
 (set-face-attribute 'mode-line t
-                    :foreground "#383a42"
-                    :background "slategray1"
-                    :box '(:line-width 2 :color "slategray1" :style released-button))
+                    :foreground "white"
+                    :background "azure4"
+                    :box '(:line-width 1 :color "azure4" :style released-button))
 
 (set-face-attribute 'mode-line-inactive t
-                    :foreground "gray70"
+                    :foreground "gray60"
                     :background "gray95"
-                    :box '(:line-width 2 :color "white" :style released-button))
+                    :box '(:line-width 1 :color "gray95" :style released-button))
 
 (set-face-attribute 'region t
                     :background "lightgoldenrod1")

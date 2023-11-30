@@ -10,9 +10,9 @@
 (defvar winfast--last-window-configuration nil)
 (defvar winfast--mode-line-color nil)
 (defvar winfast--mode-line-box-style nil)
-(defvar winfast--winfast-mode-line-color "khaki")
+(defvar winfast--winfast-mode-line-color "dark goldenrod")
 (defvar winfast--winfast-mode-line-box-style
-  `(:line-width 2 :color ,winfast--winfast-mode-line-color :style released-button))
+  `(:line-width 1 :color ,winfast--winfast-mode-line-color :style released-button))
 
 (defun winfast-swap-window-with-other (count)
   "Exchange the selected window with the next one."

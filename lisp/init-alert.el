@@ -21,7 +21,7 @@
                                              (file-name-base (buffer-name (plist-get info :buffer)))))
                               (body (plist-get info :message))
                               (message-interactive nil))
-                          (message-mail user-mail-address title)
+                          (message-mail "nicolaisingh+org-alert@protonmail.com" title)
                           (message-goto-body)
                           (insert body)
                           (insert (format "\n\n-----\nAlert time: %s"

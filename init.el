@@ -116,6 +116,9 @@ collection.  Use revert-gc-cons-percentage to restore the value."
       '("^magit: .*$"
         "^magit-status: .*$"))
 
+;; Tab bar
+(global-set-key (kbd "C-x t T") #'tab-bar-mode)
+
 ;; Tabs and spaces handling
 (setq-default tab-width 4)
 (add-hook 'shell-mode-hook #'indent-tab-width-8)
