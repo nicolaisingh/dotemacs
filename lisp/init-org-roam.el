@@ -22,7 +22,7 @@
                                       (propertize "${tags}" 'face 'org-tag)
                                       "${mytodo}")
       org-roam-dailies-capture-templates '(("d" "default" entry "* %?"
-                                            :target (file+head "%<%Y-%m-%d>.org" "#+title: %<%Y-%m-%d>\n")
+                                            :target (file+head "%<%Y-%m-%d>.org" "#+title: Journal- %<%Y-%m-%d>\n")
                                             :empty-lines-before 1)))
 
 (set-face-attribute 'org-roam-dailies-calendar-note nil :weight 'bold)

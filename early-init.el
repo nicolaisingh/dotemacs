@@ -24,7 +24,7 @@
 (add-to-list 'fringe-styles '("padded" 12))
 (fringe-mode 12)
 
-(load-theme 'tsdh-light)
+(load-theme 'adwaita)
 
 ;; tsdh-light's #a0a1a7 is too light for me
 (set-face-attribute 'font-lock-comment-face t
@@ -54,7 +54,8 @@
                     :background "lightgoldenrod1")
 
 (set-face-attribute 'highlight t
-                    :background "khaki1")
+                    :background "khaki1"
+                    :foreground "#2E3436")
 
 (set-face-attribute 'secondary-selection t
                     :background "khaki2")

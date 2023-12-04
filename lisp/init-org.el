@@ -41,10 +41,7 @@
                                "* %?\n  %U" :empty-lines-before 1)
                               ("p" "Project" entry
                                (file "~/org/projects.org")
-                               "* TODO %?\n  %U" :empty-lines-before 1)
-                              ("D" "Distraction" item
-                               (file "~/org/distraction.org")
-                               "- %? %U")))
+                               "* TODO %?\n  %U" :empty-lines-before 1)))
 
 (setq org-agenda-custom-commands
       '(("I" "Ideate TODOs" tags-todo "ideate")
