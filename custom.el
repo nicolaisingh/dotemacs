@@ -92,6 +92,10 @@
  ;; If there is more than one, they won't work right.
  '(default ((t (:font "DejaVu Sans Mono-9" :background "white"))))
  '(cursor ((t (:background "firebrick"))))
+ '(emms-metaplaylist-mode-current-face ((t (:inherit emms-metaplaylist-mode-face :inverse-video t :weight bold))))
+ '(emms-metaplaylist-mode-face ((t (:inherit font-lock-function-name-face :weight normal))))
+ '(emms-playlist-selected-face ((t (:inherit emms-playlist-track-face :inverse-video t :weight bold))))
+ '(emms-playlist-track-face ((t (:inherit default))))
  '(hl-line ((t (:background "gray95"))))
  '(mode-line-highlight ((t (:underline t))))
  '(newsticker-new-item-face ((t (:foreground "DarkGreen" :weight bold))))

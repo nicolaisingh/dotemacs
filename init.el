@@ -134,7 +134,6 @@ collection.  Use revert-gc-cons-percentage to restore the value."
 ;; easy-kill
 (global-set-key [remap kill-ring-save] 'easy-kill)
 (global-set-key [remap mark-word] 'easy-mark)
-(add-to-list 'easy-kill-alist '(?S string " "))
 
 ;; Other key bindings
 (global-set-key (kbd "C-c h l") #'hl-line-mode)
