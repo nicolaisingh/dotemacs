@@ -30,9 +30,6 @@
 (set-face-attribute 'font-lock-comment-face t
                     :foreground "#8c8d91")
 
-(set-face-attribute 'default t
-                    :background "white")
-
 (set-face-attribute 'show-paren-match t
                     :weight 'bold
                     :background "gray90")
