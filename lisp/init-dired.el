@@ -32,6 +32,57 @@
                "Hide"
              "Show")))
 
+(defun dired-return-number-of-marked-files ()
+  "Returns the number of marked files.  Extracted from `dired-number-of-marked-files'."
+  (let* ((files (dired-get-marked-files nil nil nil t))
+         (nmarked
+          (cond ((null (cdr files))
+                 0)
+                ((and (= (length files) 2)
+                      (eq (car files) t))
+                 1)
+                (t
+                 (length files))))
+         (size (cl-loop for file in files
+                        when (stringp file)
+                        sum (file-attribute-size (file-attributes file)))))
+    nmarked))
+
+(defun dired-get-marked-files-from-all-buffers ()
+  "Returns the number of marked files from all dired buffers."
+  (let ((marked-files '()))
+    (dolist (buf (mapcar #'cdr dired-buffers))
+      (when (buffer-live-p buf)
+        (with-current-buffer buf
+          (when (not (zerop (dired-return-number-of-marked-files)))
+            (setq marked-files (append marked-files (dired-get-marked-files)))))))
+    marked-files))
+
+(defun dired-get-marked-directories-from-all-buffers ()
+  "Same as `dired-get-marked-files-from-all-buffers' but returns only marked directories."
+  (cl-remove-if (lambda (elt) (not (file-directory-p elt)))
+                (dired-get-marked-files-from-all-buffers)))
+
+(defun dired-copy-file-to-marked-directories ()
+  "Copy file to all marked directories across all dired buffers."
+  (interactive)
+  (let* ((marked-dirs (dired-get-marked-directories-from-all-buffers))
+         (selected (dired-get-filename))
+         (count (length marked-dirs))
+         (i 0))
+    (dolist (dir marked-dirs)
+      (setq i (+ 1 i))
+      (when (y-or-n-p (format "[%d/%d] Copy %s to %s?" i count selected dir))
+        (copy-file selected (concat dir "/") nil)))))
+
+(defun dired-unmark-from-all-buffers ()
+  "Unmarks all marked files from all dired buffers."
+  (interactive)
+  (dolist (buf (mapcar #'cdr dired-buffers))
+    (when (buffer-live-p buf)
+      (with-current-buffer buf (dired-unmark-all-marks))))
+  (message "Removed all marks in all dired buffers"))
+
 (defun toggle-other-files ()
   (interactive)
   (if (string-empty-p dired-listing-switch-A)
@@ -159,7 +210,9 @@ the file selected during second call will be file B."
   (define-key dired-mode-map (kbd "C-c m k") #'dired-dir-to-kill-ring)
   (define-key dired-mode-map (kbd "<tab>") #'origami-toggle-node)
   (define-key dired-mode-map (kbd "<backtab>") #'origami-toggle-all-nodes)
-  (define-key dired-mode-map (kbd "C-c d d") #'dired-ediff-a-b))
+  (define-key dired-mode-map (kbd "C-c d d") #'dired-ediff-a-b)
+  (define-key dired-mode-map (kbd "@ c") #'dired-copy-file-to-marked-directories)
+  (define-key dired-mode-map (kbd "@ u") #'dired-unmark-from-all-buffers))
 
 (eval-after-load 'grep
   '(progn

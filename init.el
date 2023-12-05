@@ -206,6 +206,7 @@ collection.  Use revert-gc-cons-percentage to restore the value."
 (require 'init-command-log)
 (require 'init-company)
 (require 'init-consult)
+(require 'init-diff-hl)
 (require 'init-diminish)
 (require 'init-dired)
 (require 'init-dired-toggle)
