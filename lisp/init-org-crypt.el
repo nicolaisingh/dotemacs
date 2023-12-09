@@ -10,7 +10,7 @@
 
 (org-crypt-use-before-save-magic)
 (setq org-tags-exclude-from-inheritance '("crypt")
-      org-crypt-key ""
+      org-crypt-key "0xA4F3599BE12FDFD3"
       org-crypt-disable-auto-save t)
 
 (let ((map org-mode-map))

@@ -44,6 +44,7 @@
      "~/org/roam/ideate/20231024140843-ideate_development.org"
      "~/org/roam/ideate/20231024135925-ideate_releases.org"
      "~/org/projects.org"))
+ '(osm-home '(12.49 122.48 6))
  '(package-selected-packages
    '(diff-hl org-alert edit-indirect consult-dir dired-recent selected
              calibre emms osm easy-kill org-present org-modern
