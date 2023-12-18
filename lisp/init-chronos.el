@@ -33,7 +33,13 @@
                                  ;; For macOS: Use chronos-alert instead of chronos-desktop-notifications-notify
                                  chronos-desktop-notifications-notify))
 
-(global-set-key (kbd "C-c T") #'chronos-initialize)
+(defun chronos-load ()
+  (interactive)
+  (if (get-buffer chronos-buffer-name)
+      (switch-to-buffer chronos-buffer-name)
+    (chronos-initialize)))
+
+(global-set-key (kbd "C-c T") #'chronos-load)
 
 (provide 'init-chronos)
 ;;; init-chronos.el ends here

@@ -154,6 +154,7 @@ collection.  Use revert-gc-cons-percentage to restore the value."
 (global-set-key (kbd "C-c w \"") #'insert-pair)
 (global-set-key (kbd "C-c w <") #'insert-pair)
 (global-set-key (kbd "C-c w [") #'insert-pair)
+(global-set-key (kbd "C-c v f") #'virtual-auto-fill-mode)
 
 ;; Move facemenu-keymap to another binding
 (require 'facemenu)
