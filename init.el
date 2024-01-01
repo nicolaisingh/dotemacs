@@ -264,6 +264,7 @@ collection.  Use revert-gc-cons-percentage to restore the value."
 (require 'init-javascript)
 (require 'init-kotlin)
 (require 'init-nix)
+(require 'init-python)
 (require 'init-scheme)
 (require 'init-solidity)
 (require 'init-typescript)
