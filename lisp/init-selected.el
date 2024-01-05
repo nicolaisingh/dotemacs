@@ -9,15 +9,16 @@
 (require 'selected)
 
 (let ((map selected-keymap))
-  (define-key map (kbd "q") #'selected-off)
   (define-key map (kbd "C") #'capitalize-region)
   (define-key map (kbd "F") #'flush-lines)
   (define-key map (kbd "K") #'keep-lines)
   (define-key map (kbd "SPC") #'canonically-space-region)
+  (define-key map (kbd "a") #'align-regexp)
   (define-key map (kbd "f") #'fill-region)
   (define-key map (kbd "r") #'reverse-region)
   (define-key map (kbd "s") #'sort-lines)
-  (define-key map (kbd "u") #'unfill-region))
+  (define-key map (kbd "u") #'unfill-region)
+  (define-key map (kbd "q") #'selected-off))
 
 (defun turn-off-selected-minor-mode ()
   (selected-minor-mode -1))

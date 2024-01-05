@@ -74,6 +74,7 @@
           origami browse-kill-ring which-key plantuml-mode
           centered-cursor-mode expand-region pdf-tools))
  '(plantuml-default-exec-mode 'jar)
+ '(save-abbrevs 'silently)
  '(tab-bar-auto-width-max '(200 20))
  '(tab-bar-close-button-show nil)
  '(tab-bar-format
