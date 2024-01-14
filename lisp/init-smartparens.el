@@ -87,8 +87,10 @@
 (add-hook 'kotlin-mode-hook #'smartparens-mode)
 (add-hook 'go-mode-hook #'smartparens-mode)
 (add-hook 'js2-mode-hook #'smartparens-mode)
+(add-hook 'latex-mode-hook #'smartparens-mode)
 (add-hook 'prog-mode-hook #'smartparens-mode)
 (add-hook 'org-mode-hook #'smartparens-mode)
+(add-hook 'python-mode-hook #'smartparens-strict-mode)
 
 (add-hook 'smartparens-mode-hook #'smartparens-mode-my-custom-keys)
 

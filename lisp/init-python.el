@@ -7,6 +7,7 @@
 ;;; Code:
 
 (elpy-enable)
+(setq python-indent-def-block-scale 1)
 
 (provide 'init-python)
 ;;; init-python.el ends here

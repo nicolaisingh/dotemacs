@@ -11,10 +11,6 @@
           (lambda()
             (add-to-list 'TeX-view-program-selection '(output-pdf "PDF Tools"))))
 
-(setq TeX-auto-save t)
-(setq TeX-parse-self t)
-(setq-default TeX-master nil)
-
 ;; For latex-mode
 
 (defun tex-file-custom (&optional arg)
