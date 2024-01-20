@@ -15,14 +15,19 @@
                     :notifier
                     (lambda (info)
                       (save-window-excursion
-                        (let ((title (concat "["
-                                             (plist-get info :title)
-                                             "] "
-                                             (file-name-base (buffer-name (plist-get info :buffer)))))
+                        (let ((tag (concat "["
+                                           (plist-get info :title)
+                                           "] "))
                               (body (plist-get info :message))
+                              (title-body-length 40)
                               (message-interactive nil))
-                          (message-mail "nicolaisingh+org-alert@protonmail.com" title)
+                          (message-mail "nicolaisingh+org-alert@protonmail.com"
+                                        (concat tag (if (length> body title-body-length)
+                                                        (concat (substring body 0 title-body-length) "...")
+                                                      body)))
                           (message-goto-body)
+                          (insert (format "[From %s]\n"
+                                          (file-name-base (buffer-name (plist-get info :buffer)))))
                           (insert body)
                           (insert (format "\n\n-----\nAlert time: %s"
                                           (format-time-string "%Y-%m-%d %H:%M:%S")))
