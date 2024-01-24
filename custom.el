@@ -44,9 +44,10 @@
       "http://feeds.feedburner.com/quotationspage/qotd" "07:00" 86400)
      ("Wired News" "https://www.wired.com/feed/rss")))
  '(org-agenda-files
-   '("~/org/project-coolray.org" "~/org/project-havila.org"
-     "~/org/project-reading.org" "~/org/inbox.org"
-     "~/org/roam/ideate/20231024140843-ideate_development.org"
+   '("~/org/project-coolray.org"
+     "~/org/project-havila.org"
+     "~/org/project-reading.org"
+     "~/org/inbox.org"
      "~/org/roam/ideate/20231024135925-ideate_releases.org"
      "~/org/projects.org"))
  '(osm-home '(12.49 122.48 6))
@@ -95,7 +96,7 @@
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
- '(default ((t (:font "DejaVu Sans Mono-9" :background "white"))))
+ '(default ((t (:font "DejaVu Sans Mono-10" :background "white"))))
  '(cursor ((t (:background "firebrick"))))
  '(emms-metaplaylist-mode-current-face ((t (:inherit emms-metaplaylist-mode-face :inverse-video t :weight bold))))
  '(emms-metaplaylist-mode-face ((t (:inherit font-lock-function-name-face :weight normal))))

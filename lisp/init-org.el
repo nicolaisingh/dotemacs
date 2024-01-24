@@ -34,7 +34,8 @@
  org-hide-leading-stars t
  org-agenda-category-icon-alist '(("reading" ("📖"))
                                   ("routine" ("🔁"))
-                                  ("ideate" ("💡"))))
+                                  ("ideate" ("💡"))
+                                  ("car" ("🚙"))))
 
 (setq org-capture-templates '(("i" "Inbox" entry
                                (file+headline "~/org/inbox.org" "Inbox")
