@@ -205,6 +205,8 @@ The default format is specified by `emms-source-playlist-default-format'."
   (define-key map (kbd "z") #'emms-metaplaylist-mode-go)
   (define-key map (kbd "%") #'emms-shuffle)
   (define-key map (kbd "M") #'emms-mark-mode)
+  (define-key map (kbd ",") #'emms-seek-backward)
+  (define-key map (kbd ".") #'emms-seek-forward)
   (define-key map (kbd "C-x C-w") #'emms-my-playlist-write))
 
 (let ((map emms-mark-mode-map))

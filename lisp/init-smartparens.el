@@ -91,6 +91,7 @@
 (add-hook 'prog-mode-hook #'smartparens-mode)
 (add-hook 'org-mode-hook #'smartparens-mode)
 (add-hook 'python-mode-hook #'smartparens-strict-mode)
+(add-hook 'json-mode-hook #'smartparens-strict-mode)
 
 (add-hook 'smartparens-mode-hook #'smartparens-mode-my-custom-keys)
 

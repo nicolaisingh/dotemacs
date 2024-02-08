@@ -103,6 +103,18 @@
   (let ((org-refile-targets '((nil :maxlevel . 3))))
     (call-interactively #'org-refile)))
 
+(defun org-link-retain-description ()
+  "Delete an org-mode-link and retain only the description."
+  (interactive)
+  (let* ((element (org-element-context))
+         (element-type (car element)))
+    (when (eq 'link element-type)
+      (let* ((contents (buffer-substring (org-element-property :contents-begin element)
+                                         (org-element-property :contents-end element))))
+        (delete-region (org-element-property :begin element)
+                       (org-element-property :end element))
+        (insert contents)))))
+
 (defun org-mode-my-custom-keys ()
   (define-key org-mode-map (kbd "C-c C--") #'org-ctrl-c-minus)
   (define-key org-mode-map (kbd "C-c C-8") #'org-ctrl-c-star)
@@ -110,6 +122,7 @@
   (define-key org-mode-map (kbd "C-c C-S-W") #'org-refile-within-file)
   (define-key org-mode-map (kbd "C-M-q") #'org-fixup-whitespace)
   (define-key org-mode-map (kbd "C-M-h") #'org-mark-subtree)
+  (define-key org-mode-map (kbd "C-c o L") #'org-link-retain-description)
   ;; requires consult
   (define-key org-mode-map (kbd "C-c *") #'consult-org-heading))
 (add-hook 'org-mode-hook #'org-mode-my-custom-keys)
