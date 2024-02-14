@@ -38,8 +38,7 @@
                     :background "gray96")
 
 (set-face-attribute 'mode-line t
-                    :foreground "white"
-                    :background "azure4"
+                    :background "SkyBlue1"
                     :box '(:line-width 1 :color "azure4" :style released-button))
 
 (set-face-attribute 'mode-line-inactive t

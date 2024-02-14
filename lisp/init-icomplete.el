@@ -37,6 +37,15 @@ it with `*' instead and vice versa."
      ((equal prev-char "*") (funcall replace-prev-char " "))
      (t (insert " ")))))
 
+(defun minibuffer-selection-kill-ring-save (arg)
+  (interactive "P")
+  (if (not (active-minibuffer-window))
+      (message "The minibuffer is not active")
+    (let ((selection (car (completion-all-sorted-completions))))
+      (if arg (kill-append (concat "\n" selection) nil)
+        (kill-new selection)))
+    (message "Selection copied")))
+
 (cond
  ((>= emacs-major-version 27)
   ;; fido-mode matches most of my icomplete preferences and it also
@@ -64,6 +73,7 @@ it with `*' instead and vice versa."
       (define-key map (kbd "C-S-j") #'icomplete-force-complete)
       (define-key map (kbd "C-n") #'icomplete-forward-completions)
       (define-key map (kbd "C-p") #'icomplete-backward-completions)
+      (define-key map (kbd "C-c M-w") #'minibuffer-selection-kill-ring-save)
       (define-key map (kbd "C-?") (lambda ()
                                     (interactive)
                                     (minibuffer-hide-completions)))
