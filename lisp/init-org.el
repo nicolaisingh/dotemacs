@@ -136,12 +136,17 @@
   (interactive)
   (org-capture nil "i"))
 
+(defun org-dired ()
+  (interactive)
+  (dired org-directory))
+
 (global-set-key (kbd "C-c o l") #'org-store-link)
 (global-set-key (kbd "C-c o c") #'org-capture)
 (global-set-key (kbd "C-c o I") #'org-capture-inbox)
 (global-set-key (kbd "C-c o a") #'org-agenda)
 (global-set-key (kbd "C-c o b") #'org-switchb)
 (global-set-key (kbd "C-c o v") #'visible-mode)
+(global-set-key (kbd "C-c o d") #'org-dired)
 
 (provide 'init-org)
 ;;; init-org.el ends here

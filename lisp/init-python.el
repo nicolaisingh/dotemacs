@@ -10,6 +10,7 @@
 ;; (elpy-enable)
 
 (add-hook 'python-mode-hook #'eglot-ensure)
+(add-hook 'python-mode-hook #'blacken-mode)
 
 (defun pyright-make-config (selection)
   "Write pyrightconfig.json venv settings for a project."
