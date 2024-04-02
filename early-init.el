@@ -10,13 +10,13 @@
 (setq inhibit-startup-screen 1)
 (setq visible-bell 1)
 (setq ring-bell-function 'ignore)
-(setq blink-cursor-interval 0.5)
+(setq blink-cursor-interval 0.25)
 (setq blink-cursor-blinks 15)
 
 (menu-bar-mode -1)
 (tool-bar-mode -1)
 (scroll-bar-mode -1)
-(blink-cursor-mode 1)
+(blink-cursor-mode -1)
 
 (column-number-mode 1)
 

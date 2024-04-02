@@ -1,0 +1,9 @@
+# -*- mode: snippet -*-
+# name: local-fillcolumn
+# key: local-fillcolumn
+# --
+
+* etc
+# Local Variables:
+# fill-column: 120
+# End:

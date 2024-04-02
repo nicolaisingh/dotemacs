@@ -71,6 +71,8 @@
 
 (add-to-list 'emms-track-initialize-functions #'emms-info-initialize-track)
 (add-hook 'emms-player-paused-hook #'emms-mode-line-alter)
+(add-hook 'emms-browser-mode-hook #'hl-line-mode)
+(add-hook 'emms-playlist-mode-hook #'hl-line-mode)
 
 (emms-cache 1)
 (emms-mode-line-mode)
