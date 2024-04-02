@@ -50,10 +50,10 @@
      "~/org/projects.org"))
  '(osm-home '(12.49 122.48 6))
  '(package-selected-packages
-   '(blacken org-roam emms compat emacsql f git-commit log4e lsp-docker
-             magit-section markdown-mode shell-maker transient
-             treemacs visual-fill-column with-editor yaml focus elpy
-             chess devdocs chatgpt-shell diff-hl org-alert
+   '(prodigy uuidgen blacken org-roam emms compat emacsql f git-commit
+             log4e lsp-docker magit-section markdown-mode shell-maker
+             transient treemacs visual-fill-column with-editor yaml
+             focus elpy chess devdocs chatgpt-shell diff-hl org-alert
              edit-indirect consult-dir dired-recent selected calibre
              osm easy-kill org-present org-modern orderless
              virtual-auto-fill alert chronos multi-term esh-help

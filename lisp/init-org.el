@@ -30,8 +30,9 @@
  org-auto-align-tags nil
  org-special-ctrl-a/e t
  org-special-ctrl-k t
- org-hide-emphasis-markers t
+ org-hide-emphasis-markers nil
  org-hide-leading-stars t
+ org-log-into-drawer t
  org-agenda-category-icon-alist '(("reading" ("📖"))
                                   ("routine" ("🔁"))
                                   ("ideate" ("💡"))

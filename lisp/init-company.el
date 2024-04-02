@@ -24,6 +24,10 @@
                  company-minimum-prefix-length 2
                  company-idle-delay 0.1)
 
+(setq-mode-local python-mode
+                 company-minimum-prefix-length 3
+                 company-idle-delay 0.3)
+
 (add-to-list 'company-backends 'company-native-complete)
 (add-to-list 'company-backends 'company-go)
 (add-to-list 'company-backends 'company-restclient)
