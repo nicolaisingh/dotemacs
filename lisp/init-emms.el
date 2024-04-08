@@ -102,7 +102,7 @@
     (emms-playlist-set-playlist-buffer emms-playlist-buffer-name)
     (call-interactively #'emms-play-playlist)))
 
-(defun emms-metaplaylist-my-load-playlist (file)
+(defun emms-my-metaplaylist-load-playlist (file)
   (interactive (list (read-file-name "Load playlist file: "
                                      my-emms-playlist-directory
                                      my-emms-playlist-directory
@@ -114,27 +114,39 @@
     (emms-playlist-set-playlist-buffer playlist-name)
     (emms-play-playlist file)))
 
-(defun emms-metaplaylist-my-find-playlist (file)
+(defun emms-my-metaplaylist-find-playlist (file)
   (interactive (list (read-file-name "Find playlist file: "
                                      my-emms-playlist-directory
                                      my-emms-playlist-directory
                                      t)))
   (let* ((filename (file-name-nondirectory file))
-         (current-playlist emms-playlist-buffer)
          (playlist-name (concat " *EMMS Playlist: " filename "*")))
     (unless (get-buffer playlist-name)
       (emms-metaplaylist-mode-new-buffer playlist-name)
       (with-current-buffer playlist-name
         (emms-insert-playlist file)))))
 
-(defun emms-metaplaylist-my-load-all-playlists (directory)
-  (interactive (list (read-directory-name "Load all playlists in: "
-                                          my-emms-playlist-directory
-                                          my-emms-playlist-directory
-                                          t)))
-  (dolist (file (directory-files directory t directory-files-no-dot-files-regexp))
-    (emms-metaplaylist-my-find-playlist file))
+(defun emms-my-metaplaylist-load-all-playlists ()
+  (interactive)
+  (let ((directory (if current-prefix-arg
+                       (read-directory-name "Load all playlists in: "
+                                            my-emms-playlist-directory
+                                            my-emms-playlist-directory
+                                            t)
+                     my-emms-playlist-directory)))
+    (message "Loading all playlist files at %s" directory)
+    (dolist (file
+             (directory-files directory t directory-files-no-dot-files-regexp))
+      (emms-my-metaplaylist-find-playlist file)))
   (emms-metaplaylist-mode-update))
+
+(defun emms-my-metaplaylist-mode-go ()
+  (interactive)
+  (when (not (emms-playlist-buffer-list))
+    ;; Create an empty playlist buffer if none exist yet
+    (emms-playlist-current-clear)
+    (emms-my-metaplaylist-load-all-playlists))
+  (emms-metaplaylist-mode-go))
 
 (defun emms-my-playlist-save ()
   (interactive)
@@ -186,8 +198,8 @@ The default format is specified by `emms-source-playlist-default-format'."
 
 ;; bindings
 (let ((map global-map))
-  (define-key map (kbd "C-c M L") #'emms-metaplaylist-my-load-playlist)
-  (define-key map (kbd "C-c M b") #'emms-metaplaylist-mode-go)
+  (define-key map (kbd "C-c M L") #'emms-my-metaplaylist-load-playlist)
+  (define-key map (kbd "C-c M b") #'emms-my-metaplaylist-mode-go)
   (define-key map (kbd "C-c M l") #'emms-playlist-mode-switch-buffer)
   (define-key map (kbd "C-c M B") #'emms-smart-browse)
   (define-key map (kbd "C-c M %") #'emms-my-toggle-random-playlist)
@@ -219,9 +231,9 @@ The default format is specified by `emms-source-playlist-default-format'."
   (define-key map (kbd "a") #'emms-add-directory-tree))
 
 (let ((map emms-metaplaylist-mode-map))
-  (define-key map (kbd "f") #'emms-metaplaylist-my-find-playlist)
+  (define-key map (kbd "f") #'emms-my-metaplaylist-find-playlist)
   (define-key map (kbd "z") #'emms-playlist-mode-go)
-  (define-key map (kbd "G") #'emms-metaplaylist-my-load-all-playlists))
+  (define-key map (kbd "G") #'emms-my-metaplaylist-load-all-playlists))
 
 (let ((map dired-mode-map))
   (define-key map (kbd "C-c M a") #'emms-add-dired)
