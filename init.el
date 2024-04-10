@@ -82,10 +82,12 @@ collection.  Use revert-gc-cons-percentage to restore the value."
  next-line-add-newlines t
 
  ;; Save clipboard contents before killing
- save-interprogram-paste-before-kill t)
+ save-interprogram-paste-before-kill t
 
-;; Don't ask when reverting for the following regex
-(setq revert-without-query '("^.*\\.pdf$"))
+ ;; Don't ask when reverting for the following regex
+ revert-without-query '("^.*\\.pdf$")
+
+ abbrev-file-name (expand-file-name "abbrev-defs.el" user-emacs-directory))
 
 ;; Display long lines as is
 (setq-default truncate-lines t)
@@ -148,14 +150,13 @@ collection.  Use revert-gc-cons-percentage to restore the value."
 (global-set-key (kbd "C-x C-S-c") #'save-buffers-kill-emacs)
 (global-set-key (kbd "C-x C-m") (key-binding (kbd "M-x")))
 (global-set-key (kbd "C-x a /") #'unexpand-abbrev)
-(global-set-key (kbd "C-z") #'repeat)
 (global-set-key (kbd "M-SPC") #'cycle-spacing)
+(global-set-key (kbd "C-x K") #'kill-this-buffer)
 (global-set-key (kbd "H-D") (lambda ()
                               (interactive)
                               (browse-url-xdg-open (xdg-user-dir "DOWNLOAD"))))
-(global-set-key (kbd "H-d") (lambda ()
-                              (interactive)
-                              (dired "~/Downloads")))
+(keymap-global-set "C-h C-c" nil)
+(keymap-global-set "C-h C-f" nil)
 
 ;; Move facemenu-keymap to another binding
 (require 'facemenu)
@@ -209,6 +210,7 @@ collection.  Use revert-gc-cons-percentage to restore the value."
 (require 'init-command-log)
 (require 'init-company)
 (require 'init-consult)
+(require 'init-cov)
 (require 'init-devdocs)
 (require 'init-diff-hl)
 (require 'init-diminish)
@@ -221,6 +223,7 @@ collection.  Use revert-gc-cons-percentage to restore the value."
 (require 'init-eshell)
 (require 'init-expand-region)
 (require 'init-flycheck)
+(require 'init-gnus)
 (require 'init-graphviz-dot-mode)
 (require 'init-hippie-expand)
 (require 'init-ibuffer)
@@ -251,13 +254,14 @@ collection.  Use revert-gc-cons-percentage to restore the value."
 (require 'init-plantuml)
 (require 'init-prism)
 (require 'init-prodigy)
+(require 'init-pytest)
 (require 'init-recentf)
 (require 'init-restclient)
 (require 'init-selected)
 (require 'init-slime)
 (require 'init-smartparens)
 (require 'init-transpose-frame)
-(require 'init-which-key)
+;; (require 'init-which-key)
 (require 'init-xref)
 (require 'init-yasnippet)
 
@@ -276,6 +280,14 @@ collection.  Use revert-gc-cons-percentage to restore the value."
   (require 'init-org-modern))
 (with-eval-after-load 'init-org
   (require 'init-org-roam))
+
+;; C-z keymap
+(define-prefix-command 'my-ctl-z-map)
+(keymap-global-set "C-z" 'my-ctl-z-map)
+(keymap-set my-ctl-z-map "C-s" #'eshell-toggle)
+(keymap-set my-ctl-z-map "C-z" #'org-capture-inbox)
+(keymap-set my-ctl-z-map "g" #'magit-status)
+(keymap-set my-ctl-z-map "c" #'org-capture)
 
 (provide 'init)
 ;;; init.el ends here

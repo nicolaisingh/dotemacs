@@ -38,12 +38,15 @@
                                   ("ideate" ("💡"))
                                   ("car" ("🚙"))))
 
-(setq org-capture-templates '(("i" "Inbox" entry
-                               (file+headline "~/org/inbox.org" "Inbox")
-                               "* %?\n  %U" :empty-lines-before 1)
-                              ("p" "Project" entry
-                               (file "~/org/projects.org")
-                               "* TODO %?\n  %U" :empty-lines-before 1)))
+(setq org-capture-templates '(("i" "Inbox" entry (file "~/org/inbox.org")
+                               "* %?\n:PROPERTIES:\n:CREATED:  %U\n:END:"
+                               :empty-lines 1
+                               :prepend t)
+                              ("t" "Todo" entry
+                               (file "~/org/inbox.org")
+                               "* TODO %?\n:PROPERTIES:\n:CREATED:  %U\n:END:"
+                               :empty-lines 1
+                               :prepend t)))
 
 (setq org-agenda-custom-commands
       '(("I" "Ideate TODOs" tags-todo "ideate")
@@ -133,17 +136,15 @@
 (add-hook 'org-agenda-mode-hook #'hl-line-mode)
 (add-hook 'org-mode-hook #'virtual-auto-fill-mode)
 
-(defun org-capture-inbox ()
-  (interactive)
-  (org-capture nil "i"))
+(defun org-capture-inbox (goto)
+  (interactive "P")
+  (org-capture goto "i"))
 
 (defun org-dired ()
   (interactive)
   (dired org-directory))
 
-(global-set-key (kbd "C-c o l") #'org-store-link)
-(global-set-key (kbd "C-c o c") #'org-capture)
-(global-set-key (kbd "C-c o I") #'org-capture-inbox)
+(global-set-key (kbd "C-c o s") #'org-store-link)
 (global-set-key (kbd "C-c o a") #'org-agenda)
 (global-set-key (kbd "C-c o b") #'org-switchb)
 (global-set-key (kbd "C-c o v") #'visible-mode)

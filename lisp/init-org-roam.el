@@ -62,7 +62,7 @@
          :empty-lines-before 1
          :unnarrowed t)
 
-        ("i" "ideate" plain "%?"
+        ("I" "ideate" plain "%?"
          :target (file+head "ideate/%<%Y%m%d%H%M%S>-${slug}.org"
                             "#+filetags: :ideate:\n#+title: ${title}")
          :empty-lines-before 1
@@ -76,6 +76,15 @@
                (window-height . fit-window-to-buffer)))
 
 (org-roam-db-autosync-mode)
+
+(defun my-org-roam-extract-subtree ()
+  "Use the first tag in a node as its destination within `org-roam-directory'."
+  (interactive)
+  (let* ((first-tag (car (org-get-tags)))
+         (relative-path (if first-tag (concat "/" first-tag "/")
+                          ""))
+         (org-roam-directory (concat org-roam-directory relative-path)))
+    (org-roam-extract-subtree)))
 
 (defun org-roam-node-insert-immediate-finish ()
   (interactive)
@@ -120,7 +129,8 @@
   (define-key map (kbd "C-c n n") #'org-id-get-create)
   (define-key map (kbd "C-c n r") #'org-roam-ref-add)
   (define-key map (kbd "C-c n R") #'org-roam-ref-remove)
-  (define-key map (kbd "C-c n x") #'org-roam-extract-subtree))
+  (define-key map (kbd "C-c n x") #'org-roam-extract-subtree)
+  (define-key map (kbd "C-c n X") #'my-org-roam-extract-subtree))
 
 (let ((map org-roam-mode-map))
   (define-key map (kbd "C-c n l") #'org-roam-buffer-toggle))
