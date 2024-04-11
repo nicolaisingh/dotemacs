@@ -24,6 +24,11 @@
   (let ((pytest-global-name "coverage run -m pytest"))
     (pytest-module)))
 
+(defun pytest-cov-all ()
+  (interactive)
+  (let ((pytest-global-name "coverage run -m pytest"))
+    (pytest-all)))
+
 (define-key python-mode-map (kbd "C-c P .") #'pytest-one)
 (define-key python-mode-map (kbd "C-c P !") #'pytest-again)
 (define-key python-mode-map (kbd "C-c P m") #'pytest-module)
