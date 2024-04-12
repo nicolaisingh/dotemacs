@@ -103,20 +103,8 @@
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
- '(default ((t (:font "DejaVu Sans Mono-11" :background "white"))))
- '(cursor ((t (:background "firebrick"))))
+ '(emms-metaplaylist-mode-face ((t (:inherit default :weight normal))))
  '(emms-metaplaylist-mode-current-face ((t (:inherit emms-metaplaylist-mode-face :inverse-video t :weight bold))))
- '(emms-metaplaylist-mode-face ((t (:inherit font-lock-function-name-face :weight normal))))
- '(emms-playlist-selected-face ((t (:inherit emms-playlist-track-face :inverse-video t :weight bold))))
  '(emms-playlist-track-face ((t (:inherit default))))
- '(hl-line ((t (:background "gray95"))))
- '(mode-line-highlight ((t (:underline t))))
- '(newsticker-new-item-face ((t (:foreground "DarkGreen" :weight bold))))
- '(newsticker-old-item-face ((t (:weight bold))))
- '(tab-bar ((t (:inherit default :background "grey96"))))
- '(tab-bar-tab ((t (:inherit tab-bar :background "azure3" :box (:line-width (1 . 1) :style released-button)))))
- '(tab-bar-tab-inactive ((t (:inherit tab-bar-tab :background "grey96" :foreground "gray60"))))
- '(variable-pitch ((t (:height 1.1 :family "Source Serif Pro"))))
- '(window-divider ((t (:distant-foreground "gray40" :foreground "gray90"))))
- '(window-divider-first-pixel ((t (:foreground "gray85"))))
- '(window-divider-last-pixel ((t (:foreground "gray85")))))
+ '(emms-playlist-selected-face ((t (:inherit emms-playlist-track-face :inverse-video t :weight bold))))
+ '(hl-line ((t (:background "gray95")))))
