@@ -16,9 +16,6 @@
 (set-face-attribute 'fringe t
                     :background "gray98")
 
-(set-face-attribute 'cursor t
-                    :background "tomato")
-
 (set-face-attribute 'tab-bar t
                     :inherit 'default
                     :background "grey98")

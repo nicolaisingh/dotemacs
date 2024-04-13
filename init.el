@@ -51,6 +51,9 @@ collection.  Use revert-gc-cons-percentage to restore the value."
  ;; Timeout in seconds before auto-save
  auto-save-timeout 5
 
+ ;; How much input before auto-saving
+ auto-save-interval 100
+
  ;; Seconds before paren matches are highlighted
  show-paren-delay 1
 
@@ -68,6 +71,9 @@ collection.  Use revert-gc-cons-percentage to restore the value."
 
  ;; Save bookmarks immediately
  bookmark-save-flag t
+
+ ;; No duplicates in minibuffer history
+ history-delete-duplicates t
 
  ;; Horizontal scroll the current line only
  auto-hscroll-mode 'current-line
@@ -195,6 +201,9 @@ collection.  Use revert-gc-cons-percentage to restore the value."
 
 (require 'init-gui)
 (require 'init-treesit)
+
+(require 'window-dedicated)
+(define-key global-map (kbd "C-c w d") #'window-dedicated-mode)
 
 (require 'winfast)
 (define-key global-map (kbd "M-o") #'other-window)

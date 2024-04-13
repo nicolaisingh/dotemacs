@@ -23,6 +23,8 @@
 
 (define-key project-prefix-map "m" #'magit-project-status)
 (add-to-list 'project-switch-commands '(magit-project-status "Magit") t)
+(define-key project-prefix-map "G" #'deadgrep)
+(add-to-list 'project-switch-commands '(deadgrep "Deadgrep") t)
 
 (setq magit-repository-directories
       '(("~/prj/emacs-config/" . 0)
