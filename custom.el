@@ -4,6 +4,7 @@
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
  '(completions-format 'vertical)
+ '(dictionary-server "dict.org")
  '(elpy-modules
    '(elpy-module-company elpy-module-eldoc elpy-module-flymake
                          elpy-module-pyvenv elpy-module-django

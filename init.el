@@ -163,6 +163,7 @@ collection.  Use revert-gc-cons-percentage to restore the value."
                               (browse-url-xdg-open (xdg-user-dir "DOWNLOAD"))))
 (keymap-global-set "C-h C-c" nil)
 (keymap-global-set "C-h C-f" nil)
+(keymap-global-set "C-c d l" #'dictionary-search)
 
 ;; Move facemenu-keymap to another binding
 (require 'facemenu)
