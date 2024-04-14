@@ -14,6 +14,7 @@
 (add-hook 'clojurescript-mode-hook #'prism-mode)
 (add-hook 'scheme-mode-hook #'prism-mode)
 (add-hook 'python-mode-hook #'prism-whitespace-mode)
+(add-hook 'yaml-mode-hook #'prism-whitespace-mode)
 
 (provide 'init-prism)
 ;;; init-prism.el ends here

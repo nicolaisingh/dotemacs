@@ -11,6 +11,7 @@
 
 (add-hook 'python-mode-hook #'eglot-ensure)
 (add-hook 'python-mode-hook #'blacken-mode)
+(add-hook 'python-mode-hook #'subword-mode)
 
 (defun pyright-make-config (selection)
   "Write pyrightconfig.json venv settings for a project."
