@@ -14,7 +14,7 @@
 (require 'org-roam-dailies)
 (require 'org-roam-mode)
 
-(setq org-roam-directory "~/org/roam"
+(setq org-roam-directory "~/org"
       org-roam-db-location "~/org/org-roam.db"
       org-roam-completion-everywhere t
       org-roam-node-display-template (concat
@@ -48,6 +48,11 @@
         ("l" "literature" plain "%?"
          :target (file+head "literature/%<%Y%m%d%H%M%S>-${slug}.org"
                             "#+filetags: :@lit:\n#+title: ${title}")
+         :empty-lines-before 1
+         :unnarrowed t)
+        ("p" "project" plain "%?"
+         :target (file+head "projects/%<%Y%m%d%H%M%S>-${slug}.org"
+                            "#+filetags: :@project:\n#+title: ${title}")
          :empty-lines-before 1
          :unnarrowed t)
         ("x" "index" plain "%?"

@@ -12,7 +12,7 @@
 (setq org-alert-interval 300
       org-alert-notification-title "Org alert"
       org-alert-notify-cutoff 0
-      org-alert-notify-after-event-cutoff 5)
+      org-alert-notify-after-event-cutoff 10)
 
 (alert-add-rule :title org-alert-notification-title
                 :style 'libnotify

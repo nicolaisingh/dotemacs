@@ -11,6 +11,11 @@
 (setq org-modern-tag t
       org-modern-block-name t
       org-modern-todo t
+      org-modern-todo-faces '(("WIP" :background "tomato" :foreground "white" :weight bold)
+                              ("DEFERRED" :background "dark magenta" :foreground "white" :weight bold)
+                              ("WAITING" :background "orange" :foreground "white" :weight bold)
+                              ("CANCELED" :background "dark gray" :foreground "white" :weight bold)
+                              ("INBOX" :background "slate gray" :foreground "white" :weight bold))
       org-modern-priority t
       org-modern-checkbox nil
       org-modern-keyword nil

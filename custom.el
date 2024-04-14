@@ -45,11 +45,14 @@
       "http://feeds.feedburner.com/quotationspage/qotd" "07:00" 86400)
      ("Wired News" "https://www.wired.com/feed/rss")))
  '(org-agenda-files
-   '("~/org/project-coolray.org"
-     "~/org/project-havila.org"
-     "~/org/project-reading.org"
-     "~/org/roam/ideate/20231024135925-ideate_releases.org"
-     "~/org/projects.org"))
+   '("~/org/inbox.org"
+     "~/org/projects/havila.org"
+     "~/org/projects/coolray.org"
+     "~/org/projects/tasks.org"
+     "~/org/projects/summer-hills.org"
+     "~/org/projects/routines.org"
+     "~/org/projects/reading.org"
+     "~/org/ideate/20231024135925-ideate_releases.org"))
  '(osm-home '(12.49 122.48 6))
  '(package-selected-packages
    '(deadgrep cov pytest nnreddit prodigy uuidgen blacken org-roam emms

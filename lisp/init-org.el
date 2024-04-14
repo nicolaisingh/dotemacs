@@ -8,14 +8,14 @@
 
 (require 'org)
 
+(defun org-refile-to-projects ()
+  (directory-files "~/org/projects" t directory-files-no-dot-files-regexp))
+
 (setq
  org-startup-indented nil
  org-indent-mode-turns-on-hiding-stars t
  org-default-notes-file "~/org/inbox.org"
  org-archive-location "archive/%s::"
- org-refile-targets '((nil :maxlevel . 2)
-                      (org-agenda-files :maxlevel . 2)
-                      ("~/org/log.org" :maxlevel . 3))
  org-complete-tags-always-offer-all-agenda-tags t
  org-refile-use-outline-path 'file
  org-outline-path-complete-in-steps nil
@@ -33,17 +33,26 @@
  org-hide-emphasis-markers nil
  org-hide-leading-stars t
  org-log-into-drawer t
- org-agenda-category-icon-alist '(("reading" ("📖"))
-                                  ("routine" ("🔁"))
-                                  ("ideate" ("💡"))
-                                  ("car" ("🚙"))))
+ org-agenda-category-icon-alist '()
+ org-refile-targets '((nil :maxlevel . 2)
+                      ("~/org/inbox.org" :maxlevel . 1)
+                      (org-refile-to-projects :todo . "INBOX")
+                      (org-refile-to-projects :todo . "TODO"))
+ org-todo-keywords '((sequence "TODO(t)" "WIP(p)" "DEFERRED(f@)" "WAITING(w@)"
+                               "|" "DONE(d@/@)" "CANCELED(c@/@)")
+                     (type "INBOX(i)"))
+ org-todo-keyword-faces '(("WIP" :foreground "tomato" :weight bold)
+                          ("DEFERRED" :foreground "dark magenta" :weight bold)
+                          ("WAITING" :foreground "orange" :weight bold)
+                          ("CANCELED" :foreground "dark gray" :weight bold)
+                          ("INBOX" :foreground "dark slate blue" :weight bold)))
 
-(setq org-capture-templates '(("i" "Inbox" entry (file "~/org/inbox.org")
+(setq org-capture-templates '(("i" "Inbox" entry (file org-default-notes-file)
                                "* %?\n:PROPERTIES:\n:CREATED:  %U\n:END:"
                                :empty-lines 1
                                :prepend t)
                               ("t" "Todo" entry
-                               (file "~/org/inbox.org")
+                               (file org-default-notes-file)
                                "* TODO %?\n:PROPERTIES:\n:CREATED:  %U\n:END:"
                                :empty-lines 1
                                :prepend t)))
@@ -129,12 +138,16 @@
   (define-key org-mode-map (kbd "C-c o L") #'org-link-retain-description)
   ;; requires consult
   (define-key org-mode-map (kbd "C-c *") #'consult-org-heading))
+
 (add-hook 'org-mode-hook #'org-mode-my-custom-keys)
 ;; (add-hook 'org-mode-hook #'turn-on-auto-fill)
 (add-hook 'org-mode-hook #'indent-spaces)
 (add-hook 'org-mode-hook #'final-newline)
 (add-hook 'org-agenda-mode-hook #'hl-line-mode)
 (add-hook 'org-mode-hook #'virtual-auto-fill-mode)
+
+;; Always put an ID in new nodes so org-roam can recognize them
+(add-hook 'org-capture-before-finalize-hook #'org-id-get-create)
 
 (defun org-capture-inbox (goto)
   (interactive "P")
