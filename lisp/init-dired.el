@@ -212,7 +212,8 @@ the file selected during second call will be file B."
   (define-key dired-mode-map (kbd "<backtab>") #'origami-toggle-all-nodes)
   (define-key dired-mode-map (kbd "C-c d d") #'dired-ediff-a-b)
   (define-key dired-mode-map (kbd "@ c") #'dired-copy-file-to-marked-directories)
-  (define-key dired-mode-map (kbd "@ u") #'dired-unmark-from-all-buffers))
+  (define-key dired-mode-map (kbd "@ u") #'dired-unmark-from-all-buffers)
+  (define-key dired-mode-map (kbd "C-c C-a") #'org-attach-dired-to-subtree))
 
 (eval-after-load 'grep
   '(progn

@@ -34,13 +34,23 @@
  org-hide-leading-stars t
  org-log-into-drawer t
  org-agenda-category-icon-alist '()
+ org-startup-with-inline-images t
+ org-cycle-inline-images-display t
+ org-image-actual-width 550
+ org-attach-expert nil
+ org-attach-store-link-p 'attached
+ ;; Allows viewing attachments when archived
+ org-attach-id-dir "~/org/data/"
+
  org-refile-targets '((nil :maxlevel . 2)
                       ("~/org/inbox.org" :maxlevel . 1)
                       (org-refile-to-projects :todo . "INBOX")
                       (org-refile-to-projects :todo . "TODO"))
+
  org-todo-keywords '((sequence "TODO(t)" "WIP(p)" "DEFERRED(f@)" "WAITING(w@)"
                                "|" "DONE(d@/@)" "CANCELED(c@/@)")
                      (type "INBOX(i)"))
+
  org-todo-keyword-faces '(("WIP" :foreground "tomato" :weight bold)
                           ("DEFERRED" :foreground "dark magenta" :weight bold)
                           ("WAITING" :foreground "orange" :weight bold)
@@ -128,7 +138,15 @@
                        (org-element-property :end element))
         (insert contents)))))
 
+(defun my-org-attach ()
+  "Use Downloads as the default target directory."
+  (interactive)
+  (let ((dired-dwim-target (lambda ()
+                             (list "~/Downloads/"))))
+    (call-interactively #'org-attach)))
+
 (defun org-mode-my-custom-keys ()
+  (define-key org-mode-map (kbd "C-c C-a") #'my-org-attach)
   (define-key org-mode-map (kbd "C-c C--") #'org-ctrl-c-minus)
   (define-key org-mode-map (kbd "C-c C-8") #'org-ctrl-c-star)
   (define-key org-mode-map (kbd "C-c C-SPC") #'org-table-blank-field)

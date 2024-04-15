@@ -8,6 +8,8 @@
 
 (require 'eglot)
 
+(setq eglot-autoshutdown t)
+
 (setq-mode-local python-mode eglot-ignored-server-capabilities '(:documentHighlightProvider))
 
 (provide 'init-eglot)
