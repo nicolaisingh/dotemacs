@@ -298,6 +298,7 @@ collection.  Use revert-gc-cons-percentage to restore the value."
 (keymap-set my-ctl-z-map "C-z" #'org-capture-inbox)
 (keymap-set my-ctl-z-map "g" #'magit-status)
 (keymap-set my-ctl-z-map "c" #'org-capture)
+(keymap-set my-ctl-z-map "C-l" #'chatgpt-shell)
 
 (provide 'init)
 ;;; init.el ends here
