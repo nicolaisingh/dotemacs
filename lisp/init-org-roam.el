@@ -34,7 +34,6 @@
 (cl-defmethod org-roam-node-mytodo ((node org-roam-node))
   (let ((todo (org-roam-node-todo node)))
     (when todo
-      (message "%s" todo)
       (concat
        " "
        (cond ((equal todo "DONE") (propertize todo 'face 'org-done))
@@ -87,7 +86,7 @@
   (save-excursion
     (org-back-to-heading t)
     (while (org-up-heading-safe))
-    (org-get-local-tags)))
+    (org-get-tags nil t)))
 
 (defun my-sanitize-string (str)
   (replace-regexp-in-string "[^[:alnum:]]" "_" str))
@@ -95,10 +94,15 @@
 (defun my-org-roam-extract-subtree-inbox-entry ()
   "Use the tag in the root topic node as the destination directory within `org-roam-directory'."
   (interactive)
-  (let* ((tag (car (my-org-subtree-root-tags)))
-         (sanitized-tag (if tag (my-sanitize-string tag) nil))
-         (relative-path (if sanitized-tag (concat "/projects/" sanitized-tag "/") ""))
+  (let* ((root-tags (my-org-subtree-root-tags))
+         (subdir (car root-tags))
+         (subdir-sanitized (if subdir (my-sanitize-string subdir) nil))
+         (relative-path (if subdir-sanitized (concat "/projects/" subdir-sanitized "/") ""))
          (org-roam-directory (concat org-roam-directory relative-path)))
+    ;; Apply the root's tags to the extracted child
+    (save-excursion
+      (org-back-to-heading)
+      (org-set-tags (append (org-get-tags nil t) root-tags)))
     (org-roam-extract-subtree)))
 
 (defun org-roam-node-insert-immediate-finish ()
