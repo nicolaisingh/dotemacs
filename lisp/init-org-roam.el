@@ -97,7 +97,7 @@
   (interactive)
   (let* ((tag (car (my-org-subtree-root-tags)))
          (sanitized-tag (if tag (my-sanitize-string tag) nil))
-         (relative-path (if sanitized-tag (concat "/" sanitized-tag "/") ""))
+         (relative-path (if sanitized-tag (concat "/projects/" sanitized-tag "/") ""))
          (org-roam-directory (concat org-roam-directory relative-path)))
     (org-roam-extract-subtree)))
 
