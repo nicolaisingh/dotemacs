@@ -74,7 +74,7 @@
                       :background bg-inactive
                       :foreground fg-inactive
                       :box `(:line-width (1 . 1)
-                                         :style flat-button)))
+                                         :style released-button)))
 
 (provide 'init-theme)
 ;;; init-theme.el ends here
