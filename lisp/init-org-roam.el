@@ -82,12 +82,22 @@
 
 (org-roam-db-autosync-mode)
 
-(defun my-org-roam-extract-subtree ()
-  "Use the first tag in a node as its destination within `org-roam-directory'."
+(defun my-org-subtree-root-tags ()
+  "Return the tags of the root header of the current subtree."
+  (save-excursion
+    (org-back-to-heading t)
+    (while (org-up-heading-safe))
+    (org-get-local-tags)))
+
+(defun my-sanitize-string (str)
+  (replace-regexp-in-string "[^[:alnum:]]" "_" str))
+
+(defun my-org-roam-extract-subtree-inbox-entry ()
+  "Use the tag in the root topic node as the destination directory within `org-roam-directory'."
   (interactive)
-  (let* ((first-tag (car (org-get-tags)))
-         (relative-path (if first-tag (concat "/" first-tag "/")
-                          ""))
+  (let* ((tag (car (my-org-subtree-root-tags)))
+         (sanitized-tag (if tag (my-sanitize-string tag) nil))
+         (relative-path (if sanitized-tag (concat "/" sanitized-tag "/") ""))
          (org-roam-directory (concat org-roam-directory relative-path)))
     (org-roam-extract-subtree)))
 
@@ -135,7 +145,7 @@
   (define-key map (kbd "C-c n r") #'org-roam-ref-add)
   (define-key map (kbd "C-c n R") #'org-roam-ref-remove)
   (define-key map (kbd "C-c n x") #'org-roam-extract-subtree)
-  (define-key map (kbd "C-c n X") #'my-org-roam-extract-subtree))
+  (define-key map (kbd "C-c n X") #'my-org-roam-extract-subtree-inbox-entry))
 
 (let ((map org-roam-mode-map))
   (define-key map (kbd "C-c n l") #'org-roam-buffer-toggle))

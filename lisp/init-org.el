@@ -8,7 +8,7 @@
 
 (require 'org)
 
-(defun org-refile-to-projects ()
+(defun org-refile-target-projects ()
   (directory-files "~/org/projects" t directory-files-no-dot-files-regexp))
 
 (setq
@@ -42,20 +42,21 @@
  ;; Allows viewing attachments when archived
  org-attach-id-dir "~/org/data/"
 
- org-refile-targets '((nil :maxlevel . 2)
-                      ("~/org/inbox.org" :maxlevel . 1)
-                      (org-refile-to-projects :todo . "INBOX")
-                      (org-refile-to-projects :todo . "TODO"))
+ org-refile-targets '((nil :maxlevel . 1)
+                      ("~/org/inbox.org" :todo . "TOPIC")
+                      (org-refile-target-projects :todo . "INBOX")
+                      (org-refile-target-projects :todo . "TODO"))
 
  org-todo-keywords '((sequence "TODO(t)" "WIP(p)" "DEFERRED(f@)" "WAITING(w@)"
                                "|" "DONE(d@/@)" "CANCELED(c@/@)")
-                     (type "INBOX(i)"))
+                     (type "INBOX(i)" "TOPIC(o)"))
 
  org-todo-keyword-faces '(("WIP" :foreground "tomato" :weight bold)
                           ("DEFERRED" :foreground "dark magenta" :weight bold)
                           ("WAITING" :foreground "orange" :weight bold)
                           ("CANCELED" :foreground "dark gray" :weight bold)
-                          ("INBOX" :foreground "dark slate blue" :weight bold)))
+                          ("INBOX" :foreground "dark slate blue" :weight bold)
+                          ("TOPIC" :foreground "dark slate blue" :weight bold)))
 
 (setq org-capture-templates '(("i" "Inbox" entry (file org-default-notes-file)
                                "* %?\n:PROPERTIES:\n:CREATED:  %U\n:END:"
@@ -121,9 +122,9 @@
     (call-interactively #'save-buffer)))
 (add-hook 'org-after-refile-insert-hook #'org-save-dest-buffer-after-refile)
 
-(defun org-refile-within-file ()
+(defun org-refile-to-topic ()
   (interactive)
-  (let ((org-refile-targets '((nil :maxlevel . 3))))
+  (let ((org-refile-targets '((nil :todo . "TOPIC"))))
     (call-interactively #'org-refile)))
 
 (defun org-link-retain-description ()
@@ -150,7 +151,7 @@
   (define-key org-mode-map (kbd "C-c C--") #'org-ctrl-c-minus)
   (define-key org-mode-map (kbd "C-c C-8") #'org-ctrl-c-star)
   (define-key org-mode-map (kbd "C-c C-SPC") #'org-table-blank-field)
-  (define-key org-mode-map (kbd "C-c C-S-W") #'org-refile-within-file)
+  (define-key org-mode-map (kbd "C-c C-S-W") #'org-refile-to-topic)
   (define-key org-mode-map (kbd "C-M-q") #'org-fixup-whitespace)
   (define-key org-mode-map (kbd "C-M-h") #'org-mark-subtree)
   (define-key org-mode-map (kbd "C-c o L") #'org-link-retain-description)
