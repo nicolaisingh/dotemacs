@@ -41,6 +41,7 @@
  org-attach-store-link-p 'attached
  ;; Allows viewing attachments when archived
  org-attach-id-dir "~/org/data/"
+ org-reverse-note-order t
 
  org-refile-targets '((nil :maxlevel . 1)
                       ("~/org/inbox.org" :todo . "TOPIC")
@@ -124,7 +125,9 @@
 
 (defun org-refile-to-topic ()
   (interactive)
-  (let ((org-refile-targets '((nil :todo . "TOPIC"))))
+  (let ((org-refile-use-outline-path t)
+        (org-refile-targets '((nil :todo . "TOPIC")
+                              ("~/org/inbox.org" :todo . "TOPIC"))))
     (call-interactively #'org-refile)))
 
 (defun org-link-retain-description ()
@@ -165,8 +168,19 @@
 (add-hook 'org-agenda-mode-hook #'hl-line-mode)
 (add-hook 'org-mode-hook #'virtual-auto-fill-mode)
 
-;; Always put an ID in new nodes so org-roam can recognize them
-(add-hook 'org-capture-before-finalize-hook #'org-id-get-create)
+(defun my-org-id-get-create ()
+  "Put an ID in new nodes except for org-roam dailies."
+  (unless (string-match-p "~/org/daily/"
+                          (abbreviate-file-name
+                           ;; While capturing, this returns the
+                           ;; destination buffer, and while refiling
+                           ;; since org-capture-get will be nil, the
+                           ;; destination buffer is returned instead
+                           (buffer-file-name (org-capture-get :buffer t))))
+    (org-id-get-create)))
+(add-hook 'org-capture-before-finalize-hook #'my-org-id-get-create)
+(add-hook 'org-after-refile-insert-hook #'my-org-id-get-create)
+
 
 (defun org-capture-inbox (goto)
   (interactive "P")
