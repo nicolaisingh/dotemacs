@@ -164,6 +164,7 @@ collection.  Use revert-gc-cons-percentage to restore the value."
 (keymap-global-set "C-h C-c" nil)
 (keymap-global-set "C-h C-f" nil)
 (keymap-global-set "C-c d l" #'dictionary-search)
+(keymap-global-set "C-c l d" #'duplicate-line)
 
 ;; Move facemenu-keymap to another binding
 (require 'facemenu)

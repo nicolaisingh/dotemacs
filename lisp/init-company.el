@@ -18,7 +18,8 @@
       company-dabbrev-minimum-length 3
       company-dabbrev-downcase nil
       company-transformers '(company-sort-by-occurrence
-                             company-sort-by-backend-importance))
+                             company-sort-by-backend-importance)
+      company-global-modes '(not eshell-mode term-mode))
 
 (setq-mode-local prog-mode
                  company-minimum-prefix-length 2
@@ -32,6 +33,8 @@
 (add-to-list 'company-backends 'company-go)
 (add-to-list 'company-backends 'company-restclient)
 
+;; This backend sometimes produces an error when in other modes, so
+;; enable only on nix-mode
 (with-eval-after-load 'nix-mode
   (add-hook 'nix-mode-hook (lambda ()
                              (interactive)
@@ -41,8 +44,6 @@
 (define-key company-active-map (kbd "C-n") #'company-select-next)
 (define-key company-active-map (kbd "C-p") #'company-select-previous)
 (define-key company-active-map (kbd "C-c C-/") #'company-other-backend)
-
-(global-set-key (kbd "C-M-/") #'company-dabbrev)
 
 (add-hook 'after-init-hook #'global-company-mode)
 

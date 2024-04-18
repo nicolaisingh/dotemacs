@@ -9,6 +9,7 @@
 (require 'eglot)
 
 (setq eglot-autoshutdown t)
+(setq flymake-no-changes-timeout 1)
 
 (setq-mode-local python-mode eglot-ignored-server-capabilities '(:documentHighlightProvider))
 

@@ -19,7 +19,6 @@
 
 (defun eshell-config ()
   (setq-local completion-auto-help t)
-  (company-mode -1)
 
   (define-key eshell-mode-map (kbd "C-c l") (lambda ()
                                               (interactive)
