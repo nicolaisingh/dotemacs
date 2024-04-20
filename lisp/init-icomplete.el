@@ -57,6 +57,8 @@ it with `*' instead and vice versa."
     (fido-vertical-mode t))
 
   (defun icomplete-my-config ()
+    ;; Setting the completion-styles here is necessary because
+    ;; `icomplete--fido-mode-setup' sets it to flex by force.
     (setq-local max-mini-window-height 0.15
                 completion-styles '(orderless basic)
                 ;; completion-styles '(flex partial-completion basic)

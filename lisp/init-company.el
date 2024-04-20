@@ -7,7 +7,6 @@
 ;;; Code:
 
 (require 'company)
-(require 'mode-local)
 
 (setq company-lighter-base "Comp"
       company-minimum-prefix-length 2

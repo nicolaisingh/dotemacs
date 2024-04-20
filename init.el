@@ -194,6 +194,7 @@ collection.  Use revert-gc-cons-percentage to restore the value."
 ;;;; Package initializations
 
 (add-to-list 'load-path (expand-file-name "lisp" user-emacs-directory))
+(require 'mode-local)
 
 (require 'init-package)
 (require 'init-theme)
@@ -220,8 +221,9 @@ collection.  Use revert-gc-cons-percentage to restore the value."
 (require 'init-chatgpt-shell)
 (require 'init-chronos)
 (require 'init-command-log)
-(require 'init-company)
+;; (require 'init-company)
 (require 'init-consult)
+(require 'init-corfu-cape)
 (require 'init-cov)
 (require 'init-devdocs)
 (require 'init-diff-hl)
@@ -255,6 +257,7 @@ collection.  Use revert-gc-cons-percentage to restore the value."
 (require 'init-nav-flash)
 (require 'init-newsticker)
 (require 'init-nov)
+(require 'init-orderless)
 (require 'init-org)
 (require 'init-org-alert)
 (require 'init-org-crypt)
