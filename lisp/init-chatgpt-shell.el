@@ -10,7 +10,7 @@
 
 (add-to-list 'chatgpt-shell-system-prompts
              `("Concise" . ,(string-join '("I need you to reply as concise and direct to the point as possible."
-                                           "Please format all responses in org-mode"
+                                           "If includeing source code, please format them in org-mode"
                                            "Don't wrap responses in markdown.") "  ")) t)
 
 (setq chatgpt-shell-openai-key (lambda ()
