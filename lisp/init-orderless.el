@@ -13,8 +13,8 @@
       ;; Completion falls back to using completion-styles if
       ;; completion-category-overrides doesn't yield a
       ;; result
-      completion-category-overrides '((file (styles (basic flex partial-completion)))
-                                      (buffer (styles (basic flex partial-completion)))))
+      completion-category-overrides '((file (styles . (basic flex partial-completion)))
+                                      (buffer (styles . (basic flex partial-completion)))))
 
 (provide 'init-orderless)
 ;;; init-orderless.el ends here

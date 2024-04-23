@@ -23,6 +23,15 @@
     (set-window-buffer original-window (window-buffer (selected-window)))
     (set-window-buffer (selected-window) current-buffer)))
 
+(defun winfast-swap-window-with-other-reverse (count)
+  "Exchange the selected window with the previous one."
+  (interactive "p")
+  (let* ((original-window (selected-window))
+         (current-buffer (window-buffer (selected-window))))
+    (other-window (* -1 count))
+    (set-window-buffer original-window (window-buffer (selected-window)))
+    (set-window-buffer (selected-window) current-buffer)))
+
 (defun winfast-swap-window-with-largest ()
   "Exchange the selected window with the frame's largest window.
 
@@ -77,17 +86,20 @@ called again."
 
 (defun winfast-pre-command-hook ()
   (let* ((key (this-single-command-keys))
-         (winfast-key (lookup-key winfast-mode-map key nil)))
+         (winfast-command (keymap-lookup winfast-mode-map (key-description key) nil))
+         (winfast-command-p (or (commandp winfast-command)
+                                (equal key (where-is-internal #'winfast-mode global-map t)))))
+
     ;; Reset the fullscreen flag if the key is a winfast command
     ;; that is not `winfast-toggle-fullscreen-window'
     (when winfast--fullscreen-p
-      (when (and (commandp winfast-key)
-                 (not (eq 'winfast-toggle-fullscreen-window winfast-key)))
+      (when (and winfast-command-p
+                 (not (eq 'winfast-toggle-fullscreen-window winfast-command)))
         (setq winfast--fullscreen-p nil)))
 
     ;; Turn off winfast-mode if the keybinding does not belong to its
     ;; keymap, and execute the keybinding normally (like isearch).
-    (unless (commandp winfast-key)
+    (unless winfast-command-p
       (winfast-mode-done))))
 
 (defun winfast-mode-done ()
@@ -116,28 +128,28 @@ called again."
 
 (defvar winfast-mode-map
   (let ((map (make-sparse-keymap)))
-    (define-key map "\M-o" #'other-window)
-    (define-key map "\M-0" #'delete-window)
-    (define-key map "\M-1" #'delete-other-windows)
-    (define-key map "\M-2" #'split-window-below)
-    (define-key map "\M-3" #'split-window-right)
-    (define-key map "\M-m" #'minimize-window)
-    (define-key map "\M-k" #'kill-current-buffer)
-    (define-key map "\M-M" #'maximize-window)
-    (define-key map "\M-=" #'balance-windows)
-    (define-key map "\M-P" #'previous-buffer)
-    (define-key map "\M-N" #'next-buffer)
-    (define-key map "\M-b" #'switch-to-buffer)
+    (keymap-set map "<remap> <winfast-mode>" #'other-window)
+    (keymap-set map "M-o" #'other-window)
+    (keymap-set map "M-0" #'delete-window)
+    (keymap-set map "M-1" #'delete-other-windows)
+    (keymap-set map "M-2" #'split-window-below)
+    (keymap-set map "M-3" #'split-window-right)
+    (keymap-set map "M-m" #'minimize-window)
+    (keymap-set map "M-k" #'kill-current-buffer)
+    (keymap-set map "M-M" #'maximize-window)
+    (keymap-set map "M-=" #'balance-windows)
+    (keymap-set map "M-P" #'previous-buffer)
+    (keymap-set map "M-N" #'next-buffer)
 
-    (define-key map "\M-f" #'winfast-toggle-fullscreen-window)
-    (define-key map "\M-s" #'winfast-swap-window-with-other)
-    (define-key map [M-return] #'winfast-swap-window-with-largest)
-    (define-key map "\M-\r" #'winfast-swap-window-with-largest)
+    (keymap-set map "M-f" #'winfast-toggle-fullscreen-window)
+    (keymap-set map "M-s" #'winfast-swap-window-with-other)
+    (keymap-set map "M-r" #'winfast-swap-window-with-other-reverse)
+    (keymap-set map "M-<return>" #'winfast-swap-window-with-largest)
 
-    (define-key map "\M-]" #'winfast-enlarge-window)
-    (define-key map "\M-[" #'winfast-shrink-window)
-    (define-key map "\M-}" #'winfast-enlarge-window-horizontally)
-    (define-key map "\M-{" #'winfast-shrink-window-horizontally)
+    (keymap-set map "M-]" #'winfast-enlarge-window)
+    (keymap-set map "M-[" #'winfast-shrink-window)
+    (keymap-set map "M-}" #'winfast-enlarge-window-horizontally)
+    (keymap-set map "M-{" #'winfast-shrink-window-horizontally)
     map)
   "Keymap for `winfast-mode'.
 Any other key binding used which is not in the map will turn off

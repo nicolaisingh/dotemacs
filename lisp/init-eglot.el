@@ -11,7 +11,8 @@
 (setq eglot-autoshutdown t)
 (setq flymake-no-changes-timeout 1)
 
-(setq-mode-local python-mode eglot-ignored-server-capabilities '(:documentHighlightProvider))
+(setq-mode-local python-mode eglot-ignored-server-capabilities '(:documentHighlightProvider
+                                                                 :hoverProvider))
 
 (provide 'init-eglot)
 ;;; init-eglot.el ends here

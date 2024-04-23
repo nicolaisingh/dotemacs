@@ -93,7 +93,9 @@ collection.  Use revert-gc-cons-percentage to restore the value."
  ;; Don't ask when reverting for the following regex
  revert-without-query '("^.*\\.pdf$")
 
- abbrev-file-name (expand-file-name "abbrev-defs.el" user-emacs-directory))
+ abbrev-file-name (expand-file-name "abbrev-defs.el" user-emacs-directory)
+
+ help-window-select t)
 
 ;; Display long lines as is
 (setq-default truncate-lines t)
@@ -210,7 +212,7 @@ collection.  Use revert-gc-cons-percentage to restore the value."
 
 (require 'winfast)
 (define-key global-map (kbd "M-o") #'other-window)
-(define-key global-map (kbd "M-O") #'winfast-mode)
+(define-key global-map (kbd "M-`") #'winfast-mode)
 
 (require 'init-alert)
 
@@ -296,7 +298,6 @@ collection.  Use revert-gc-cons-percentage to restore the value."
 (with-eval-after-load 'init-org
   (require 'init-org-roam))
 
-;; C-z keymap
 (define-prefix-command 'my-ctl-z-map)
 (keymap-global-set "C-z" 'my-ctl-z-map)
 (keymap-set my-ctl-z-map "C-s" #'eshell-toggle)
