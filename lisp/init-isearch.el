@@ -8,14 +8,15 @@
 
 (require 'isearch)
 
-;; Do not exit incremental search when scrolling
-(setq-default isearch-allow-scroll 1)
+(setq
+ ;; Do not exit incremental search when scrolling
+ isearch-allow-scroll 'unlimited
 
-;; Make space characters match anything
-(setq search-whitespace-regexp ".+?")
+ ;; Make space characters match anything
+ search-whitespace-regexp ".+?"
 
-;; Show match numbers in the search prompt
-(setq isearch-lazy-count t)
+ ;; Show match numbers in the search prompt
+ isearch-lazy-count t)
 
 ;; Straight up cancels isearch without the rub out behavior.
 (defun my-isearch-control-g ()
