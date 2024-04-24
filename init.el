@@ -41,6 +41,10 @@ collection.  Use revert-gc-cons-percentage to restore the value."
 
 ;;;; Emacs-wide initializations
 
+(add-hook 'emacs-startup-hook
+          (lambda ()
+            (message (concat "Emacs startup took " (emacs-init-time) " with " (number-to-string gcs-done) " GCs."))))
+
 ;; (add-hook 'after-init-hook #'server-start)
 
 ;; General emacs settings
@@ -126,9 +130,6 @@ collection.  Use revert-gc-cons-percentage to restore the value."
       '("^magit: .*$"
         "^magit-status: .*$"))
 
-;; Tab bar
-(global-set-key (kbd "C-x t T") #'tab-bar-mode)
-
 ;; Tabs and spaces handling
 (setq-default tab-width 4)
 (add-hook 'shell-mode-hook #'indent-tab-width-8)
@@ -141,41 +142,51 @@ collection.  Use revert-gc-cons-percentage to restore the value."
 ;; Don't wrap minibuffer entries
 (add-hook 'minibuffer-setup-hook (lambda () (setq-local truncate-lines t)))
 
-;; easy-kill
-(global-set-key [remap kill-ring-save] 'easy-kill)
-(global-set-key [remap mark-word] 'easy-mark)
-
-;; Other key bindings
-(global-set-key (kbd "C-c h l") #'hl-line-mode)
-(global-set-key (kbd "C-c v f") #'virtual-auto-fill-mode)
-(global-set-key (kbd "C-c w '") #'insert-pair)
-(global-set-key (kbd "C-c w <") #'insert-pair)
-(global-set-key (kbd "C-c w [") #'insert-pair)
-(global-set-key (kbd "C-c w \"") #'insert-pair)
-(global-set-key (kbd "C-h u f") #'find-library)
-(global-set-key (kbd "C-h u p") #'list-packages)
-(global-set-key (kbd "C-x B") #'bury-buffer)
-(global-set-key (kbd "C-x C-S-c") #'save-buffers-kill-emacs)
-(global-set-key (kbd "C-x C-m") (key-binding (kbd "M-x")))
-(global-set-key (kbd "C-x a /") #'unexpand-abbrev)
-(global-set-key (kbd "M-SPC") #'cycle-spacing)
-(global-set-key (kbd "C-x K") #'kill-this-buffer)
-(global-set-key (kbd "H-D") (lambda ()
-                              (interactive)
-                              (browse-url-xdg-open (xdg-user-dir "DOWNLOAD"))))
-(keymap-global-set "C-h C-c" nil)
-(keymap-global-set "C-h C-f" nil)
-(keymap-global-set "C-c d l" #'dictionary-search)
-(keymap-global-set "C-c l d" #'duplicate-line)
-
 ;; Move facemenu-keymap to another binding
 (require 'facemenu)
-(define-key global-map (kbd "M-o") nil) ;; winfast and other-window will occupy M-o
+(define-key global-map (kbd "M-o") nil)
 (define-key global-map (kbd "C-c f m") 'facemenu-keymap)
 
-(add-hook 'emacs-startup-hook
-          (lambda ()
-            (message (concat "Emacs startup took " (emacs-init-time) " with " (number-to-string gcs-done) " GCs."))))
+;; Prefix definitions
+(define-prefix-command 'my-debug-map)
+(define-prefix-command 'my-ctl-c-M-map)
+(define-prefix-command 'my-ctl-c-b-map)
+(define-prefix-command 'my-ctl-c-d-map)
+(define-prefix-command 'my-ctl-c-e-map)
+(define-prefix-command 'my-ctl-c-f-map)
+(define-prefix-command 'my-ctl-c-h-map)
+(define-prefix-command 'my-ctl-c-i-map)
+(define-prefix-command 'my-ctl-c-l-map)
+(define-prefix-command 'my-ctl-c-m-map)
+(define-prefix-command 'my-ctl-c-n-map)
+(define-prefix-command 'my-ctl-c-o-map)
+(define-prefix-command 'my-ctl-c-p-map)
+(define-prefix-command 'my-ctl-c-s-map)
+(define-prefix-command 'my-ctl-c-t-map)
+(define-prefix-command 'my-ctl-c-v-map)
+(define-prefix-command 'my-ctl-c-w-map)
+(define-prefix-command 'my-ctl-c-y-map)
+(define-prefix-command 'my-ctl-z-map)
+
+(keymap-global-set "C-c D" 'my-debug-map)
+(keymap-global-set "C-c M" 'my-ctl-c-M-map)
+(keymap-global-set "C-c b" 'my-ctl-c-b-map)
+(keymap-global-set "C-c d" 'my-ctl-c-d-map)
+(keymap-global-set "C-c e" 'my-ctl-c-e-map)
+(keymap-global-set "C-c f" 'my-ctl-c-f-map)
+(keymap-global-set "C-c h" 'my-ctl-c-h-map)
+(keymap-global-set "C-c i" 'my-ctl-c-i-map)
+(keymap-global-set "C-c l" 'my-ctl-c-l-map)
+(keymap-global-set "C-c m" 'my-ctl-c-m-map)
+(keymap-global-set "C-c n" 'my-ctl-c-n-map)
+(keymap-global-set "C-c o" 'my-ctl-c-o-map)
+(keymap-global-set "C-c p" 'my-ctl-c-p-map)
+(keymap-global-set "C-c s" 'my-ctl-c-s-map)
+(keymap-global-set "C-c t" 'my-ctl-c-t-map)
+(keymap-global-set "C-c v" 'my-ctl-c-v-map)
+(keymap-global-set "C-c w" 'my-ctl-c-w-map)
+(keymap-global-set "C-c y" 'my-ctl-c-y-map)
+(keymap-global-set "C-z" 'my-ctl-z-map)
 
 ;;;; Load Customize file
 
@@ -183,20 +194,11 @@ collection.  Use revert-gc-cons-percentage to restore the value."
 (when (file-exists-p custom-file)
   (load custom-file))
 
-;;;; Macros
-(fset 'nft-fix-jsons
-      (kmacro-lambda-form [?w return ?\C-x ?h backspace ?\{
-                              return ?\" ?n ?a ?m ?e ?: S-backspace ?\" ?: ?\S- ?\" ?\C-y
-                              ?\C-b ?\C-b ?\C-b ?\C-b ?\C-b ?\C-d ?\C-d ?\C-d ?\C-d ?\C-d
-                              ?\" ?, return ?\" ?d ?e ?s ?c ?r ?i ?p ?t ?i ?o ?n ?\" ?:
-                              ?\S- ?\" ?T ?h ?i ?s ?  ?i ?s ?  ?m ?y ?  ?d ?e ?s ?c ?r ?t
-                              ?i ?p backspace backspace backspace ?i ?p ?t ?i ?o ?n ?\"
-                              return ?\} ?\C-x ?\C-s ?\C-x ?k return ?n ?n] 0 "%d"))
-
 ;;;; Package initializations
 
-(add-to-list 'load-path (expand-file-name "lisp" user-emacs-directory))
 (require 'mode-local)
+
+(add-to-list 'load-path (expand-file-name "lisp" user-emacs-directory))
 
 (require 'init-package)
 (require 'init-theme)
@@ -215,7 +217,6 @@ collection.  Use revert-gc-cons-percentage to restore the value."
 (define-key global-map (kbd "M-`") #'winfast-mode)
 
 (require 'init-alert)
-
 (require 'init-aggressive-indent)
 (require 'init-browse-kill-ring)
 (require 'init-calibre)
@@ -298,13 +299,48 @@ collection.  Use revert-gc-cons-percentage to restore the value."
 (with-eval-after-load 'init-org
   (require 'init-org-roam))
 
-(define-prefix-command 'my-ctl-z-map)
-(keymap-global-set "C-z" 'my-ctl-z-map)
+;;;; Other key bindings
+(keymap-global-set "<remap> <kill-ring-save>" #'easy-kill)
+(keymap-global-set "<remap> <mark-word>" #'easy-mark)
+
+(keymap-global-set "C-x t T" #'tab-bar-mode)
+
 (keymap-set my-ctl-z-map "C-s" #'eshell-toggle)
 (keymap-set my-ctl-z-map "C-z" #'org-capture-inbox)
 (keymap-set my-ctl-z-map "g" #'magit-status)
 (keymap-set my-ctl-z-map "c" #'org-capture)
 (keymap-set my-ctl-z-map "C-l" #'chatgpt-shell)
+
+(keymap-set my-debug-map "q" #'toggle-debug-on-quit)
+(keymap-set my-debug-map "e" #'toggle-debug-on-error)
+(keymap-set my-debug-map "p p" #'profiler-toggle)
+(keymap-set my-debug-map "p r" #'profiler-report)
+(keymap-set my-debug-map "t" #'debug-on-entry)
+(keymap-set my-debug-map "T" #'cancel-debug-on-entry)
+(keymap-set my-debug-map "v" #'debug-on-variable-change)
+(keymap-set my-debug-map "V" #'cancel-debug-on-variable-change)
+
+(keymap-global-set "C-c h l" #'hl-line-mode)
+(keymap-global-set "C-c v f" #'virtual-auto-fill-mode)
+(keymap-global-set "C-c w '" #'insert-pair)
+(keymap-global-set "C-c w <" #'insert-pair)
+(keymap-global-set "C-c w [" #'insert-pair)
+(keymap-global-set "C-c w \"" #'insert-pair)
+(keymap-global-set "C-x B" #'bury-buffer)
+(keymap-global-set "C-x C-S-c" #'save-buffers-kill-emacs)
+(keymap-global-set "C-x C-m" (key-binding (kbd "M-x")))
+(keymap-global-set "C-x a /" #'unexpand-abbrev)
+(keymap-global-set "M-SPC" #'cycle-spacing)
+(keymap-global-set "C-x K" #'kill-this-buffer)
+
+(keymap-global-set "C-h C-c" nil)
+(keymap-global-set "C-h C-f" nil)
+(keymap-global-set "C-h C-k" #'describe-keymap)
+(keymap-global-set "C-h u f" #'find-library)
+(keymap-global-set "C-h u p" #'list-packages)
+
+(keymap-global-set "C-c d l" #'dictionary-search)
+(keymap-global-set "C-c l d" #'duplicate-line)
 
 (provide 'init)
 ;;; init.el ends here
