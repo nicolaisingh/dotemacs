@@ -38,8 +38,14 @@
     (with-current-buffer b (insert text-b))
     (ediff-buffers a b)))
 
-(global-set-key (kbd "C-c d k") #'ediff-last-2-kills)
-(define-key dired-mode-map (kbd "C-c d d") #'ediff-dired-diff)
+(keymap-set dired-mode-map "C-c d d" #'ediff-dired-diff)
+
+(keymap-global-set "C-c d b" #'ediff-buffers)
+(keymap-global-set "C-c d c" #'ediff-current-file)
+(keymap-global-set "C-c d d" #'ediff-files)
+(keymap-global-set "C-c d k" #'ediff-last-2-kills)
+(keymap-global-set "C-c d r l" #'ediff-regions-linewise)
+(keymap-global-set "C-c d r w" #'ediff-regions-wordwise)
 
 (provide 'init-ediff)
 ;;; init-ediff.el ends here

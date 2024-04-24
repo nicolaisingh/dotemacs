@@ -14,6 +14,7 @@
       dired-isearch-filenames t
       dired-hide-details-hide-symlink-targets nil
       dired-hide-details-hide-information-lines nil
+      dired-kill-when-opening-new-dired-buffer t
       dired-dwim-target t
       dired-recursive-copies 'always
       dired-recursive-deletes 'always)
@@ -197,7 +198,6 @@ the file selected during second call will be file B."
 (dired-set-listing-switches)
 
 (defun dired-mode-my-custom-keys ()
-  (define-key dired-mode-map (kbd "C-c .") #'toggle-other-files)
   (define-key dired-mode-map (kbd "z") #'dired-up-directory)
   (define-key dired-mode-map (kbd "C-c m .") #'toggle-other-files)
   (define-key dired-mode-map (kbd "C-c m e") #'dired-create-empty-file)
@@ -222,6 +222,7 @@ the file selected during second call will be file B."
 (add-hook 'dired-mode-hook #'dired-mode-my-custom-keys)
 (add-hook 'dired-mode-hook #'hl-line-mode)
 (add-hook 'dired-mode-hook #'dired-hide-details-mode)
+(add-hook 'dired-mode-hook #'dired-omit-mode)
 
 ;; dired-recent
 (dired-recent-mode 1)
