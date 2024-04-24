@@ -188,13 +188,11 @@ collection.  Use revert-gc-cons-percentage to restore the value."
 (keymap-global-set "C-c y" 'my-ctl-c-y-map)
 (keymap-global-set "C-z" 'my-ctl-z-map)
 
-;;;; Load Customize file
+;;;; Package initializations
 
 (setq custom-file (expand-file-name "custom.el" user-emacs-directory))
 (when (file-exists-p custom-file)
   (load custom-file))
-
-;;;; Package initializations
 
 (require 'mode-local)
 
