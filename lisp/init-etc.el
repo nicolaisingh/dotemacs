@@ -186,8 +186,6 @@ times."
 (keymap-global-set "C-c l n" #'toggle-line-and-column-numbers)
 (keymap-global-set "C-c h n" #'highlight-numbers-mode)
 (keymap-global-set "C-c h s" #'toggle-hscroll-mode)
-(keymap-global-set "C-c P P" #'profiler-toggle)
-(keymap-global-set "C-c P R" #'profiler-report)
 
 (provide 'init-etc)
 ;;; init-etc.el ends here
