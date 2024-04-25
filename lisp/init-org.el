@@ -150,16 +150,16 @@
     (call-interactively #'org-attach)))
 
 (defun org-mode-my-custom-keys ()
-  (define-key org-mode-map (kbd "C-c C-a") #'my-org-attach)
-  (define-key org-mode-map (kbd "C-c C--") #'org-ctrl-c-minus)
-  (define-key org-mode-map (kbd "C-c C-8") #'org-ctrl-c-star)
-  (define-key org-mode-map (kbd "C-c C-SPC") #'org-table-blank-field)
-  (define-key org-mode-map (kbd "C-c C-S-W") #'org-refile-to-topic)
-  (define-key org-mode-map (kbd "C-M-q") #'org-fixup-whitespace)
-  (define-key org-mode-map (kbd "C-M-h") #'org-mark-subtree)
-  (define-key org-mode-map (kbd "C-c o L") #'org-link-retain-description)
+  (keymap-set org-mode-map "C-c C-a" #'my-org-attach)
+  (keymap-set org-mode-map "C-c C--" #'org-ctrl-c-minus)
+  (keymap-set org-mode-map "C-c C-8" #'org-ctrl-c-star)
+  (keymap-set org-mode-map "C-c C-SPC" #'org-table-blank-field)
+  (keymap-set org-mode-map "C-c C-S-W" #'org-refile-to-topic)
+  (keymap-set org-mode-map "C-M-q" #'org-fixup-whitespace)
+  (keymap-set org-mode-map "C-M-h" #'org-mark-subtree)
+  (keymap-set org-mode-map "C-c o L" #'org-link-retain-description)
   ;; requires consult
-  (define-key org-mode-map (kbd "C-c *") #'consult-org-heading))
+  (keymap-set org-mode-map "C-c *" #'consult-org-heading))
 
 (add-hook 'org-mode-hook #'org-mode-my-custom-keys)
 ;; (add-hook 'org-mode-hook #'turn-on-auto-fill)
@@ -190,11 +190,11 @@
   (interactive)
   (dired org-directory))
 
-(global-set-key (kbd "C-c o s") #'org-store-link)
-(global-set-key (kbd "C-c o a") #'org-agenda)
-(global-set-key (kbd "C-c o b") #'org-switchb)
-(global-set-key (kbd "C-c o v") #'visible-mode)
-(global-set-key (kbd "C-c o d") #'org-dired)
+(keymap-global-set "C-c o s" #'org-store-link)
+(keymap-global-set "C-c o a" #'org-agenda)
+(keymap-global-set "C-c o b" #'org-switchb)
+(keymap-global-set "C-c o v" #'visible-mode)
+(keymap-global-set "C-c o d" #'org-dired)
 
 (provide 'init-org)
 ;;; init-org.el ends here

@@ -13,17 +13,17 @@
       magit-status-goto-file-position t
       magit-status-show-hashes-in-headers t)
 
-(defvar magit-my-global-map
+(defvar my-magit-global-map
   (let ((map (make-sparse-keymap)))
-    (define-key map (kbd "g") #'magit-status)
-    (define-key map (kbd "l") #'magit-log-current)
-    (define-key map (kbd "M-g") #'magit-dispatch)
+    (keymap-set map "g" #'magit-status)
+    (keymap-set map "l" #'magit-log-current)
+    (keymap-set map "M-g" #'magit-dispatch)
     map))
-(define-key global-map (kbd "C-c g") magit-my-global-map)
+(keymap-global-set "C-c g" my-magit-global-map)
 
-(define-key project-prefix-map "m" #'magit-project-status)
+(keymap-set project-prefix-map "m" #'magit-project-status)
 (add-to-list 'project-switch-commands '(magit-project-status "Magit") t)
-(define-key project-prefix-map "G" #'deadgrep)
+(keymap-set project-prefix-map "G" #'deadgrep)
 (add-to-list 'project-switch-commands '(deadgrep "Deadgrep") t)
 
 (setq magit-repository-directories

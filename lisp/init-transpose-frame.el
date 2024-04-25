@@ -8,7 +8,7 @@
 
 (require 'transpose-frame)
 
-(global-set-key (kbd "C-c t f") #'transpose-frame)
+(keymap-global-set "C-c t f" #'transpose-frame)
 
 (provide 'init-transpose-frame)
 ;;; init-transpose-frame.el ends here

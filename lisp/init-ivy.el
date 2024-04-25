@@ -15,13 +15,13 @@
               ivy-height 6
               ivy-wrap 1)
 
-(global-set-key (kbd "M-x") 'counsel-M-x)
-;; (global-set-key (kbd "C-x r b") 'counsel-bookmark)
-(global-set-key (kbd "C-x C-f") 'counsel-find-file)
-(global-set-key (kbd "C-h C-l") 'counsel-find-library)
-(global-set-key (kbd "C-h f") 'counsel-describe-function)
-(global-set-key (kbd "C-h v") 'counsel-describe-variable)
-(global-set-key (kbd "C-h C-u") 'counsel-unicode-char)
+(keymap-global-set "M-x" 'counsel-M-x)
+;; (keymap-global-set "C-x r b" 'counsel-bookmark)
+(keymap-global-set "C-x C-f" 'counsel-find-file)
+(keymap-global-set "C-h C-l" 'counsel-find-library)
+(keymap-global-set "C-h f" 'counsel-describe-function)
+(keymap-global-set "C-h v" 'counsel-describe-variable)
+(keymap-global-set "C-h C-u" 'counsel-unicode-char)
 
 (provide 'init-ivy)
 ;;; init-ivy.el ends here

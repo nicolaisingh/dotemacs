@@ -25,8 +25,8 @@
   (isearch-cancel))
 
 (defun isearch-mode-my-custom-keys ()
-  (define-key isearch-mode-map (kbd "C-g") #'my-isearch-control-g)
-  (define-key isearch-mode-map (kbd "C-o") #'other-window))
+  (keymap-set isearch-mode-map "C-g" #'my-isearch-control-g)
+  (keymap-set isearch-mode-map "C-o" #'other-window))
 
 (add-hook 'isearch-mode-hook #'isearch-mode-my-custom-keys)
 

@@ -16,9 +16,9 @@
 
 (with-eval-after-load 'markdown-mode
   (let ((map markdown-mode-map))
-    (define-key map (kbd "C-<return>") #'markdown-insert-header-dwim)
-    (define-key map (kbd "M-<left>") #'markdown-promote)
-    (define-key map (kbd "M-<right>") #'markdown-demote)))
+    (keymap-set map "C-<return>" #'markdown-insert-header-dwim)
+    (keymap-set map "M-<left>" #'markdown-promote)
+    (keymap-set map "M-<right>" #'markdown-demote)))
 
 (provide 'init-markdown)
 ;;; init-markdown.el ends here

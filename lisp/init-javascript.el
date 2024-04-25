@@ -18,17 +18,17 @@
       js2-strict-missing-semi-warning nil)
 
 (defun js2-mode-my-custom-keys ()
-  (define-key js2-mode-map (kbd "C-M-SPC") #'js2-mark-parent-statement)
-  (define-key js2-mode-map (kbd "C-M-h") #'js2-mark-defun)
-  (define-key js2-mode-map (kbd "C-c m j") #'js2-print-json-path)
-  (define-key js2-mode-map (kbd "<return>") #'js2-line-break)
-  (define-key js2-mode-map (kbd "C-k") #'js2r-kill)
+  (keymap-set js2-mode-map "C-M-SPC" #'js2-mark-parent-statement)
+  (keymap-set js2-mode-map "C-M-h" #'js2-mark-defun)
+  (keymap-set js2-mode-map "C-c m j" #'js2-print-json-path)
+  (keymap-set js2-mode-map "<return>" #'js2-line-break)
+  (keymap-set js2-mode-map "C-k" #'js2r-kill)
 
   ;; Let xref-js2 handle references and definitions
-  (define-key js2-mode-map (kbd "M-.") nil))
+  (keymap-unset js2-mode-map "M-."))
 
 (defun json-mode-my-custom-keys ()
-  (define-key json-mode-map (kbd "C-c m j") #'jsons-print-path))
+  (keymap-set json-mode-map "C-c m j" #'jsons-print-path))
 
 (add-hook 'js2-mode-hook #'indent-spaces)
 (add-hook 'js2-mode-hook #'js2-mode-my-custom-keys)

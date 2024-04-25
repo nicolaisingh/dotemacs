@@ -8,7 +8,7 @@
 
 (require 'marginalia)
 
-(define-key minibuffer-local-map (kbd "C-c m m") #'marginalia-cycle)
+(keymap-set minibuffer-local-map "C-c m m" #'marginalia-cycle)
 (marginalia-mode)
 
 (provide 'init-marginalia)

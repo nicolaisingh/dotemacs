@@ -10,28 +10,28 @@
 
 (setq consult-preview-key "C-SPC")
 
-(global-set-key [remap switch-to-buffer] #'consult-buffer)
-(global-set-key [remap switch-to-buffer-other-frame] #'consult-buffer-other-frame)
-(global-set-key [remap switch-to-buffer-other-window] #'consult-buffer-other-window)
-(global-set-key [remap yank-pop] #'consult-yank-pop)
-(global-set-key [remap repeat-complex-command] #'consult-complex-command)
-(global-set-key (kbd "C-c m M-x") #'consult-mode-command)
+(keymap-global-set "<remap> <switch-to-buffer>" #'consult-buffer)
+(keymap-global-set "<remap> <switch-to-buffer-other-frame>" #'consult-buffer-other-frame)
+(keymap-global-set "<remap> <switch-to-buffer-other-window>" #'consult-buffer-other-window)
+(keymap-global-set "<remap> <yank-pop>" #'consult-yank-pop)
+(keymap-global-set "<remap> <repeat-complex-command>" #'consult-complex-command)
+(keymap-global-set "C-c m M-x" #'consult-mode-command)
 
 ;; org-mode
-(global-set-key (kbd "C-c o j") #'consult-org-agenda)
+(keymap-global-set "C-c o j" #'consult-org-agenda)
 
 ;; goto-map (M-g prefix)
-(define-key goto-map (kbd "i") #'consult-imenu)
-(define-key goto-map (kbd "I") #'consult-imenu-multi)
-(define-key goto-map (kbd "m") #'consult-mark)
-(define-key goto-map (kbd "M") #'consult-global-mark)
-(define-key goto-map (kbd "h") #'consult-history)
-(define-key goto-map (kbd "d") #'consult-dir)
+(keymap-set goto-map "i" #'consult-imenu)
+(keymap-set goto-map "I" #'consult-imenu-multi)
+(keymap-set goto-map "m" #'consult-mark)
+(keymap-set goto-map "M" #'consult-global-mark)
+(keymap-set goto-map "h" #'consult-history)
+(keymap-set goto-map "d" #'consult-dir)
 
 ;; minibuffer
-(define-key minibuffer-local-map (kbd "M-s") #'consult-history)
-(define-key minibuffer-local-map (kbd "M-g d") #'consult-dir)
-(define-key minibuffer-local-map (kbd "M-g f") #'consult-dir-jump-file)
+(keymap-set minibuffer-local-map "M-s" #'consult-history)
+(keymap-set minibuffer-local-map "M-g d" #'consult-dir)
+(keymap-set minibuffer-local-map "M-g f" #'consult-dir-jump-file)
 
 (provide 'init-consult)
 ;;; init-consult.el ends here

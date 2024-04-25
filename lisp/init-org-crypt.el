@@ -14,10 +14,10 @@
       org-crypt-disable-auto-save t)
 
 (let ((map org-mode-map))
-  (define-key map (kbd "C-c o e") #'org-encrypt-entry)
-  (define-key map (kbd "C-c o d") #'org-decrypt-entry)
-  (define-key map (kbd "C-c o E") #'org-encrypt-entries)
-  (define-key map (kbd "C-c o D") #'org-decrypt-entries))
+  (keymap-set map "C-c o e" #'org-encrypt-entry)
+  (keymap-set map "C-c o d" #'org-decrypt-entry)
+  (keymap-set map "C-c o E" #'org-encrypt-entries)
+  (keymap-set map "C-c o D" #'org-decrypt-entries))
 
 (provide 'init-org-crypt)
 ;;; init-org-crypt.el ends here

@@ -101,29 +101,29 @@ the configuration 'files-plus-some-buffers-and-modes."
   (bs-message-without-log config-name))
 
 (defun bs-mode-my-custom-keys ()
-  (define-key bs-mode-map (kbd "0")
-    (lambda ()
-      (interactive)
-      (apply #'bs-custom-set-configuration-and-refresh
-             '("default--files-plus-some-buffers-and-modes"))))
-  (define-key bs-mode-map (kbd "1")
-    (lambda ()
-      (interactive)
-      (apply #'bs-custom-set-configuration-and-refresh
-             '("dired-only"))))
-  (define-key bs-mode-map (kbd "2")
-    (lambda ()
-      (interactive)
-      (apply #'bs-custom-set-configuration-and-refresh
-             '("all"))))
-  (define-key bs-mode-map (kbd "/") #'isearch-forward))
+  (keymap-set bs-mode-map "0"
+              (lambda ()
+                (interactive)
+                (apply #'bs-custom-set-configuration-and-refresh
+                       '("default--files-plus-some-buffers-and-modes"))))
+  (keymap-set bs-mode-map "1"
+              (lambda ()
+                (interactive)
+                (apply #'bs-custom-set-configuration-and-refresh
+                       '("dired-only"))))
+  (keymap-set bs-mode-map "2"
+              (lambda ()
+                (interactive)
+                (apply #'bs-custom-set-configuration-and-refresh
+                       '("all"))))
+  (keymap-set bs-mode-map "/" #'isearch-forward))
 
 (defun bs-mode-my-config ()
   (bs-mode-my-custom-keys)
   (hl-line-mode)
   (set (make-local-variable 'scroll-conservatively) 101))
 
-(global-set-key (kbd "C-x C-b") #'bs-show)
+(keymap-global-set "C-x C-b" #'bs-show)
 
 (add-hook 'bs-mode-hook #'bs-mode-my-config)
 

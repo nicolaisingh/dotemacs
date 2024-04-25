@@ -14,7 +14,7 @@
 (add-hook 'scheme-mode-hook #'aggressive-indent-mode)
 (add-hook 'js2-mode-hook #'aggressive-indent-mode)
 
-(global-set-key (kbd "C-c i A") #'aggressive-indent-mode)
+(keymap-global-set "C-c i A" #'aggressive-indent-mode)
 
 (provide 'init-aggressive-indent)
 ;;; aggressive-indent.el ends here

@@ -20,9 +20,9 @@
 (defun eshell-config ()
   (setq-local completion-auto-help t)
 
-  (define-key eshell-mode-map (kbd "C-c l") (lambda ()
-                                              (interactive)
-                                              (eshell/clear-scrollback))))
+  (keymap-set eshell-mode-map "C-c l" (lambda ()
+                                        (interactive)
+                                        (eshell/clear-scrollback))))
 (add-hook 'eshell-mode-hook #'eshell-config)
 
 (defun eshell-other ()
@@ -46,13 +46,13 @@
         (insert (concat "cd " path-to-cd))
         (eshell-send-input)))))
 
-(global-set-key (kbd "C-c e e") #'eshell)
-(global-set-key (kbd "C-c e 1") #'eshell-other)
-(global-set-key (kbd "C-c e 0") #'eshell-ask)
-(global-set-key (kbd "C-c e E") (defun eshell-new ()
-                                  (interactive)
-                                  (let ((current-prefix-arg '(4)))
-                                    (call-interactively #'eshell))))
+(keymap-global-set "C-c e e" #'eshell)
+(keymap-global-set "C-c e 1" #'eshell-other)
+(keymap-global-set "C-c e 0" #'eshell-ask)
+(keymap-global-set "C-c e E" (defun eshell-new ()
+                               (interactive)
+                               (let ((current-prefix-arg '(4)))
+                                 (call-interactively #'eshell))))
 
 ;; (setq eshell-after-prompt-hook nil)
 ;; esh-help
@@ -61,7 +61,7 @@
 
 ;; esh-toggle
 (require 'esh-toggle)
-(define-key global-map (kbd "C-c e t") #'eshell-toggle)
+(keymap-global-set "C-c e t" #'eshell-toggle)
 
 ;;eshell-up
 (require 'eshell-up)

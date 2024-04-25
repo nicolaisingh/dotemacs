@@ -29,14 +29,14 @@
   (let ((pytest-global-name "coverage run -m pytest"))
     (pytest-all)))
 
-(define-key python-mode-map (kbd "C-c P .") #'pytest-one)
-(define-key python-mode-map (kbd "C-c P !") #'pytest-again)
-(define-key python-mode-map (kbd "C-c P m") #'pytest-module)
-(define-key python-mode-map (kbd "C-c P a") #'pytest-all)
-(define-key python-mode-map (kbd "C-c C .") #'pytest-cov-one)
-(define-key python-mode-map (kbd "C-c C !") #'pytest-cov-again)
-(define-key python-mode-map (kbd "C-c C m") #'pytest-cov-module)
-(define-key python-mode-map (kbd "C-c C a") #'pytest-cov-all)
+(keymap-set python-mode-map "C-c P ." #'pytest-one)
+(keymap-set python-mode-map "C-c P !" #'pytest-again)
+(keymap-set python-mode-map "C-c P m" #'pytest-module)
+(keymap-set python-mode-map "C-c P a" #'pytest-all)
+(keymap-set python-mode-map "C-c C ." #'pytest-cov-one)
+(keymap-set python-mode-map "C-c C !" #'pytest-cov-again)
+(keymap-set python-mode-map "C-c C m" #'pytest-cov-module)
+(keymap-set python-mode-map "C-c C a" #'pytest-cov-all)
 
 (provide 'init-pytest)
 ;;; init-pytest.el ends here

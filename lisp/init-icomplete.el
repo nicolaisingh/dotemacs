@@ -69,21 +69,21 @@ it with `*' instead and vice versa."
                                                 (buffer (styles . (basic flex partial-completion)))))
 
     (let ((map icomplete-minibuffer-map))
-      ;; (define-key map (kbd "SPC") #'star-before-word-completion)
-      (define-key map (kbd "SPC") #'space-dash-star)
-      (define-key map (kbd "S-SPC") (lambda () (interactive) (self-insert-command 1 ? )))
-      (define-key map (kbd "C-S-j") #'icomplete-force-complete)
-      (define-key map (kbd "C-n") #'icomplete-forward-completions)
-      (define-key map (kbd "C-p") #'icomplete-backward-completions)
-      (define-key map (kbd "C-c M-w") #'minibuffer-selection-kill-ring-save)
-      (define-key map (kbd "C-?") (lambda ()
-                                    (interactive)
-                                    (minibuffer-hide-completions)))
-      (define-key map (kbd "C-^") (lambda ()
-                                    (interactive)
-                                    (setq-local max-mini-window-height
-                                                (if (< max-mini-window-height 0.3)
-                                                    0.3 0.75))))))
+      ;; (keymap-set map "SPC" #'star-before-word-completion)
+      (keymap-set map "SPC" #'space-dash-star)
+      (keymap-set map "S-SPC" (lambda () (interactive) (self-insert-command 1 ? )))
+      (keymap-set map "C-S-j" #'icomplete-force-complete)
+      (keymap-set map "C-n" #'icomplete-forward-completions)
+      (keymap-set map "C-p" #'icomplete-backward-completions)
+      (keymap-set map "C-c M-w" #'minibuffer-selection-kill-ring-save)
+      (keymap-set map "C-?" (lambda ()
+                              (interactive)
+                              (minibuffer-hide-completions)))
+      (keymap-set map "C-^" (lambda ()
+                              (interactive)
+                              (setq-local max-mini-window-height
+                                          (if (< max-mini-window-height 0.3)
+                                              0.3 0.75))))))
 
   (add-hook 'icomplete-minibuffer-setup-hook #'icomplete-my-config))
 
@@ -98,8 +98,8 @@ it with `*' instead and vice versa."
         read-buffer-completion-ignore-case t)
 
   (let ((map icomplete-minibuffer-map))
-    (define-key map (kbd "C-S-j") #'minibuffer-force-complete)
-    (define-key map (kbd "SPC") #'star-before-word-completion))
+    (keymap-set map "C-S-j" #'minibuffer-force-complete)
+    (keymap-set map "SPC" #'star-before-word-completion))
 
   ;; TEMPORARY: There's a bug in icomplete where the `.' and `..'
   ;; entries are not being shown in the completion list

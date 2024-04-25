@@ -20,7 +20,7 @@
 
 (defun go-mode-my-custom-keys ()
   (let ((map go-mode-map))
-    (define-key map (kbd "C-x C-s") #'go-mode-my-save-buffer)))
+    (keymap-set map "C-x C-s" #'go-mode-my-save-buffer)))
 
 (add-hook 'go-mode-hook #'init-go-lsp)
 (add-hook 'go-mode-hook #'go-mode-my-custom-keys)

@@ -8,24 +8,24 @@
 
 (require 'multiple-cursors)
 
-(global-set-key (kbd "C-c mc e") #'mc/edit-lines)
-(global-set-key (kbd "C-c mc C-a") #'mc/edit-beginnings-of-lines)
-(global-set-key (kbd "C-c mc C-e") #'mc/edit-ends-of-lines)
-(global-set-key (kbd "C-c mc C-SPC") #'mc/mark-all-in-region)
-(global-set-key (kbd "C-c mc C-M-SPC") #'mc/mark-all-in-region-regexp)
-(global-set-key (kbd "C-c mc i n") #'mc/insert-numbers)
-(global-set-key (kbd "C-c mc i l") #'mc/insert-letters)
-(global-set-key (kbd "C-c mc C-n") #'mc/mark-next-like-this)
-(global-set-key (kbd "C-c mc C-p") #'mc/mark-previous-like-this)
+(keymap-global-set "C-c m c e" #'mc/edit-lines)
+(keymap-global-set "C-c m c C-a" #'mc/edit-beginnings-of-lines)
+(keymap-global-set "C-c m c C-e" #'mc/edit-ends-of-lines)
+(keymap-global-set "C-c m c C-SPC" #'mc/mark-all-in-region)
+(keymap-global-set "C-c m c C-M-SPC" #'mc/mark-all-in-region-regexp)
+(keymap-global-set "C-c m c i n" #'mc/insert-numbers)
+(keymap-global-set "C-c m c i l" #'mc/insert-letters)
+(keymap-global-set "C-c m c C-n" #'mc/mark-next-like-this)
+(keymap-global-set "C-c m c C-p" #'mc/mark-previous-like-this)
 
-(define-key mc/keymap (kbd "C-c .") #'mc/mark-next-like-this)
-(define-key mc/keymap (kbd "C-c ,") #'mc/mark-previous-like-this)
-(define-key mc/keymap (kbd "C-c >") #'mc/skip-to-next-like-this)
-(define-key mc/keymap (kbd "C-c <") #'mc/skip-to-previous-like-this)
+(keymap-set mc/keymap "C-c ." #'mc/mark-next-like-this)
+(keymap-set mc/keymap "C-c ," #'mc/mark-previous-like-this)
+(keymap-set mc/keymap "C-c >" #'mc/skip-to-next-like-this)
+(keymap-set mc/keymap "C-c <" #'mc/skip-to-previous-like-this)
 
 (defun multiple-cursors-mode-my-custom-keys ()
   ;; Enable enter key while having multiple cursors
-  (define-key mc/keymap (kbd "<return>") nil))
+  (keymap-unset mc/keymap "<return>"))
 
 (add-hook 'multiple-cursors-mode-hook #'multiple-cursors-mode-my-custom-keys)
 

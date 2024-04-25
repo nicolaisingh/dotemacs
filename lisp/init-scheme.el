@@ -7,8 +7,8 @@
 ;;; Code:
 
 (defun scheme-mode-my-custom-keys ()
-  (define-key scheme-mode-map (kbd "M-RET") #'scheme-send-last-sexp)
-  (define-key scheme-mode-map (kbd "C-c m s") #'run-scheme))
+  (keymap-set scheme-mode-map "M-RET" #'scheme-send-last-sexp)
+  (keymap-set scheme-mode-map "C-c m s" #'run-scheme))
 
 (add-hook 'scheme-mode-hook #'scheme-mode-my-custom-keys)
 

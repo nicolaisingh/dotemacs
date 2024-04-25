@@ -7,7 +7,7 @@
 ;;; Code:
 
 (require 'prodigy)
-(global-set-key (kbd "C-c P p") #'prodigy)
+(keymap-global-set "C-c P p" #'prodigy)
 
 (setq prodigy-services '((:name "proton-bridge"
                                 :command "protonmail-bridge"

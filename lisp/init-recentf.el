@@ -35,7 +35,7 @@
            ;; The item "More..." needs to be eval'd
            (eval recentf-form)))))
 
-(global-set-key (kbd "C-x C-S-f") #'recentf-open-files-completing-read)
+(keymap-global-set "C-x C-S-f" #'recentf-open-files-completing-read)
 
 (provide 'init-recentf)
 ;;; init-recentf.el ends here

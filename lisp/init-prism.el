@@ -6,7 +6,7 @@
 
 ;;; Code:
 
-(global-set-key (kbd "C-c h b") #'prism-mode)
+(keymap-global-set "C-c h b" #'prism-mode)
 
 (add-hook 'lisp-mode-hook #'prism-mode)
 (add-hook 'emacs-lisp-mode-hook #'prism-mode)

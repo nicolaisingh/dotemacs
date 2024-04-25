@@ -9,7 +9,7 @@
 (require 'newsticker)
 
 (defun newsticker-my-custom-keys ()
-  (define-key newsticker-mode-map (kbd "<tab>") 'newsticker-show-entry))
+  (keymap-set newsticker-mode-map "<tab>" 'newsticker-show-entry))
 
 (defun newsticker--cache-update-advice (orig-fun &rest args)
   (message "newsticker--cache-update called, doing nothing"))

@@ -10,9 +10,9 @@
 (require 'tree-mode)
 
 (defun json-navigator-mode-my-custom-keys ()
-  (define-key json-navigator-mode-map (kbd "SPC") #'tree-mode-expand-level)
-  (define-key json-navigator-mode-map (kbd "n") #'widget-forward)
-  (define-key json-navigator-mode-map (kbd "p") #'widget-backward))
+  (keymap-set json-navigator-mode-map "SPC" #'tree-mode-expand-level)
+  (keymap-set json-navigator-mode-map "n" #'widget-forward)
+  (keymap-set json-navigator-mode-map "p" #'widget-backward))
 
 (add-hook 'json-navigator-mode-hook #'json-navigator-mode-my-custom-keys)
 

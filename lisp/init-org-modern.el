@@ -32,7 +32,7 @@
         (t (progn (org-modern-mode -1)
                   (setq-local line-spacing nil)))))
 
-(define-key org-mode-map (kbd "C-c o m") #'toggle-org-modern-mode)
+(keymap-set org-mode-map "C-c o m" #'toggle-org-modern-mode)
 
 (set-face-attribute 'org-modern-label nil
                     :height 0.8)

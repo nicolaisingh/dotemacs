@@ -20,7 +20,7 @@
         (cov-mode 1))
     (call-interactively #'cov-mode)))
 
-(define-key python-mode-map (kbd "C-c C C") #'cov-my-cov-mode)
+(keymap-set python-mode-map "C-c C C" #'cov-my-cov-mode)
 
 (provide 'init-cov)
 ;;; init-cov.el ends here

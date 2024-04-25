@@ -50,7 +50,7 @@ currently selected."
                                               ("Sections" "^\n#+ *\\(.*\\)\n$" 1))))
 (add-hook 'restclient-mode-hook #'imenu-restclient-mode)
 
-(global-set-key (kbd "C-c i m") #'imenu-list)
+(keymap-global-set "C-c i m" #'imenu-list)
 
 (provide 'init-imenu-list)
 ;;; init-imenu-list.el ends here

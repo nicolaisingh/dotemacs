@@ -16,11 +16,11 @@
 
 (defvar nixos-helpers-map
   (let ((map (make-sparse-keymap)))
-    (define-key map "c" #'my-find-nixos-config-file)
+    (keymap-set map "c" #'my-find-nixos-config-file)
     map)
   "Key map for my NixOS helper functions.")
 
-(global-set-key (kbd "C-c n") nixos-helpers-map)
+(keymap-global-set "C-c n" nixos-helpers-map)
 
 (add-hook 'nix-mode-hook #'smartparens-mode)
 

@@ -79,9 +79,9 @@
   (when hippie-expand-line-mode
     (hippie-expand-filename-mode -1)))
 
-(global-set-key (kbd "M-/") #'hippie-expand)
-(global-set-key (kbd "C-c e f") #'hippie-expand-filename-mode)
-(global-set-key (kbd "C-c e l") #'hippie-expand-line-mode)
+(keymap-global-set "M-/" #'hippie-expand)
+(keymap-global-set "C-c e f" #'hippie-expand-filename-mode)
+(keymap-global-set "C-c e l" #'hippie-expand-line-mode)
 
 (provide 'init-hippie-expand)
 ;;; init-hippie-expand.el ends here

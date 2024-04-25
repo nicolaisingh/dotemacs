@@ -8,8 +8,8 @@
 
 (defun xref-custom-keys ()
   (interactive)
-  (define-key xref--xref-buffer-mode-map (kbd "b") #'outline-backward-same-level)
-  (define-key xref--xref-buffer-mode-map (kbd "f") #'outline-forward-same-level))
+  (keymap-set xref--xref-buffer-mode-map "b" #'outline-backward-same-level)
+  (keymap-set xref--xref-buffer-mode-map "f" #'outline-forward-same-level))
 
 (add-hook 'xref--xref-buffer-mode-hook #'outline-minor-mode)
 (add-hook 'xref--xref-buffer-mode-hook #'xref-custom-keys)

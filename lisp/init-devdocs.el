@@ -6,7 +6,7 @@
 
 ;;; Code:
 
-(global-set-key (kbd "C-h D") #'devdocs-lookup)
+(keymap-global-set "C-h D" #'devdocs-lookup)
 
 (provide 'init-devdocs)
 ;;; init-devdocs.el ends here

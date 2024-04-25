@@ -25,7 +25,7 @@
       tex-dvi-view-command "emacsclient -e \"(find-file-other-window \\\"*\\\")\"")
 
 (defun latex-mode-my-config ()
-  (define-key latex-mode-map (kbd "C-c C-f") #'tex-file-custom))
+  (keymap-set latex-mode-map "C-c C-f" #'tex-file-custom))
 
 (add-hook 'latex-mode-hook #'latex-mode-my-config)
 

@@ -39,7 +39,7 @@
       (switch-to-buffer chronos-buffer-name)
     (chronos-initialize)))
 
-(global-set-key (kbd "C-c T") #'chronos-load)
+(keymap-global-set "C-c T" #'chronos-load)
 
 (provide 'init-chronos)
 ;;; init-chronos.el ends here

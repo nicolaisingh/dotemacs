@@ -144,8 +144,8 @@ collection.  Use revert-gc-cons-percentage to restore the value."
 
 ;; Move facemenu-keymap to another binding
 (require 'facemenu)
-(define-key global-map (kbd "M-o") nil)
-(define-key global-map (kbd "C-c f m") 'facemenu-keymap)
+(keymap-global-unset "M-o")
+(keymap-global-set "C-c f m" #'facemenu-keymap)
 
 ;; Prefix definitions
 (define-prefix-command 'my-debug-map)
@@ -208,11 +208,11 @@ collection.  Use revert-gc-cons-percentage to restore the value."
 (require 'init-treesit)
 
 (require 'window-dedicated)
-(define-key global-map (kbd "C-c w d") #'window-dedicated-mode)
+(keymap-global-set "C-c w d" #'window-dedicated-mode)
 
 (require 'winfast)
-(define-key global-map (kbd "M-o") #'other-window)
-(define-key global-map (kbd "M-`") #'winfast-mode)
+(keymap-global-set "M-o" #'other-window)
+(keymap-global-set "M-`" #'winfast-mode)
 
 (require 'init-alert)
 (require 'init-aggressive-indent)
@@ -318,27 +318,25 @@ collection.  Use revert-gc-cons-percentage to restore the value."
 (keymap-set my-debug-map "v" #'debug-on-variable-change)
 (keymap-set my-debug-map "V" #'cancel-debug-on-variable-change)
 
+(keymap-global-set "C-c d l" #'dictionary-search)
 (keymap-global-set "C-c h l" #'hl-line-mode)
+(keymap-global-set "C-c l d" #'duplicate-line)
 (keymap-global-set "C-c v f" #'virtual-auto-fill-mode)
 (keymap-global-set "C-c w '" #'insert-pair)
 (keymap-global-set "C-c w <" #'insert-pair)
 (keymap-global-set "C-c w [" #'insert-pair)
 (keymap-global-set "C-c w \"" #'insert-pair)
-(keymap-global-set "C-x B" #'bury-buffer)
-(keymap-global-set "C-x C-S-c" #'save-buffers-kill-emacs)
-(keymap-global-set "C-x C-m" (key-binding (kbd "M-x")))
-(keymap-global-set "C-x a /" #'unexpand-abbrev)
-(keymap-global-set "M-SPC" #'cycle-spacing)
-(keymap-global-set "C-x K" #'kill-this-buffer)
-
-(keymap-global-set "C-h C-c" nil)
-(keymap-global-set "C-h C-f" nil)
 (keymap-global-set "C-h C-k" #'describe-keymap)
 (keymap-global-set "C-h u f" #'find-library)
 (keymap-global-set "C-h u p" #'list-packages)
-
-(keymap-global-set "C-c d l" #'dictionary-search)
-(keymap-global-set "C-c l d" #'duplicate-line)
+(keymap-global-set "C-x B" #'bury-buffer)
+(keymap-global-set "C-x C-S-c" #'save-buffers-kill-emacs)
+(keymap-global-set "C-x C-m" (key-binding (kbd "M-x")))
+(keymap-global-set "C-x K" #'kill-this-buffer)
+(keymap-global-set "C-x a /" #'unexpand-abbrev)
+(keymap-global-set "M-SPC" #'cycle-spacing)
+(keymap-global-unset "C-h C-c")
+(keymap-global-unset "C-h C-f")
 
 (provide 'init)
 ;;; init.el ends here

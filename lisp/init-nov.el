@@ -22,7 +22,7 @@
   (setq-local nov-text-width n)
   (nov-render-document))
 
-(define-key nov-mode-map (kbd "f") #'nov-update-text-width)
+(keymap-set nov-mode-map "f" #'nov-update-text-width)
 
 (provide 'init-nov)
 ;;; init-nov.el ends here

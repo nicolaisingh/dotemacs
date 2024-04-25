@@ -41,10 +41,10 @@ instead of burying it."
 (setq dired-toggle-window-side 'left)
 
 (defun dired-toggle-mode-my-custom-keys ()
-  (define-key dired-toggle-mode-map (kbd "RET") #'dired-toggle-my-find-file)
-  (define-key dired-toggle-mode-map (kbd "q") #'dired-toggle-my-quit)
-  (define-key dired-toggle-mode-map (kbd "^") #'dired-toggle-up-directory)
-  (define-key dired-toggle-mode-map (kbd "z") #'dired-toggle-up-directory))
+  (keymap-set dired-toggle-mode-map "RET" #'dired-toggle-my-find-file)
+  (keymap-set dired-toggle-mode-map "q" #'dired-toggle-my-quit)
+  (keymap-set dired-toggle-mode-map "^" #'dired-toggle-up-directory)
+  (keymap-set dired-toggle-mode-map "z" #'dired-toggle-up-directory))
 
 (add-hook 'dired-toggle-mode-hook #'dired-toggle-mode-my-custom-keys)
 (add-hook 'dired-toggle-mode-hook
@@ -53,7 +53,7 @@ instead of burying it."
             (setq-local visual-line-fringe-indicators '(nil right-curly-arrow))
             (setq-local word-wrap nil)))
 
-(global-set-key (kbd "C-c d t") #'dired-toggle)
+(keymap-global-set "C-c d t" #'dired-toggle)
 
 (provide 'init-dired-toggle)
 ;;; init-dired-toggle.el ends here
