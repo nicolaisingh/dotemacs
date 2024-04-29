@@ -1,24 +1,22 @@
-;;; early-init.el --- Early init configuration
+;;; early-init.el --- Early init configuration -*- lexical-binding: t -*-
 
 ;;; Commentary:
 
-;; This contains early init configuration, mostly GUI-related.
+;; This contains early-init configuration.
 
 ;;; Code:
 
-(setq-default cursor-type t)
-(setq inhibit-startup-screen 1)
-(setq visible-bell 1)
-(setq ring-bell-function 'ignore)
-(setq blink-cursor-interval 0.25)
 (setq blink-cursor-blinks 15)
-
-(menu-bar-mode -1)
-(tool-bar-mode -1)
-(scroll-bar-mode -1)
+(setq blink-cursor-interval 0.25)
+(setq cursor-type t)
+(setq inhibit-startup-screen t)
+(setq ring-bell-function 'ignore)
+(setq visible-bell t)
 (blink-cursor-mode -1)
-
 (column-number-mode 1)
+(menu-bar-mode -1)
+(scroll-bar-mode -1)
+(tool-bar-mode -1)
 
 ;; Make the fringe slightly thicker
 ;; (add-to-list 'fringe-styles '("padded" 12))

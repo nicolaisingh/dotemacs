@@ -1,4 +1,4 @@
-;;; init-theme.el --- Init customization
+;;; theme.el --- Color theme -*- lexical-binding: t -*-
 
 ;;; Commentary:
 
@@ -76,5 +76,5 @@
                       :box `(:line-width (1 . 1)
                                          :style released-button)))
 
-(provide 'init-theme)
-;;; init-theme.el ends here
+(provide 'theme)
+;;; theme.el ends here

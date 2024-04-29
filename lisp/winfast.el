@@ -14,8 +14,37 @@
 (defvar winfast--winfast-mode-line-box-style
   `(:line-width 1 :color ,winfast--winfast-mode-line-color :style released-button))
 
+(defvar winfast-mode-map
+  (let ((map (make-sparse-keymap)))
+    (keymap-set map "<remap> <winfast-mode>" #'other-window)
+    (keymap-set map "M-o" #'other-window)
+    (keymap-set map "M-0" #'delete-window)
+    (keymap-set map "M-1" #'delete-other-windows)
+    (keymap-set map "M-2" #'split-window-below)
+    (keymap-set map "M-3" #'split-window-right)
+    (keymap-set map "M-m" #'minimize-window)
+    (keymap-set map "M-k" #'kill-current-buffer)
+    (keymap-set map "M-M" #'maximize-window)
+    (keymap-set map "M-=" #'balance-windows)
+    (keymap-set map "M-P" #'previous-buffer)
+    (keymap-set map "M-N" #'next-buffer)
+
+    (keymap-set map "M-f" #'winfast-toggle-fullscreen-window)
+    (keymap-set map "M-s" #'winfast-swap-window-with-other)
+    (keymap-set map "M-r" #'winfast-swap-window-with-other-reverse)
+    (keymap-set map "M-<return>" #'winfast-swap-window-with-largest)
+
+    (keymap-set map "M-]" #'winfast-enlarge-window)
+    (keymap-set map "M-[" #'winfast-shrink-window)
+    (keymap-set map "M-}" #'winfast-enlarge-window-horizontally)
+    (keymap-set map "M-{" #'winfast-shrink-window-horizontally)
+    map)
+  "Keymap for `winfast-mode'.
+Any other key binding used which is not in the map will turn off
+`winfast-mode'.")
+
 (defun winfast-swap-window-with-other (count)
-  "Exchange the selected window with the next one."
+  "Exchange the selected window with the next one COUNT times."
   (interactive "p")
   (let* ((original-window (selected-window))
          (current-buffer (window-buffer (selected-window))))
@@ -24,7 +53,7 @@
     (set-window-buffer (selected-window) current-buffer)))
 
 (defun winfast-swap-window-with-other-reverse (count)
-  "Exchange the selected window with the previous one."
+  "Exchange the selected window with the previous one COUNT times."
   (interactive "p")
   (let* ((original-window (selected-window))
          (current-buffer (window-buffer (selected-window))))
@@ -103,7 +132,7 @@ called again."
       (winfast-mode-done))))
 
 (defun winfast-mode-done ()
-  "Cleanup before fully turning off winfast-mode."
+  "Cleanup before fully turning off `winfast-mode'."
   (remove-hook 'pre-command-hook #'winfast-pre-command-hook)
   (set-face-attribute 'mode-line nil
                       :background winfast--mode-line-color
@@ -126,38 +155,10 @@ called again."
   (interactive)
   (enlarge-window 5))
 
-(defvar winfast-mode-map
-  (let ((map (make-sparse-keymap)))
-    (keymap-set map "<remap> <winfast-mode>" #'other-window)
-    (keymap-set map "M-o" #'other-window)
-    (keymap-set map "M-0" #'delete-window)
-    (keymap-set map "M-1" #'delete-other-windows)
-    (keymap-set map "M-2" #'split-window-below)
-    (keymap-set map "M-3" #'split-window-right)
-    (keymap-set map "M-m" #'minimize-window)
-    (keymap-set map "M-k" #'kill-current-buffer)
-    (keymap-set map "M-M" #'maximize-window)
-    (keymap-set map "M-=" #'balance-windows)
-    (keymap-set map "M-P" #'previous-buffer)
-    (keymap-set map "M-N" #'next-buffer)
-
-    (keymap-set map "M-f" #'winfast-toggle-fullscreen-window)
-    (keymap-set map "M-s" #'winfast-swap-window-with-other)
-    (keymap-set map "M-r" #'winfast-swap-window-with-other-reverse)
-    (keymap-set map "M-<return>" #'winfast-swap-window-with-largest)
-
-    (keymap-set map "M-]" #'winfast-enlarge-window)
-    (keymap-set map "M-[" #'winfast-shrink-window)
-    (keymap-set map "M-}" #'winfast-enlarge-window-horizontally)
-    (keymap-set map "M-{" #'winfast-shrink-window-horizontally)
-    map)
-  "Keymap for `winfast-mode'.
-Any other key binding used which is not in the map will turn off
-`winfast-mode'.")
-
 (define-minor-mode winfast-mode
   "Minor mode for fast management of Emacs windows."
   :global t
+  :group 'winfast
   :init-value nil
   :lighter " WinFast"
   :keymap winfast-mode-map
