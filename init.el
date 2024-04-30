@@ -1193,8 +1193,8 @@ be file B."
     (emms-playlist-set-playlist-buffer emms-playlist-buffer-name)
     (call-interactively #'emms-play-playlist)))
 
-(defun emms-my-metaplaylist-load-playlist (file)
-  (interactive (list (read-file-name "Load playlist file: "
+(defun emms-my-metaplaylist-play-playlist (file)
+  (interactive (list (read-file-name "Play playlist file: "
                                      my-emms-playlist-directory
                                      my-emms-playlist-directory
                                      t)))
@@ -1217,17 +1217,16 @@ be file B."
       (with-current-buffer playlist-name
         (emms-insert-playlist file)))))
 
-(defun emms-my-metaplaylist-load-all-playlists ()
+(defun emms-my-metaplaylist-find-all-playlists ()
   (interactive)
   (let ((directory (if current-prefix-arg
-                       (read-directory-name "Load all playlists in: "
+                       (read-directory-name "Find all playlists in: "
                                             my-emms-playlist-directory
                                             my-emms-playlist-directory
                                             t)
                      my-emms-playlist-directory)))
-    (message "Loading all playlist files at %s" directory)
-    (dolist (file
-             (directory-files directory t directory-files-no-dot-files-regexp))
+    (message "Finding all playlist files at %s" directory)
+    (dolist (file (directory-files directory t directory-files-no-dot-files-regexp))
       (emms-my-metaplaylist-find-playlist file)))
   (emms-metaplaylist-mode-update))
 
@@ -1236,7 +1235,7 @@ be file B."
   (when (not (emms-playlist-buffer-list))
     ;; Create an empty playlist buffer if none exist yet
     (emms-playlist-current-clear)
-    (emms-my-metaplaylist-load-all-playlists))
+    (emms-my-metaplaylist-find-all-playlists))
   (emms-metaplaylist-mode-go))
 
 (defun emms-my-playlist-save ()
@@ -1284,11 +1283,10 @@ The default format is specified by `emms-source-playlist-default-format'."
 (keymap-global-set "C-c M %" #'emms-my-toggle-random-playlist)
 (keymap-global-set "C-c M 1" #'emms-my-toggle-repeat-track)
 (keymap-global-set "C-c M B" #'emms-smart-browse)
-(keymap-global-set "C-c M F" #'emms-show-all)
-(keymap-global-set "C-c M L" #'emms-my-metaplaylist-load-playlist)
+(keymap-global-set "C-c M i" #'emms-show-all)
+(keymap-global-set "C-c M L" #'emms-my-metaplaylist-play-playlist)
 (keymap-global-set "C-c M P" #'emms-pause)
 (keymap-global-set "C-c M b" #'emms-my-metaplaylist-mode-go)
-(keymap-global-set "C-c M f" #'emms-show)
 (keymap-global-set "C-c M l" #'emms-playlist-mode-switch-buffer)
 (keymap-global-set "C-c M m" #'emms-mode-line-mode)
 (keymap-global-set "C-c M n" #'emms-next)
@@ -1299,7 +1297,7 @@ The default format is specified by `emms-source-playlist-default-format'."
 (keymap-set emms-browser-mode-map "R" #'emms-browser-replace-playlist)
 (keymap-set emms-browser-mode-map "a" #'emms-add-directory-tree)
 (keymap-set emms-mark-mode-map "M" #'emms-mark-mode-disable)
-(keymap-set emms-metaplaylist-mode-map "G" #'emms-my-metaplaylist-load-all-playlists)
+(keymap-set emms-metaplaylist-mode-map "G" #'emms-my-metaplaylist-find-all-playlists)
 (keymap-set emms-metaplaylist-mode-map "f" #'emms-my-metaplaylist-find-playlist)
 (keymap-set emms-metaplaylist-mode-map "z" #'emms-playlist-mode-go)
 (keymap-set emms-playlist-mode-map "%" #'emms-shuffle)
