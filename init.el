@@ -2238,13 +2238,13 @@ Useful for completion style 'partial-completion."
       org-modern-timestamp t
       org-modern-todo t
       org-modern-todo-faces '(("CANCELED" :background "gainsboro" :foreground "black" :weight normal :box (:style released-button :line-width (0 . -1)))
-                              ("DEFERRED" :background "lightpink1" :foreground "black" :weight normal :box (:style released-button :line-width (0 . -1)))
+                              ("DEFERRED" :background "azure1" :foreground "black" :weight normal :box (:style released-button :line-width (0 . -1)))
                               ("DONE" :background "honeydew1" :foreground "black" :weight normal :box (:style released-button :line-width (0 . -1)))
                               ("INBOX" :background "lightskyblue1" :foreground "black" :weight normal :box (:style released-button :line-width (0 . -1)))
-                              ("TODO" :background "lightsalmon1" :foreground "black" :weight normal :box (:style released-button :line-width (0 . -1)))
+                              ("TODO" :background "mistyrose1" :foreground "black" :weight normal :box (:style released-button :line-width (0 . -1)))
                               ("TOPIC" :background "slategray1" :foreground "black" :weight normal :box (:style released-button :line-width (0 . -1)))
-                              ("WAITING" :background "orange1" :foreground "black" :weight normal :box (:style released-button :line-width (0 . -1)))
-                              ("WIP" :background "lightsalmon1" :foreground "black" :weight normal :box (:style released-button :line-width (0 . -1)))))
+                              ("WAITING" :background "plum1" :foreground "black" :weight normal :box (:style released-button :line-width (0 . -1)))
+                              ("WIP" :background "peachpuff1" :foreground "black" :weight normal :box (:style released-button :line-width (0 . -1)))))
 (set-face-attribute 'org-modern-label nil :height 0.85)
 
 (defun my-org-modern-mode-toggle ()
