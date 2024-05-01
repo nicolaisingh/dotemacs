@@ -387,18 +387,33 @@ times."
     (setq auto-hscroll-mode value)
     (message "auto-hscroll-mode: %s" value)))
 
+(defun delete-undo-history ()
+  "Delete the undo history of this buffer."
+  (interactive)
+  (buffer-disable-undo)
+  (buffer-enable-undo))
+
+(defun my-yank-to-other-window ()
+  "Yank the current word or the region, if active, to the other window."
+  (interactive)
+  (let ((text (if (use-region-p)
+                  (buffer-substring-no-properties (region-beginning) (region-end))
+                (current-word)))
+        (separator (cond
+                    ((equal current-prefix-arg '(4)) " ")
+                    ((equal current-prefix-arg '(16)) "")
+                    (t "\n"))))
+    (save-excursion
+      (set-buffer (window-buffer (next-window)))
+      (insert separator text))))
+
+(keymap-global-set "C-c y o" #'my-yank-to-other-window)
 (keymap-global-set "C-c i TAB" #'indent-using-tabs-and-fixup)
 (keymap-global-set "C-c i SPC" #'indent-using-spaces-and-fixup)
 (keymap-global-set "C-c D ." #'benchmark-this)
 (keymap-global-set "C-c f #" #'sudo-find-alternate-file)
 (keymap-global-set "C-c f s" #'find-scratch-buffer)
 (keymap-global-set "C-c h s" #'toggle-hscroll-mode)
-
-(defun delete-undo-history ()
-  "Delete the undo history of this buffer."
-  (interactive)
-  (buffer-disable-undo)
-  (buffer-enable-undo))
 
 
 ;;;; Post-startup
@@ -2237,6 +2252,7 @@ Useful for completion style 'partial-completion."
       org-modern-radio-target '("「" t "」")
       org-modern-star nil
       org-modern-tag t
+      org-modern-tag-faces '((t :background "beige" :foreground "black" :weight normal :box (:style pressed-button :line-width (0 . -1))))
       org-modern-timestamp t
       org-modern-todo t
       org-modern-todo-faces '(("CANCELED" :background "gainsboro" :foreground "black" :weight normal :box (:style released-button :line-width (0 . -1)))
