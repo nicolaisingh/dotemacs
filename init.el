@@ -2029,7 +2029,7 @@ Useful for completion style 'partial-completion."
       org-fontify-done-headline nil
       org-fontify-todo-headline nil
       org-hide-emphasis-markers nil
-      org-hide-leading-stars t
+      org-hide-leading-stars nil
       org-image-actual-width 550
       org-indent-mode-turns-on-hiding-stars t
       org-log-into-drawer t
@@ -2075,10 +2075,12 @@ Useful for completion style 'partial-completion."
                                ("TOPIC" :foreground "dark slate blue" :weight bold)))
 
 (set-face-attribute 'org-block t :background "gray99")
-(set-face-attribute 'org-block-begin-line t :inherit 'shadow :background "gray96")
+(set-face-attribute 'org-block-begin-line t :inherit 'shadow :background "gray98")
 (set-face-attribute 'org-block-end-line t :background "gray99")
-(set-face-attribute 'org-level-1 t :height 1.15)
-(set-face-attribute 'org-level-2 t :height 1.1)
+(set-face-attribute 'org-level-1 t :height 1.1 :weight 'bold)
+(set-face-attribute 'org-level-2 t :height 1.1  :weight 'bold)
+(set-face-attribute 'org-level-3 t :height 1.0  :weight 'bold)
+(set-face-attribute 'org-level-4 t :height 1.0  :weight 'bold)
 (set-face-attribute 'org-property-value t :height 0.8 :foreground "gray50")
 (set-face-attribute 'org-special-keyword t :height 0.8)
 (set-face-attribute 'org-todo t :foreground "coral3")
@@ -2226,24 +2228,30 @@ Useful for completion style 'partial-completion."
       org-modern-keyword nil
       org-modern-list nil
       org-modern-priority t
+      org-modern-priority-faces '((?A :background "whitesmoke" :foreground "hotpink" :weight bold :box (:style released-button :line-width (0 . -1)))
+                                  (?B :background "whitesmoke" :foreground "cadetblue" :weight bold :box (:style released-button :line-width (0 . -1)))
+                                  (?C :background "whitesmoke" :foreground "gray" :weight bold :box (:style released-button :line-width (0 . -1))))
       org-modern-progress nil
       org-modern-radio-target '("「" t "」")
       org-modern-star nil
       org-modern-tag t
+      org-modern-timestamp t
       org-modern-todo t
-      org-modern-todo-faces '(("WIP" :background "tomato" :foreground "white" :weight bold)
-                              ("DEFERRED" :background "dark magenta" :foreground "white" :weight bold)
-                              ("WAITING" :background "orange" :foreground "white" :weight bold)
-                              ("CANCELED" :background "dark gray" :foreground "white" :weight bold)
-                              ("INBOX" :background "slate gray" :foreground "white" :weight bold)
-                              ("TOPIC" :background "slate gray" :foreground "white" :weight bold)))
-(set-face-attribute 'org-modern-label nil :height 0.8)
+      org-modern-todo-faces '(("CANCELED" :background "gainsboro" :foreground "black" :weight normal :box (:style released-button :line-width (0 . -1)))
+                              ("DEFERRED" :background "lightpink1" :foreground "black" :weight normal :box (:style released-button :line-width (0 . -1)))
+                              ("DONE" :background "honeydew1" :foreground "black" :weight normal :box (:style released-button :line-width (0 . -1)))
+                              ("INBOX" :background "lightskyblue1" :foreground "black" :weight normal :box (:style released-button :line-width (0 . -1)))
+                              ("TODO" :background "lightsalmon1" :foreground "black" :weight normal :box (:style released-button :line-width (0 . -1)))
+                              ("TOPIC" :background "slategray1" :foreground "black" :weight normal :box (:style released-button :line-width (0 . -1)))
+                              ("WAITING" :background "orange1" :foreground "black" :weight normal :box (:style released-button :line-width (0 . -1)))
+                              ("WIP" :background "lightsalmon1" :foreground "black" :weight normal :box (:style released-button :line-width (0 . -1)))))
+(set-face-attribute 'org-modern-label nil :height 0.85)
 
 (defun my-org-modern-mode-toggle ()
   "Toggle `org-modern-mode' with some minor customization."
   (interactive)
   (cond ((not org-modern-mode) (progn (org-modern-mode)
-                                      (setq line-spacing 0.15)))
+                                      (setq line-spacing 0.1)))
         (t (progn (org-modern-mode -1)
                   (setq line-spacing nil)))))
 
