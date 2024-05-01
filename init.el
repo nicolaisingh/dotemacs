@@ -1728,6 +1728,7 @@ Useful for completion style 'partial-completion."
 (keymap-global-set "C-c i m" #'imenu-list-minor-mode)
 (keymap-set imenu-list-major-mode-map "<return>" #'imenu-list-ret-dwim-then-quit)
 (keymap-set imenu-list-major-mode-map "C-<return>" #'imenu-list-ret-dwim)
+(keymap-set imenu-list-major-mode-map "s" #'isearch-forward)
 
 
 ;;; inf-clojure
@@ -1863,8 +1864,9 @@ Useful for completion style 'partial-completion."
 (setq magit-diff-refine-hunk t
       magit-status-goto-file-position t
       magit-status-show-hashes-in-headers t)
-(keymap-global-set "C-c g g" #'magit-status)
 (keymap-global-set "C-c g M-g" #'magit-dispatch)
+(keymap-global-set "C-c g g" #'magit-status)
+(keymap-global-set "C-c g u" #'magit-ediff-show-unstaged)
 
 
 ;;; mail
@@ -2389,7 +2391,6 @@ Useful for completion style 'partial-completion."
 (keymap-global-set "C-c n J" #'org-roam-dailies-capture-date)
 (keymap-global-set "C-c n c" #'org-roam-capture)
 (keymap-global-set "C-c n f" #'org-roam-node-find)
-(keymap-global-set "C-c n g" #'org-roam-graph)
 (keymap-global-set "C-c n j" #'org-roam-dailies-capture-today)
 (keymap-global-set "C-c n y" #'org-roam-dailies-goto-yesterday)
 (keymap-set org-mode-map "C-c n A" #'org-roam-alias-remove)
