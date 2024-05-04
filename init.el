@@ -58,6 +58,7 @@ collection.  Use revert-gc-cons-percentage to restore the value."
 (defmacro define-set-indent-tab-width-fn (width)
   "Macro to define a simple function to set `tab-width' to WIDTH."
   `(defun ,(intern (format "set-indent-tab-width-%d" width)) ()
+     (interactive)
      ,(format "Set `tab-width' to %d." width)
      (setq tab-width ,width)))
 (define-set-indent-tab-width-fn 2)
@@ -142,6 +143,10 @@ collection.  Use revert-gc-cons-percentage to restore the value."
 
 (setq show-paren-delay 0)
 
+;;; register
+
+(setq register-preview-delay 0)
+
 ;;; repeat
 
 (repeat-mode 1)
@@ -201,9 +206,11 @@ collection.  Use revert-gc-cons-percentage to restore the value."
 (define-prefix-command 'my-ctl-c-D-map)
 (define-prefix-command 'my-ctl-c-M-map)
 (define-prefix-command 'my-ctl-c-b-map)
+(define-prefix-command 'my-ctl-c-c-map)
 (define-prefix-command 'my-ctl-c-d-map)
 (define-prefix-command 'my-ctl-c-e-map)
 (define-prefix-command 'my-ctl-c-f-map)
+(define-prefix-command 'my-ctl-c-g-map)
 (define-prefix-command 'my-ctl-c-h-map)
 (define-prefix-command 'my-ctl-c-i-map)
 (define-prefix-command 'my-ctl-c-l-map)
@@ -221,9 +228,11 @@ collection.  Use revert-gc-cons-percentage to restore the value."
 (keymap-global-set "C-c D" 'my-ctl-c-D-map)
 (keymap-global-set "C-c M" 'my-ctl-c-M-map)
 (keymap-global-set "C-c b" 'my-ctl-c-b-map)
+(keymap-global-set "C-c c" 'my-ctl-c-c-map)
 (keymap-global-set "C-c d" 'my-ctl-c-d-map)
 (keymap-global-set "C-c e" 'my-ctl-c-e-map)
 (keymap-global-set "C-c f" 'my-ctl-c-f-map)
+(keymap-global-set "C-c g" 'my-ctl-c-g-map)
 (keymap-global-set "C-c h" 'my-ctl-c-h-map)
 (keymap-global-set "C-c i" 'my-ctl-c-i-map)
 (keymap-global-set "C-c l" 'my-ctl-c-l-map)
@@ -948,7 +957,8 @@ If ARG is Non-nil, the existing command log buffer is cleared."
 ;;; dired
 
 (require 'dired)
-(setq dired-dwim-target t
+(setq dired-auto-revert-buffer t
+      dired-dwim-target t
       dired-hide-details-hide-information-lines nil
       dired-hide-details-hide-symlink-targets nil
       dired-isearch-filenames t
