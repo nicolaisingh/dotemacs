@@ -1462,7 +1462,107 @@ The default format is specified by `emms-source-playlist-default-format'."
 
 
 ;;; gnus
-;; TODO
+
+(with-eval-after-load 'gnus
+  (require 'gnus-group)
+
+  (setq gnus-select-method '(nnnil "")
+        gnus-secondary-select-methods
+        `((nnmaildir "proton"
+                     (directory "~/Maildir/proton")
+                     (gnus-search-engine gnus-search-mairix
+                                         (remove-prefix ,(expand-file-name "~/Maildir/proton/")))))
+        gnus-parameters
+        '(("gaming"
+           (subscribe . "nnrss")
+           (subscribe-level . 5))
+
+          ("INBOX"
+           (total-expire . t)
+           (gnus-use-scoring nil)
+           (expiry-target . "nnmaildir+proton:Archive")
+           (expiry-wait . 84)
+           (expire-group . "nnmaildir+proton:Archive")) ; nnmaildir-specific
+
+          ("Spam"
+           (total-expire . t)
+           (expiry-target . delete)
+           (expiry-wait . 56))
+
+          ("daily.summary"
+           (gnus-show-threads nil)
+           (gnus-summary-line-format "%U%R%z%(%-20,20f%) : %s %1{%[ %&user-date; %]%}\n")
+           (gnus-article-sort-functions '(gnus-thread-sort-by-most-recent-date)))
+
+          ("notifications"
+           (gnus-summary-line-format "%U%R%z%(%-20,20f%) : %s %1{%[ %&user-date; %]%}\n")
+           (gnus-show-threads nil)
+           (gnus-article-sort-functions '(gnus-thread-sort-by-most-recent-date)))
+
+          ("notifications$"
+           (total-expire . t)
+           (expiry-target . delete)
+           (expiry-wait . 56))
+
+          ("lists"
+           (total-expire . t)
+           (expiry-target . delete)
+           (expiry-wait . 56))))
+
+  (setq gnus-activate-level 3
+        gnus-always-read-dribble-file t
+        gnus-asynchronous t
+        gnus-cacheable-groups nil
+        gnus-expert-user nil
+        gnus-generate-tree-function #'gnus-generate-horizontal-tree
+        gnus-group-line-format "%M%S%L%p%P%5y:%B%(%g%)\n"
+        gnus-inhibit-startup-message t
+        gnus-interactive-exit 'quiet
+        gnus-large-newsgroup 1000
+        gnus-level-default-subscribed 4
+        gnus-novice-user nil
+        gnus-permanently-visible-groups "INBOX"
+        gnus-read-active-file #'some
+        gnus-read-newsrc-file nil
+        gnus-save-newsrc-file nil
+        gnus-search-use-parsed-queries nil
+        gnus-sort-gathered-threads-function #'gnus-thread-sort-by-date
+        gnus-subscribe-newsgroup-method 'gnus-subscribe-topics
+        gnus-sum-thread-tree-false-root nil
+        gnus-sum-thread-tree-indent " "
+        gnus-sum-thread-tree-leaf-with-other "├── "
+        gnus-sum-thread-tree-root nil
+        gnus-sum-thread-tree-single-indent nil
+        gnus-sum-thread-tree-single-indent nil
+        gnus-sum-thread-tree-single-leaf "└── "
+        gnus-sum-thread-tree-vertical "│ "
+        gnus-summary-display-arrow t
+        gnus-summary-line-format "%U%R%z%(%-20,20f%) : %B %1{%[ %&user-date; %]%}\n"
+        gnus-summary-same-subject ""
+        gnus-thread-hide-subtree t
+        gnus-thread-sort-functions '((not gnus-thread-sort-by-number))
+        gnus-topic-display-empty-topics t
+        gnus-topic-line-format "%i[ %(%{%A: %n%}%) ]%v\n"
+        gnus-uncacheable-groups "^nnml\\|^nnfolder\\|^nnmaildir"
+        gnus-use-cache t
+        gnus-use-trees nil
+        gnus-verbose 10
+        mm-text-html-renderer 'gnus-w3m)
+
+  (defun my-gnus-offlineimap-sync ()
+    (interactive)
+    (async-shell-command "offlineimap -u ttyui" (get-buffer-create "*offlineimap*")))
+
+  (defun my-gnus-proton-trash-article (arg)
+    (interactive "P")
+    (gnus-summary-move-article arg "nnmaildir+proton:Trash"))
+
+  (keymap-set gnus-group-mode-map "v s" #'my-gnus-offlineimap-sync)
+  (keymap-set gnus-summary-mode-map "v <backspace>" #'my-gnus-proton-trash-article)
+
+  (add-hook 'gnus-group-mode-hook #'gnus-topic-mode)
+  (add-hook 'gnus-group-mode-hook #'hl-line-mode)
+  (add-hook 'gnus-summary-mode-hook #'hl-line-mode))
 
 
 ;;; go-mode
