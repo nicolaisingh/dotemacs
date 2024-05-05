@@ -2622,6 +2622,11 @@ Useful for completion style 'partial-completion."
 ;; (add-hook 'restclient-response-loaded-hook #'restclient-format-response)
 
 
+;;; savehist
+
+(savehist-mode)
+
+
 ;;; saveplace-pdf-view
 
 (require 'saveplace-pdf-view)
