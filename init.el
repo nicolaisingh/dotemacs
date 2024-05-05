@@ -440,6 +440,7 @@ times."
   (keymap-global-set "C-c h l" #'hl-line-mode)
   (keymap-global-set "C-c l d" #'duplicate-line)
   (keymap-global-set "C-c v f" #'virtual-auto-fill-mode)
+  (keymap-global-set "C-c v l" #'visual-line-fill-column-mode)
   (keymap-global-set "C-c w '" #'insert-pair)
   (keymap-global-set "C-c w <" #'insert-pair)
   (keymap-global-set "C-c w [" #'insert-pair)
@@ -2158,7 +2159,7 @@ Useful for completion style 'partial-completion."
       org-fontify-todo-headline nil
       org-hide-emphasis-markers nil
       org-hide-leading-stars nil
-      org-image-actual-width 550
+      org-image-actual-width 500
       org-indent-mode-turns-on-hiding-stars t
       org-log-into-drawer t
       org-outline-path-complete-in-steps nil
@@ -2294,8 +2295,8 @@ Useful for completion style 'partial-completion."
 (add-hook 'org-agenda-mode-hook #'hl-line-mode)
 (add-hook 'org-mode-hook #'no-indent-tabs-mode)
 (add-hook 'org-mode-hook #'my-org-mode-config)
-;; (add-hook 'org-mode-hook #'turn-on-auto-fill)
-(add-hook 'org-mode-hook #'virtual-auto-fill-mode)
+(add-hook 'org-mode-hook #'visual-line-fill-column-mode)
+(add-hook 'org-mode-hook #'org-indent-mode)
 (add-hook 'org-after-refile-insert-hook #'my-org-id-get-create)
 (add-hook 'org-capture-before-finalize-hook #'my-org-id-get-create)
 
@@ -2353,6 +2354,8 @@ Useful for completion style 'partial-completion."
 (require 'org-modern)
 (setq org-modern-block-name t
       org-modern-checkbox nil
+      org-modern-fold-stars '(("▶" . "▼") ("▷" . "▽") ("▶" . "▼") ("▷" . "▽") ("▶" . "▼"))
+      org-modern-hide-stars " "
       org-modern-keyword nil
       org-modern-list nil
       org-modern-priority t
@@ -2361,7 +2364,7 @@ Useful for completion style 'partial-completion."
                                   (?C :background "whitesmoke" :foreground "gray" :weight bold :box (:style released-button :line-width (0 . -1))))
       org-modern-progress nil
       org-modern-radio-target '("「" t "」")
-      org-modern-star nil
+      org-modern-star 'fold
       org-modern-tag t
       org-modern-tag-faces '((t :background "beige" :foreground "black" :weight normal :box (:style pressed-button :line-width (0 . -1))))
       org-modern-timestamp t
@@ -2408,7 +2411,7 @@ Useful for completion style 'partial-completion."
 ;;; org-roam
 
 (require 'org-roam)
-(defvar org-roam-content-width 50)
+(defvar org-roam-content-width 60)
 
 (setq org-roam-directory "~/org"
       org-roam-db-location "~/org/org-roam.db"
@@ -2509,7 +2512,7 @@ Useful for completion style 'partial-completion."
     (call-interactively #'org-roam-node-insert)))
 
 (add-hook 'org-roam-mode-hook (lambda ()
-                                (virtual-auto-fill-mode)
+                                (visual-line-fill-column-mode)
                                 (set-fill-column org-roam-content-width)))
 
 (keymap-global-set "C-c n %" #'org-roam-node-random)
