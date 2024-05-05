@@ -2091,9 +2091,10 @@ Useful for completion style 'partial-completion."
 
 ;;; nix-mode
 
-(require 'nix-mode)
-(add-to-list 'auto-mode-alist  '("\\.nix\\'" . nix-mode))
-(add-hook 'nix-mode-hook #'smartparens-mode)
+(with-eval-after-load 'nix-mode
+  (add-hook 'nix-mode-hook #'smartparens-mode)
+  (add-hook 'nix-mode-hook #'eglot-ensure))
+
 (defun find-nixos-config-file ()
   (interactive)
   (find-file "~/nix/configuration.nix"))
