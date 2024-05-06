@@ -135,6 +135,10 @@ collection.  Use revert-gc-cons-percentage to restore the value."
 
 (setq tab-always-indent 'complete)
 
+;;; minibuffer
+
+(setq completions-format 'one-column)
+
 ;;; novice
 
 (setq disabled-command-function nil)
@@ -2142,6 +2146,13 @@ Useful for completion style 'partial-completion."
 (defun org-refile-target-projects ()
   (directory-files "~/org/projects" t directory-files-no-dot-files-regexp))
 
+(defun my-add-org-property-dir (&rest args)
+  "Add DIR property to the org element."
+  (unless (org-entry-get (point) "DIR")
+    (org-set-property "DIR" (concat org-attach-id-dir
+                                    (file-name-base (buffer-name))))))
+(advice-add 'org-attach :before #'my-add-org-property-dir)
+
 (setq org-adapt-indentation nil
       org-agenda-category-icon-alist '()
       org-agenda-search-view-max-outline-level 2
@@ -2149,6 +2160,7 @@ Useful for completion style 'partial-completion."
       org-archive-location "archive/%s::"
       org-attach-expert nil
       org-attach-id-dir "~/org/data/"        ; To allow viewing attachments even when archived
+      org-attach-preferred-new-method 'dir
       org-attach-store-link-p 'attached
       org-auto-align-tags nil
       org-complete-tags-always-offer-all-agenda-tags t
