@@ -420,6 +420,9 @@ times."
       (set-buffer (window-buffer (next-window)))
       (insert separator text))))
 
+(defun my-sanitize-string (str)
+  (replace-regexp-in-string "[^[:alnum:]]" "_" str))
+
 (keymap-global-set "C-c y o" #'my-yank-to-other-window)
 (keymap-global-set "C-c i TAB" #'indent-using-tabs-and-fixup)
 (keymap-global-set "C-c i SPC" #'indent-using-spaces-and-fixup)
@@ -2146,13 +2149,6 @@ Useful for completion style 'partial-completion."
 (defun org-refile-target-projects ()
   (directory-files "~/org/projects" t directory-files-no-dot-files-regexp))
 
-(defun my-add-org-property-dir (&rest args)
-  "Add DIR property to the org element."
-  (unless (org-entry-get (point) "DIR")
-    (org-set-property "DIR" (concat org-attach-id-dir
-                                    (file-name-base (buffer-name))))))
-(advice-add 'org-attach :before #'my-add-org-property-dir)
-
 (setq org-adapt-indentation nil
       org-agenda-category-icon-alist '()
       org-agenda-search-view-max-outline-level 2
@@ -2303,6 +2299,19 @@ Useful for completion style 'partial-completion."
                            ;; instead
                            (buffer-file-name (org-capture-get :buffer t))))
     (org-id-get-create)))
+
+(defun my-add-org-property-dir (&rest _)
+  "Add DIR property to the org element."
+  (unless (org-entry-get (point) "DIR")
+    (let* ((base-name (file-name-base (buffer-name)))
+           (relative-dir (if (not (equal base-name "inbox"))
+                             base-name
+                           (org-back-to-heading-or-point-min)
+                           (or (plist-get (cadr (org-element-at-point)) :raw-value)
+                               "inbox_header"))))
+      (org-set-property "DIR" (concat org-attach-id-dir
+                                      (downcase (my-sanitize-string relative-dir)))))))
+(advice-add 'org-attach :before #'my-add-org-property-dir)
 
 (add-hook 'org-agenda-mode-hook #'hl-line-mode)
 (add-hook 'org-mode-hook #'no-indent-tabs-mode)
@@ -2498,9 +2507,6 @@ Useful for completion style 'partial-completion."
     (org-back-to-heading t)
     (while (org-up-heading-safe))
     (org-get-tags nil t)))
-
-(defun my-sanitize-string (str)
-  (replace-regexp-in-string "[^[:alnum:]]" "_" str))
 
 (defun my-org-roam-extract-subtree-inbox-entry ()
   "Use the tag in the root topic node as the destination directory within `org-roam-directory'."
