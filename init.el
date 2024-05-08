@@ -2311,7 +2311,8 @@ Useful for completion style 'partial-completion."
                                "inbox_header"))))
       (org-set-property "DIR" (concat org-attach-id-dir
                                       (downcase (my-sanitize-string relative-dir)))))))
-(advice-add 'org-attach :before #'my-add-org-property-dir)
+;; Covers both org-attach and org-attach-dired-to-subtree
+(advice-add 'org-attach-attach :before #'my-add-org-property-dir)
 
 (add-hook 'org-agenda-mode-hook #'hl-line-mode)
 (add-hook 'org-mode-hook #'no-indent-tabs-mode)

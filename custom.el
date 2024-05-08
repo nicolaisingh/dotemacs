@@ -94,9 +94,7 @@
                              pdf-tools))
  '(package-vc-selected-packages
    '((saveplace-pdf-view :vc-backend Git :url
-                         "https://github.com/nicolaisingh/saveplace-pdf-view.git")
-     (emms :vc-backend Git :url
-           "https://git.savannah.gnu.org/git/emms.git")))
+                         "https://github.com/nicolaisingh/saveplace-pdf-view.git")))
  '(plantuml-default-exec-mode 'jar)
  '(save-abbrevs 'silently)
  '(tab-bar-auto-width-max '(200 20))
