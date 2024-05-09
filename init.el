@@ -2386,7 +2386,8 @@ Useful for completion style 'partial-completion."
                                   (?C :background "whitesmoke" :foreground "gray" :weight bold :box (:style released-button :line-width (0 . -1))))
       org-modern-progress nil
       org-modern-radio-target '("「" t "」")
-      org-modern-star 'fold
+      org-modern-replace-stars "▶▷▶▷▶▷"
+      org-modern-star 'replace
       org-modern-tag t
       org-modern-tag-faces '((t :background "beige" :foreground "black" :weight normal :box (:style pressed-button :line-width (0 . -1))))
       org-modern-timestamp t
