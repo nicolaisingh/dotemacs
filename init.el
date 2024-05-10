@@ -1827,6 +1827,38 @@ Useful for completion style 'partial-completion."
                                          (visual-line-mode 1))))
 
 
+;;; image-dired
+
+(with-eval-after-load 'dired
+  (setq image-dired-marking-shows-next nil
+        image-dired-thumb-margin 10
+        image-dired-thumb-relief 1
+        image-dired-thumbnail-storage 'standard)
+  (keymap-set dired-mode-map "C-t ." (defun image-dired-current-directory ()
+                                       (interactive)
+                                       (image-dired dired-directory)))
+  (keymap-set dired-mode-map "C-t 0" (defun image-dired-standard-thumbnails ()
+                                       (interactive)
+                                       (setq image-dired-thumbnail-storage 'standard)))
+  (keymap-set dired-mode-map "C-t 1" (defun image-dired-large-thumbnails ()
+                                       (interactive)
+                                       (setq image-dired-thumbnail-storage 'standard-large)))
+  (keymap-set dired-mode-map "C-t 2" (defun image-dired-x-large-thumbnails ()
+                                       (interactive)
+                                       (setq image-dired-thumbnail-storage 'standard-x-large)))
+  (keymap-set dired-mode-map "C-t 3" (defun image-dired-xx-large-thumbnails ()
+                                       (interactive)
+                                       (setq image-dired-thumbnail-storage 'standard-xx-large)))
+  (defun my-image-dired-config ()
+    (let ((map image-dired-thumbnail-mode-map))
+      (keymap-set map "<tab>" #'image-dired-forward-image)
+      (keymap-set map "<backtab>" #'image-dired-backward-image)
+      (keymap-set map "f" #'image-dired-forward-image)
+      (keymap-set map "b" #'image-dired-backward-image)
+      (keymap-set map "n" #'image-dired-next-line)
+      (keymap-set map "p" #'image-dired-previous-line)))
+  (add-hook 'image-dired-thumbnail-mode-hook #'my-image-dired-config))
+
 ;;; imenu
 
 (defun my-imenu-emacs-lisp-mode ()
