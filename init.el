@@ -200,6 +200,8 @@ collection.  Use revert-gc-cons-percentage to restore the value."
 
 (setq same-window-regexps '("^magit: .*$"
                             "^magit-status: .*$"))
+(keymap-global-set "M-o" #'other-window)
+
 ;;; winner
 
 (winner-mode 1)
@@ -1429,6 +1431,11 @@ The default format is specified by `emms-source-playlist-default-format'."
 (keymap-global-set "C-c e {" #'er/mark-outside-pairs)
 (keymap-global-set "C-c e '" #'er/mark-inside-quotes)
 (keymap-global-set "C-c e \"" #'er/mark-outside-quotes)
+
+
+;;; ffap
+
+(keymap-global-set "C-c f ." #'ffap)
 
 
 ;;; find-dired
@@ -2962,7 +2969,6 @@ Useful for completion style 'partial-completion."
 ;;; winfast
 
 (require 'winfast)
-(keymap-global-set "M-o" #'other-window)
 (keymap-global-set "M-`" #'winfast-mode)
 
 
