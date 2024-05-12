@@ -423,7 +423,7 @@ times."
       (insert separator text))))
 
 (defun my-sanitize-string (str)
-  (replace-regexp-in-string "[^[:alnum:]]" "_" str))
+  (replace-regexp-in-string "[^[:alnum:]-]" "_" str))
 
 (keymap-global-set "C-c y o" #'my-yank-to-other-window)
 (keymap-global-set "C-c i TAB" #'indent-using-tabs-and-fixup)
