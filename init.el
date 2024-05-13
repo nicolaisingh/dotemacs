@@ -190,7 +190,9 @@ collection.  Use revert-gc-cons-percentage to restore the value."
 
 ;;; tab-bar
 
+(setq tab-bar-tab-hints t)
 (keymap-global-set "C-x t T" #'tab-bar-mode)
+(keymap-global-set "C-`" #'tab-bar-select-tab)
 
 ;;; vc
 
@@ -568,6 +570,17 @@ times."
                              (sev (plist-get info :severity))
                              (len (length mes)))
                         (alert-legacy-log-notify mes sev len))))
+
+
+;;; avy
+
+(require 'avy)
+(setq avy-timeout-seconds 0.4)
+(set-face-attribute 'avy-lead-face nil :background "lightgoldenrod1" :foreground "black")
+(set-face-attribute 'avy-lead-face-0 nil :background "lightgoldenrod1" :foreground "black")
+(set-face-attribute 'avy-lead-face-1 nil :background "lightgoldenrod1" :foreground "black")
+(set-face-attribute 'avy-lead-face-2 nil :background "lightgoldenrod1" :foreground "black")
+(keymap-global-set "C-z C-v" #'avy-goto-char-timer)
 
 
 ;;; browse-kill-ring
@@ -976,7 +989,7 @@ If ARG is Non-nil, the existing command log buffer is cleared."
       dired-recursive-copies 'always
       dired-recursive-deletes 'always
       my-dired-listing-switches "--group-directories-first -lhv"
-      my-dired-listing-a-switch " -a")
+      my-dired-listing-a-switch "")
 
 (when (eq system-type 'darwin)
   ;; Don't forget `brew install coreutils' in MacOS
@@ -2425,7 +2438,7 @@ Useful for completion style 'partial-completion."
                                   (?C :background "whitesmoke" :foreground "gray" :weight bold :box (:style released-button :line-width (0 . -1))))
       org-modern-progress nil
       org-modern-radio-target '("「" t "」")
-      org-modern-replace-stars "▶▷▶▷▶▷"
+      org-modern-replace-stars "■▪■▪■▪"
       org-modern-star 'replace
       org-modern-tag t
       org-modern-tag-faces '((t :background "beige" :foreground "black" :weight normal :box (:style pressed-button :line-width (0 . -1))))
