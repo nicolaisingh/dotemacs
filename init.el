@@ -1227,8 +1227,8 @@ be file B."
       (error "Buffer must not exist.")
     (let ((buf (get-buffer-create buffer-name)))
       (with-current-buffer buf
-	      (emms-playlist-mode)
-	      (setq emms-playlist-buffer-p t)))))
+        (emms-playlist-mode)
+        (setq emms-playlist-buffer-p t)))))
 
 (defun emms-browser-replace-playlist ()
   (interactive)
@@ -1306,7 +1306,7 @@ The default format is specified by `emms-source-playlist-default-format'."
                                         emms-playlist-buffer-to-write
                                         (current-buffer))
           (let ((backup-inhibited t))
-	          (write-file file emms-source-playlist-ask-before-overwrite))))
+            (write-file file emms-source-playlist-ask-before-overwrite))))
     (message "aborting save")))
 
 (defun emms-my-playlist-write ()
@@ -1327,14 +1327,33 @@ The default format is specified by `emms-source-playlist-default-format'."
     (customize-set-variable 'emms-random-playlist nil))
   (emms-mode-line-alter))
 
+(defun emms-playlist-my-add-track-to-playlist (buffer)
+  (interactive
+   (list (let* ((buf-list (mapcar #'(lambda (buf)
+                                      (list (buffer-name buf)))
+                                  (emms-playlist-buffer-list)))
+                (sorted-buf-list (sort buf-list
+                                       #'(lambda (lbuf rbuf)
+                                           (< (length (car lbuf))
+                                              (length (car rbuf)))))))
+           (emms-completing-read "Playlist buffer to add track: "
+                                 sorted-buf-list nil t))))
+  (let ((previous-buffer emms-playlist-buffer)
+        (previous-selection (overlay-start emms-playlist-mode-selected-overlay)))
+    (emms-playlist-ensure-playlist-buffer)
+    (emms-playlist-set-playlist-buffer buffer)
+    (emms-playlist-mode-add-contents)
+    (emms-playlist-set-playlist-buffer previous-buffer)
+    (emms-playlist-select previous-selection)))
+
 (keymap-global-set "<remap> <emms-playlist-save>" #'emms-my-playlist-save)
 (keymap-global-set "C-c M %" #'emms-my-toggle-random-playlist)
 (keymap-global-set "C-c M 1" #'emms-my-toggle-repeat-track)
 (keymap-global-set "C-c M B" #'emms-smart-browse)
-(keymap-global-set "C-c M i" #'emms-show-all)
 (keymap-global-set "C-c M L" #'emms-my-metaplaylist-play-playlist)
 (keymap-global-set "C-c M P" #'emms-pause)
 (keymap-global-set "C-c M b" #'emms-my-metaplaylist-mode-go)
+(keymap-global-set "C-c M i" #'emms-show-all)
 (keymap-global-set "C-c M l" #'emms-playlist-mode-switch-buffer)
 (keymap-global-set "C-c M m" #'emms-mode-line-mode)
 (keymap-global-set "C-c M n" #'emms-next)
@@ -1351,6 +1370,7 @@ The default format is specified by `emms-source-playlist-default-format'."
 (keymap-set emms-playlist-mode-map "%" #'emms-shuffle)
 (keymap-set emms-playlist-mode-map "," #'emms-seek-backward)
 (keymap-set emms-playlist-mode-map "." #'emms-seek-forward)
+(keymap-set emms-playlist-mode-map "A" #'emms-playlist-my-add-track-to-playlist)
 (keymap-set emms-playlist-mode-map "C-x C-w" #'emms-my-playlist-write)
 (keymap-set emms-playlist-mode-map "F" #'emms-show-all)
 (keymap-set emms-playlist-mode-map "M" #'emms-mark-mode)
