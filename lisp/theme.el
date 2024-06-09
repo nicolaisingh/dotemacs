@@ -49,9 +49,9 @@
                     :weight 'bold
                     :foreground "black")
 
-(let ((bg-active "azure3")
+(let ((bg-active "gray75")
       (bg-inactive "gray96")
-      (bg-inactive-border "gray95")
+      (bg-inactive-border "gray80")
       (fg-inactive "gray50"))
   (set-face-attribute 'mode-line t
                       :background bg-active
