@@ -145,7 +145,9 @@ collection.  Use revert-gc-cons-percentage to restore the value."
 
 ;;; paren
 
-(setq show-paren-delay 0)
+(setq show-paren-delay 0
+      show-paren-style 'parenthesis
+      show-paren-when-point-inside-paren nil)
 
 ;;; register
 
@@ -1950,7 +1952,7 @@ Useful for completion style 'partial-completion."
 (require 'isearch)
 (setq isearch-allow-scroll 'unlimited
       isearch-lazy-count t
-      search-whitespace-regexp ".+?")
+      search-whitespace-regexp "[ \t\r\n]+")
 
 (defun my-isearch-control-g ()
   "Skip the rub out behavior and cancel the current isearch."
@@ -2782,7 +2784,7 @@ Useful for completion style 'partial-completion."
            ;; The item "More..." needs to be eval'd
            (eval recentf-form)))))
 
-(keymap-global-set "C-x C-S-f" #'recentf-open-files-completing-read)
+(keymap-global-set "C-x C-M-f" #'recentf-open-files-completing-read)
 (add-hook 'after-init-hook #'recentf-mode)
 
 
