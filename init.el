@@ -2404,6 +2404,7 @@ Useful for completion style 'partial-completion."
   (interactive)
   (dired org-directory))
 
+(keymap-global-set "C-c C" #'org-capture)
 (keymap-global-set "C-c o a" #'org-agenda)
 (keymap-global-set "C-c o b" #'org-switchb)
 (keymap-global-set "C-c o d" #'my-org-dired)
