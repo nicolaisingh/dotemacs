@@ -452,8 +452,7 @@ times."
   (keymap-global-set "C-c d l" #'dictionary-search)
   (keymap-global-set "C-c h l" #'hl-line-mode)
   (keymap-global-set "C-c l d" #'duplicate-line)
-  (keymap-global-set "C-c v f" #'virtual-auto-fill-mode)
-  (keymap-global-set "C-c v l" #'visual-line-fill-column-mode)
+  (keymap-global-set "C-c v f" #'visual-line-fill-column-mode)
   (keymap-global-set "C-c w '" #'insert-pair)
   (keymap-global-set "C-c w <" #'insert-pair)
   (keymap-global-set "C-c w [" #'insert-pair)
@@ -462,7 +461,7 @@ times."
   (keymap-global-set "C-h u f" #'find-library)
   (keymap-global-set "C-h u p" #'list-packages)
   (keymap-global-set "C-x B" #'bury-buffer)
-  (keymap-global-set "C-x C-S-c" #'save-buffers-kill-emacs)
+  (keymap-global-set "C-x C-M-c" #'save-buffers-kill-emacs)
   (keymap-global-set "C-x C-m" (key-binding (kbd "M-x")))
   (keymap-global-set "C-x K" #'kill-this-buffer)
   (keymap-global-set "C-x a /" #'unexpand-abbrev)
@@ -2102,10 +2101,10 @@ Useful for completion style 'partial-completion."
 (defun my-markdown-config ()
   "`markdown-mode' config."
   (indent-tabs-mode -1)
-  (virtual-auto-fill-mode 1)
   (setq fill-column 80
         markdown-unordered-list-item-prefix "  * "))
 (add-hook 'markdown-mode-hook #'my-markdown-config)
+(add-hook 'markdown-mode-hook #'visual-line-fill-column-mode)
 
 
 ;;; multi-term

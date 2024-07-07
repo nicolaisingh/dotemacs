@@ -58,19 +58,19 @@
          visual-fill-column with-editor yaml focus elpy chess devdocs
          chatgpt-shell diff-hl org-alert edit-indirect consult-dir
          dired-recent selected calibre osm easy-kill org-present
-         org-modern orderless virtual-auto-fill alert chronos
-         multi-term esh-help eshell-up eshell-z exec-path-from-shell
-         slime ox-jira ox-gfm ox-slack git-timemachine consult
-         marginalia flycheck-package csv-mode atomic-chrome
-         solidity-mode dockerfile-mode yaml-imenu yaml-mode dash ag
-         js2-refactor xref-js2 typescript-mode company-go lsp-treemacs
-         lsp-mode go-mode ztree nav-flash company-nixos-options
-         nix-mode nixos-options dap-mode bui nov highlight-numbers
-         lorem-ipsum command-log-mode imenu-list yasnippet
-         package-lint currency-convert company-native-complete
-         native-complete graphviz-dot-mode company-restclient
-         restclient know-your-http-well multiple-cursors inf-clojure
-         clojure-mode aggressive-indent tree-mode json-navigator prism
+         org-modern orderless alert chronos multi-term esh-help
+         eshell-up eshell-z exec-path-from-shell slime ox-jira ox-gfm
+         ox-slack git-timemachine consult marginalia flycheck-package
+         csv-mode atomic-chrome solidity-mode dockerfile-mode
+         yaml-imenu yaml-mode dash ag js2-refactor xref-js2
+         typescript-mode company-go lsp-treemacs lsp-mode go-mode
+         ztree nav-flash company-nixos-options nix-mode nixos-options
+         dap-mode bui nov highlight-numbers lorem-ipsum
+         command-log-mode imenu-list yasnippet package-lint
+         currency-convert company-native-complete native-complete
+         graphviz-dot-mode company-restclient restclient
+         know-your-http-well multiple-cursors inf-clojure clojure-mode
+         aggressive-indent tree-mode json-navigator prism
          find-file-in-repository dired-toggle diminish transpose-frame
          amx unfill readline-complete writeroom-mode magit htmlize
          flycheck flycheck-kotlin typing company edit-server js2-mode
