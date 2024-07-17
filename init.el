@@ -697,6 +697,47 @@ the configuration 'files-plus-some-buffers-and-modes."
   (keymap-global-set "C-x C-b" #'bs-show))
 
 
+;;; calendar
+
+(require 'calendar)
+(add-hook 'calendar-today-visible-hook #'calendar-mark-today)
+
+(defun define-my-calendar-mark-org-headings-fn (buffer-name)
+  (eval
+   `(defun ,(intern (format "my-calendar-mark-headings-%s" buffer-name)) ()
+      ,(format "Mark all dates that can be found at the end of each heading in %s." buffer-name)
+      (let ((dates '())
+            (bufname ,buffer-name))
+        (save-excursion
+          (set-buffer bufname)
+          (goto-char (point-min))
+          (while (re-search-forward (concat "^\\*+ .*" org-ts-regexp) nil t)
+            (let ((context (org-element-context)))
+              (when (eq (car context) 'timestamp)
+                (let* ((year (plist-get (cadr context) :year-start))
+                       (month (plist-get (cadr context) :month-start))
+                       (day (plist-get (cadr context) :day-start))
+                       (date `(,month ,day ,year)))
+                  (push date dates))))))
+        (dolist (date dates)
+          (when (calendar-date-is-visible-p date)
+            (calendar-mark-visible-date date)))))))
+
+(defun my-calendar-mark-org-headings ()
+  (interactive)
+  (let ((bufname (buffer-name)))
+    (if (memq (intern (concat "my-calendar-mark-headings-" bufname))
+              calendar-today-visible-hook)
+        (progn
+          (remove-hook 'calendar-today-visible-hook (define-my-calendar-mark-org-headings-fn bufname))
+          (remove-hook 'calendar-today-invisible-hook (define-my-calendar-mark-org-headings-fn bufname))
+          (message "Will not mark headings for %s" bufname))
+      (add-hook 'calendar-today-visible-hook (define-my-calendar-mark-org-headings-fn bufname))
+      (add-hook 'calendar-today-invisible-hook (define-my-calendar-mark-org-headings-fn bufname))
+      (message "Will mark headings for %s" bufname)
+      (calendar))))
+
+
 ;;; calibre
 
 (require 'calibre)
@@ -1561,6 +1602,7 @@ The default format is specified by `emms-source-playlist-default-format'."
   (setq gnus-activate-level 3
         gnus-always-read-dribble-file t
         gnus-asynchronous t
+        gnus-auto-select-next nil
         gnus-cacheable-groups nil
         gnus-expert-user nil
         gnus-generate-tree-function #'gnus-generate-horizontal-tree
@@ -2358,6 +2400,7 @@ Useful for completion style 'partial-completion."
   (keymap-set org-mode-map "C-M-q" #'org-fixup-whitespace)
   (keymap-set org-mode-map "C-M-h" #'org-mark-subtree)
   (keymap-set org-mode-map "C-c o L" #'org-link-retain-description)
+  (keymap-set org-mode-map "C-c o >" #'my-calendar-mark-org-headings)
   ;; requires consult
   (keymap-set org-mode-map "C-c *" #'consult-org-heading))
 
