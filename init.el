@@ -2304,6 +2304,10 @@ Useful for completion style 'partial-completion."
                                "* %?\n:PROPERTIES:\n:CREATED:  %U\n:END:"
                                :empty-lines 1
                                :prepend t)
+                              ("m" "Meditation" entry (file "~/org/daily/meditation.org")
+                               "* %t\n%?"
+                               :empty-lines 1
+                               :prepend t)
                               ("t" "Todo" entry
                                (file org-default-notes-file)
                                "* TODO %?\n:PROPERTIES:\n:CREATED:  %U\n:END:"
