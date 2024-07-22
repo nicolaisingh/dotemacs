@@ -1425,6 +1425,11 @@ The default format is specified by `emms-source-playlist-default-format'."
 (erc-dcc-mode 1)
 
 
+;;; epg
+
+(setq epg-pinentry-mode 'loopback)
+
+
 ;;; esh-help
 
 (with-eval-after-load 'eshell
