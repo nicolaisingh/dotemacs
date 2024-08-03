@@ -472,7 +472,10 @@ times."
   (keymap-global-set "C-z g" #'magit-status)
   (keymap-global-set "M-SPC" #'cycle-spacing)
   (keymap-global-unset "C-h C-c")
-  (keymap-global-unset "C-h C-f"))
+  (keymap-global-unset "C-h C-f")
+  (keymap-global-set "C-c j" (lambda ()
+                               (interactive)
+                               (browse-url (concat "https://JIRA.atlassian.net/browse/" (symbol-name (symbol-at-point)))))))
 (add-hook 'emacs-startup-hook #'my-other-keybindings)
 
 (defun message-init-time ()
@@ -1451,7 +1454,8 @@ The default format is specified by `emms-source-playlist-default-format'."
       eshell-history-size 10000
       eshell-ls-dired-initial-args '("-h")
       eshell-ls-initial-args '("-h")
-      eshell-visual-subcommands '(("git" "log" "diff" "show" "shortlog"))
+      eshell-visual-subcommands '(("git" "log" "diff" "show" "shortlog")
+                                  ("aws" "cloudfront" "dynamodb"))
       my-eshell-names-alist '(("nix-config" . "~/prj/nix-config")
                               ("bash-scripts" . "~/prj/bash-scripts")
                               ("other")))
@@ -2305,7 +2309,8 @@ Useful for completion style 'partial-completion."
         ("P" "All project TODOs" tags-todo "@project")
         ("R" "All routines" ((tags-todo "+CATEGORY=\"routine\""))))
 
-      org-capture-templates '(("i" "Inbox" entry (file org-default-notes-file)
+      org-capture-templates '(("i" "Inbox" entry
+                               (file org-default-notes-file)
                                "* %?\n:PROPERTIES:\n:CREATED:  %U\n:END:"
                                :empty-lines 1
                                :prepend t)
@@ -2602,7 +2607,7 @@ Useful for completion style 'partial-completion."
                                     :unnarrowed t))
       org-roam-dailies-capture-templates '(("d" "default" entry "* %?"
                                             :target (file+head "%<%Y-%m-%d>.org" "#+title: Journal - %<%Y-%m-%d>\n")
-                                            :empty-lines-before 1)))
+                                            :empty-lines 1)))
 
 (require 'org-roam-dailies)
 (require 'org-roam-mode)
@@ -2729,10 +2734,18 @@ Useful for completion style 'partial-completion."
 (setq prodigy-services '((:name "proton-bridge"
                                 :command "protonmail-bridge"
                                 :args ("-n")
-                                :tags (proton)))
+                                :tags (proton))
+                         (:name "sample-project"
+                                :command "~/prj/sample/local_build.sh"
+                                :args ("")
+                                :cwd "~/prj/sample"
+                                :tags (ctl-c)))
       prodigy-tags '((:name proton
                             :stop-signal int
-                            :kill-process-buffer-on-stop t)))
+                            :kill-process-buffer-on-stop t)
+                     (:name ctl-c
+                            :stop-signal int
+                            :ready-message "Press CTRL\\+C to quit")))
 (keymap-global-set "C-c P p" #'prodigy)
 
 
@@ -3090,6 +3103,7 @@ Useful for completion style 'partial-completion."
                            (keymap-set map "r" 'yas-reload-all)
                            map)
       yas-prompt-functions '(yas-completing-prompt yas-no-prompt)
+      yas-triggers-in-field t
       yas-wrap-around-region t)
 
 (set-face-attribute 'yas-field-highlight-face t :inherit 'minibuffer-prompt)

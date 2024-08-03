@@ -1,0 +1,15 @@
+# -*- mode: snippet -*-
+# name: sequelize-check-constraint
+# --
+await queryInterface.addConstraint(
+  '${1:table_name}',
+  {
+    name: '${2:constraint_name}',
+    fields: ['${3:column_name}'],
+    type: 'CHECK',
+    where: {
+      $3: { [Sequelize.Op.gt]: 0 },
+    },
+    transaction,
+  },
+);

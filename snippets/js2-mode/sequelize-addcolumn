@@ -1,0 +1,18 @@
+# -*- mode: snippet -*-
+# key: sequelize-addcolumn
+# name: sequelize-addcolumn
+# --
+await queryInterface.addColumn(
+  '${1:(table_name)}',
+  '${2:(column_name)}',
+  {
+    type: Sequelize.${3:(type)},
+    allowNull: true,
+    defaultValue: $4
+    validate: {
+      isIn: [[ $5 ]],
+      isEmail: $6,
+    },
+  },
+  { transaction },
+);

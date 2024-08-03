@@ -1,0 +1,17 @@
+# name: sequelize-fk-constraint
+# --
+await queryInterface.addConstraint(
+  '${1:(table_name)}',
+  {
+    name: '${2:(constraint_name)}',
+    type: 'foreign key',
+    fields: ['${3:(column_name)}'],
+    references: {
+      table: '${4:(table_referred)}',
+      field: '${5:(column_referred)}',
+    },
+    onDelete: 'SET NULL',
+    onUpdate: 'CASCADE',
+    transaction,
+  },
+);

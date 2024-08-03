@@ -3,9 +3,9 @@
 # key: dailystandup
 # --
 For DS
-     - Yesterday
-       - ${1:(Progress yesterday)}
-     - Today
-       - ${2:(Plans for today)}
-     - Blockers/delays
-       - ${3:(Any blockers and delays to raise)}
+- Yesterday
+  - ${1:(Progress yesterday)}
+- Today
+  - ${2:(Plans for today)}
+- Blockers/delays
+  - None

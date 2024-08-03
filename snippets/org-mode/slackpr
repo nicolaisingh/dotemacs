@@ -1,0 +1,6 @@
+# key: slackpr
+# name: slackpr
+# --
+${1:$$(org-roam-db--file-title)}
+Jira: ${2:jiralink}
+PR: ${3:pullrequest_link}

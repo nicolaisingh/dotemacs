@@ -1,0 +1,4 @@
+# key: dateTtime24h-00
+# name: dateTtime24h-00
+# --
+`(format-time-string "%Y-%m-%dT00:00:00.000000Z")`

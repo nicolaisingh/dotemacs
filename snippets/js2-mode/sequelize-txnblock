@@ -1,0 +1,7 @@
+# -*- mode: snippet -*-
+# name: sequelize-txnblock
+# key: txnblock
+# --
+await queryInterface.sequelize.transaction(async (transaction) => {
+  $0
+});

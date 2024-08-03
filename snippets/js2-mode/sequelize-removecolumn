@@ -1,0 +1,5 @@
+# -*- mode: snippet -*-
+# name: sequelize-removecolumn
+# key: sequelize-removecolumn
+# --
+await queryInterface.removeColumn('${1:(tablename)}', '${2:(columnname)}', { transaction });
