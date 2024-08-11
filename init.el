@@ -3029,6 +3029,14 @@ Useful for completion style 'partial-completion."
 (require 'solidity-mode)
 
 
+;;; time
+
+(require 'time)
+(setq display-time-24hr-format t
+      display-time-default-load-average 0)
+(display-time-mode t)
+
+
 ;;; transpose-frame
 
 (require 'transpose-frame)
