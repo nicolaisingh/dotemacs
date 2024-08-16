@@ -2306,21 +2306,31 @@ Useful for completion style 'partial-completion."
 
       org-agenda-custom-commands
       '(("I" "Ideate TODOs" tags-todo "ideate")
-        ("P" "All project TODOs" tags-todo "@project")
-        ("R" "All routines" ((tags-todo "+CATEGORY=\"routine\""))))
+        ("P" "All TODOs" ((tags-todo "@project-CATEGORY=\"routines\"") (tags-todo "@inbox")))
+        ("R" "All routines" ((tags-todo "+CATEGORY=\"routines\""))))
 
       org-capture-templates '(("i" "Inbox" entry
                                (file org-default-notes-file)
                                "* %?\n:PROPERTIES:\n:CREATED:  %U\n:END:"
                                :empty-lines 1
                                :prepend t)
-                              ("m" "Meditation" entry (file "~/org/daily/meditation.org")
-                               "* %t\n%?"
+                              ("p" "Inbox - Personal" entry
+                               (file+olp org-default-notes-file "Personal")
+                               "* %?\n:PROPERTIES:\n:CREATED:  %U\n:END:"
                                :empty-lines 1
                                :prepend t)
-                              ("t" "Todo" entry
-                               (file org-default-notes-file)
-                               "* TODO %?\n:PROPERTIES:\n:CREATED:  %U\n:END:"
+                              ("e" "Inbox - Emacs" entry
+                               (file+olp org-default-notes-file "Emacs")
+                               "* %?\n:PROPERTIES:\n:CREATED:  %U\n:END:"
+                               :empty-lines 1
+                               :prepend t)
+                              ("f" "Inbox - Family" entry
+                               (file+olp org-default-notes-file "Family")
+                               "* %?\n:PROPERTIES:\n:CREATED:  %U\n:END:"
+                               :empty-lines 1
+                               :prepend t)
+                              ("m" "Meditation" entry (file "~/org/daily/meditation.org")
+                               "* %t\n%?"
                                :empty-lines 1
                                :prepend t))
 
