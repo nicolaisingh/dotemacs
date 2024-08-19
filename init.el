@@ -2350,13 +2350,13 @@ Useful for completion style 'partial-completion."
                                ("INBOX" :foreground "dark slate blue" :weight bold)
                                ("TOPIC" :foreground "dark slate blue" :weight bold)))
 
-(set-face-attribute 'org-block t :background "gray99")
-(set-face-attribute 'org-block-begin-line t :inherit 'shadow :background "gray98")
-(set-face-attribute 'org-block-end-line t :background "gray99")
+(set-face-attribute 'org-block nil :background "gray96" :inherit 'shadow)
+(set-face-attribute 'org-block-begin-line nil :inherit 'shadow :background "gray90")
+(set-face-attribute 'org-block-end-line nil :background "gray90")
 (set-face-attribute 'org-level-1 t :height 1.1 :weight 'bold)
-(set-face-attribute 'org-level-2 t :height 1.1  :weight 'bold)
-(set-face-attribute 'org-level-3 t :height 1.0  :weight 'bold)
-(set-face-attribute 'org-level-4 t :height 1.0  :weight 'bold)
+(set-face-attribute 'org-level-2 t :height 1.1 :weight 'bold)
+(set-face-attribute 'org-level-3 t :height 1.0 :weight 'bold)
+(set-face-attribute 'org-level-4 t :height 1.0 :weight 'bold)
 (set-face-attribute 'org-property-value t :height 0.8 :foreground "gray50")
 (set-face-attribute 'org-special-keyword t :height 0.8)
 (set-face-attribute 'org-todo t :foreground "coral3")
@@ -2515,7 +2515,8 @@ Useful for completion style 'partial-completion."
 ;;; org-modern
 
 (require 'org-modern)
-(setq org-modern-block-name t
+(setq org-modern-block-name nil
+      org-modern-block-fringe nil
       org-modern-checkbox nil
       org-modern-fold-stars '(("▶" . "▼") ("▷" . "▽") ("▶" . "▼") ("▷" . "▽") ("▶" . "▼"))
       org-modern-hide-stars " "
