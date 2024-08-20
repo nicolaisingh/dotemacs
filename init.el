@@ -2343,24 +2343,27 @@ Useful for completion style 'partial-completion."
                                     "|" "DONE(d@/@)" "CANCELED(c@/@)")
                           (type "INBOX(i)" "TOPIC(o)"))
 
-      org-todo-keyword-faces '(("WIP" :foreground "tomato" :weight bold)
-                               ("DEFERRED" :foreground "dark magenta" :weight bold)
-                               ("WAITING" :foreground "orange" :weight bold)
-                               ("CANCELED" :foreground "dark gray" :weight bold)
-                               ("INBOX" :foreground "dark slate blue" :weight bold)
-                               ("TOPIC" :foreground "dark slate blue" :weight bold)))
+      org-todo-keyword-faces '(("CANCELED" :foreground "black" :background "gainsboro" :box (:style released-button) :height 0.8)
+                               ("DEFERRED" :foreground "black" :background "azure1" :box (:style released-button) :height 0.8)
+                               ("DONE" :foreground "black" :background "honeydew1" :box (:style released-button) :height 0.8)
+                               ("INBOX" :foreground "black" :background "lightskyblue1" :box (:style released-button) :height 0.8)
+                               ("TODO" :foreground "black" :background "mistyrose1" :box (:style released-button) :height 0.8)
+                               ("TOPIC" :foreground "black" :background "slategray1" :box (:style released-button) :height 0.8)
+                               ("WAITING" :foreground "black" :background "plum1" :box (:style released-button) :height 0.8)
+                               ("WIP" :foreground "black" :background "peachpuff1" :box (:style released-button) :height 0.8)))
 
 (set-face-attribute 'org-block t :background "gray96" :inherit 'shadow)
 (set-face-attribute 'org-block-begin-line t :inherit 'shadow :background "gray90")
 (set-face-attribute 'org-block-end-line t :background "gray90")
 (set-face-attribute 'org-date t :height 0.85 :background "lavender" :foreground "black")
-(set-face-attribute 'org-level-1 t :height 1.1 :weight 'bold)
-(set-face-attribute 'org-level-2 t :height 1.1 :weight 'bold)
-(set-face-attribute 'org-level-3 t :height 1.0 :weight 'bold)
-(set-face-attribute 'org-level-4 t :height 1.0 :weight 'bold)
+(set-face-attribute 'org-level-1 t :height 1.1 :weight 'normal)
+(set-face-attribute 'org-level-2 t :height 1.1 :weight 'normal)
+(set-face-attribute 'org-level-3 t :height 1.0 :weight 'normal)
+(set-face-attribute 'org-level-4 t :height 1.0 :weight 'normal)
 (set-face-attribute 'org-property-value t :height 0.8 :foreground "gray50")
 (set-face-attribute 'org-special-keyword t :height 0.8)
-(set-face-attribute 'org-todo t :foreground "coral3")
+(set-face-attribute 'org-todo t :weight 'normal)
+(set-face-attribute 'org-done t :weight 'normal)
 (with-eval-after-load 'org-modern
   (set-face-attribute 'org-drawer t :inherit 'org-modern-label :foreground "gray50"))
 
@@ -2534,7 +2537,7 @@ Useful for completion style 'partial-completion."
       org-modern-tag t
       org-modern-tag-faces '((t :background "beige" :foreground "black" :weight normal :box (:style pressed-button :line-width (0 . -1))))
       org-modern-timestamp nil
-      org-modern-todo t
+      org-modern-todo nil
       org-modern-todo-faces '(("CANCELED" :background "gainsboro" :foreground "black" :weight normal :box (:style released-button :line-width (0 . -1)))
                               ("DEFERRED" :background "azure1" :foreground "black" :weight normal :box (:style released-button :line-width (0 . -1)))
                               ("DONE" :background "honeydew1" :foreground "black" :weight normal :box (:style released-button :line-width (0 . -1)))
