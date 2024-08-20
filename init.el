@@ -2350,9 +2350,10 @@ Useful for completion style 'partial-completion."
                                ("INBOX" :foreground "dark slate blue" :weight bold)
                                ("TOPIC" :foreground "dark slate blue" :weight bold)))
 
-(set-face-attribute 'org-block nil :background "gray96" :inherit 'shadow)
-(set-face-attribute 'org-block-begin-line nil :inherit 'shadow :background "gray90")
-(set-face-attribute 'org-block-end-line nil :background "gray90")
+(set-face-attribute 'org-block t :background "gray96" :inherit 'shadow)
+(set-face-attribute 'org-block-begin-line t :inherit 'shadow :background "gray90")
+(set-face-attribute 'org-block-end-line t :background "gray90")
+(set-face-attribute 'org-date t :height 0.85 :background "lavender" :foreground "black")
 (set-face-attribute 'org-level-1 t :height 1.1 :weight 'bold)
 (set-face-attribute 'org-level-2 t :height 1.1 :weight 'bold)
 (set-face-attribute 'org-level-3 t :height 1.0 :weight 'bold)
@@ -2532,7 +2533,7 @@ Useful for completion style 'partial-completion."
       org-modern-star 'replace
       org-modern-tag t
       org-modern-tag-faces '((t :background "beige" :foreground "black" :weight normal :box (:style pressed-button :line-width (0 . -1))))
-      org-modern-timestamp t
+      org-modern-timestamp nil
       org-modern-todo t
       org-modern-todo-faces '(("CANCELED" :background "gainsboro" :foreground "black" :weight normal :box (:style released-button :line-width (0 . -1)))
                               ("DEFERRED" :background "azure1" :foreground "black" :weight normal :box (:style released-button :line-width (0 . -1)))
