@@ -2161,7 +2161,26 @@ Useful for completion style 'partial-completion."
 ;;; multi-term
 
 (require 'multi-term)
-(setq multi-term-program "/run/current-system/sw/bin/bash")
+(setq multi-term-program "/run/current-system/sw/bin/bash"
+      term-bind-key-alist '(("C-c C-c" . term-interrupt-subjob)
+                            ("C-c C-j" . term-line-mode)
+                            ("C-p" . previous-line)
+                            ("C-n" . next-line)
+                            ("C-s" . isearch-forward)
+                            ("C-r" . isearch-backward)
+                            ("C-m" . term-send-return)
+                            ("C-y" . term-paste)
+                            ("M-f" . term-send-forward-word)
+                            ("M-b" . term-send-backward-word)
+                            ("M-o" . term-send-backspace)
+                            ("M-p" . term-send-up)
+                            ("M-n" . term-send-down)
+                            ("M-DEL" . term-send-backward-kill-word)
+                            ("<C-backspace>" . term-send-backward-kill-word)
+                            ("M-r" . term-send-reverse-search-history)
+                            ("M-d" . term-send-delete-word)
+                            ("M-," . term-send-raw)
+                            ("M-." . comint-dynamic-complete)))
 (keymap-global-set "C-c t T" #'multi-term)
 (keymap-global-set "C-c t t" #'multi-term-next)
 
