@@ -1184,6 +1184,12 @@ be file B."
                                                      :hoverProvider))
 
 
+;;; electric
+
+(setq electric-layout-rules '((?\{ . around)
+                              (?\} . around)))
+
+
 ;;; emms
 
 ;; playback
