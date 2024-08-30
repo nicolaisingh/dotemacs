@@ -1182,6 +1182,11 @@ be file B."
 (setq-mode-local python-mode
                  eglot-ignored-server-capabilities '(:documentHighlightProvider
                                                      :hoverProvider))
+(setq-mode-local nix-mode
+                 eglot-ignored-server-capabilities '(:documentHighlightProvider
+                                                     :hoverProvider
+                                                     :documentRangeFormattingProvider
+                                                     :inlayHintProvider))
 
 
 ;;; electric
@@ -2248,13 +2253,12 @@ Useful for completion style 'partial-completion."
 
 ;;; nix-mode
 
-(with-eval-after-load 'nix-mode
-  (add-hook 'nix-mode-hook #'smartparens-mode)
-  (add-hook 'nix-mode-hook #'eglot-ensure))
-
 (defun find-nixos-config-file ()
   (interactive)
   (find-file "~/nix/configuration.nix"))
+
+(add-hook 'nix-mode-hook #'eglot-ensure)
+(add-hook 'nix-mode-hook #'smartparens-mode)
 
 
 ;;; nov
@@ -2975,6 +2979,9 @@ Useful for completion style 'partial-completion."
 
 (require 'smartparens-config)
 
+(setq sp-highlight-pair-overlay nil
+      sp-show-pair-delay 0)
+
 (defun sp-repeatable-extra-bindings ()
   `(("0" . ,(if (memq major-mode sp-lisp-modes)
                 #'sp-forward-slurp-sexp-repeatable
@@ -3041,7 +3048,6 @@ Useful for completion style 'partial-completion."
   (keymap-set smartparens-mode-map "C-M-d" #'sp-down-sexp))
 
 (defun setup-smartparens-lisp ()
-  (show-paren-local-mode)
   (smartparens-mode)
   (smartparens-strict-mode))
 
@@ -3102,7 +3108,7 @@ Useful for completion style 'partial-completion."
 (add-to-list 'auto-mode-alist '("\\.tsx\\'" . typescript-ts-mode))
 (add-hook 'typescript-ts-mode-hook #'smartparens-mode)
 (add-hook 'typescript-ts-mode-hook #'smartparens-strict-mode)
-(add-hook 'typescript-ts-mode-hook #'show-paren-local-mode)
+(add-hook 'typescript-ts-mode-hook #'show-smartparens-mode)
 
 
 ;;; which-key (disabled)
