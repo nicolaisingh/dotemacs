@@ -523,9 +523,8 @@ times."
   (exec-path-from-shell-initialize))
 
 
-;;; 02 theme
+;;; 02 early-init
 
-(require 'theme)
 (when (< emacs-major-version 27)
   ;; Manually load early-init.el for older versions of Emacs
   (let ((early-init-file (expand-file-name "early-init.el" user-emacs-directory)))
@@ -2755,6 +2754,12 @@ Useful for completion style 'partial-completion."
 ;;; pdf-tools
 
 (add-hook 'after-init-hook #'pdf-tools-install)
+
+
+;;; personal-theme
+
+(require 'personal-theme)
+(enable-theme 'personal)
 
 
 ;;; plantuml

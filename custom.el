@@ -103,9 +103,4 @@
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
- '(cursor ((t (:background "tomato"))))
- '(emms-metaplaylist-mode-current-face ((t (:inherit emms-metaplaylist-mode-face :inverse-video t :weight bold))))
- '(emms-metaplaylist-mode-face ((t (:inherit default :weight normal))))
- '(emms-playlist-selected-face ((t (:inherit emms-playlist-track-face :inverse-video t :weight bold))))
- '(emms-playlist-track-face ((t (:inherit default))))
- '(hl-line ((t (:background "gray95")))))
+ )
