@@ -163,6 +163,12 @@ collection.  Use revert-gc-cons-percentage to restore the value."
     "." #'org-roam-dailies-goto-next-note
     "," #'org-roam-dailies-goto-previous-note))
 
+(with-eval-after-load 'calendar
+  (defvar-keymap calendar-mode-repeat-map
+    :repeat t
+    "]" #'calendar-forward-year
+    "[" #'calendar-backward-year))
+
 ;;; saveplace
 
 (save-place-mode 1)
@@ -703,6 +709,7 @@ the configuration 'files-plus-some-buffers-and-modes."
 ;;; calendar
 
 (require 'calendar)
+(require 'year-calendar)
 (add-hook 'calendar-today-visible-hook #'calendar-mark-today)
 
 (defun define-my-calendar-mark-org-headings-fn (buffer-name)
@@ -2359,7 +2366,7 @@ Useful for completion style 'partial-completion."
                                :empty-lines 1
                                :prepend t)
                               ("m" "Meditation" entry (file "~/org/daily/meditation.org")
-                               "* %t\n%?"
+                               "* %^t\n%?"
                                :empty-lines 1
                                :prepend t))
 
