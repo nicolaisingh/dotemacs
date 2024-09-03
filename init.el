@@ -48,6 +48,10 @@ collection.  Use revert-gc-cons-percentage to restore the value."
     (setq use-short-answers t)
   (fset 'yes-or-no-p 'y-or-n-p))
 
+;; Source code
+(setq find-function-C-source-directory "/run/current-system/sw/share/emacs/source/src")
+(visit-tags-table (format "/run/current-system/sw/share/emacs/%s/lisp/TAGS" emacs-version))
+
 (setq enable-recursive-minibuffers 1)
 (minibuffer-depth-indicate-mode 1)
 
