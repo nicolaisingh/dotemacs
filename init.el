@@ -1506,6 +1506,7 @@ The default format is specified by `emms-source-playlist-default-format'."
 
 (defun my-eshell-config ()
   (setq-local completion-auto-help t)
+  (setenv "PAGER" "cat")
   (keymap-set eshell-mode-map "C-c C-<backspace>" (lambda ()
                                                     (interactive)
                                                     (eshell/clear-scrollback))))
