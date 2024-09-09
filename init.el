@@ -502,23 +502,12 @@ times."
 (add-to-list 'load-path (expand-file-name "lisp" user-emacs-directory))
 
 
-;;; 00 package
+;;; 00 straight
 
-(require 'package)
-
-(defun ensure-all-packages-installed ()
-  (dolist (package package-selected-packages)
-    (unless (package-installed-p package)
-      (message "Installing missing package `%s'" package)
-      (package-install package))))
-
-(add-to-list 'package-archives '("melpa" . "https://melpa.org/packages/"))
-(add-to-list 'package-archives '("ox-odt" . "https://kjambunathan.github.io/elpa/"))
-(add-hook 'package-menu-mode-hook #'hl-line-mode)
-
-(when (< emacs-major-version 27)
-  (package-initialize))
-(ensure-all-packages-installed)
+(setq straight-profiles `((nil . ,(expand-file-name "lisp/straight/versions/default.el"
+                                                    user-emacs-directory)))
+      straight-vc-git-default-clone-depth 1)
+(load (expand-file-name "packages.el" user-emacs-directory))
 
 
 ;;; 01 exec-path-from-shell
@@ -2746,14 +2735,15 @@ Useful for completion style 'partial-completion."
 
 ;;; origami
 
-(require 'origami)
 (defun my-origami-mode-config ()
   "`origami-mode' config."
   (keymap-set origami-mode-map "C-c f f" #'origami-toggle-node)
   (keymap-set origami-mode-map "C-c f O" #'origami-open-all-nodes)
   (keymap-set origami-mode-map "C-c f C" #'origami-close-all-nodes))
 (add-hook 'origami-mode-hook #'my-origami-mode-config)
-(global-origami-mode)
+
+;; Calling (global-origami-mode) directly causes issues on emacs --fg-daemon
+(add-hook 'after-init-hook #'global-origami-mode)
 
 
 ;;; pdf-tools
