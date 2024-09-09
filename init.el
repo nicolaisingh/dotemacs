@@ -1778,7 +1778,11 @@ The default format is specified by `emms-source-playlist-default-format'."
       ibuffer-saved-filter-groups
       '(("default"
          ("Emacs Lisp" (mode . emacs-lisp-mode))
+         ("Python" (mode . python-mode))
          ("Javascript" (mode . js2-mode))
+         ("YAML" (mode . yaml-mode))
+         ("Prodigy" (or (mode . prodigy-mode)
+                        (mode . prodigy-view-mode)))
          ("Shell/Term" (or (mode . shell-mode)
                            (mode . eshell-mode)
                            (mode . term-mode)))
@@ -2049,6 +2053,7 @@ Useful for completion style 'partial-completion."
 
 (setq js-indent-level 2
       js-switch-indent-offset 2)
+(add-hook 'js2-mode-hook #'eglot-ensure)
 
 
 ;;; js2-mode
@@ -2316,6 +2321,7 @@ Useful for completion style 'partial-completion."
       org-cycle-inline-images-display t
       org-default-notes-file "~/org/inbox.org"
       org-edit-src-content-indentation 0
+      org-export-with-sub-superscripts '{}
       org-fontify-done-headline nil
       org-fontify-todo-headline nil
       org-hide-emphasis-markers nil
@@ -2332,6 +2338,7 @@ Useful for completion style 'partial-completion."
       org-startup-indented nil
       org-startup-with-inline-images t
       org-tags-column 0
+      org-use-sub-superscripts '{}
 
       org-agenda-custom-commands
       '(("I" "Ideate TODOs" tags-todo "ideate")
@@ -2957,7 +2964,11 @@ Useful for completion style 'partial-completion."
 ;;; selected
 
 (require 'selected)
+(defun flush-empy-lines ()
+  (interactive)
+  (flush-lines "^$"))
 (keymap-set selected-keymap "C" #'capitalize-region)
+(keymap-set selected-keymap "E" #'flush-empy-lines)
 (keymap-set selected-keymap "F" #'flush-lines)
 (keymap-set selected-keymap "K" #'keep-lines)
 (keymap-set selected-keymap "SPC" #'canonically-space-region)
