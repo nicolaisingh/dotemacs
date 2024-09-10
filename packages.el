@@ -92,6 +92,8 @@
         nix-mode
         nixos-options
         nov
+        ob-kotlin
+        ob-nix
         orderless
         org-bookmark-heading
         org-alert

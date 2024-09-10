@@ -2542,6 +2542,21 @@ Useful for completion style 'partial-completion."
   (org-alert-enable))
 
 
+;;; org-babel
+
+(org-babel-do-load-languages
+ 'org-babel-load-languages
+ '((calc . t)
+   (emacs-lisp . t)
+   (js . t)
+   (nix . t)
+   (kotlin . t)
+   (latex . t)
+   (plantuml . t)
+   (python . t)
+   (shell . t)))
+
+
 ;;; org-bookmark-heading
 (require 'org-bookmark-heading)
 
