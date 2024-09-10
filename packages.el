@@ -61,7 +61,6 @@
         flycheck-kotlin
         flycheck-package
         focus
-        ;; git-commit
         git-timemachine
         go-mode
         gptel
@@ -94,6 +93,7 @@
         nixos-options
         nov
         orderless
+        org-bookmark-heading
         org-alert
         org-modern
         org-present

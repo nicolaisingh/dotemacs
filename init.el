@@ -469,7 +469,6 @@ times."
   (keymap-global-set "C-c w \"" #'insert-pair)
   (keymap-global-set "C-h C-k" #'describe-keymap)
   (keymap-global-set "C-h u f" #'find-library)
-  (keymap-global-set "C-h u p" #'list-packages)
   (keymap-global-set "C-x B" #'bury-buffer)
   (keymap-global-set "C-x C-M-c" #'save-buffers-kill-emacs)
   (keymap-global-set "C-x C-m" (key-binding (kbd "M-x")))
@@ -508,6 +507,9 @@ times."
                                                     user-emacs-directory)))
       straight-vc-git-default-clone-depth 1)
 (load (expand-file-name "packages.el" user-emacs-directory))
+
+(keymap-global-set "C-h u r" #'straight-get-recipe)
+(keymap-global-set "C-h u w" #'straight-visit-package-website)
 
 
 ;;; 01 exec-path-from-shell
@@ -2334,6 +2336,7 @@ Useful for completion style 'partial-completion."
       org-reverse-note-order t
       org-special-ctrl-a/e t
       org-special-ctrl-k t
+      org-src-window-setup 'current-window
       org-src-fontify-natively nil
       org-startup-indented nil
       org-startup-with-inline-images t
@@ -2537,6 +2540,10 @@ Useful for completion style 'partial-completion."
                   :style 'legacy-log
                   :continue t)
   (org-alert-enable))
+
+
+;;; org-bookmark-heading
+(require 'org-bookmark-heading)
 
 
 ;;; org-crypt
