@@ -10,12 +10,10 @@
         ag
         aggressive-indent
         alert
-        amx
         atomic-chrome
         avy
         blacken
         browse-kill-ring
-        bui
         calibre
         cape
         centered-cursor-mode
@@ -24,11 +22,6 @@
         chronos
         clojure-mode
         command-log-mode
-        company
-        company-go
-        company-native-complete
-        company-nixos-options
-        company-restclient
         consult
         consult-dir
         corfu
@@ -56,7 +49,6 @@
         exec-path-from-shell
         expand-region
         f
-        find-file-in-repository
         flycheck
         flycheck-kotlin
         flycheck-package
@@ -82,7 +74,6 @@
         lsp-mode
         lsp-treemacs
         magit
-        magit-section
         marginalia
         markdown-mode
         multi-term

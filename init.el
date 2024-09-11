@@ -2275,6 +2275,7 @@ Useful for completion style 'partial-completion."
 
 (add-hook 'nix-mode-hook #'eglot-ensure)
 (add-hook 'nix-mode-hook #'smartparens-mode)
+;; (add-hook 'nix-mode-hook (lambda () (add-hook 'before-save-hook #'nix-format-buffer 0 t)))
 
 
 ;;; nov
