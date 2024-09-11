@@ -2136,9 +2136,18 @@ Useful for completion style 'partial-completion."
 ;;; magit
 
 (require 'magit)
-(setq magit-diff-refine-hunk t
+(setq magit-commit-ask-to-stage 'stage
+      magit-diff-refine-hunk t
       magit-status-goto-file-position t
       magit-status-show-hashes-in-headers t)
+
+(defun magit-commit-create-updates ()
+  (interactive)
+  (magit-commit-create '("-m" "updates")))
+
+(transient-append-suffix 'magit-commit "c"
+  '("C" "Commit generic" magit-commit-create-updates))
+
 (keymap-global-set "C-c g M-g" #'magit-dispatch)
 (keymap-global-set "C-c g g" #'magit-status)
 (keymap-global-set "C-c g u" #'magit-ediff-show-unstaged)
