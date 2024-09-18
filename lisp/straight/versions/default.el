@@ -32,6 +32,7 @@
  ("devdocs.el" . "c14d1306648d3ae09ee3a3b3f45592334943cfeb")
  ("diff-hl" . "b80ff9b4a772f7ea000e86fbf88175104ddf9557")
  ("diminish.el" . "fbd5d846611bad828e336b25d2e131d1bc06b83d")
+ ("dired-hacks" . "e9e408e8571aee5574ca0a431ef15cac5a3585d4")
  ("dired-recent.el" . "a0869778e252b97c568140bca366955f9391d885")
  ("dired-toggle" . "7fe5fe35c63d1b0da14d6d6d52bdf6b2a5410ba7")
  ("dockerfile-mode" . "39a012a27fcf6fb629c447d13b6974baf906714c")

@@ -811,10 +811,16 @@ the configuration 'files-plus-some-buffers-and-modes."
   (let ((chatgpt-shell-prompt-query-response-style 'inline))
     (call-interactively #'chatgpt-shell-prompt)))
 
+(defun chatgpt-shell-other-buffer ()
+  (interactive)
+  (let ((chatgpt-shell-prompt-query-response-style 'other-buffer))
+    (call-interactively #'chatgpt-shell-prompt)))
+
 (keymap-global-set "C-c l C-SPC" #'chatgpt-shell-send-and-review-region)
 (keymap-global-set "C-c l SPC" #'chatgpt-shell-send-region)
 (keymap-global-set "C-c l l" #'chatgpt-shell)
 (keymap-global-set "C-c l m" #'chatgpt-shell-inline)
+(keymap-global-set "C-c l o" #'chatgpt-shell-other-buffer)
 (keymap-global-set "C-c l p" #'chatgpt-shell-proofread-region)
 (keymap-global-set "C-c l r" #'chatgpt-shell-refactor-code)
 (keymap-global-set "C-c l s" #'chatgpt-shell-rephrase-sentences)
@@ -1129,6 +1135,14 @@ be file B."
 (require 'dired-marked)
 (keymap-set dired-mode-map "@ c" #'dired-marked-copy-file-to-marked-directories)
 (keymap-set dired-mode-map "@ u" #'dired-marked-unmark-all)
+
+
+;;; dired-narrow (from dired-hacks)
+
+(require 'dired-narrow)
+(setq dired-narrow-map nil)
+(keymap-set dired-mode-map "/ /" #'dired-narrow)
+(keymap-set dired-mode-map "/ r" #'dired-narrow-regexp)
 
 
 ;;; easy-kill
@@ -2269,10 +2283,6 @@ Useful for completion style 'partial-completion."
 
 ;;; nix-mode
 
-(defun find-nixos-config-file ()
-  (interactive)
-  (find-file "~/nix/configuration.nix"))
-
 (add-hook 'nix-mode-hook #'eglot-ensure)
 (add-hook 'nix-mode-hook #'smartparens-mode)
 ;; (add-hook 'nix-mode-hook (lambda () (add-hook 'before-save-hook #'nix-format-buffer 0 t)))
@@ -2565,6 +2575,9 @@ Useful for completion style 'partial-completion."
    (plantuml . t)
    (python . t)
    (shell . t)))
+
+(require 'ob-chatgpt-shell)
+(ob-chatgpt-shell-setup)
 
 
 ;;; org-bookmark-heading

@@ -34,6 +34,7 @@
         devdocs
         diff-hl
         diminish
+        dired-narrow
         dired-recent
         dired-toggle
         dockerfile-mode
@@ -83,6 +84,7 @@
         nix-mode
         nixos-options
         nov
+        ob-chatgpt-shell
         ob-kotlin
         ob-nix
         orderless
