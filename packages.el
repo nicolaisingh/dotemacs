@@ -29,6 +29,7 @@
         csv-mode
         currency-convert
         dap-mode
+        dart-mode
         dash
         deadgrep
         devdocs
@@ -93,15 +94,20 @@
         org-modern
         org-present
         org-roam
+        org-sticky-header
         origami
         osm
         ox-gfm
         ox-jira
         ox-slack
         package-lint
-        pass
+
+        ;; pass deps
+        (password-store-otp
+         :host github :repo "volrath/password-store-otp.el" :fork t)
         password-store
-        password-store-otp
+        pass
+
         pcsv
         pdf-tools
         plantuml-mode
@@ -110,8 +116,7 @@
         pytest
         readline-complete
         restclient
-        (saveplace-pdf-view
-         :type git :flavor melpa :host github :repo "nicolaisingh/saveplace-pdf-view" :depth full)
+        (saveplace-pdf-view :host github :depth full)
         selected
         shell-maker
         slime

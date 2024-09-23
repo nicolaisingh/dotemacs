@@ -503,7 +503,8 @@ times."
 
 ;;; 00 straight
 
-(setq straight-profiles `((nil . ,(expand-file-name "lisp/straight/versions/default.el"
+(setq straight-host-usernames '((github . "nicolaisingh"))
+      straight-profiles `((nil . ,(expand-file-name "lisp/straight/versions/default.el"
                                                     user-emacs-directory)))
       straight-vc-git-default-clone-depth 1)
 (load (expand-file-name "packages.el" user-emacs-directory))
@@ -530,12 +531,16 @@ times."
 ;;; aggressive-indent
 
 (require 'aggressive-indent)
-(keymap-global-set "C-c i A" #'aggressive-indent-mode)
 (add-hook 'emacs-lisp-mode-hook #'aggressive-indent-mode)
 (add-hook 'clojure-mode-hook #'aggressive-indent-mode)
 (add-hook 'clojurescript-mode-hook #'aggressive-indent-mode)
 (add-hook 'scheme-mode-hook #'aggressive-indent-mode)
 (add-hook 'js2-mode-hook #'aggressive-indent-mode)
+(keymap-global-set "C-c i A" #'aggressive-indent-mode)
+
+;; Don't aggressively indent comment lines in the edebug eval list buffer
+(add-hook 'edebug-eval-mode-hook
+          (lambda () (interactive) (aggressive-indent-mode -1)))
 
 
 ;;; alert
@@ -2785,6 +2790,13 @@ Useful for completion style 'partial-completion."
 (keymap-set org-roam-mode-map "C-c n l" #'org-roam-buffer-toggle)
 
 
+;; org-sticky-header
+
+(setq org-sticky-header-at-point t
+      org-sticky-header-heading-star "■"
+      org-sticky-header-full-path 'full)
+
+
 ;;; origami
 
 (defun my-origami-mode-config ()
@@ -3045,70 +3057,32 @@ Useful for completion style 'partial-completion."
 (setq sp-highlight-pair-overlay nil
       sp-show-pair-delay 0)
 
-(defun sp-repeatable-extra-bindings ()
-  `(("0" . ,(if (memq major-mode sp-lisp-modes)
-                #'sp-forward-slurp-sexp-repeatable
-              #'sp-slurp-hybrid-sexp-repeatable))
-    ("9" . sp-backward-slurp-sexp-repeatable)
-    (")" . sp-forward-barf-sexp-repeatable)
-    ("(" . sp-backward-barf-sexp-repeatable)))
-
-(defun sp-forward-slurp-sexp-repeatable ()
-  "Call `sp-forward-slurp-sexp' using `repeatkey-repeatable-call'."
-  (interactive)
-  (repeatkey-repeatable-call #'sp-forward-slurp-sexp (sp-repeatable-extra-bindings)))
-
-(defun sp-backward-slurp-sexp-repeatable ()
-  "Call `sp-backward-slurp-sexp' using `repeatkey-repeatable-call'."
-  (interactive)
-  (repeatkey-repeatable-call #'sp-backward-slurp-sexp (sp-repeatable-extra-bindings)))
-
-(defun sp-forward-barf-sexp-repeatable ()
-  "Call `sp-forward-barf-sexp' using `repeatkey-repeatable-call'."
-  (interactive)
-  (repeatkey-repeatable-call #'sp-forward-barf-sexp (sp-repeatable-extra-bindings)))
-
-(defun sp-backward-barf-sexp-repeatable ()
-  "Call `sp-backward-barf-sexp' using `repeatkey-repeatable-call'."
-  (interactive)
-  (repeatkey-repeatable-call #'sp-backward-barf-sexp (sp-repeatable-extra-bindings)))
-
-(defun sp-slurp-hybrid-sexp-repeatable ()
-  "Call `sp-slurp-hybrid-sexp' using `repeatkey-repeatable-call'."
-  (interactive)
-  (repeatkey-repeatable-call #'sp-slurp-hybrid-sexp (sp-repeatable-extra-bindings)))
-
 (defun my-smartparens-config ()
-  (if (memq major-mode sp-lisp-modes)
-      (keymap-set smartparens-mode-map "C-c s 0" #'sp-forward-slurp-sexp-repeatable)
-    (keymap-set smartparens-mode-map "C-c s 0" #'sp-slurp-hybrid-sexp-repeatable))
-  (keymap-set smartparens-mode-map "C-c s 9" #'sp-backward-slurp-sexp-repeatable)
-  (keymap-set smartparens-mode-map "C-c s )" #'sp-forward-barf-sexp-repeatable)
-  (keymap-set smartparens-mode-map "C-c s (" #'sp-backward-barf-sexp-repeatable)
-
-  (keymap-set smartparens-mode-map "C-c s a" #'sp-absorb-sexp)
-  (keymap-set smartparens-mode-map "C-c s e" #'sp-emit-sexp)
-  (keymap-set smartparens-mode-map "C-c s r" #'sp-raise-sexp)
-  (keymap-set smartparens-mode-map "C-c s c" #'sp-change-inner)
-  (keymap-set smartparens-mode-map "C-c s j" #'sp-join-sexp)
-  (keymap-set smartparens-mode-map "C-c s s" #'sp-splice-sexp)
-  (keymap-set smartparens-mode-map "C-c s S" #'sp-split-sexp)
-
-  (keymap-set smartparens-mode-map "M-W" #'sp-wrap-round)
-  (keymap-set smartparens-mode-map "M-U" #'sp-unwrap-sexp)
-  (keymap-set smartparens-mode-map "M-F" #'sp-forward-symbol)
-  (keymap-set smartparens-mode-map "M-B" #'sp-backward-symbol)
-
-  (keymap-set smartparens-mode-map "M-D" #'sp-kill-symbol)
-  (keymap-set smartparens-mode-map "M-S-<backspace>" #'sp-backward-kill-symbol)
-
-  (keymap-set smartparens-mode-map "C-M-<backspace>" #'backward-kill-sexp)
-  (keymap-set smartparens-mode-map "C-M-f" #'sp-forward-sexp)
-  (keymap-set smartparens-mode-map "C-M-b" #'sp-backward-sexp)
-  (keymap-set smartparens-mode-map "C-M-n" #'sp-next-sexp)
-  (keymap-set smartparens-mode-map "C-M-p" #'sp-previous-sexp)
-  (keymap-set smartparens-mode-map "C-M-u" #'sp-up-sexp)
-  (keymap-set smartparens-mode-map "C-M-d" #'sp-down-sexp))
+  (let ((map smartparens-mode-map))
+    ;; movement
+    (keymap-set map "C-M-b" #'sp-backward-sexp)
+    (keymap-set map "C-M-d" #'sp-down-sexp)
+    (keymap-set map "C-M-f" #'sp-forward-sexp)
+    (keymap-set map "C-M-n" #'sp-next-sexp)
+    (keymap-set map "C-M-p" #'sp-previous-sexp)
+    (keymap-set map "C-M-u" #'sp-backward-up-sexp)
+    ;; barf/slurp
+    (keymap-set map "C-(" #'sp-backward-slurp-sexp)
+    (keymap-set map "C-)" (if (memq major-mode sp-lisp-modes) #'sp-forward-slurp-sexp #'sp-slurp-hybrid-sexp))
+    (keymap-set map "M-(" #'sp-backward-barf-sexp)
+    (keymap-set map "M-)" #'sp-forward-barf-sexp)
+    ;; editing
+    (keymap-set map "M-C" #'sp-change-enclosing)
+    (keymap-set map "M-D" #'sp-kill-symbol)
+    (keymap-set map "M-J" #'sp-join-sexp)
+    (keymap-set map "M-R" #'sp-raise-sexp)
+    (keymap-set map "M-S" #'sp-splice-sexp)
+    (keymap-set map "M-U" #'sp-unwrap-sexp)
+    (keymap-set map "M-W" #'sp-wrap-round)
+    (keymap-set map "C-M-<backspace>" #'sp-backward-kill-sexp)
+    (keymap-set map "M-S-<backspace>" #'sp-backward-kill-symbol)
+    (keymap-set map "C-c s C" #'sp-convolute-sexp)
+    nil))
 
 (defun setup-smartparens-lisp ()
   (smartparens-mode)
