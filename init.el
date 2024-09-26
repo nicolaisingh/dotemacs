@@ -2828,6 +2828,7 @@ Useful for completion style 'partial-completion."
       plantuml-jar-path "~/.nix-profile/bin/plantuml"
       plantuml-output-type "png")
 (add-to-list 'auto-mode-alist '("\\.plantuml\\'" . plantuml-mode))
+(add-to-list 'org-src-lang-modes '("plantuml" . plantuml))
 
 
 ;;; prism (disabled)
