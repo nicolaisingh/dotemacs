@@ -2234,6 +2234,7 @@ Useful for completion style 'partial-completion."
 ;;; multiple-cursors
 
 (require 'multiple-cursors)
+(keymap-global-set "C-c m c ." #'mc/mark-all-like-this-dwim)
 (keymap-global-set "C-c m c C-M-SPC" #'mc/mark-all-in-region-regexp)
 (keymap-global-set "C-c m c C-SPC" #'mc/mark-all-in-region)
 (keymap-global-set "C-c m c C-a" #'mc/edit-beginnings-of-lines)
@@ -2338,9 +2339,13 @@ Useful for completion style 'partial-completion."
       org-agenda-category-icon-alist '()
       org-agenda-search-view-max-outline-level 2
       org-agenda-start-with-follow-mode t
+      org-agenda-text-search-extra-files '(agenda-archives)
+      org-archive-file-header-format "#+filetags: :@archive:\n\n"
       org-archive-location "archive/%s::"
+      org-archive-reversed-order t
       org-attach-expert nil
       org-attach-id-dir "~/org/data/"        ; To allow viewing attachments even when archived
+      org-attach-method 'mv
       org-attach-preferred-new-method 'dir
       org-attach-store-link-p 'attached
       org-auto-align-tags nil
@@ -2446,14 +2451,6 @@ Useful for completion style 'partial-completion."
   ;; Call with a C-u prefix to fixup tag indentation
   (let ((current-prefix-arg '(4)))
     (call-interactively #'org-set-tags-command)))
-
-(defun org-save-dest-buffer-after-refile ()
-  "Save the destination buffer after doing a refile."
-  (interactive)
-  (save-window-excursion
-    (org-refile-goto-last-stored)
-    (call-interactively #'save-buffer)))
-(add-hook 'org-after-refile-insert-hook #'org-save-dest-buffer-after-refile)
 
 (defun org-refile-to-topic ()
   "Limit `org-refile-targets' to those having todo keyword TOPIC in the current file plus the inbox."
@@ -2593,9 +2590,9 @@ Useful for completion style 'partial-completion."
 
 (require 'org-crypt)
 (org-crypt-use-before-save-magic)
-(setq org-tags-exclude-from-inheritance '("crypt")
-      org-crypt-key "0xA4F3599BE12FDFD3"
+(setq org-crypt-key "0xA4F3599BE12FDFD3"
       org-crypt-disable-auto-save t)
+(add-to-list 'org-tags-exclude-from-inheritance "crypt")
 (keymap-set org-mode-map "C-c o e" #'org-encrypt-entry)
 (keymap-set org-mode-map "C-c o d" #'org-decrypt-entry)
 (keymap-set org-mode-map "C-c o E" #'org-encrypt-entries)
@@ -2673,7 +2670,8 @@ Useful for completion style 'partial-completion."
       org-roam-completion-everywhere t
       org-roam-node-display-template (concat
                                       "${title:100} "
-                                      (propertize "${tags}" 'face 'org-tag)
+                                      (propertize "${tags}" 'face 'default)
+                                      "${myarchive-itags}"
                                       "${mytodo}")
       org-roam-capture-templates '(("d" "default" plain "%?" :target (file+head "%<%Y%m%d%H%M%S>-${slug}.org"
                                                                                 "#+title: ${title}\n")
@@ -2719,12 +2717,23 @@ Useful for completion style 'partial-completion."
                     :foreground "slate blue")
 
 (cl-defmethod org-roam-node-mytodo ((node org-roam-node))
+  ;; Show the todo keywords when doing `org-roam-node-find'.
   (let ((todo (org-roam-node-todo node)))
     (when todo
-      (concat
-       " "
-       (cond ((equal todo "DONE") (propertize todo 'face 'org-done))
-             (t (propertize todo 'face 'org-todo)))))))
+      (format " #%s" (cond ((equal todo "DONE") (propertize todo 'face 'org-done))
+                           ((equal todo "CANCELED") (propertize todo 'face 'org-done))
+                           (t (propertize todo 'face 'org-todo)))))))
+
+(cl-defmethod org-roam-node-myarchive-itags ((node org-roam-node))
+  ;; Show some tags for archived entries when doing `org-roam-node-find'.
+  (let* ((archive-tags (cdr (assoc "ARCHIVE_ITAGS" (org-roam-node-properties node))))
+         (dropped-tags '("@inbox" "@archive")))
+    (when archive-tags
+      (let ((tags))
+        (mapcar (lambda (elt)
+                  (unless (member elt dropped-tags) (push (concat "#" elt) tags)))
+                (string-split archive-tags " "))
+        (format " %s" (propertize (string-join tags " ") 'face 'org-tag))))))
 
 (add-to-list 'display-buffer-alist
              `("\\*org-roam\\*"
