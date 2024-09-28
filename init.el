@@ -3034,6 +3034,27 @@ Useful for completion style 'partial-completion."
 (defun flush-empy-lines ()
   (interactive)
   (flush-lines "^$"))
+
+(defun replace-region-with (string)
+  "Replace text in the region with STRING."
+  (interactive "sReplace region with: ")
+  (save-excursion
+    (let ((begin (use-region-beginning))
+          (end (use-region-end)))
+      (unless (or (null begin) (null end))
+        (goto-char begin)
+        (atomic-change-group ;; Treat the following as a single undo
+          (while (< (point) end)
+            (let ((line-start (if (< (pos-bol) begin) begin (pos-bol)))
+                  (line-end (if (> (pos-eol) end) end (pos-eol))))
+              (delete-region line-start line-end)
+              (insert (let* ((len (- line-end line-start))
+                             (string (mapconcat #'identity (make-list len string))))
+                        (if (length> string len)
+                            (substring string 0 len)
+                          string)))
+              (forward-line 1))))))))
+
 (keymap-set selected-keymap "C" #'capitalize-region)
 (keymap-set selected-keymap "E" #'flush-empy-lines)
 (keymap-set selected-keymap "F" #'flush-lines)
@@ -3045,6 +3066,7 @@ Useful for completion style 'partial-completion."
 (keymap-set selected-keymap "s" #'sort-lines)
 (keymap-set selected-keymap "u" #'unfill-region)
 (keymap-set selected-keymap "q" #'selected-off)
+(keymap-set selected-keymap "R" #'replace-region-with)
 (selected-global-mode 1)
 
 (defun turn-off-selected-minor-mode ()
