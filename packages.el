@@ -37,7 +37,10 @@
         diminish
         dired-narrow
         dired-recent
-        dired-toggle
+
+        dired-subtree
+        dired-sidebar
+
         dockerfile-mode
         easy-kill
         edit-indirect
