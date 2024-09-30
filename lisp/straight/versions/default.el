@@ -34,7 +34,7 @@
  ("diminish.el" . "fbd5d846611bad828e336b25d2e131d1bc06b83d")
  ("dired-hacks" . "e9e408e8571aee5574ca0a431ef15cac5a3585d4")
  ("dired-recent.el" . "a0869778e252b97c568140bca366955f9391d885")
- ("dired-toggle" . "7fe5fe35c63d1b0da14d6d6d52bdf6b2a5410ba7")
+ ("dired-sidebar" . "702165ad53a473992d84e0207b984b9be5114bde")
  ("dockerfile-mode" . "39a012a27fcf6fb629c447d13b6974baf906714c")
  ("easy-kill" . "de7d66c3c864a4722a973ee9bc228a14be49ba0c")
  ("edit-indirect" . "82a28d8a85277cfe453af464603ea330eae41c05")

@@ -1095,9 +1095,9 @@ Inspired by https://oremacs.com/2017/03/18/dired-ediff"
 (keymap-set dired-mode-map "C-c m e" #'dired-create-empty-file)
 (keymap-set dired-mode-map "C-c m d" #'dired-ediff-marked-files)
 (keymap-set dired-mode-map "C-c m !" #'dired-apply-to-marked-files)
-(with-eval-after-load 'origami
-  (keymap-set dired-mode-map "<tab>" #'origami-toggle-node)
-  (keymap-set dired-mode-map "<backtab>" #'origami-toggle-all-nodes))
+(with-eval-after-load 'dired-subtree
+  (keymap-set dired-mode-map "<tab>" #'dired-subtree-toggle)
+  (keymap-set dired-mode-map "<backtab>" #'dired-subtree-cycle))
 (with-eval-after-load 'org
   (keymap-set dired-mode-map "C-c C-a" #'org-attach-dired-to-subtree))
 
@@ -1148,6 +1148,24 @@ be file B."
 (setq dired-narrow-map nil)
 (keymap-set dired-mode-map "/ /" #'dired-narrow)
 (keymap-set dired-mode-map "/ r" #'dired-narrow-regexp)
+
+
+;;; dired-sidebar
+
+(require 'dired-sidebar)
+(setq dired-sidebar-should-follow-file nil
+      dired-sidebar-theme 'none)
+(add-hook 'dired-sidebar-mode-hook (lambda () (interactive) (hl-line-mode -1)))
+
+(keymap-set dired-sidebar-mode-map "z" #'dired-sidebar-up-directory)
+(keymap-global-set "C-c d s" #'dired-sidebar-toggle-sidebar)
+(keymap-global-set "C-c d S" #'dired-sidebar-jump-to-sidebar)
+
+
+;;; dired-subtree
+
+(require 'dired-subtree)
+(setq dired-subtree-use-backgrounds nil)
 
 
 ;;; easy-kill
