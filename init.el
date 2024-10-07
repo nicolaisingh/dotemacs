@@ -584,11 +584,8 @@ times."
 ;;; avy
 
 (require 'avy)
-(setq avy-timeout-seconds 0.4)
-(set-face-attribute 'avy-lead-face nil :background "lightgoldenrod1" :foreground "black")
-(set-face-attribute 'avy-lead-face-0 nil :background "lightgoldenrod1" :foreground "black")
-(set-face-attribute 'avy-lead-face-1 nil :background "lightgoldenrod1" :foreground "black")
-(set-face-attribute 'avy-lead-face-2 nil :background "lightgoldenrod1" :foreground "black")
+(setq avy-timeout-seconds 0.4
+      avy-keys '(?a ?o ?e ?u ?i ?d ?h ?t ?n ?s))
 (keymap-global-set "C-z C-v" #'avy-goto-char-timer)
 
 
@@ -2439,21 +2436,6 @@ Useful for completion style 'partial-completion."
                                ("WAITING" :foreground "black" :background "plum1" :box (:style released-button) :height 0.8)
                                ("WIP" :foreground "black" :background "peachpuff1" :box (:style released-button) :height 0.8)))
 
-(set-face-attribute 'org-block t :background "gray96" :inherit 'shadow)
-(set-face-attribute 'org-block-begin-line t :inherit 'shadow :background "gray90")
-(set-face-attribute 'org-block-end-line t :background "gray90")
-(set-face-attribute 'org-date t :height 0.85 :background "lavender" :foreground "black")
-(set-face-attribute 'org-level-1 t :height 1.1 :weight 'normal)
-(set-face-attribute 'org-level-2 t :height 1.1 :weight 'normal)
-(set-face-attribute 'org-level-3 t :height 1.0 :weight 'normal)
-(set-face-attribute 'org-level-4 t :height 1.0 :weight 'normal)
-(set-face-attribute 'org-property-value t :height 0.8 :foreground "gray50")
-(set-face-attribute 'org-special-keyword t :height 0.8)
-(set-face-attribute 'org-todo t :weight 'normal)
-(set-face-attribute 'org-done t :weight 'normal)
-(with-eval-after-load 'org-modern
-  (set-face-attribute 'org-drawer t :inherit 'org-modern-label :foreground "gray50"))
-
 (with-eval-after-load 'org
   (require 'ox-md)
   (require 'ox-gfm)
@@ -2647,7 +2629,6 @@ Useful for completion style 'partial-completion."
                               ("TOPIC" :background "slategray1" :foreground "black" :weight normal :box (:style released-button :line-width (0 . -1)))
                               ("WAITING" :background "plum1" :foreground "black" :weight normal :box (:style released-button :line-width (0 . -1)))
                               ("WIP" :background "peachpuff1" :foreground "black" :weight normal :box (:style released-button :line-width (0 . -1)))))
-(set-face-attribute 'org-modern-label nil :height 0.85)
 
 (defun my-org-modern-mode-toggle ()
   "Toggle `org-modern-mode' with some minor customization."
@@ -2725,14 +2706,6 @@ Useful for completion style 'partial-completion."
       org-roam-dailies-capture-templates '(("d" "default" entry "* %?"
                                             :target (file+head "%<%Y-%m-%d>.org" "#+title: Journal - %<%Y-%m-%d>\n")
                                             :empty-lines 1)))
-
-(require 'org-roam-dailies)
-(require 'org-roam-mode)
-(set-face-attribute 'org-roam-dailies-calendar-note nil :weight 'bold)
-(set-face-attribute 'org-roam-title nil
-                    :weight 'bold
-                    :box '(:style released-button)
-                    :foreground "slate blue")
 
 (cl-defmethod org-roam-node-mytodo ((node org-roam-node))
   ;; Show the todo keywords when doing `org-roam-node-find'.
@@ -3247,7 +3220,6 @@ Useful for completion style 'partial-completion."
       yas-triggers-in-field t
       yas-wrap-around-region t)
 
-(set-face-attribute 'yas-field-highlight-face t :inherit 'minibuffer-prompt)
 (keymap-global-set "C-c y s" yas-minor-mode-map)
 (yas-global-mode t)
 
