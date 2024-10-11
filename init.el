@@ -1690,11 +1690,12 @@ The default format is specified by `emms-source-playlist-default-format'."
 ;;; gnus-group
 
 (require 'gnus-group)
-(setq gnus-group-goto-unread t
-      gnus-group-line-format "%M%S%p%P%5y:%B%(%g%)\n"
+(setq gnus-keep-same-level t
+      gnus-group-goto-unread t
+      gnus-group-line-format "%M%S%p%P%5y:%B%(%G%)\n"
+      gnus-group-sort-function '(gnus-group-sort-by-alphabet gnus-group-sort-by-level)
       gnus-permanently-visible-groups "INBOX")
 (add-hook 'gnus-group-mode-hook #'gnus-topic-mode)
-(add-hook 'gnus-group-mode-hook #'hl-line-mode)
 
 (defun my-gnus-offlineimap-sync ()
   (interactive)
@@ -1723,13 +1724,17 @@ The default format is specified by `emms-source-playlist-default-format'."
 
 (require 'gnus-start)
 (setq gnus-always-read-dribble-file t
-      gnus-level-default-subscribed 4
-      gnus-read-active-file #'some
-      gnus-read-newsrc-file nil
-      gnus-save-newsrc-file nil
       gnus-subscribe-newsgroup-method 'gnus-subscribe-topics
-      gnus-activate-level 3)
+      ;; 1-5 : subscribed
+      ;; 6-7 : unsubscribed
+      ;; 8   : zombie
+      ;; 9   : killed
+      gnus-activate-level 2
+      gnus-level-default-subscribed 3
 
+      ;; Don't maintain the .newsrc file
+      gnus-read-newsrc-file nil
+      gnus-save-newsrc-file nil)
 
 
 ;;; gnus-sum
@@ -1750,8 +1755,6 @@ The default format is specified by `emms-source-playlist-default-format'."
       gnus-summary-same-subject ""
       gnus-thread-hide-subtree t
       gnus-thread-sort-functions '((not gnus-thread-sort-by-number)))
-
-(add-hook 'gnus-summary-mode-hook #'hl-line-mode)
 
 (defun my-gnus-trash-article (arg)
   (interactive "P")

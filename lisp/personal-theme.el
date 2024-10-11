@@ -198,13 +198,29 @@ numbered variants the same as the base color."
      `(font-lock-type-face ((t (:foreground ,color-blue-2))))
      `(font-lock-variable-name-face ((t (:foreground ,color-red-2))))
 
+     ;; gnus
+     `(gnus-group-mail-1-empty ((t (:foreground ,color-red-3))))
+     `(gnus-group-mail-2-empty ((t (:foreground ,color-red))))
+     `(gnus-group-mail-3-empty ((t (:foreground ,color-magenta-3))))
+     `(gnus-group-mail-low-empty ((t (:foreground ,color-magenta))))
+     `(gnus-group-news-1-empty ((t (:foreground ,color-green-3))))
+     `(gnus-group-news-2-empty ((t (:foreground ,color-green))))
+     `(gnus-group-news-3-empty ((t (:foreground ,color-blue-3))))
+     `(gnus-group-news-low-empty ((t (:foreground ,color-blue))))
+     `(gnus-header ((t (:family "Noto Sans" :height 1.1))))
+     `(gnus-header-content ((t (:inherit gnus-header :foreground ,color-green-2))))
+     `(gnus-header-from ((t (:inherit gnus-header :foreground ,color-red-2))))
+     `(gnus-header-name ((t (:inherit gnus-header :foreground ,color-magenta-2))))
+     `(gnus-header-newsgroups ((t (:foreground ,color-blue-4))))
+     `(gnus-header-subject ((t (:inherit gnus-header :foreground ,color-red-3))))
+
      ;; isearch
      `(isearch ((t (:foreground "white" :background ,color-magenta-2))))
      `(isearch-fail ((t (:background ,color-red-light))))
      `(lazy-highlight ((t (:distant-foreground "black" :background ,color-cyan-light))))
 
      ;; org, org-modern, org-roam
-     `(org-block ((t (:inherit shadow :extend t :background "gray97"))))
+     `(org-block ((t (:inherit shadow :extend t :background "gray97" :foreground "gray40"))))
      `(org-block-begin-line ((t (:inherit org-meta-line :extend t :background "gray97"))))
      `(org-block-end-line ((t (:inherit org-meta-line :extend t :background "gray97"))))
      `(org-date ((t (:inherit default :background ,color-magenta-light :height 0.9 :underline t))))
