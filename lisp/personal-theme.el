@@ -189,14 +189,14 @@ numbered variants the same as the base color."
      `(eshell-prompt ((t (:foreground ,color-red :weight bold))))
 
      ;; font-lock
-     `(font-lock-builtin-face ((t (:foreground ,color-blue))))
+     `(font-lock-builtin-face ((t (:foreground ,color-blue-2))))
      `(font-lock-comment-face ((t (:foreground ,color-orange-2))))
-     `(font-lock-constant-face ((t (:foreground ,color-cyan))))
-     `(font-lock-function-name-face ((t (:foreground ,color-blue))))
+     `(font-lock-constant-face ((t (:foreground ,color-cyan-2))))
+     `(font-lock-function-name-face ((t (:foreground ,color-blue-2))))
      `(font-lock-keyword-face ((t (:foreground ,color-magenta-2))))
-     `(font-lock-string-face ((t (:foreground ,color-green))))
-     `(font-lock-type-face ((t (:foreground ,color-blue))))
-     `(font-lock-variable-name-face ((t (:foreground ,color-red))))
+     `(font-lock-string-face ((t (:foreground ,color-green-2))))
+     `(font-lock-type-face ((t (:foreground ,color-blue-2))))
+     `(font-lock-variable-name-face ((t (:foreground ,color-red-2))))
 
      ;; isearch
      `(isearch ((t (:foreground "white" :background ,color-magenta-2))))
