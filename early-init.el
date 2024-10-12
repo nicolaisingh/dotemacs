@@ -22,9 +22,7 @@
 ;; (add-to-list 'fringe-styles '("padded" 12))
 ;; (fringe-mode 12)
 
-(add-to-list 'initial-frame-alist '(fullscreen . maximized))
-(add-to-list 'default-frame-alist '(height . 60))
-(add-to-list 'default-frame-alist '(width . 180))
+(add-to-list 'default-frame-alist '(fullscreen . maximized))
 
 (provide 'early-init)
 ;;; early-init.el ends here
