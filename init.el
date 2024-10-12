@@ -480,7 +480,7 @@ times."
   (keymap-global-set "C-x B" #'bury-buffer)
   (keymap-global-set "C-x C-M-c" #'save-buffers-kill-emacs)
   (keymap-global-set "C-x C-m" (key-binding (kbd "M-x")))
-  (keymap-global-set "C-x K" #'kill-this-buffer)
+  (keymap-global-set "C-x K" #'kill-current-buffer)
   (keymap-global-set "C-x a /" #'unexpand-abbrev)
   (keymap-global-set "C-z C-l" #'chatgpt-shell)
   (keymap-global-set "C-z C-s" #'eshell-toggle)
@@ -1465,6 +1465,7 @@ The default format is specified by `emms-source-playlist-default-format'."
 (keymap-set emms-mark-mode-map "M" #'emms-mark-mode-disable)
 (keymap-set emms-metaplaylist-mode-map "G" #'emms-my-metaplaylist-find-all-playlists)
 (keymap-set emms-metaplaylist-mode-map "f" #'emms-my-metaplaylist-find-playlist)
+(keymap-set emms-metaplaylist-mode-map "q" #'kill-current-buffer)
 (keymap-set emms-metaplaylist-mode-map "z" #'emms-playlist-mode-go)
 (keymap-set emms-playlist-mode-map "%" #'emms-shuffle)
 (keymap-set emms-playlist-mode-map "," #'emms-seek-backward)
@@ -1626,11 +1627,7 @@ The default format is specified by `emms-source-playlist-default-format'."
                 (nnimap-stream plain)
                 (nnimap-user "nicolaisingh@pm.me")))
       gnus-parameters
-      '(("gaming"
-         (subscribe . "nnrss")
-         (subscribe-level . 5))
-
-        ("INBOX"
+      '(("INBOX"
          (total-expire . t)
          (gnus-use-scoring nil)
          (expiry-target . "nnimap+proton:Archive")
@@ -3017,6 +3014,16 @@ Useful for completion style 'partial-completion."
       recentf-menu-filter 'recentf-show-basenames-ascending)
 (add-to-list 'recentf-exclude "\\/sudoedit:root")
 (run-at-time nil (* 10 60) 'recentf-save-list) ; Save every 10 minutes
+
+(defun recentf-cleanup-quietly (orig-fun &rest _)
+  "Don't print log messages while calling ORIG-FUN."
+  (let ((inhibit-message t)) (funcall orig-fun)))
+(advice-add #'recentf-cleanup :around #'recentf-cleanup-quietly)
+
+(defun recentf-save-list-quietly (orig-fun &rest _)
+  "Don't print log messages while calling ORIG-FUN."
+  (let ((inhibit-message t)) (funcall orig-fun)))
+(advice-add #'recentf-save-list :around #'recentf-save-list-quietly)
 
 (defun recentf-open-files-completing-read ()
   (interactive)
