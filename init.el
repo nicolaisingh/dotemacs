@@ -1629,7 +1629,6 @@ The default format is specified by `emms-source-playlist-default-format'."
       gnus-parameters
       '(("INBOX"
          (total-expire . t)
-         (gnus-use-scoring nil)
          (expiry-target . "nnimap+proton:Archive")
          (expiry-wait . 84))
 
@@ -1639,13 +1638,15 @@ The default format is specified by `emms-source-playlist-default-format'."
          (expiry-wait . 56))
 
         ("daily.summary"
-         (gnus-show-threads nil)
          (gnus-summary-line-format "%U%R%z%(%-20,20f%) : %s %1{%[ %&user-date; %]%}\n")
+         (gnus-show-threads nil)
+         (gnus-use-scoring nil)
          (gnus-article-sort-functions '(gnus-thread-sort-by-most-recent-date)))
 
         ("notifications"
          (gnus-summary-line-format "%U%R%z%(%-20,20f%) : %s %1{%[ %&user-date; %]%}\n")
          (gnus-show-threads nil)
+         (gnus-use-scoring nil)
          (gnus-article-sort-functions '(gnus-thread-sort-by-most-recent-date)))
 
         ("notifications$"
@@ -1663,12 +1664,13 @@ The default format is specified by `emms-source-playlist-default-format'."
       gnus-interactive-exit 'quiet
       gnus-large-newsgroup 1000
       gnus-novice-user nil
-      gnus-summary-line-format "%U%R%z%(%-20,20f%) : %B %1{%[ %&user-date; %]%}\n"
+      gnus-summary-line-format "%U%R%z%(%-20,20f%) %2t : %B %1{%[%&user-date;%]%}\n"
       gnus-use-cache t
       gnus-use-trees nil
       ;; FIXME
       mm-text-html-renderer 'gnus-w3m
-      message-signature "Drew")
+      message-signature "Drew"
+      gnus-max-image-proportion 0.5)
 
 
 ;;; gnus-async
@@ -1682,6 +1684,11 @@ The default format is specified by `emms-source-playlist-default-format'."
 (require 'gnus-cache)
 (setq gnus-cacheable-groups nil
       gnus-uncacheable-groups "^nnml\\|^nnfolder\\|^nnmaildir")
+
+
+;;; gnus-dired
+(require 'gnus-dired)
+(add-hook 'dired-mode-hook #'gnus-dired-mode)
 
 
 ;;; gnus-group
@@ -1709,6 +1716,22 @@ The default format is specified by `emms-source-playlist-default-format'."
 
 (require 'gnus-salt)
 (setq gnus-generate-tree-function #'gnus-generate-horizontal-tree)
+
+
+;;; gnus-score
+
+(require 'gnus-score)
+(setq gnus-default-adaptive-score-alist
+      '((gnus-saved-mark (subject 15))
+        (gnus-replied-mark (subject 10) (from 5))
+        (gnus-read-mark (subject 5) (from 1))
+        (gnus-del-mark (subject -5) (from -1))
+        (gnus-killed-mark (subject -10) (from -5))
+        (gnus-catchup-mark (subject -15)))
+      gnus-score-expiry-days 90
+      gnus-use-adaptive-scoring '(line)
+      gnus-adaptive-pretty-print t
+      gnus-summary-mark-below -50)
 
 
 ;;; gnus-search

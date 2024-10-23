@@ -117,6 +117,7 @@
         prism
         prodigy
         pytest
+        qrencode
         readline-complete
         restclient
         (saveplace-pdf-view :host github :depth full)
