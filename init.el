@@ -2307,6 +2307,24 @@ Useful for completion style 'partial-completion."
 (add-hook 'markdown-mode-hook #'visual-line-fill-column-mode)
 
 
+;;; mermaid-mode
+
+(require 'mermaid-mode)
+(require 'mermaid-ts-mode)
+(setq mermaid-ts-indent-level 4)
+(add-to-list 'auto-mode-alist '("\\.mermaid\\'" . mermaid-ts-mode))
+(add-to-list 'auto-mode-alist '("\\.mmd\\'" . mermaid-ts-mode))
+(keymap-set mermaid-ts-mode-map "C-c C-b" #'mermaid-compile-buffer)
+(keymap-set mermaid-ts-mode-map "C-c C-d" #'mermaid-open-doc)
+(keymap-set mermaid-ts-mode-map "C-c C-f" #'mermaid-compile-file)
+(keymap-set mermaid-ts-mode-map "C-c C-o" #'mermaid-open-browser)
+(keymap-set mermaid-ts-mode-map "C-c C-r" #'mermaid-compile-region)
+(keymap-set mermaid-ts-mode-map "C-c C-c" (lambda ()
+                                            (interactive)
+                                            (save-buffer)
+                                            (mermaid-compile)))
+
+
 ;;; multi-term
 
 (require 'multi-term)
@@ -3027,6 +3045,12 @@ Useful for completion style 'partial-completion."
         (write-file (concat out-dir out-filename))
         (message "Wrote config to %s" (concat out-dir out-filename))))))
 
+(keymap-set python-mode-map "C-c C-b" (lambda ()
+                                        "Create a buffer-dedicated python shell."
+                                        (interactive)
+                                        (run-python (python-shell-calculate-command) t t)))
+(keymap-set python-mode-map "C-c C-t" #'python-shell-restart)
+
 
 ;;; recentf
 
@@ -3233,6 +3257,12 @@ Useful for completion style 'partial-completion."
 (require 'solidity-mode)
 
 
+;;; tide
+
+(require 'tide)
+(add-hook 'typescript-ts-mode-hook #'tide-setup)
+
+
 ;;; time
 
 (require 'time)
@@ -3254,6 +3284,7 @@ Useful for completion style 'partial-completion."
 (require 'treesit)
 (setq treesit-language-source-alist
       '((bash "https://github.com/tree-sitter/tree-sitter-bash")
+        (mermaid "https://github.com/monaqa/tree-sitter-mermaid")
         (typescript "https://github.com/tree-sitter/tree-sitter-typescript" nil "typescript/src")
         (tsx "https://github.com/tree-sitter/tree-sitter-typescript" nil "tsx/src")))
 

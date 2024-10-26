@@ -81,6 +81,8 @@
         magit
         marginalia
         markdown-mode
+        mermaid-mode
+        mermaid-ts-mode
         multi-term
         multiple-cursors
         native-complete
@@ -126,6 +128,7 @@
         slime
         smartparens
         solidity-mode
+        tide
         transient
         transpose-frame
         tree-mode
