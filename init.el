@@ -943,6 +943,11 @@ If ARG is Non-nil, the existing command log buffer is cleared."
   (add-hook 'after-init-hook #'global-company-mode))
 
 
+;;; conf-mode
+
+(add-to-list 'auto-mode-alist '("\\.env.*\\'" . conf-mode))
+
+
 ;;; consult
 
 (require 'consult)
@@ -1030,12 +1035,13 @@ If ARG is Non-nil, the existing command log buffer is cleared."
 
 (defun my-diminish-config ()
   "Load diminished modes."
+  (diminish-mode 'autorevert 'auto-revert-mode)
   (diminish-mode 'org-indent 'org-indent-mode)
+  (diminish-mode 'prettier-js 'prettier-js-mode)
   (diminish-mode 'selected 'selected-minor-mode)
   (diminish-mode 'smartparens 'smartparens-mode)
   (diminish-mode 'subword 'subword-mode)
-  (diminish-mode 'yasnippet 'yas-minor-mode)
-  (diminish-mode 'autorevert 'auto-revert-mode))
+  (diminish-mode 'yasnippet 'yas-minor-mode))
 (add-hook 'after-init-hook #'my-diminish-config)
 
 
@@ -1143,8 +1149,8 @@ be file B."
 ;;; dired-marked
 
 (require 'dired-marked)
-(keymap-set dired-mode-map "@ c" #'dired-marked-copy-file-to-marked-directories)
-(keymap-set dired-mode-map "@ u" #'dired-marked-unmark-all)
+(keymap-set dired-mode-map "* C" #'dired-marked-copy-file-to-marked-directories)
+(keymap-set dired-mode-map "* U" #'dired-marked-unmark-all)
 
 
 ;;; dired-narrow (from dired-hacks)
@@ -1229,6 +1235,10 @@ be file B."
                  eglot-ignored-server-capabilities '(:documentHighlightProvider
                                                      :hoverProvider
                                                      :documentRangeFormattingProvider
+                                                     :inlayHintProvider))
+(setq-mode-local typescript-ts-mode
+                 eglot-ignored-server-capabilities '(:documentHighlightProvider
+                                                     :hoverProvider
                                                      :inlayHintProvider))
 
 
@@ -2524,7 +2534,7 @@ Useful for completion style 'partial-completion."
                                :empty-lines 1
                                :prepend t))
 
-      org-refile-targets '((nil :maxlevel . 1)
+      org-refile-targets '((nil :maxlevel . 2)
                            ("~/org/inbox.org" :todo . "TOPIC")
                            (org-refile-target-projects :todo . "INBOX")
                            (org-refile-target-projects :todo . "TODO"))
@@ -2696,7 +2706,7 @@ Useful for completion style 'partial-completion."
 
 (require 'org-crypt)
 (org-crypt-use-before-save-magic)
-(setq org-crypt-key "0xA4F3599BE12FDFD3"
+(setq org-crypt-key "0x837541986DF6E7AB"
       org-crypt-disable-auto-save t)
 (add-to-list 'org-tags-exclude-from-inheritance "crypt")
 (keymap-set org-mode-map "C-c o e" #'org-encrypt-entry)
@@ -2935,6 +2945,10 @@ Useful for completion style 'partial-completion."
       plantuml-output-type "png")
 (add-to-list 'auto-mode-alist '("\\.plantuml\\'" . plantuml-mode))
 (add-to-list 'org-src-lang-modes '("plantuml" . plantuml))
+
+
+;;; prettier
+(add-hook 'typescript-ts-mode-hook #'prettier-js-mode)
 
 
 ;;; prism (disabled)
@@ -3260,7 +3274,7 @@ Useful for completion style 'partial-completion."
 ;;; tide
 
 (require 'tide)
-(add-hook 'typescript-ts-mode-hook #'tide-setup)
+(add-hook 'typescript-ts-mode-hook #'eglot-ensure)
 
 
 ;;; time
@@ -3298,6 +3312,7 @@ Useful for completion style 'partial-completion."
 (add-hook 'typescript-ts-mode-hook #'smartparens-mode)
 (add-hook 'typescript-ts-mode-hook #'smartparens-strict-mode)
 (add-hook 'typescript-ts-mode-hook #'show-smartparens-mode)
+(add-hook 'typescript-ts-mode-hook #'subword-mode)
 
 
 ;;; which-key (disabled)

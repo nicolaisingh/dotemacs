@@ -116,6 +116,7 @@
         pcsv
         pdf-tools
         plantuml-mode
+        prettier-js
         prism
         prodigy
         pytest
