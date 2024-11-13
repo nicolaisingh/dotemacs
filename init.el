@@ -2661,7 +2661,7 @@ Useful for completion style 'partial-completion."
 
 (defun my-org-capture-inbox (goto)
   (interactive "P")
-  (org-capture goto "i"))
+  (org-capture goto "c"))
 
 (defun my-org-dired ()
   (interactive)
