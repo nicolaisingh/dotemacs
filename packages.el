@@ -24,6 +24,7 @@
         command-log-mode
         consult
         consult-dir
+        consult-org-roam
         corfu
         cov
         csv-mode

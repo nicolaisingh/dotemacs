@@ -447,6 +447,11 @@ times."
 (defun my-sanitize-string (str)
   (replace-regexp-in-string "[^[:alnum:]-]" "_" str))
 
+(defun single-blank-lines-only ()
+  (interactive)
+  "Replace consecutive blank lines with single blank lines in the entire buffer."
+  (replace-regexp-in-region "\n+$" "\n" (point-min) (point-max)))
+
 (keymap-global-set "C-c y o" #'my-yank-to-other-window)
 (keymap-global-set "C-c i TAB" #'indent-using-tabs-and-fixup)
 (keymap-global-set "C-c i SPC" #'indent-using-spaces-and-fixup)
@@ -951,7 +956,8 @@ If ARG is Non-nil, the existing command log buffer is cleared."
 ;;; consult
 
 (require 'consult)
-(setq consult-preview-key "C-SPC")
+(setq consult-preview-key "C-SPC"
+      consult-narrow-key "<")
 (keymap-global-set "<remap> <repeat-complex-command>" #'consult-complex-command)
 (keymap-global-set "<remap> <switch-to-buffer-other-frame>" #'consult-buffer-other-frame)
 (keymap-global-set "<remap> <switch-to-buffer-other-window>" #'consult-buffer-other-window)
@@ -968,6 +974,19 @@ If ARG is Non-nil, the existing command log buffer is cleared."
 (keymap-set minibuffer-local-map "M-g d" #'consult-dir)
 (keymap-set minibuffer-local-map "M-g f" #'consult-dir-jump-file)
 (keymap-set minibuffer-local-map "M-s" #'consult-history)
+
+
+;;; consult-org-roam
+
+(with-eval-after-load 'org-roam
+  (require 'consult-org-roam)
+  (setq consult-org-roam-grep-func #'consult-ripgrep
+        consult-org-roam-buffer-after-buffers nil)
+  (consult-org-roam-mode 1)
+  (keymap-global-set "C-c n f" #'consult-org-roam-file-find)
+  (keymap-global-set "C-c n g" #'consult-org-roam-search)
+  (keymap-set org-mode-map "C-c n <" #'consult-org-roam-backlinks)
+  (keymap-set org-mode-map "C-c n >" #'consult-org-roam-forward-links))
 
 
 ;;; corfu
@@ -2509,23 +2528,8 @@ Useful for completion style 'partial-completion."
         ("P" "All TODOs" ((tags-todo "@project-CATEGORY=\"routines\"") (tags-todo "@inbox")))
         ("R" "All routines" ((tags-todo "+CATEGORY=\"routines\""))))
 
-      org-capture-templates '(("i" "Inbox" entry
+      org-capture-templates '(("c" "Capture something" entry
                                (file org-default-notes-file)
-                               "* %?\n:PROPERTIES:\n:CREATED:  %U\n:END:"
-                               :empty-lines 1
-                               :prepend t)
-                              ("p" "Inbox - Personal" entry
-                               (file+olp org-default-notes-file "Personal")
-                               "* %?\n:PROPERTIES:\n:CREATED:  %U\n:END:"
-                               :empty-lines 1
-                               :prepend t)
-                              ("e" "Inbox - Emacs" entry
-                               (file+olp org-default-notes-file "Emacs")
-                               "* %?\n:PROPERTIES:\n:CREATED:  %U\n:END:"
-                               :empty-lines 1
-                               :prepend t)
-                              ("f" "Inbox - Family" entry
-                               (file+olp org-default-notes-file "Family")
                                "* %?\n:PROPERTIES:\n:CREATED:  %U\n:END:"
                                :empty-lines 1
                                :prepend t)
@@ -2574,7 +2578,15 @@ Useful for completion style 'partial-completion."
   (let ((org-refile-use-outline-path t)
         (org-refile-targets '((nil :todo . "TOPIC")
                               ("~/org/inbox.org" :todo . "TOPIC"))))
-    (call-interactively #'org-refile)))
+    (org-refile)))
+
+(defun org-capture-refile-to-topic ()
+  "Limit `org-refile-targets' to those having todo keyword TOPIC in the current file plus the inbox."
+  (interactive)
+  (let ((org-refile-use-outline-path t)
+        (org-refile-targets '((nil :todo . "TOPIC")
+                              ("~/org/inbox.org" :todo . "TOPIC"))))
+    (org-capture-refile)))
 
 (defun org-link-retain-description ()
   "Delete an org-mode-link and retain only the description."
@@ -2601,11 +2613,12 @@ Useful for completion style 'partial-completion."
   (keymap-set org-mode-map "C-c C--" #'org-ctrl-c-minus)
   (keymap-set org-mode-map "C-c C-8" #'org-ctrl-c-star)
   (keymap-set org-mode-map "C-c C-SPC" #'org-table-blank-field)
-  (keymap-set org-mode-map "C-c C-S-W" #'org-refile-to-topic)
+  (keymap-set org-mode-map "C-c C-M-t" #'org-refile-to-topic)
   (keymap-set org-mode-map "C-M-q" #'org-fixup-whitespace)
   (keymap-set org-mode-map "C-M-h" #'org-mark-subtree)
   (keymap-set org-mode-map "C-c o L" #'org-link-retain-description)
   (keymap-set org-mode-map "C-c o >" #'my-calendar-mark-org-headings)
+  (keymap-set org-capture-mode-map "C-c C-M-t" #'org-capture-refile-to-topic)
   ;; requires consult
   (keymap-set org-mode-map "C-c *" #'consult-org-heading))
 
@@ -2641,6 +2654,9 @@ Useful for completion style 'partial-completion."
 (add-hook 'org-mode-hook #'visual-line-fill-column-mode)
 (add-hook 'org-mode-hook #'org-indent-mode)
 (add-hook 'org-after-refile-insert-hook #'my-org-id-get-create)
+(add-hook 'org-capture-prepare-finalize-hook #'beginning-of-buffer) ; so the ID property gets added to the root node
+(add-hook 'org-capture-prepare-finalize-hook #'whitespace-cleanup)
+(add-hook 'org-capture-prepare-finalize-hook #'single-blank-lines-only)
 (add-hook 'org-capture-before-finalize-hook #'my-org-id-get-create)
 
 (defun my-org-capture-inbox (goto)
@@ -2785,7 +2801,7 @@ Useful for completion style 'partial-completion."
       org-roam-completion-everywhere t
       org-roam-node-display-template (concat
                                       "${title:100} "
-                                      (propertize "${tags}" 'face 'default)
+                                      (propertize "${tags}" 'foreground 'default)
                                       "${myarchive-itags}"
                                       "${mytodo}")
       org-roam-capture-templates '(("d" "default" plain "%?" :target (file+head "%<%Y%m%d%H%M%S>-${slug}.org"
@@ -2827,9 +2843,9 @@ Useful for completion style 'partial-completion."
   ;; Show the todo keywords when doing `org-roam-node-find'.
   (let ((todo (org-roam-node-todo node)))
     (when todo
-      (format " #%s" (cond ((equal todo "DONE") (propertize todo 'face 'org-done))
-                           ((equal todo "CANCELED") (propertize todo 'face 'org-done))
-                           (t (propertize todo 'face 'org-todo)))))))
+      (format " #%s" (cond ((equal todo "DONE") (propertize todo 'face 'bold))
+                           ((equal todo "CANCELED") (propertize todo 'face 'bold))
+                           (t (propertize todo 'face 'bold)))))))
 
 (cl-defmethod org-roam-node-myarchive-itags ((node org-roam-node))
   ;; Show some tags for archived entries when doing `org-roam-node-find'.
@@ -2840,7 +2856,7 @@ Useful for completion style 'partial-completion."
         (mapcar (lambda (elt)
                   (unless (member elt dropped-tags) (push (concat "#" elt) tags)))
                 (string-split archive-tags " "))
-        (format " %s" (propertize (string-join tags " ") 'face 'org-tag))))))
+        (format " %s" (propertize (string-join tags " ") 'foreground 'default))))))
 
 (add-to-list 'display-buffer-alist
              `("\\*org-roam\\*"
