@@ -2506,7 +2506,7 @@ Useful for completion style 'partial-completion."
       org-export-with-sub-superscripts '{}
       org-fontify-done-headline nil
       org-fontify-todo-headline nil
-      org-hide-emphasis-markers nil
+      org-hide-emphasis-markers t
       org-hide-leading-stars nil
       org-image-actual-width 500
       org-indent-mode-turns-on-hiding-stars t
@@ -2927,6 +2927,14 @@ Useful for completion style 'partial-completion."
 (setq org-sticky-header-at-point t
       org-sticky-header-heading-star "■"
       org-sticky-header-full-path 'full)
+
+
+;;; org-web-tools
+
+(keymap-set org-mode-map "C-c o C-y" #'org-web-tools-insert-link-for-url)
+(keymap-set org-mode-map "C-c o w i" #'org-web-tools-insert-web-page-as-entry)
+(keymap-set org-mode-map "C-c o w a" #'org-web-tools-archive-attach)
+(keymap-set org-mode-map "C-c o w v" #'org-web-tools-archive-view)
 
 
 ;;; origami

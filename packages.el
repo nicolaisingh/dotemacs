@@ -95,12 +95,13 @@
         ob-kotlin
         ob-nix
         orderless
-        org-bookmark-heading
         org-alert
+        org-bookmark-heading
         org-modern
         org-present
         org-roam
         org-sticky-header
+        org-web-tools
         origami
         osm
         ox-gfm
