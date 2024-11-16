@@ -319,6 +319,20 @@ From https://www.emacswiki.org/emacs/XModMapMode")
 
 ;;;; Functions
 
+(defun my-sort-init-file ()
+  "Sort the init file."
+  (interactive)
+  (save-excursion
+    (goto-char (point-min))
+    ;; Packages
+    (re-search-forward "^;;;; Package loads$")
+    (forward-page)
+    (let ((start (point)))
+      (point-marker)
+      (end-of-buffer)
+      (backward-page)
+      (sort-pages nil start (point)))))
+
 (defun find-init-file ()
   "Find my Emacs init file."
   (interactive)
@@ -519,7 +533,7 @@ times."
 (setq straight-host-usernames '((github . "nicolaisingh"))
       straight-profiles `((nil . ,(expand-file-name "lisp/straight/versions/default.el"
                                                     user-emacs-directory)))
-      straight-vc-git-default-clone-depth 1)
+      straight-vc-git-default-clone-depth 'full)
 (load (expand-file-name "packages.el" user-emacs-directory))
 
 (keymap-global-set "C-h u r" #'straight-get-recipe)
@@ -1055,6 +1069,7 @@ If ARG is Non-nil, the existing command log buffer is cleared."
 (defun my-diminish-config ()
   "Load diminished modes."
   (diminish-mode 'autorevert 'auto-revert-mode)
+  (diminish-mode 'consult-org-roam 'consult-org-roam-mode)
   (diminish-mode 'org-indent 'org-indent-mode)
   (diminish-mode 'prettier-js 'prettier-js-mode)
   (diminish-mode 'selected 'selected-minor-mode)
@@ -1927,7 +1942,6 @@ The default format is specified by `emms-source-playlist-default-format'."
 (require 'ibuffer)
 (require 'ibuf-ext)
 (setq ibuffer-show-empty-filter-groups nil
-      ibuffer-show-empty-filter-groups nil
       ibuffer-saved-filter-groups
       '(("default"
          ("Emacs Lisp" (mode . emacs-lisp-mode))

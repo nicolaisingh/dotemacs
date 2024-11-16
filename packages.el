@@ -72,6 +72,7 @@
         js2-refactor
         json-mode
         json-navigator
+        jsonian
         know-your-http-well
         kotlin-mode
         log4e
