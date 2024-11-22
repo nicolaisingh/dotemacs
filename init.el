@@ -2504,7 +2504,7 @@ Useful for completion style 'partial-completion."
       org-agenda-search-view-max-outline-level 2
       org-agenda-start-with-follow-mode t
       org-agenda-text-search-extra-files '(agenda-archives)
-      org-archive-file-header-format "#+filetags: :@archive:\n\n"
+      org-archive-file-header-format "#+filetags: :ARCHIVE:\n\n"
       org-archive-location "archive/%s::"
       org-archive-reversed-order t
       org-attach-expert nil
@@ -2518,6 +2518,7 @@ Useful for completion style 'partial-completion."
       org-default-notes-file "~/org/inbox.org"
       org-edit-src-content-indentation 0
       org-export-with-sub-superscripts '{}
+      org-use-fast-todo-selection 'expert
       org-fontify-done-headline nil
       org-fontify-todo-headline nil
       org-hide-emphasis-markers t
@@ -2549,6 +2550,11 @@ Useful for completion style 'partial-completion."
                                :prepend t)
                               ("m" "Meditation" entry (file "~/org/daily/meditation.org")
                                "* %^t\n%?"
+                               :empty-lines 1
+                               :prepend t)
+                              ("t" "Topic" entry
+                               (file org-default-notes-file)
+                               "* TOPIC %? %^g\n:PROPERTIES:\n:CREATED:  %U\n:END:"
                                :empty-lines 1
                                :prepend t))
 
@@ -2827,11 +2833,6 @@ Useful for completion style 'partial-completion."
                                                        "#+filetags: :@lit:\n#+title: ${title}")
                                     :empty-lines-before 1
                                     :unnarrowed t)
-                                   ("p" "project" plain "%?"
-                                    :target (file+head "projects/%<%Y%m%d%H%M%S>-${slug}.org"
-                                                       "#+filetags: :@project:\n#+title: ${title}")
-                                    :empty-lines-before 1
-                                    :unnarrowed t)
                                    ("x" "index" plain "%?"
                                     :target (file+head "index/%<%Y%m%d%H%M%S>-${slug}.org"
                                                        "#+filetags: :@lit:index:\n#+title: ${title}\n#+author: %^{author}")
@@ -2864,7 +2865,7 @@ Useful for completion style 'partial-completion."
 (cl-defmethod org-roam-node-myarchive-itags ((node org-roam-node))
   ;; Show some tags for archived entries when doing `org-roam-node-find'.
   (let* ((archive-tags (cdr (assoc "ARCHIVE_ITAGS" (org-roam-node-properties node))))
-         (dropped-tags '("@inbox" "@archive")))
+         (dropped-tags '("@inbox" "@archive" "INBOX" "ARCHIVE")))
     (when archive-tags
       (let ((tags))
         (mapcar (lambda (elt)
@@ -2892,7 +2893,7 @@ Useful for completion style 'partial-completion."
   "Use the tag in the root topic node as the destination directory within `org-roam-directory'."
   (interactive)
   (let* ((root-tags (my-org-subtree-root-tags))
-         (subdir (car root-tags))
+         (subdir (string-replace "@" "" (car root-tags)))
          (subdir-sanitized (if subdir (my-sanitize-string subdir) nil))
          (relative-path (if subdir-sanitized (concat "/projects/" subdir-sanitized "/") ""))
          (org-roam-directory (concat org-roam-directory relative-path)))
@@ -2908,6 +2909,15 @@ Useful for completion style 'partial-completion."
                                               (append elt '(:immediate-finish t)))
                                             org-roam-capture-templates)))
     (call-interactively #'org-roam-node-insert)))
+
+(defun my-org-roam-add-link-to-region ()
+  "Link the selected region to an org-roam node."
+  (interactive)
+  (add-hook 'minibuffer-setup-hook
+            #'(lambda () (when (minibufferp) (delete-minibuffer-contents))))
+  (org-roam-node-insert)
+  (remove-hook 'minibuffer-setup-hook
+               #'(lambda () (when (minibufferp) (delete-minibuffer-contents)))))
 
 (add-hook 'org-roam-mode-hook (lambda ()
                                 (visual-line-fill-column-mode)
@@ -2927,8 +2937,9 @@ Useful for completion style 'partial-completion."
 (keymap-set org-mode-map "C-c n T" #'org-roam-tag-remove)
 (keymap-set org-mode-map "C-c n X" #'my-org-roam-extract-subtree-inbox-entry)
 (keymap-set org-mode-map "C-c n a" #'org-roam-alias-add)
+(keymap-set org-mode-map "C-c n b" #'org-roam-buffer-toggle)
 (keymap-set org-mode-map "C-c n i" #'org-roam-node-insert)
-(keymap-set org-mode-map "C-c n l" #'org-roam-buffer-toggle)
+(keymap-set org-mode-map "C-c n l" #'my-org-roam-add-link-to-region)
 (keymap-set org-mode-map "C-c n n" #'org-id-get-create)
 (keymap-set org-mode-map "C-c n r" #'org-roam-ref-add)
 (keymap-set org-mode-map "C-c n t" #'org-roam-tag-add)
