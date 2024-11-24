@@ -499,6 +499,7 @@ times."
   (keymap-global-set "C-x B" #'bury-buffer)
   (keymap-global-set "C-x C-M-c" #'save-buffers-kill-emacs)
   (keymap-global-set "C-x C-m" (key-binding (kbd "M-x")))
+  (keymap-global-set "C-x D" (lambda () (interactive) (dired "~")))
   (keymap-global-set "C-x K" #'kill-current-buffer)
   (keymap-global-set "C-x a /" #'unexpand-abbrev)
   (keymap-global-set "C-z C-l" #'chatgpt-shell)
@@ -2501,8 +2502,9 @@ Useful for completion style 'partial-completion."
 
 (setq org-adapt-indentation nil
       org-agenda-category-icon-alist '()
+      org-agenda-files (expand-file-name "org-agenda-files" user-emacs-directory)
       org-agenda-search-view-max-outline-level 2
-      org-agenda-start-with-follow-mode t
+      org-agenda-start-with-follow-mode nil
       org-agenda-text-search-extra-files '(agenda-archives)
       org-archive-file-header-format "#+filetags: :ARCHIVE:\n\n"
       org-archive-location "archive/%s::"
@@ -2668,9 +2670,45 @@ Useful for completion style 'partial-completion."
 ;; Covers both org-attach and org-attach-dired-to-subtree
 (advice-add 'org-attach-attach :before #'my-add-org-property-dir)
 
+(defun my-buffer-has-org-todo-p (buffer)
+  "Returns t if org-mode BUFFER contains a todo header."
+  (with-current-buffer buffer
+    (save-excursion
+      (goto-char (point-min))
+      (let ((todo-keywords-regexp (format "^\\*+ \\(%s\\)\\( \\|$\\) *"
+                                          (mapconcat #'(lambda (elt)
+                                                         (substring-no-properties elt))
+                                                     org-not-done-keywords "\\|"))))
+        (not (not (re-search-forward todo-keywords-regexp nil t)))))))
+
+(defun my-org-update-org-agenda-files ()
+  "Update `org-agenda-files' whenever a todo item is found in the buffer."
+  (let ((current-buffer-entry (string-trim
+                               (string-trim
+                                (abbreviate-file-name (buffer-file-name))
+                                org-directory)
+                               "/"))
+        (current-buffer (current-buffer)))
+    (copy-file org-agenda-files (concat org-agenda-files ".bak") t)
+
+    (with-temp-buffer
+      (insert-file-contents org-agenda-files)
+      (goto-char (point-min))
+      (if (my-buffer-has-org-todo-p current-buffer)
+          (insert (concat current-buffer-entry "\n"))
+        (delete-matching-lines (format "^%s$" current-buffer-entry)))
+      (sort-lines nil (point-min) (point-max))
+      (delete-duplicate-lines (point-min) (point-max) nil t)
+      (let ((inhibit-message t))
+        (write-region (point-min) (point-max) org-agenda-files)))))
+
+(defun my-org-update-org-agenda-on-save ()
+  (add-hook 'before-save-hook #'my-org-update-org-agenda-files nil t))
+
 (add-hook 'org-agenda-mode-hook #'hl-line-mode)
 (add-hook 'org-mode-hook #'no-indent-tabs-mode)
 (add-hook 'org-mode-hook #'my-org-mode-config)
+(add-hook 'org-mode-hook #'my-org-update-org-agenda-on-save)
 (add-hook 'org-mode-hook #'visual-line-fill-column-mode)
 (add-hook 'org-mode-hook #'org-indent-mode)
 (add-hook 'org-after-refile-insert-hook #'my-org-id-get-create)

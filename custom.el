@@ -45,11 +45,6 @@
      ("Quote of the day"
       "http://feeds.feedburner.com/quotationspage/qotd" "07:00" 86400)
      ("Wired News" "https://www.wired.com/feed/rss")))
- '(org-agenda-files
-   '("~/org/inbox.org" "~/org/projects/havila.org"
-     "~/org/projects/coolray.org" "~/org/projects/summer-hills.org"
-     "~/org/projects/routines.org" "~/org/projects/reading.org"
-     "~/org/ideate/20231024135925-ideate_releases.org"))
  '(osm-home '(12.49 122.48 6))
  '(plantuml-default-exec-mode 'jar)
  '(save-abbrevs 'silently)
