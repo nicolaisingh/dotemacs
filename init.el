@@ -1308,6 +1308,7 @@ be file B."
 (defvar my-emms-playlist-directory "~/Music/playlists/")
 (defvar my-emms-library-directory "~/Music/library/")
 (defvar my-emms-flac-directory "~/Music/flac/")
+(defvar my-emms-temp-playlist-buffer (emms-playlist-new " *EMMS Playlist: -temp*"))
 
 ;; track filters
 (emms-browser-make-filter "all" 'ignore)
@@ -1490,6 +1491,25 @@ The default format is specified by `emms-source-playlist-default-format'."
     (emms-playlist-set-playlist-buffer previous-buffer)
     (emms-playlist-select previous-selection)))
 
+(defun emms-my-metaplaylist-view-playlist ()
+  "Open the EMMS playlist without changing the current active playlist."
+  (interactive)
+  (let ((buffer (get-buffer
+                 (buffer-substring (line-beginning-position)
+                                   (line-end-position)))))
+    (switch-to-buffer buffer)))
+
+(defun emms-my-playlist-mode-view-current-track ()
+  "Play the track at point without changing the current active playlist."
+  (interactive)
+  (let* ((name (emms-track-get (emms-playlist-track-at) 'name))
+         (previous-playlist-buffer emms-playlist-buffer))
+    ;; switch to temp playlist buffer, place the file to listen/view
+    ;; there and return to the original playlist
+    (emms-playlist-set-playlist-buffer my-emms-temp-playlist-buffer)
+    (emms-play-file name)
+    (emms-playlist-set-playlist-buffer previous-playlist-buffer)))
+
 (keymap-global-set "<remap> <emms-playlist-save>" #'emms-my-playlist-save)
 (keymap-global-set "C-c M %" #'emms-my-toggle-random-playlist)
 (keymap-global-set "C-c M 1" #'emms-my-toggle-repeat-track)
@@ -1510,6 +1530,7 @@ The default format is specified by `emms-source-playlist-default-format'."
 (keymap-set emms-mark-mode-map "M" #'emms-mark-mode-disable)
 (keymap-set emms-metaplaylist-mode-map "G" #'emms-my-metaplaylist-find-all-playlists)
 (keymap-set emms-metaplaylist-mode-map "f" #'emms-my-metaplaylist-find-playlist)
+(keymap-set emms-metaplaylist-mode-map "v" #'emms-my-metaplaylist-view-playlist)
 (keymap-set emms-metaplaylist-mode-map "q" #'kill-current-buffer)
 (keymap-set emms-metaplaylist-mode-map "z" #'emms-playlist-mode-go)
 (keymap-set emms-playlist-mode-map "%" #'emms-shuffle)
@@ -1519,6 +1540,7 @@ The default format is specified by `emms-source-playlist-default-format'."
 (keymap-set emms-playlist-mode-map "C-x C-w" #'emms-my-playlist-write)
 (keymap-set emms-playlist-mode-map "F" #'emms-show-all)
 (keymap-set emms-playlist-mode-map "M" #'emms-mark-mode)
+(keymap-set emms-playlist-mode-map "v" #'emms-my-playlist-mode-view-current-track)
 (keymap-set emms-playlist-mode-map "z" #'emms-metaplaylist-mode-go)
 
 
@@ -2877,9 +2899,9 @@ Useful for completion style 'partial-completion."
                                     :empty-lines-before 1
                                     :unnarrowed t)
 
-                                   ("r" "refs" plain "%?"
+                                   ("r" "reference" plain "%?"
                                     :target (file+head "refs/%<%Y%m%d%H%M%S>-${slug}.org"
-                                                       "#+filetags: :@ref:\n#+title: ${title}")
+                                                       "#+filetags: :ref:\n#+title: ${title}")
                                     :empty-lines-before 1
                                     :unnarrowed t)
 
