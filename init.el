@@ -1308,7 +1308,6 @@ be file B."
 (defvar my-emms-playlist-directory "~/Music/playlists/")
 (defvar my-emms-library-directory "~/Music/library/")
 (defvar my-emms-flac-directory "~/Music/flac/")
-(defvar my-emms-temp-playlist-buffer (emms-playlist-new " *EMMS Playlist: -temp*"))
 
 ;; track filters
 (emms-browser-make-filter "all" 'ignore)
@@ -1499,16 +1498,26 @@ The default format is specified by `emms-source-playlist-default-format'."
                                    (line-end-position)))))
     (switch-to-buffer buffer)))
 
-(defun emms-my-playlist-mode-view-current-track ()
-  "Play the track at point without changing the current active playlist."
+(defvar emms-my-insert-track-to-playlist-destination emms-playlist-buffer-name
+  "What playlist to use in `emms-my-insert-track-to-playlist'.")
+
+(defun emms-my-insert-track-to-playlist ()
+  "Add the current track at point to the playlist set in `emms-my-insert-track-to-playlist-destination'.
+When a prefix is used, ask where to insert the track and save it to `emms-my-insert-track-to-playlist-destination'."
   (interactive)
   (let* ((name (emms-track-get (emms-playlist-track-at) 'name))
-         (previous-playlist-buffer emms-playlist-buffer))
-    ;; switch to temp playlist buffer, place the file to listen/view
-    ;; there and return to the original playlist
-    (emms-playlist-set-playlist-buffer my-emms-temp-playlist-buffer)
-    (emms-play-file name)
-    (emms-playlist-set-playlist-buffer previous-playlist-buffer)))
+         (dest-playlist (if (not current-prefix-arg)
+                            emms-my-insert-track-to-playlist-destination
+                          (completing-read
+                           "Insert track in: "
+                           (mapcar #'buffer-name emms-playlist-buffers) nil t))))
+
+    (unless (eq emms-my-insert-track-to-playlist-destination dest-playlist)
+      (setq emms-my-insert-track-to-playlist-destination dest-playlist))
+    (save-excursion
+      (with-current-buffer dest-playlist
+        (emms-insert-file name)))
+    (message "Added to: %s" dest-playlist)))
 
 (keymap-global-set "<remap> <emms-playlist-save>" #'emms-my-playlist-save)
 (keymap-global-set "C-c M %" #'emms-my-toggle-random-playlist)
@@ -1540,7 +1549,7 @@ The default format is specified by `emms-source-playlist-default-format'."
 (keymap-set emms-playlist-mode-map "C-x C-w" #'emms-my-playlist-write)
 (keymap-set emms-playlist-mode-map "F" #'emms-show-all)
 (keymap-set emms-playlist-mode-map "M" #'emms-mark-mode)
-(keymap-set emms-playlist-mode-map "v" #'emms-my-playlist-mode-view-current-track)
+(keymap-set emms-playlist-mode-map "i" #'emms-my-insert-track-to-playlist)
 (keymap-set emms-playlist-mode-map "z" #'emms-metaplaylist-mode-go)
 
 
