@@ -506,6 +506,7 @@ times."
   (keymap-global-set "C-z C-s" #'eshell-toggle)
   (keymap-global-set "C-z C-z" #'my-org-capture-inbox)
   (keymap-global-set "C-z c" #'org-capture)
+  (keymap-global-set "C-S-z" #'org-capture)
   (keymap-global-set "C-z g" #'magit-status)
   (keymap-global-set "M-SPC" #'cycle-spacing)
   (keymap-global-unset "C-h C-c")
@@ -2581,7 +2582,18 @@ Useful for completion style 'partial-completion."
                                "* %?\n:PROPERTIES:\n:CREATED:  %U\n:END:"
                                :empty-lines 1
                                :prepend t)
-                              ("m" "Meditation" entry (file "~/org/daily/meditation.org")
+
+                              ("m" "Meeting")
+                              ("mm" "Meeting" entry (file "~/org/meetings/meetings.org")
+                               "* %T %^{Agenda||Meeting X|Meeting Y}\n\n%?"
+                               :empty-lines 1
+                               :prepend t)
+                              ("ms" "Standup/DSM" entry (file "~/org/meetings/standups.org")
+                               "* %T standup\n#+date: %T\n\ndailystandup%?"
+                               :empty-lines 1
+                               :prepend t)
+
+                              ("M" "Meditation" entry (file "~/org/daily/meditation.org")
                                "* %^t\n%?"
                                :empty-lines 1
                                :prepend t)
