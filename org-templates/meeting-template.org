@@ -1,0 +1,4 @@
+#+startup: overview
+#+filetags: :meeting:
+#+title: %T Meeting: %^{Meeting agenda}
+#+date: %T
