@@ -2,10 +2,9 @@
 # name: dailystandup
 # key: dailystandup
 # --
-For DS
 - Yesterday
   - ${1:(Progress yesterday)}
 - Today
   - ${2:(Plans for today)}
 - Blockers/delays
-  - None
+  - ${3:None}

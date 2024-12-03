@@ -2532,6 +2532,40 @@ Useful for completion style 'partial-completion."
 (defun org-refile-target-projects ()
   (directory-files "~/org/projects" t directory-files-no-dot-files-regexp))
 
+(defun my-org-capture-file (path filename &optional template timestamp)
+  "Return an org-mode file path of FILENAME stored under PATH within `org-directory'.
+
+If TIMESTAMP is a non-nil value, the resulting filename will be prefixed
+with a timestamp.
+
+If TEMPLATE is given, it will be treated as the filename of a template
+file and the contents of this file will be used as the initial contents
+of the new org-mode file."
+  (let* ((prefix (if (not timestamp)
+                     ""
+                   (format-time-string "%Y%m%d%H%M%S-")))
+         (template-file (if (not template)
+                            ""
+                          (expand-file-name
+                           template
+                           (concat user-emacs-directory "org-templates/"))))
+         (dest-dir (concat org-directory "/" path))
+         (org-file (expand-file-name
+                    (format "%s%s" prefix filename)
+                    dest-dir)))
+    (when (and template (not (file-exists-p org-file)))
+      ;; Template given and file does not exist; create it
+      (unless (file-directory-p dest-dir)
+        (make-directory dest-dir t))
+      (with-temp-file org-file
+        (insert
+         ;; Let org-capture consume and fill out the template
+         (org-capture-fill-template
+          (with-temp-buffer
+            (insert-file-contents template-file)
+            (buffer-string))))))
+    (abbreviate-file-name org-file)))
+
 (setq org-adapt-indentation nil
       org-agenda-category-icon-alist '()
       org-agenda-files (expand-file-name "org-agenda-files" user-emacs-directory)
@@ -2584,19 +2618,44 @@ Useful for completion style 'partial-completion."
                                :prepend t)
 
                               ("m" "Meeting")
-                              ("mm" "Meeting" entry (file "~/org/meetings/meetings.org")
-                               "* %T %^{Agenda||Meeting X|Meeting Y}\n\n%?"
+
+                              ("mh" "Huddle" entry
+                               (file (lambda ()
+                                       (my-org-capture-file "meetings/"
+                                                            "huddles.org"
+                                                            "huddle-template.org")))
+                               "* %T %?"
                                :empty-lines 1
-                               :prepend t)
-                              ("ms" "Standup/DSM" entry (file "~/org/meetings/standups.org")
-                               "* %T standup\n#+date: %T\n\ndailystandup%?"
+                               :prepend t
+                               :unnarrowed t)
+
+                              ("mm" "Meeting" plain
+                               (file (lambda ()
+                                       (my-org-capture-file "meetings/"
+                                                            ;; (concat "meeting-"
+                                                            ;;         (my-sanitize-string (read-string "Agenda: " "notitle"))
+                                                            ;;         ".org")
+                                                            "meeting.org"
+                                                            "meeting-template.org" t)))
+                               "%?"
                                :empty-lines 1
-                               :prepend t)
+                               :unnarrowed t)
+
+                              ("ms" "Standup/DSM" entry
+                               (file (lambda ()
+                                       (my-org-capture-file "meetings/"
+                                                            "standups.org"
+                                                            "standup-template.org")))
+                               "* %T Standup\n\ndailystandup%?"
+                               :empty-lines 1
+                               :prepend t
+                               :unnarrowed t)
 
                               ("M" "Meditation" entry (file "~/org/daily/meditation.org")
                                "* %^t\n%?"
                                :empty-lines 1
                                :prepend t)
+
                               ("t" "Topic" entry
                                (file org-default-notes-file)
                                "* TOPIC %? %^g\n:PROPERTIES:\n:CREATED:  %U\n:END:"
@@ -2905,32 +2964,35 @@ Useful for completion style 'partial-completion."
                                       (propertize "${tags}" 'foreground 'default)
                                       "${myarchive-itags}"
                                       "${mytodo}")
-      org-roam-capture-templates '(("d" "default" plain "%?" :target (file+head "%<%Y%m%d%H%M%S>-${slug}.org"
-                                                                                "#+title: ${title}\n")
-                                    :empty-lines-before 1
+      org-roam-capture-templates '(("d" "default" plain "%?"
+                                    :target (file+head "%<%Y%m%d%H%M%S>-${slug}.org" "#+title: ${title}\n")
+                                    :empty-lines 1
                                     :unnarrowed t)
+
                                    ("l" "literature" plain "%?"
                                     :target (file+head "literature/%<%Y%m%d%H%M%S>-${slug}.org"
                                                        "#+filetags: :@lit:\n#+title: ${title}")
-                                    :empty-lines-before 1
+                                    :empty-lines 1
                                     :unnarrowed t)
+
                                    ("x" "index" plain "%?"
                                     :target (file+head "index/%<%Y%m%d%H%M%S>-${slug}.org"
                                                        "#+filetags: :@lit:index:\n#+title: ${title}\n#+author: %^{author}")
-                                    :empty-lines-before 1
+                                    :empty-lines 1
                                     :unnarrowed t)
 
                                    ("r" "reference" plain "%?"
                                     :target (file+head "refs/%<%Y%m%d%H%M%S>-${slug}.org"
                                                        "#+filetags: :ref:\n#+title: ${title}")
-                                    :empty-lines-before 1
+                                    :empty-lines 1
                                     :unnarrowed t)
 
                                    ("I" "ideate" plain "%?"
                                     :target (file+head "ideate/%<%Y%m%d%H%M%S>-${slug}.org"
                                                        "#+filetags: :ideate:\n#+title: ${title}")
-                                    :empty-lines-before 1
+                                    :empty-lines 1
                                     :unnarrowed t))
+
       org-roam-dailies-capture-templates '(("d" "default" entry "* %?"
                                             :target (file+head "%<%Y-%m-%d>.org" "#+title: Journal - %<%Y-%m-%d>\n")
                                             :empty-lines 1)))
