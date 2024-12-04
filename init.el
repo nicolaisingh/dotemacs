@@ -2535,6 +2535,10 @@ Useful for completion style 'partial-completion."
 (defun my-org-capture-file (path filename &optional template timestamp)
   "Return an org-mode file path of FILENAME stored under PATH within `org-directory'.
 
+If FILENAME is the symbol 'title, prompt for a title to use and use it
+as the org file's #+title, and then sanitize it and use it as the
+filename.
+
 If TIMESTAMP is a non-nil value, the resulting filename will be prefixed
 with a timestamp.
 
@@ -2550,8 +2554,12 @@ of the new org-mode file."
                            template
                            (concat user-emacs-directory "org-templates/"))))
          (dest-dir (concat org-directory "/" path))
+         (title (if (eq filename 'title) (read-string "Title: ")))
+         (name (if (eq filename 'title)
+                   (format "%s.org" (my-sanitize-string title))
+                 filename))
          (org-file (expand-file-name
-                    (format "%s%s" prefix filename)
+                    (format "%s%s" prefix name)
                     dest-dir)))
     (when (and template (not (file-exists-p org-file)))
       ;; Template given and file does not exist; create it
@@ -2563,6 +2571,10 @@ of the new org-mode file."
          (org-capture-fill-template
           (with-temp-buffer
             (insert-file-contents template-file)
+            (when (eq filename 'title)
+              (goto-char (point-min))
+              (while (re-search-forward "^\\(#\\+title: .*\\)%\\^{.*}\\(.*\\)$" nil t 1)
+                (replace-match (format "\\1%s\\2" title))))
             (buffer-string))))))
     (abbreviate-file-name org-file)))
 
@@ -2632,11 +2644,9 @@ of the new org-mode file."
                               ("mm" "Meeting" plain
                                (file (lambda ()
                                        (my-org-capture-file "meetings/"
-                                                            ;; (concat "meeting-"
-                                                            ;;         (my-sanitize-string (read-string "Agenda: " "notitle"))
-                                                            ;;         ".org")
-                                                            "meeting.org"
-                                                            "meeting-template.org" t)))
+                                                            'title
+                                                            "meeting-template.org"
+                                                            t)))
                                "%?"
                                :empty-lines 1
                                :unnarrowed t)
