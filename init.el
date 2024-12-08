@@ -190,9 +190,10 @@ collection.  Use revert-gc-cons-percentage to restore the value."
   (indent-tabs-mode -1))
 
 (add-hook 'before-save-hook #'delete-trailing-whitespace)
-(add-hook 'kotlin-mode-hook #'no-indent-tabs-mode)
 (add-hook 'emacs-lisp-mode-hook #'no-indent-tabs-mode)
+(add-hook 'kotlin-mode-hook #'no-indent-tabs-mode)
 (add-hook 'scheme-mode-hook #'no-indent-tabs-mode)
+(add-hook 'typescript-ts-mode-hook #'no-indent-tabs-mode)
 
 ;;; startup
 
@@ -2387,18 +2388,38 @@ Useful for completion style 'partial-completion."
 
 (require 'mermaid-mode)
 (require 'mermaid-ts-mode)
-(setq mermaid-ts-indent-level 4)
-(add-to-list 'auto-mode-alist '("\\.mermaid\\'" . mermaid-ts-mode))
-(add-to-list 'auto-mode-alist '("\\.mmd\\'" . mermaid-ts-mode))
-(keymap-set mermaid-ts-mode-map "C-c C-b" #'mermaid-compile-buffer)
-(keymap-set mermaid-ts-mode-map "C-c C-d" #'mermaid-open-doc)
-(keymap-set mermaid-ts-mode-map "C-c C-f" #'mermaid-compile-file)
-(keymap-set mermaid-ts-mode-map "C-c C-o" #'mermaid-open-browser)
-(keymap-set mermaid-ts-mode-map "C-c C-r" #'mermaid-compile-region)
-(keymap-set mermaid-ts-mode-map "C-c C-c" (lambda ()
-                                            (interactive)
-                                            (save-buffer)
-                                            (mermaid-compile)))
+(setq mermaid-ts-indent-level 4
+      mermaid-output-format ".png"
+      mermaid-flags "-s 3")
+(add-to-list 'auto-mode-alist '("\\.mermaid\\'" . mermaid-mode))
+(add-to-list 'auto-mode-alist '("\\.mmd\\'" . mermaid-mode))
+
+(defun my-mermaid-config ()
+  (setq-local indent-tabs-mode nil))
+
+(defun my-mermaid-compile-svg ()
+  (interactive)
+  (save-buffer)
+  (let* ((mermaid-output-format ".svg")
+         (input (buffer-file-name))
+         (output (concat (file-name-sans-extension input) mermaid-output-format))
+         (exit-code (apply #'call-process
+                           mermaid-mmdc-location nil "*mmdc*" nil (append (split-string mermaid-flags " ")
+                                                                          (list "-i" input "-o" output)))))
+    (when (zerop exit-code)
+      (shell-command (concat "open " (shell-quote-argument output))))))
+
+(keymap-set mermaid-mode-map "C-c C-b" #'mermaid-compile-buffer)
+(keymap-set mermaid-mode-map "C-c C-d" #'mermaid-open-doc)
+(keymap-set mermaid-mode-map "C-c C-f" #'mermaid-compile-file)
+(keymap-set mermaid-mode-map "C-c C-o" #'mermaid-open-browser)
+(keymap-set mermaid-mode-map "C-c C-r" #'mermaid-compile-region)
+(keymap-set mermaid-mode-map "C-c C-c" (lambda ()
+                                         (interactive)
+                                         (save-buffer)
+                                         (mermaid-compile)))
+(keymap-set mermaid-mode-map "C-c C-s" #'my-mermaid-compile-svg)
+(add-hook 'mermaid-mode-hook #'my-mermaid-config)
 
 
 ;;; multi-term
@@ -3072,6 +3093,16 @@ of the new org-mode file."
   (remove-hook 'minibuffer-setup-hook
                #'(lambda () (when (minibufferp) (delete-minibuffer-contents)))))
 
+(cl-defun my-org-roam-capture (&optional goto keys &key filter-fn templates info)
+  (interactive "P")
+  (org-roam-capture- :goto goto
+                     :info info
+                     :keys keys
+                     :templates templates
+                     :node (org-roam-node-create :title "notitle")
+                     :props '(:immediate-finish nil)))
+
+
 (add-hook 'org-roam-mode-hook (lambda ()
                                 (visual-line-fill-column-mode)
                                 (set-fill-column org-roam-content-width)))
@@ -3079,8 +3110,9 @@ of the new org-mode file."
 (keymap-global-set "C-c n %" #'org-roam-node-random)
 (keymap-global-set "C-c n ," #'org-roam-dailies-goto-previous-note)
 (keymap-global-set "C-c n ." #'org-roam-dailies-goto-next-note)
+(keymap-global-set "C-c n C" #'org-roam-capture)
 (keymap-global-set "C-c n J" #'org-roam-dailies-capture-date)
-(keymap-global-set "C-c n c" #'org-roam-capture)
+(keymap-global-set "C-c n c" #'my-org-roam-capture)
 (keymap-global-set "C-c n f" #'org-roam-node-find)
 (keymap-global-set "C-c n j" #'org-roam-dailies-capture-today)
 (keymap-global-set "C-c n y" #'org-roam-dailies-goto-yesterday)

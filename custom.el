@@ -51,7 +51,7 @@
  '(tab-bar-auto-width-max '(200 20))
  '(tab-bar-close-button-show nil)
  '(tab-bar-format
-   '(tab-bar-format-history tab-bar-format-tabs tab-bar-separator))
+   '(tab-bar-format-history tab-bar-format-tabs tab-bar-separator tab-bar-format-align-right tab-bar-format-global))
  '(tab-bar-show 1)
  '(window-divider-default-right-width 3)
  '(window-divider-mode t)
