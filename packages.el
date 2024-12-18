@@ -65,6 +65,7 @@
         graphviz-dot-mode
         highlight-indent-guides
         highlight-numbers
+        (howm :host github :repo "kaorahi/howm" :files (:defaults (:exclude "*.el.in")) :fork t)
         htmlize
         imenu-list
         inf-clojure
@@ -103,6 +104,7 @@
         org-roam
         org-sticky-header
         org-web-tools
+        orgalist
         origami
         osm
         ox-gfm

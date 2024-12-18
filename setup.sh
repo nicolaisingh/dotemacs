@@ -18,3 +18,5 @@ ln -sn $initdir/lisp ~/.emacs.d/lisp
 ln -sn $initdir/org-templates ~/.emacs.d/org-templates
 ln -sn $initdir/snippets ~/.emacs.d/snippets
 ln -sn $initdir/tree-sitter ~/.emacs.d/tree-sitter
+
+ls -sn $initdir/howm-menu.txt ~/.emacs.d/howm-menu.txt

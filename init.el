@@ -173,6 +173,12 @@ collection.  Use revert-gc-cons-percentage to restore the value."
     "]" #'calendar-forward-year
     "[" #'calendar-backward-year))
 
+(with-eval-after-load 'howm
+  (defvar-keymap howm-mode-repeat-map
+    :repeat t
+    "n" #'action-lock-goto-next-link
+    "p" #'action-lock-goto-previous-link))
+
 ;;; saveplace
 
 (save-place-mode 1)
@@ -1074,6 +1080,7 @@ If ARG is Non-nil, the existing command log buffer is cleared."
   (diminish-mode 'autorevert 'auto-revert-mode)
   (diminish-mode 'consult-org-roam 'consult-org-roam-mode)
   (diminish-mode 'org-indent 'org-indent-mode)
+  (diminish-mode 'orgalist 'orgalist-mode)
   (diminish-mode 'prettier-js 'prettier-js-mode)
   (diminish-mode 'selected 'selected-minor-mode)
   (diminish-mode 'smartparens 'smartparens-mode)
@@ -1344,7 +1351,7 @@ be file B."
           (if emms-player-paused-p " paused")
           (optional-flag-string (with-current-emms-playlist emms-random-playlist) " random")
           (optional-flag-string (with-current-emms-playlist emms-repeat-track) " repeat-track")
-          " ]"))
+          " ] "))
 
 (setq emms-player-list '(emms-player-vlc
                          emms-player-alsaplayer
@@ -1969,6 +1976,31 @@ When a prefix is used, ask where to insert the track and save it to `emms-my-ins
 (keymap-global-set "M-/" #'hippie-expand)
 (keymap-global-set "C-c e f" #'hippie-expand-filename-mode)
 (keymap-global-set "C-c e l" #'hippie-expand-line-mode)
+
+
+;;; howm
+
+(require 'howm)
+(setq howm-content-from-region t
+      howm-directory "~/howm/"
+      howm-file-name-format "%Y/%m/%Y-%m-%d-%H%M%S.txt"
+      howm-history-file (expand-file-name ".howm-history" howm-directory)
+      howm-history-limit nil
+      howm-keyword-file (expand-file-name ".howm-keys" howm-directory)
+      howm-list-title t
+      howm-menu-file (expand-file-name "howm-menu.txt" user-emacs-directory)
+      howm-prefix (kbd "C-c ,")
+      howm-prepend t
+      howm-view-keep-one-window t
+      howm-view-split-horizontally nil
+      howm-view-summary-persistent nil
+      howm-view-use-grep t
+      ;; https://github.com/kaorahi/howm/issues/22
+      ;; riffle-protected-localvar-prefixes '("action-lock-" "howm-" "illusion-" "riffle-")
+      )
+
+(keymap-set howm-menu-mode-map "<backtab>" #'action-lock-goto-previous-link)
+(keymap-set howm-view-summary-mode-map "<backtab>" #'howm-view-summary-previous-section)
 
 
 ;;; ibuffer
@@ -2866,6 +2898,12 @@ of the new org-mode file."
 (keymap-global-set "C-c o v" #'visible-mode)
 
 
+;;; org-agenda
+
+(require 'org-agenda)
+(setq org-agenda-show-outline-path nil)
+
+
 ;;; org-alert
 
 (with-eval-after-load 'alert
@@ -3145,6 +3183,24 @@ of the new org-mode file."
 (keymap-set org-mode-map "C-c o w i" #'org-web-tools-insert-web-page-as-entry)
 (keymap-set org-mode-map "C-c o w a" #'org-web-tools-archive-attach)
 (keymap-set org-mode-map "C-c o w v" #'org-web-tools-archive-view)
+
+
+;;; orgalist
+
+(require 'orgalist)
+(defun orgalist-insert-checkbox ()
+  (interactive)
+  (orgalist-insert-item t))
+(defconst orgalist--maybe-insert-checkbox
+  '(menu-item "" orgalist-insert-checkbox :filter orgalist--when-in-item))
+(keymap-set orgalist-mode-map "M-<up>" orgalist--maybe-move-up)
+(keymap-set orgalist-mode-map "M-<down>" orgalist--maybe-move-down)
+(keymap-set orgalist-mode-map "C-c C--" orgalist--maybe-cycle-bullet)
+(keymap-set orgalist-mode-map "M-S-<return>" orgalist--maybe-insert-checkbox)
+(keymap-unset orgalist-mode-map "C-c -")
+
+(add-hook 'howm-mode-hook #'orgalist-mode)
+(add-hook 'howm-remember-mode-hook #'orgalist-mode)
 
 
 ;;; origami
@@ -3488,6 +3544,7 @@ of the new org-mode file."
 (add-hook 'scheme-mode-hook #'setup-smartparens-lisp)
 
 (add-hook 'go-mode-hook #'smartparens-mode)
+(add-hook 'howm-mode-hook #'smartparens-mode)
 (add-hook 'js2-mode-hook #'smartparens-mode)
 (add-hook 'kotlin-mode-hook #'smartparens-mode)
 (add-hook 'latex-mode-hook #'smartparens-mode)
