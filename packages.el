@@ -7,6 +7,7 @@
         ;; for json-navigator
         (hierarchy :type built-in)
 
+        adoc-mode
         ag
         aggressive-indent
         alert
@@ -107,6 +108,7 @@
         orgalist
         origami
         osm
+        ox-asciidoc
         ox-gfm
         ox-jira
         ox-slack

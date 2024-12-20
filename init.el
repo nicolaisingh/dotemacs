@@ -509,12 +509,9 @@ times."
   (keymap-global-set "C-x D" (lambda () (interactive) (dired "~")))
   (keymap-global-set "C-x K" #'kill-current-buffer)
   (keymap-global-set "C-x a /" #'unexpand-abbrev)
-  (keymap-global-set "C-z C-l" #'chatgpt-shell)
   (keymap-global-set "C-z C-s" #'eshell-toggle)
   (keymap-global-set "C-z C-z" #'my-org-capture-inbox)
-  (keymap-global-set "C-z c" #'org-capture)
   (keymap-global-set "C-S-z" #'org-capture)
-  (keymap-global-set "C-z g" #'magit-status)
   (keymap-global-set "M-SPC" #'cycle-spacing)
   (keymap-global-unset "C-h C-c")
   (keymap-global-unset "C-h C-f")
@@ -562,6 +559,54 @@ times."
   (let ((early-init-file (expand-file-name "early-init.el" user-emacs-directory)))
     (when (file-exists-p early-init-file)
       (load early-init-file))))
+
+
+;;; adoc-mode / asciidoc
+
+(require 'adoc-mode)
+
+(setq adoc-default-title-type 1
+      adoc-default-title-sub-type 1)
+
+(defun my-adoc-insert-title-2 ()
+  "Insert a new title line."
+  (interactive)
+  (let ((title-line-p (save-excursion
+                        (beginning-of-line)
+                        (re-search-forward "^=+ " (pos-eol) t))))
+    (cond
+     (title-line-p
+      (forward-line 1)
+      (open-line 1))
+     (t (forward-paragraph 1)
+        (insert "\n")))
+    (tempo-template-adoc-title-2)))
+
+(defun my-adoc-promote ()
+  "Increase a header's level."
+  (interactive)
+  (save-excursion
+    (beginning-of-line)
+    (if (not (re-search-forward "^=+ " (pos-eol) t))
+        (message "Not a title")
+      (beginning-of-line)
+      (insert "="))))
+
+(defun my-adoc-demote ()
+  "Decrease a header's level."
+  (interactive)
+  (save-excursion
+    (beginning-of-line)
+    (if (not (re-search-forward "^==+ " (pos-eol) t))
+        (message "Cannote demote any further")
+      (beginning-of-line)
+      (delete-char 1))))
+
+(keymap-unset adoc-mode-map "C-c C-t")
+(keymap-set adoc-mode-map "C-c C-b" #'tempo-template-adoc-bold)
+(keymap-set adoc-mode-map "C-c C-d" #'my-adoc-demote)
+(keymap-set adoc-mode-map "C-c C-p" #'my-adoc-promote)
+(keymap-set adoc-mode-map "C-c C-t" #'my-adoc-insert-title-2)
 
 
 ;;; aggressive-indent
@@ -2744,6 +2789,7 @@ of the new org-mode file."
                                ("WIP" :foreground "black" :background "peachpuff1" :box (:style released-button) :height 0.8)))
 
 (with-eval-after-load 'org
+  (require 'ox-asciidoc)
   (require 'ox-md)
   (require 'ox-gfm)
   (require 'ox-jira)

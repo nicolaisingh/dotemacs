@@ -137,6 +137,14 @@ numbered variants the same as the base color."
      `(link ((t (:foreground ,color-blue :underline t))))
      `(link-visited ((t (:inherit link :foreground ,color-magenta))))
 
+     ;; adoc-mode
+     `(adoc-title-face ((t (:foreground ,color-blue :height 1.0 :weight bold))))
+     `(adoc-title-0-face ((t (:inherit adoc-title-face :foreground ,color-blue :height 1.1))))
+     `(adoc-title-1-face ((t (:inherit adoc-title-face :foreground ,color-green :height 1.1))))
+     `(adoc-title-2-face ((t (:inherit adoc-title-face :foreground ,color-red :height 1.0))))
+     `(adoc-title-3-face ((t (:inherit adoc-title-face :foreground ,color-magenta :height 1.0))))
+     `(adoc-title-4-face ((t (:inherit adoc-title-face :foreground ,color-orange :height 1.0))))
+
      ;; ansi-color
      `(ansi-color-black ((t (:background "black" :foreground "black"))))
      `(ansi-color-red ((t (:background ,color-red :foreground ,color-red))))
