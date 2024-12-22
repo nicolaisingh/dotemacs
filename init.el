@@ -177,7 +177,11 @@ collection.  Use revert-gc-cons-percentage to restore the value."
   (defvar-keymap howm-mode-repeat-map
     :repeat t
     "n" #'action-lock-goto-next-link
-    "p" #'action-lock-goto-previous-link))
+    "p" #'action-lock-goto-previous-link
+    "N" #'howm-next-memo
+    "P" #'howm-previous-memo
+    "<" #'howm-first-memo
+    ">" #'howm-last-memo))
 
 ;;; saveplace
 
@@ -2023,10 +2027,66 @@ When a prefix is used, ask where to insert the track and save it to `emms-my-ins
 (keymap-global-set "C-c e l" #'hippie-expand-line-mode)
 
 
+;;; outline
+
+(require 'outline)
+(setq outline-default-state nil)
+
+(defun my-outline-ensure-space-after-heading ()
+  (unless (char-equal ?\s (char-before))
+    (insert " ")))
+(add-hook 'outline-insert-heading-hook #'my-outline-ensure-space-after-heading)
+
+(defun my-outline-mode-config ()
+  (keymap-set outline-mode-map "C-c"
+              (let ((map (make-sparse-keymap)))
+                (keymap-set map "@" #'outline-mark-subtree)
+                (keymap-set map "C-n" #'outline-next-visible-heading)
+                (keymap-set map "C-p" #'outline-previous-visible-heading)
+                (keymap-set map "C-u" #'outline-up-heading)
+                (keymap-set map "C-f" #'outline-forward-same-level)
+                (keymap-set map "C-b" #'outline-backward-same-level)
+                (keymap-set map "C-o" #'outline-hide-other)
+                map))
+  (keymap-set outline-mode-map "M-<up>" #'outline-move-subtree-up)
+  (keymap-set outline-mode-map "M-<down>" #'outline-move-subtree-down)
+  (keymap-set outline-mode-map "M-<left>" #'outline-promote)
+  (keymap-set outline-mode-map "M-<right>" #'outline-demote)
+  (keymap-set outline-mode-map "C-<return>" #'outline-insert-heading))
+
+(defun my-outline-minor-mode-config ()
+  (keymap-set outline-minor-mode-map "C-c"
+              (let ((map (make-sparse-keymap)))
+                (keymap-set map "@" #'outline-mark-subtree)
+                (keymap-set map "C-n" #'outline-next-visible-heading)
+                (keymap-set map "C-p" #'outline-previous-visible-heading)
+                (keymap-set map "C-u" #'outline-up-heading)
+                (keymap-set map "C-f" #'outline-forward-same-level)
+                (keymap-set map "C-b" #'outline-backward-same-level)
+                (keymap-set map "C-o" #'outline-hide-other)
+                map))
+  (keymap-set outline-minor-mode-map "M-<up>" #'outline-move-subtree-up)
+  (keymap-set outline-minor-mode-map "M-<down>" #'outline-move-subtree-down)
+  (keymap-set outline-minor-mode-map "M-<left>" #'outline-promote)
+  (keymap-set outline-minor-mode-map "M-<right>" #'outline-demote)
+  (keymap-set outline-minor-mode-map "C-<return>" #'outline-insert-heading))
+
+(add-hook 'outline-mode-hook #'my-outline-mode-config)
+;; (add-hook 'outline-minor-mode-hook #'my-outline-minor-mode-config)
+
+
+
 ;;; howm
 
+(setq howm-prefix nil
+      howm-view-summary-sep "|"
+      howm-view-title-header "*"
+      ;; howm-date-format (concat "%Y-%m-%d %a")
+      howm-default-key-table nil
+      )
 (require 'howm)
 (setq howm-content-from-region t
+      howm-menu-lang 'en
       howm-directory "~/howm/"
       howm-file-name-format "%Y/%m/%Y-%m-%d-%H%M%S.txt"
       howm-history-file (expand-file-name ".howm-history" howm-directory)
@@ -2034,18 +2094,108 @@ When a prefix is used, ask where to insert the track and save it to `emms-my-ins
       howm-keyword-file (expand-file-name ".howm-keys" howm-directory)
       howm-list-title t
       howm-menu-file (expand-file-name "howm-menu.txt" user-emacs-directory)
-      howm-prefix (kbd "C-c ,")
       howm-prepend t
       howm-view-keep-one-window t
-      howm-view-split-horizontally nil
+      howm-view-split-horizontally t
       howm-view-summary-persistent nil
       howm-view-use-grep t
+      howm-title-from-search nil
+      howm-menu-name-format "*howm-menu*"
+      howm-menu-footer ""
       ;; https://github.com/kaorahi/howm/issues/22
       ;; riffle-protected-localvar-prefixes '("action-lock-" "howm-" "illusion-" "riffle-")
       )
 
+(defun my-howm-mode-keys ()
+  (keymap-set howm-mode-map
+              "C-z" (let ((map (make-sparse-keymap)))
+                      (keymap-set map "," #'howm-menu)
+                      (keymap-set map "." #'howm-find-today)
+                      (keymap-set map "1" #'howm-list-schedule)
+                      (keymap-set map "2" #'howm-list-todo)
+                      (keymap-set map ":" #'howm-find-yesterday)
+                      (keymap-set map "<" #'howm-first-memo)
+                      (keymap-set map ">" #'howm-last-memo)
+                      (keymap-set map "A" #'howm-list-around)
+                      (keymap-set map "C" #'howm-create-here)
+                      (keymap-set map "D" #'howm-dup)
+                      (keymap-set map "I" #'howm-create-interactively)
+                      (keymap-set map "K" #'howm-keyword-to-kill-ring)
+                      (keymap-set map "M" #'howm-open-named-file)
+                      (keymap-set map "N" #'howm-next-memo)
+                      (keymap-set map "P" #'howm-previous-memo)
+                      (keymap-set map "Q" #'howm-kill-all)
+                      (keymap-set map "S" #'howm-list-grep-fixed)
+                      (keymap-set map "SPC" #'howm-toggle-buffer)
+                      (keymap-set map "a" #'howm-list-all)
+                      (keymap-set map "c" #'howm-create)
+                      (keymap-set map "d" #'howm-insert-date)
+                      (keymap-set map "e" #'howm-remember)
+                      (keymap-set map "g" #'howm-refresh)
+                      (keymap-set map "h" #'howm-history)
+                      (keymap-set map "i" #'howm-insert-keyword)
+                      (keymap-set map "l" #'howm-list-recent)
+                      (keymap-set map "m" #'howm-list-migemo) ; ??
+                      (keymap-set map "n" #'action-lock-goto-next-link)
+                      (keymap-set map "o" #'howm-occur)
+                      (keymap-set map "p" #'action-lock-goto-previous-link)
+                      (keymap-set map "s" #'howm-list-grep)
+                      (keymap-set map "t" #'howm-insert-dtime)
+                      (keymap-set map "w" #'howm-random-walk)
+                      (keymap-set map "x" #'howm-list-mark-ring)
+                      map)))
+
+(defun my-howm-other-modes-keys ()
+  (mapc (lambda (map)
+          (keymap-set map "," #'howm-menu)
+          (keymap-set map "." #'howm-reminder-goto-today)
+          (keymap-set map "1" #'howm-list-schedule)
+          (keymap-set map "2" #'howm-list-todo)
+          (keymap-set map "K" #'howm-keyword-to-kill-ring)
+          (keymap-set map "M" #'howm-open-named-file)
+          (keymap-set map "Q" #'howm-kill-all)
+          (keymap-set map "S" #'howm-list-grep-fixed)
+          (keymap-set map "a" #'howm-list-all)
+          (keymap-set map "c" #'howm-create)
+          (keymap-set map "e" #'howm-remember)
+          (keymap-set map "m" #'howm-list-migemo) ; ??
+          (keymap-set map "o" #'howm-occur)
+          (keymap-set map "s" #'howm-list-grep)
+          (keymap-set map "x" #'howm-list-mark-ring))
+        (list howm-view-summary-mode-map
+              howm-view-contents-mode-map)))
+
+(defun my-howm-mode-config ()
+  (setq-local outline-regexp "[*]+")
+  (my-howm-mode-keys))
+
+(add-hook 'howm-mode-hook #'my-howm-mode-config)
+(add-hook 'howm-view-summary-mode-hook #'my-howm-other-modes-keys)
+(add-hook 'howm-view-contents-mode-hook #'my-howm-other-modes-keys)
+
 (keymap-set howm-menu-mode-map "<backtab>" #'action-lock-goto-previous-link)
 (keymap-set howm-view-summary-mode-map "<backtab>" #'howm-view-summary-previous-section)
+(keymap-global-set "C-z 2" #'howm-list-todo)
+(keymap-global-set "C-z ," #'howm-menu)
+(keymap-global-set "C-z ." #'howm-find-today)
+(keymap-global-set "C-z :" #'howm-find-yesterday)
+(keymap-global-set "C-z 1" #'howm-list-schedule)
+(keymap-global-set "C-z D" #'howm-dup)
+(keymap-global-set "C-z I" #'howm-create-interactively)
+(keymap-global-set "C-z K" #'howm-keyword-to-kill-ring)
+(keymap-global-set "C-z M" #'howm-open-named-file)
+(keymap-global-set "C-z S" #'howm-list-grep-fixed)
+(keymap-global-set "C-z SPC" #'howm-toggle-buffer)
+(keymap-global-set "C-z a" #'howm-list-all)
+(keymap-global-set "C-z c" #'howm-create)
+(keymap-global-set "C-z d" #'howm-insert-date)
+(keymap-global-set "C-z e" #'howm-remember)
+(keymap-global-set "C-z h" #'howm-history)
+(keymap-global-set "C-z H" #'howm-mode)
+(keymap-global-set "C-z l" #'howm-list-recent)
+(keymap-global-set "C-z s" #'howm-list-grep)
+(keymap-global-set "C-z t" #'howm-insert-dtime)
+(keymap-global-set "C-z w" #'howm-random-walk)
 
 
 ;;; ibuffer

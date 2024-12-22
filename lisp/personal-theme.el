@@ -138,6 +138,8 @@ numbered variants the same as the base color."
      `(link-visited ((t (:inherit link :foreground ,color-magenta))))
 
      ;; adoc-mode
+     `(adoc-meta-face ((t (:inherit default))))
+     `(adoc-meta-hide-face ((t (:inherit adoc-meta-face :foreground "gray30"))))
      `(adoc-title-face ((t (:foreground ,color-blue :height 1.0 :weight bold))))
      `(adoc-title-0-face ((t (:inherit adoc-title-face :foreground ,color-blue :height 1.1))))
      `(adoc-title-1-face ((t (:inherit adoc-title-face :foreground ,color-green :height 1.1))))
