@@ -2078,38 +2078,75 @@ When a prefix is used, ask where to insert the track and save it to `emms-my-ins
 
 ;;; howm
 
-(setq howm-prefix nil
-      howm-view-summary-sep "|"
+(setq howm-view-summary-sep "|"
       howm-view-title-header "*"
-      ;; howm-date-format (concat "%Y-%m-%d %a")
-      howm-default-key-table nil
-      )
+      howm-default-key-table nil)
 (require 'howm)
-(setq howm-content-from-region t
-      howm-menu-lang 'en
+(setq howm-view-split-horizontally nil
+      howm-view-summary-window-size 15
+      howm-view-keep-one-window t
+      ;; Files
       howm-directory "~/howm/"
       howm-file-name-format "%Y/%m/%Y-%m-%d-%H%M%S.txt"
+      howm-keyword-file (expand-file-name ".howm-keys" howm-directory)
+      ;; Menu
+      howm-menu-file (expand-file-name "howm-menu.txt" user-emacs-directory)
+      howm-menu-footer ""
+      howm-menu-lang 'en
+      howm-menu-name-format "*howm-menu*"
+      ;; Reminder
+      howm-action-lock-forward-save-buffer t
+      howm-menu-recent-num 50
+      howm-menu-schedule-days 30
+      howm-menu-schedule-days-before 14
+      howm-menu-todo-num 100
+      howm-menu-todo-priority-format "(%8.1f)"
+      howm-reminder-cancel-string "cancel"
+      ;; List
+      howm-list-recent-days 14
+      howm-list-title t
+      howm-view-contents-name "*howm-contents:%s*"
+      howm-view-summary-name "*howm-search:%s*"
+      howm-view-summary-persistent t
+      howm-normalizer 'howm-sort-items-by-mtime
+      ;; Search
+      howm-check-word-break nil
       howm-history-file (expand-file-name ".howm-history" howm-directory)
       howm-history-limit nil
-      howm-keyword-file (expand-file-name ".howm-keys" howm-directory)
-      howm-list-title t
-      howm-menu-file (expand-file-name "howm-menu.txt" user-emacs-directory)
+      howm-iigrep-preview-items 50
+      howm-iigrep-show-what nil
+      howm-keyword-case-fold-search nil
+      howm-message-time t
+      howm-view-use-grep t ; TODO: use ripgrep
+      ;; Misc
+      howm-prefix nil
+      howm-remember-insertion-format "\n%s\n" ; Skip titles (the first line) in howm-remember
+      ;; Create
+      howm-content-from-region t
       howm-prepend t
-      howm-view-keep-one-window t
-      howm-view-split-horizontally t
-      howm-view-summary-persistent nil
-      howm-view-use-grep t
+      howm-remember-first-line-to-title nil
       howm-title-from-search nil
-      howm-menu-name-format "*howm-menu*"
-      howm-menu-footer ""
+
       ;; https://github.com/kaorahi/howm/issues/22
       ;; riffle-protected-localvar-prefixes '("action-lock-" "howm-" "illusion-" "riffle-")
       )
 
+(defun my-howm-insert-date ()
+  "Insert date without any prompt, unless a prefix was given."
+  (interactive)
+  (let ((date (format-time-string howm-date-format)))
+    (insert (format howm-insert-date-format date))
+    (when current-prefix-arg
+      (howm-action-lock-date date t howm-insert-date-future))))
+
+(defun my-howm-list-all-by-name ()
+  (interactive)
+  (howm-list-all)
+  (howm-view-sort-by-name t))
+
 (defun my-howm-mode-keys ()
   (keymap-set howm-mode-map
               "C-z" (let ((map (make-sparse-keymap)))
-                      (keymap-set map "," #'howm-menu)
                       (keymap-set map "." #'howm-find-today)
                       (keymap-set map "1" #'howm-list-schedule)
                       (keymap-set map "2" #'howm-list-todo)
@@ -2125,21 +2162,21 @@ When a prefix is used, ask where to insert the track and save it to `emms-my-ins
                       (keymap-set map "N" #'howm-next-memo)
                       (keymap-set map "P" #'howm-previous-memo)
                       (keymap-set map "Q" #'howm-kill-all)
-                      (keymap-set map "S" #'howm-list-grep-fixed)
                       (keymap-set map "SPC" #'howm-toggle-buffer)
-                      (keymap-set map "a" #'howm-list-all)
+                      (keymap-set map "a" #'my-howm-list-all-by-name)
                       (keymap-set map "c" #'howm-create)
-                      (keymap-set map "d" #'howm-insert-date)
+                      (keymap-set map "d" #'my-howm-insert-date)
                       (keymap-set map "e" #'howm-remember)
-                      (keymap-set map "g" #'howm-refresh)
+                      (keymap-set map "g" #'howm-list-grep)
                       (keymap-set map "h" #'howm-history)
                       (keymap-set map "i" #'howm-insert-keyword)
                       (keymap-set map "l" #'howm-list-recent)
-                      (keymap-set map "m" #'howm-list-migemo) ; ??
+                      (keymap-set map "m" #'howm-menu)
                       (keymap-set map "n" #'action-lock-goto-next-link)
                       (keymap-set map "o" #'howm-occur)
                       (keymap-set map "p" #'action-lock-goto-previous-link)
-                      (keymap-set map "s" #'howm-list-grep)
+                      (keymap-set map "r" #'howm-refresh)
+                      (keymap-set map "s" #'howm-list-grep-fixed)
                       (keymap-set map "t" #'howm-insert-dtime)
                       (keymap-set map "w" #'howm-random-walk)
                       (keymap-set map "x" #'howm-list-mark-ring)
@@ -2147,20 +2184,19 @@ When a prefix is used, ask where to insert the track and save it to `emms-my-ins
 
 (defun my-howm-other-modes-keys ()
   (mapc (lambda (map)
-          (keymap-set map "," #'howm-menu)
           (keymap-set map "." #'howm-reminder-goto-today)
           (keymap-set map "1" #'howm-list-schedule)
           (keymap-set map "2" #'howm-list-todo)
           (keymap-set map "K" #'howm-keyword-to-kill-ring)
           (keymap-set map "M" #'howm-open-named-file)
           (keymap-set map "Q" #'howm-kill-all)
-          (keymap-set map "S" #'howm-list-grep-fixed)
-          (keymap-set map "a" #'howm-list-all)
+          (keymap-set map "s" #'howm-list-grep-fixed)
+          (keymap-set map "a" #'my-howm-list-all-by-name)
           (keymap-set map "c" #'howm-create)
           (keymap-set map "e" #'howm-remember)
-          (keymap-set map "m" #'howm-list-migemo) ; ??
+          (keymap-set map "m" #'howm-menu)
           (keymap-set map "o" #'howm-occur)
-          (keymap-set map "s" #'howm-list-grep)
+          (keymap-set map "g" #'howm-list-grep)
           (keymap-set map "x" #'howm-list-mark-ring))
         (list howm-view-summary-mode-map
               howm-view-contents-mode-map)))
@@ -2175,24 +2211,24 @@ When a prefix is used, ask where to insert the track and save it to `emms-my-ins
 
 (keymap-set howm-menu-mode-map "<backtab>" #'action-lock-goto-previous-link)
 (keymap-set howm-view-summary-mode-map "<backtab>" #'howm-view-summary-previous-section)
-(keymap-global-set "C-z 2" #'howm-list-todo)
-(keymap-global-set "C-z ," #'howm-menu)
 (keymap-global-set "C-z ." #'howm-find-today)
-(keymap-global-set "C-z :" #'howm-find-yesterday)
 (keymap-global-set "C-z 1" #'howm-list-schedule)
+(keymap-global-set "C-z 2" #'howm-list-todo)
+(keymap-global-set "C-z :" #'howm-find-yesterday)
 (keymap-global-set "C-z D" #'howm-dup)
+(keymap-global-set "C-z H" #'howm-mode)
 (keymap-global-set "C-z I" #'howm-create-interactively)
 (keymap-global-set "C-z K" #'howm-keyword-to-kill-ring)
 (keymap-global-set "C-z M" #'howm-open-named-file)
 (keymap-global-set "C-z S" #'howm-list-grep-fixed)
 (keymap-global-set "C-z SPC" #'howm-toggle-buffer)
-(keymap-global-set "C-z a" #'howm-list-all)
+(keymap-global-set "C-z a" #'my-howm-list-all-by-name)
 (keymap-global-set "C-z c" #'howm-create)
-(keymap-global-set "C-z d" #'howm-insert-date)
+(keymap-global-set "C-z d" #'my-howm-insert-date)
 (keymap-global-set "C-z e" #'howm-remember)
 (keymap-global-set "C-z h" #'howm-history)
-(keymap-global-set "C-z H" #'howm-mode)
 (keymap-global-set "C-z l" #'howm-list-recent)
+(keymap-global-set "C-z m" #'howm-menu)
 (keymap-global-set "C-z s" #'howm-list-grep)
 (keymap-global-set "C-z t" #'howm-insert-dtime)
 (keymap-global-set "C-z w" #'howm-random-walk)
