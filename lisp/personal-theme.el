@@ -224,6 +224,24 @@ numbered variants the same as the base color."
      `(gnus-header-newsgroups ((t (:foreground ,color-blue-4))))
      `(gnus-header-subject ((t (:inherit gnus-header :foreground ,color-red-3))))
 
+     ;; ;; howm
+     ;; `(howm-menu-key-face ((t (:foreground ,color-red))))
+     `(howm-mode-keyword-face ((t (:foreground ,color-blue))))
+     `(howm-mode-ref-face ((t (:foreground ,color-blue))))
+     `(howm-mode-title-face ((t (:weight bold)))) ; FIXME?
+     `(howm-mode-wiki-face ((t (:foreground ,color-blue))))
+     ;; `(howm-reminder-deadline-face ((t (:foreground ,color-red))))
+     ;; `(howm-reminder-defer-face ((t (:foreground ,color-magenta))))
+     ;; `(howm-reminder-late-deadline-face ((t (:background ,color-red-light))))
+     ;; `(howm-reminder-normal-face ((t (:foreground ,color-blue))))
+     ;; `(howm-reminder-schedule-face ((t (:foreground ,color-green))))
+     `(howm-reminder-today-face ((t (:foreground ,color-orange))))
+     ;; `(howm-reminder-todo-face ((t (:background ,color-magenta-light))))
+     ;; `(howm-reminder-tomorrow-face ((t (:background ,color-green-light))))
+     `(howm-view-empty-face ((t (:default))))
+     `(howm-view-hilit-face ((t (:foreground ,color-red))))
+     `(howm-view-name-face ((t (:foreground "gray30"))))
+
      ;; isearch
      `(isearch ((t (:foreground "white" :background ,color-magenta-2))))
      `(isearch-fail ((t (:background ,color-red-light))))

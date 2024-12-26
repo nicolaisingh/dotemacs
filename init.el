@@ -1195,7 +1195,7 @@ Inspired by https://oremacs.com/2017/03/18/dired-ediff"
         (apply function (dired-get-marked-files))))))
 
 (keymap-set dired-mode-map "z" #'dired-up-directory)
-(keymap-set dired-mode-map "C-c m ." #'dired-toggle-other-files-visibility)
+(keymap-set dired-mode-map "C-." #'dired-toggle-other-files-visibility)
 (keymap-set dired-mode-map "C-c m e" #'dired-create-empty-file)
 (keymap-set dired-mode-map "C-c m d" #'dired-ediff-marked-files)
 (keymap-set dired-mode-map "C-c m !" #'dired-apply-to-marked-files)
@@ -2078,12 +2078,12 @@ When a prefix is used, ask where to insert the track and save it to `emms-my-ins
 
 ;;; howm
 
-(setq howm-view-summary-sep "|"
+(setq howm-view-summary-sep " :"
       howm-view-title-header "*"
       howm-default-key-table nil)
 (require 'howm)
 (setq howm-view-split-horizontally nil
-      howm-view-summary-window-size 15
+      howm-view-summary-window-size 20
       howm-view-keep-one-window t
       ;; Files
       howm-directory "~/howm/"
@@ -2127,8 +2127,7 @@ When a prefix is used, ask where to insert the track and save it to `emms-my-ins
       howm-remember-first-line-to-title nil
       howm-title-from-search nil
 
-      ;; https://github.com/kaorahi/howm/issues/22
-      ;; riffle-protected-localvar-prefixes '("action-lock-" "howm-" "illusion-" "riffle-")
+      howm-configuration-for-major-mode nil
       )
 
 (defun my-howm-insert-date ()
@@ -2180,7 +2179,8 @@ When a prefix is used, ask where to insert the track and save it to `emms-my-ins
                       (keymap-set map "t" #'howm-insert-dtime)
                       (keymap-set map "w" #'howm-random-walk)
                       (keymap-set map "x" #'howm-list-mark-ring)
-                      map)))
+                      map))
+  (keymap-set howm-mode-map "C-c C-q" #'delete-window))
 
 (defun my-howm-other-modes-keys ()
   (mapc (lambda (map)
@@ -2208,6 +2208,8 @@ When a prefix is used, ask where to insert the track and save it to `emms-my-ins
 (add-hook 'howm-mode-hook #'my-howm-mode-config)
 (add-hook 'howm-view-summary-mode-hook #'my-howm-other-modes-keys)
 (add-hook 'howm-view-contents-mode-hook #'my-howm-other-modes-keys)
+(add-hook 'howm-mode-hook 'howm-mode-set-buffer-name)
+(add-hook 'after-save-hook 'howm-mode-set-buffer-name)
 
 (keymap-set howm-menu-mode-map "<backtab>" #'action-lock-goto-previous-link)
 (keymap-set howm-view-summary-mode-map "<backtab>" #'howm-view-summary-previous-section)
@@ -2220,16 +2222,16 @@ When a prefix is used, ask where to insert the track and save it to `emms-my-ins
 (keymap-global-set "C-z I" #'howm-create-interactively)
 (keymap-global-set "C-z K" #'howm-keyword-to-kill-ring)
 (keymap-global-set "C-z M" #'howm-open-named-file)
-(keymap-global-set "C-z S" #'howm-list-grep-fixed)
 (keymap-global-set "C-z SPC" #'howm-toggle-buffer)
 (keymap-global-set "C-z a" #'my-howm-list-all-by-name)
 (keymap-global-set "C-z c" #'howm-create)
 (keymap-global-set "C-z d" #'my-howm-insert-date)
 (keymap-global-set "C-z e" #'howm-remember)
+(keymap-global-set "C-z g" #'howm-list-grep)
 (keymap-global-set "C-z h" #'howm-history)
 (keymap-global-set "C-z l" #'howm-list-recent)
 (keymap-global-set "C-z m" #'howm-menu)
-(keymap-global-set "C-z s" #'howm-list-grep)
+(keymap-global-set "C-z s" #'howm-list-grep-fixed)
 (keymap-global-set "C-z t" #'howm-insert-dtime)
 (keymap-global-set "C-z w" #'howm-random-walk)
 
