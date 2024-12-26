@@ -2037,10 +2037,30 @@ When a prefix is used, ask where to insert the track and save it to `emms-my-ins
     (insert " ")))
 (add-hook 'outline-insert-heading-hook #'my-outline-ensure-space-after-heading)
 
+(defun my-outline-convert-to-heading ()
+  "Convert current line to a heading."
+  (interactive)
+  (save-excursion
+    (cond ((outline-on-heading-p)
+           (goto-char (pos-bol))
+           (re-search-forward "^\\*+ " nil t)
+           (replace-match ""))
+          (t (kill-region (pos-bol) (pos-eol))
+             (condition-case err
+                 (outline-insert-heading)
+               (error (insert "* ")))
+             (yank)
+             ;; handle case where only a space is inserted by outline-insert-heading
+             ;; (happens when there are no other headings in the buffer)
+             (goto-char (pos-bol))
+             (when (not (char-equal (following-char) ?*))
+               (insert "*"))))))
+
 (defun my-outline-mode-config ()
   (keymap-set outline-mode-map "C-c"
               (let ((map (make-sparse-keymap)))
                 (keymap-set map "@" #'outline-mark-subtree)
+                (keymap-set map "C-8" #'my-outline-convert-to-heading)
                 (keymap-set map "C-n" #'outline-next-visible-heading)
                 (keymap-set map "C-p" #'outline-previous-visible-heading)
                 (keymap-set map "C-u" #'outline-up-heading)
@@ -2058,12 +2078,13 @@ When a prefix is used, ask where to insert the track and save it to `emms-my-ins
   (keymap-set outline-minor-mode-map "C-c"
               (let ((map (make-sparse-keymap)))
                 (keymap-set map "@" #'outline-mark-subtree)
+                (keymap-set map "C-8" #'my-outline-convert-to-heading)
+                (keymap-set map "C-b" #'outline-backward-same-level)
+                (keymap-set map "C-f" #'outline-forward-same-level)
                 (keymap-set map "C-n" #'outline-next-visible-heading)
+                (keymap-set map "C-o" #'outline-hide-other)
                 (keymap-set map "C-p" #'outline-previous-visible-heading)
                 (keymap-set map "C-u" #'outline-up-heading)
-                (keymap-set map "C-f" #'outline-forward-same-level)
-                (keymap-set map "C-b" #'outline-backward-same-level)
-                (keymap-set map "C-o" #'outline-hide-other)
                 map))
   (keymap-set outline-minor-mode-map "M-<up>" #'outline-move-subtree-up)
   (keymap-set outline-minor-mode-map "M-<down>" #'outline-move-subtree-down)
@@ -2078,16 +2099,20 @@ When a prefix is used, ask where to insert the track and save it to `emms-my-ins
 
 ;;; howm
 
-(setq howm-view-summary-sep " :"
-      howm-view-title-header "*"
-      howm-default-key-table nil)
+(setq action-lock-date-default '("[@]" "[%Y-%m-%d %H:%M]")
+      action-lock-switch-default '("[ ]" "[X]" "[-]" "[*]")
+      howm-default-key-table nil
+      howm-view-summary-sep " |"
+      howm-view-title-header "*")
 (require 'howm)
-(setq howm-view-split-horizontally nil
-      howm-view-summary-window-size 20
+(setq howm-view-header-format "\n--------------------------------------- >>> %s\n"
+      howm-view-header-regexp "^--------------------------------------- >>> .*$"
       howm-view-keep-one-window t
+      howm-view-summary-window-size 20
+      howm-view-split-horizontally nil
       ;; Files
       howm-directory "~/howm/"
-      howm-file-name-format "%Y/%m/%Y-%m-%d-%H%M%S.txt"
+      howm-file-name-format "%Y/%m/%Y-%m-%dT%H%M%S.txt"
       howm-keyword-file (expand-file-name ".howm-keys" howm-directory)
       ;; Menu
       howm-menu-file (expand-file-name "howm-menu.txt" user-emacs-directory)
@@ -2100,7 +2125,7 @@ When a prefix is used, ask where to insert the track and save it to `emms-my-ins
       howm-menu-schedule-days 30
       howm-menu-schedule-days-before 14
       howm-menu-todo-num 100
-      howm-menu-todo-priority-format "(%8.1f)"
+      howm-menu-todo-priority-format nil;;"(%8.1f)"
       howm-reminder-cancel-string "cancel"
       ;; List
       howm-list-recent-days 14
@@ -2115,12 +2140,12 @@ When a prefix is used, ask where to insert the track and save it to `emms-my-ins
       howm-history-limit nil
       howm-iigrep-preview-items 50
       howm-iigrep-show-what nil
-      howm-keyword-case-fold-search nil
-      howm-message-time t
+      howm-keyword-case-fold-search t
+      howm-message-time nil
       howm-view-use-grep t ; TODO: use ripgrep
       ;; Misc
       howm-prefix nil
-      howm-remember-insertion-format "\n%s\n" ; Skip titles (the first line) in howm-remember
+      howm-remember-insertion-format "%s\n"
       ;; Create
       howm-content-from-region t
       howm-prepend t
@@ -2128,14 +2153,38 @@ When a prefix is used, ask where to insert the track and save it to `emms-my-ins
       howm-title-from-search nil
 
       howm-configuration-for-major-mode nil
+      ;; howm-configuration-for-major-mode
+      ;; '((adoc-mode . ((howm-view-title-regexp . "^= \\(.*\\)$")
+      ;;                 (howm-view-title-regexp-pos . 1)
+      ;;                 (howm-view-title-regexp-grep . "^= \\(.*\\)$"))))
       )
 
+(defun my-howm-insert-keywords ()
+  "Insert keywords line."
+  (interactive)
+  (let* ((completion-table (mapcar #'list (howm-keyword-list)))
+         (keywords (completing-read-multiple "Keyword: " completion-table)))
+    (insert ":keywords: " (string-join keywords " "))))
+
+(defun my-howm-collect-keywords ()
+  "Write all keywords found in the current buffer."
+  (interactive)
+  (let (all-keywords)
+    (save-excursion
+      (goto-char (point-min))
+      (while (re-search-forward ":keywords: \\(.*\\)$" nil t)
+        (let ((keywords (match-string-no-properties 1)))
+          (setq all-keywords (append all-keywords
+                                     (split-string keywords " ")))))
+      (let ((save-silently t))
+        (howm-keyword-add all-keywords)))))
+
 (defun my-howm-insert-date ()
-  "Insert date without any prompt, unless a prefix was given."
+  "Insert date without any prompt when prefix is given."
   (interactive)
   (let ((date (format-time-string howm-date-format)))
     (insert (format howm-insert-date-format date))
-    (when current-prefix-arg
+    (unless current-prefix-arg
       (howm-action-lock-date date t howm-insert-date-future))))
 
 (defun my-howm-list-all-by-name ()
@@ -2169,6 +2218,7 @@ When a prefix is used, ask where to insert the track and save it to `emms-my-ins
                       (keymap-set map "g" #'howm-list-grep)
                       (keymap-set map "h" #'howm-history)
                       (keymap-set map "i" #'howm-insert-keyword)
+                      (keymap-set map "k" #'my-howm-insert-keywords)
                       (keymap-set map "l" #'howm-list-recent)
                       (keymap-set map "m" #'howm-menu)
                       (keymap-set map "n" #'action-lock-goto-next-link)
@@ -2201,6 +2251,9 @@ When a prefix is used, ask where to insert the track and save it to `emms-my-ins
         (list howm-view-summary-mode-map
               howm-view-contents-mode-map)))
 
+(keymap-set howm-menu-mode-map "n" #'next-line)
+(keymap-set howm-menu-mode-map "p" #'previous-line)
+
 (defun my-howm-mode-config ()
   (setq-local outline-regexp "[*]+")
   (my-howm-mode-keys))
@@ -2208,11 +2261,13 @@ When a prefix is used, ask where to insert the track and save it to `emms-my-ins
 (add-hook 'howm-mode-hook #'my-howm-mode-config)
 (add-hook 'howm-view-summary-mode-hook #'my-howm-other-modes-keys)
 (add-hook 'howm-view-contents-mode-hook #'my-howm-other-modes-keys)
-(add-hook 'howm-mode-hook 'howm-mode-set-buffer-name)
+(add-hook 'howm-mode-hook #'howm-mode-set-buffer-name)
+(add-hook 'howm-mode-hook (lambda () (add-hook 'before-save-hook #'my-howm-collect-keywords nil t)))
 (add-hook 'after-save-hook 'howm-mode-set-buffer-name)
 
 (keymap-set howm-menu-mode-map "<backtab>" #'action-lock-goto-previous-link)
 (keymap-set howm-view-summary-mode-map "<backtab>" #'howm-view-summary-previous-section)
+(keymap-set howm-view-contents-mode-map "<backtab>" #'riffle-contents-goto-previous-item)
 (keymap-global-set "C-z ." #'howm-find-today)
 (keymap-global-set "C-z 1" #'howm-list-schedule)
 (keymap-global-set "C-z 2" #'howm-list-todo)
@@ -2336,6 +2391,7 @@ When a prefix is used, ask where to insert the track and save it to `emms-my-ins
                                                   (buffer (styles . (basic flex partial-completion)))))
       (keymap-set icomplete-minibuffer-map "C-?" #'minibuffer-hide-completions)
       (keymap-set icomplete-minibuffer-map "C-S-j" #'icomplete-force-complete)
+      (keymap-set icomplete-minibuffer-map "C-<return>" #'icomplete-force-complete)
       (keymap-set icomplete-minibuffer-map "C-^" (lambda ()
                                                    (interactive)
                                                    (setq-local max-mini-window-height
