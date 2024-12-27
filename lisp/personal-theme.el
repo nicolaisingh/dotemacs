@@ -100,8 +100,8 @@ numbered variants the same as the base color."
      ("color-red" "#d55e00")            ; vermillion
      ("color-magenta" "#cc79a7"))       ; reddish purple
   (let* (;; frame elements
-         (bg-active color-magenta-light)
-         (bg-active-border color-magenta)
+         (bg-active color-magenta-light-2)
+         (bg-active-border color-magenta-2)
          (bg-inactive "gray95")
          (bg-inactive-border "gray90")
          (bg-active-tab "white")
@@ -199,14 +199,14 @@ numbered variants the same as the base color."
      `(eshell-prompt ((t (:foreground ,color-red :weight bold))))
 
      ;; font-lock
-     `(font-lock-builtin-face ((t (:foreground ,color-blue-2))))
-     `(font-lock-comment-face ((t (:foreground ,color-orange-2))))
-     `(font-lock-constant-face ((t (:foreground ,color-cyan-2))))
-     `(font-lock-function-name-face ((t (:foreground ,color-blue-2))))
-     `(font-lock-keyword-face ((t (:foreground ,color-magenta-2))))
-     `(font-lock-string-face ((t (:foreground ,color-green-2))))
-     `(font-lock-type-face ((t (:foreground ,color-blue-2))))
-     `(font-lock-variable-name-face ((t (:foreground ,color-red-2))))
+     `(font-lock-builtin-face ((t (:foreground ,color-blue-3))))
+     `(font-lock-comment-face ((t (:foreground ,color-orange-3))))
+     `(font-lock-constant-face ((t (:foreground ,color-cyan-3))))
+     `(font-lock-function-name-face ((t (:foreground ,color-blue-3))))
+     `(font-lock-keyword-face ((t (:foreground ,color-magenta-3))))
+     `(font-lock-string-face ((t (:foreground ,color-green-3))))
+     `(font-lock-type-face ((t (:foreground ,color-blue-3))))
+     `(font-lock-variable-name-face ((t (:foreground ,color-red-3))))
 
      ;; gnus
      `(gnus-group-mail-1-empty ((t (:foreground ,color-red-3))))
@@ -225,19 +225,20 @@ numbered variants the same as the base color."
      `(gnus-header-subject ((t (:inherit gnus-header :foreground ,color-red-3))))
 
      ;; ;; howm
+     `(action-lock-face ((t (:underline t))))
      ;; `(howm-menu-key-face ((t (:foreground ,color-red))))
      `(howm-mode-keyword-face ((t (:foreground ,color-blue))))
      `(howm-mode-ref-face ((t (:foreground ,color-blue))))
-     `(howm-mode-title-face ((t (:weight bold)))) ; FIXME?
+     `(howm-mode-title-face ((t (:weight bold))))
      `(howm-mode-wiki-face ((t (:foreground ,color-blue))))
      ;; `(howm-reminder-deadline-face ((t (:foreground ,color-red))))
      ;; `(howm-reminder-defer-face ((t (:foreground ,color-magenta))))
      ;; `(howm-reminder-late-deadline-face ((t (:background ,color-red-light))))
      ;; `(howm-reminder-normal-face ((t (:foreground ,color-blue))))
      ;; `(howm-reminder-schedule-face ((t (:foreground ,color-green))))
-     `(howm-reminder-today-face ((t (:foreground ,color-orange))))
+     `(howm-reminder-today-face ((t (:foreground ,color-orange-2 :weight bold))))
      ;; `(howm-reminder-todo-face ((t (:background ,color-magenta-light))))
-     ;; `(howm-reminder-tomorrow-face ((t (:background ,color-green-light))))
+     `(howm-reminder-tomorrow-face ((t (:foreground ,color-magenta-2 :weight bold))))
      `(howm-view-empty-face ((t (:default))))
      `(howm-view-hilit-face ((t (:foreground ,color-red))))
      `(howm-view-name-face ((t (:foreground "gray30"))))

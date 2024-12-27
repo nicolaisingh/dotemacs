@@ -1126,6 +1126,7 @@ If ARG is Non-nil, the existing command log buffer is cleared."
 
 (defun my-diminish-config ()
   "Load diminished modes."
+  (diminish-mode 'action-lock 'action-lock-mode)
   (diminish-mode 'autorevert 'auto-revert-mode)
   (diminish-mode 'consult-org-roam 'consult-org-roam-mode)
   (diminish-mode 'org-indent 'org-indent-mode)
@@ -2099,9 +2100,7 @@ When a prefix is used, ask where to insert the track and save it to `emms-my-ins
 
 ;;; howm
 
-(setq action-lock-date-default '("[@]" "[%Y-%m-%d %H:%M]")
-      action-lock-switch-default '("[ ]" "[X]" "[-]" "[*]")
-      howm-default-key-table nil
+(setq howm-default-key-table nil
       howm-view-summary-sep " |"
       howm-view-title-header "*")
 (require 'howm)
@@ -2157,6 +2156,8 @@ When a prefix is used, ask where to insert the track and save it to `emms-my-ins
       ;; '((adoc-mode . ((howm-view-title-regexp . "^= \\(.*\\)$")
       ;;                 (howm-view-title-regexp-pos . 1)
       ;;                 (howm-view-title-regexp-grep . "^= \\(.*\\)$"))))
+
+      *howm-show-item-filename* nil
       )
 
 (defun my-howm-insert-keywords ()
@@ -2261,8 +2262,8 @@ When a prefix is used, ask where to insert the track and save it to `emms-my-ins
 (add-hook 'howm-mode-hook #'my-howm-mode-config)
 (add-hook 'howm-view-summary-mode-hook #'my-howm-other-modes-keys)
 (add-hook 'howm-view-contents-mode-hook #'my-howm-other-modes-keys)
-(add-hook 'howm-mode-hook #'howm-mode-set-buffer-name)
 (add-hook 'howm-mode-hook (lambda () (add-hook 'before-save-hook #'my-howm-collect-keywords nil t)))
+(add-hook 'howm-mode-hook #'howm-mode-set-buffer-name)
 (add-hook 'after-save-hook 'howm-mode-set-buffer-name)
 
 (keymap-set howm-menu-mode-map "<backtab>" #'action-lock-goto-previous-link)
@@ -2289,6 +2290,33 @@ When a prefix is used, ask where to insert the track and save it to `emms-my-ins
 (keymap-global-set "C-z s" #'howm-list-grep-fixed)
 (keymap-global-set "C-z t" #'howm-insert-dtime)
 (keymap-global-set "C-z w" #'howm-random-walk)
+
+
+;;; howm (action-lock)
+
+(require 'action-lock)
+
+(setq my-action-lock-checkbox '("[ ]" "[X]" "[-]" "[*]")
+      my-action-lock-datebox '("[@]" "[%Y-%m-%d %H:%M]")
+      my-action-lock-jira-issue-regexp "\\(JIRA-[0-9]+\\)")
+
+(defun my-action-lock-jira-browse (issue)
+  "action-lock to browse a Jira issue."
+  (browse-url (format "https://JIRA.atlassian.net/browse/%s" issue)))
+
+(defun my-action-lock-jira-browse-rule (regexp arg-pos &optional hilit-pos)
+  "action-lock rule to browse a Jira issue."
+  (action-lock-general #'my-action-lock-jira-browse regexp arg-pos hilit-pos))
+
+(defun my-action-lock-mode-config ()
+  (when action-lock-mode
+    (action-lock-add-rules
+     (list (action-lock-switch my-action-lock-checkbox)
+           (action-lock-date (regexp-quote (car my-action-lock-datebox))
+                             (cadr my-action-lock-datebox))
+           (my-action-lock-jira-browse-rule my-action-lock-jira-issue-regexp 0)))))
+
+(add-hook 'action-lock-mode-hook #'my-action-lock-mode-config)
 
 
 ;;; ibuffer
