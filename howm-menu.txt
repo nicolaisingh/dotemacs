@@ -1,7 +1,6 @@
 * howm menu
-**Bookmarks
+** Bookmarks
 Keys file: file://~/howm/.howm-keys
->>> howm
 
 ** Reminder
 [Schedule, Todo] -- @schedule, !deadline (until %sdays days from now)

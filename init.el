@@ -2109,6 +2109,8 @@ When a prefix is used, ask where to insert the track and save it to `emms-my-ins
       howm-view-keep-one-window t
       howm-view-summary-window-size 20
       howm-view-split-horizontally nil
+      ;; include timestamp part and note filenames
+      howm-highlight-date-regexp-format "\\(?:\\[%Y-%m-%d.*]\\|%Y-%m-%d\\)?"
       ;; Files
       howm-directory "~/howm/"
       howm-file-name-format "%Y/%m/%Y-%m-%dT%H%M%S.txt"
@@ -2128,7 +2130,11 @@ When a prefix is used, ask where to insert the track and save it to `emms-my-ins
       howm-reminder-cancel-string "cancel"
       ;; List
       howm-list-recent-days 14
-      howm-list-title t
+      howm-list-title '(howm-action-lock-date-search
+                        howm-list-all
+                        howm-list-around
+                        howm-list-grep-fixed
+                        howm-list-recent)
       howm-view-contents-name "*howm-contents:%s*"
       howm-view-summary-name "*howm-search:%s*"
       howm-view-summary-persistent t
@@ -2147,7 +2153,7 @@ When a prefix is used, ask where to insert the track and save it to `emms-my-ins
       howm-remember-insertion-format "%s\n"
       ;; Create
       howm-content-from-region t
-      howm-prepend t
+      howm-prepend nil
       howm-remember-first-line-to-title nil
       howm-title-from-search nil
 
@@ -2165,6 +2171,8 @@ When a prefix is used, ask where to insert the track and save it to `emms-my-ins
   (interactive)
   (let* ((completion-table (mapcar #'list (howm-keyword-list)))
          (keywords (completing-read-multiple "Keyword: " completion-table)))
+    (unless (eolp) (goto-char (pos-eol)))
+    (newline)
     (insert ":keywords: " (string-join keywords " "))))
 
 (defun my-howm-collect-keywords ()
