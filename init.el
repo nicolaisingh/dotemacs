@@ -2096,7 +2096,6 @@ When a prefix is used, ask where to insert the track and save it to `emms-my-ins
 (add-hook 'outline-mode-hook #'my-outline-mode-config)
 ;; (add-hook 'outline-minor-mode-hook #'my-outline-minor-mode-config)
 
-
 
 ;;; howm
 
@@ -2144,10 +2143,16 @@ When a prefix is used, ask where to insert the track and save it to `emms-my-ins
       howm-history-file (expand-file-name ".howm-history" howm-directory)
       howm-history-limit nil
       howm-iigrep-preview-items 50
-      howm-iigrep-show-what nil
+      howm-iigrep-show-what 'counts
       howm-keyword-case-fold-search t
       howm-message-time nil
-      howm-view-use-grep t ; TODO: use ripgrep
+      howm-view-use-grep t
+      howm-view-grep-command "rg"
+      howm-view-grep-expr-option "-e"
+      howm-view-grep-extended-option nil
+      howm-view-grep-file-stdin-option "-f -"
+      howm-view-grep-fixed-option "-F"
+      howm-view-grep-option "-nH --smart-case --no-heading --color never"
       ;; Misc
       howm-prefix nil
       howm-remember-insertion-format "%s\n"
@@ -2157,14 +2162,42 @@ When a prefix is used, ask where to insert the track and save it to `emms-my-ins
       howm-remember-first-line-to-title nil
       howm-title-from-search nil
 
-      howm-configuration-for-major-mode nil
-      ;; howm-configuration-for-major-mode
-      ;; '((adoc-mode . ((howm-view-title-regexp . "^= \\(.*\\)$")
-      ;;                 (howm-view-title-regexp-pos . 1)
-      ;;                 (howm-view-title-regexp-grep . "^= \\(.*\\)$"))))
-
-      *howm-show-item-filename* nil
-      )
+      howm-configuration-for-major-mode
+      '((text-mode . (;; (howm-view-preview-narrow . nil)
+                      ;; (howm-keyword-list-alias-sep . nil)
+                      (howm-keyword-header . "*")
+                      (howm-keyword-format . "^\\*+ %s$")
+                      (howm-keyword-regexp . "^\\(\\*+\\)[ \t]*\\([^ \t\r\n].*\\)$")
+                      (howm-keyword-regexp-hilit-pos . 1)
+                      (howm-keyword-regexp-pos . 2)
+                      (howm-view-title-header . "*")
+                      (howm-view-title-regexp . "^\\*+\\( +\\(.*\\)\\|\\)$")
+                      (howm-view-title-regexp-pos . 2)
+                      (howm-view-title-regexp-grep . "^\\*+ +")))
+        (org-mode . (;; (howm-view-preview-narrow . nil)
+                     ;; (howm-keyword-list-alias-sep . nil)
+                     (howm-keyword-header . "*")
+                     (howm-keyword-format . "^\\*+ %s$")
+                     (howm-keyword-regexp . "^\\(\\*+\\)[ \t]*\\([^ \t\r\n].*\\)$")
+                     (howm-keyword-regexp-hilit-pos . 1)
+                     (howm-keyword-regexp-pos . 2)
+                     (howm-view-title-header . "*")
+                     (howm-view-title-regexp . "^\\*+\\( +\\(.*\\)\\|\\)$")
+                     (howm-view-title-regexp-pos . 2)
+                     (howm-view-title-regexp-grep . "^\\*+ +")))
+        (outline-mode . (;; (howm-view-preview-narrow . nil)
+                         ;; (howm-keyword-list-alias-sep . nil)
+                         (howm-keyword-header . "*")
+                         (howm-keyword-format . "^\\*+ %s$")
+                         (howm-keyword-regexp . "^\\(\\*+\\)[ \t]*\\([^ \t\r\n].*\\)$")
+                         (howm-keyword-regexp-hilit-pos . 1)
+                         (howm-keyword-regexp-pos . 2)
+                         ;; (howm-mode-title-face . nil)
+                         (howm-view-title-header . "*")
+                         (howm-view-title-regexp . "^\\*+\\( +\\(.*\\)\\|\\)$")
+                         (howm-view-title-regexp-pos . 2)
+                         (howm-view-title-regexp-grep . "^\\*+ +"))))
+      *howm-show-item-filename* nil)
 
 (defun my-howm-insert-keywords ()
   "Insert keywords line."
@@ -2268,11 +2301,12 @@ When a prefix is used, ask where to insert the track and save it to `emms-my-ins
   (my-howm-mode-keys))
 
 (add-hook 'howm-mode-hook #'my-howm-mode-config)
+(add-hook 'howm-mode-hook #'visual-line-fill-column-mode)
 (add-hook 'howm-view-summary-mode-hook #'my-howm-other-modes-keys)
 (add-hook 'howm-view-contents-mode-hook #'my-howm-other-modes-keys)
 (add-hook 'howm-mode-hook (lambda () (add-hook 'before-save-hook #'my-howm-collect-keywords nil t)))
 (add-hook 'howm-mode-hook #'howm-mode-set-buffer-name)
-(add-hook 'after-save-hook 'howm-mode-set-buffer-name)
+(add-hook 'after-save-hook #'howm-mode-set-buffer-name)
 
 (keymap-set howm-menu-mode-map "<backtab>" #'action-lock-goto-previous-link)
 (keymap-set howm-view-summary-mode-map "<backtab>" #'howm-view-summary-previous-section)
@@ -3525,8 +3559,12 @@ of the new org-mode file."
 (keymap-set orgalist-mode-map "M-S-<return>" orgalist--maybe-insert-checkbox)
 (keymap-unset orgalist-mode-map "C-c -")
 
-(add-hook 'howm-mode-hook #'orgalist-mode)
-(add-hook 'howm-remember-mode-hook #'orgalist-mode)
+(defun my-orgalist-mode-config ()
+  (when (eq major-mode 'text-mode)
+    (orgalist-mode 1)))
+
+(add-hook 'text-mode-hook #'my-orgalist-mode-config)
+(add-hook 'outline-mode-hook #'orgalist-mode)
 
 
 ;;; origami
