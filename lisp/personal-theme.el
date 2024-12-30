@@ -101,14 +101,14 @@ numbered variants the same as the base color."
      ("color-magenta" "#cc79a7"))       ; reddish purple
   (let* (;; frame elements
          (bg-active color-magenta-light-2)
-         (bg-active-border color-magenta-2)
+         (bg-active-border color-magenta-light-3)
          (bg-inactive "gray95")
          (bg-inactive-border "gray90")
          (bg-active-tab "white")
          (bg-inactive-tab "gray90")
          (fg-inactive "gray50")
-         (box-active `(:line-width 2 :color ,bg-active-border :style flat-button))
-         (box-inactive `(:line-width 2 :color ,bg-inactive-border :style flat-button))
+         (box-active `(:line-width 3 :color ,bg-active-border :style flat-button))
+         (box-inactive `(:line-width 3 :color ,bg-inactive-border :style flat-button))
          (box-active-tab `(:line-width 1 :color ,bg-active-tab :style released-button))
          (box-inactive-tab `(:line-width 1 :color ,bg-inactive-tab :style flat-button)))
     (custom-theme-set-faces
@@ -116,7 +116,7 @@ numbered variants the same as the base color."
 
      ;; faces
      `(cursor ((t (:background "black"))))
-     `(default ((t (:font "Noto Sans Mono-10" :foreground "black" :background "white"))))
+     `(default ((t (:font "Noto Sans Mono-9" :foreground "black" :background "white"))))
      `(fringe ((t (:background "gray98"))))
      `(highlight ((t (:background "gray95"))))
      `(minibuffer-prompt ((t (:foreground ,color-blue-2 :weight bold))))

@@ -1279,6 +1279,13 @@ be file B."
 (keymap-global-set "<remap> <mark-word>" #'easy-mark)
 
 
+;;; eat
+
+(require 'eat)
+(setq eshell-visual-commands nil)
+(eat-eshell-mode)
+
+
 ;;; ediff
 
 (setq ediff-window-setup-function 'ediff-setup-windows-plain
@@ -1644,8 +1651,9 @@ When a prefix is used, ask where to insert the track and save it to `emms-my-ins
       eshell-history-size 10000
       eshell-ls-dired-initial-args '("-h")
       eshell-ls-initial-args '("-h")
-      eshell-visual-subcommands '(("git" "log" "diff" "show" "shortlog")
-                                  ("aws" "cloudfront" "dynamodb"))
+      ;; eat-eshell will handle these
+      ;; eshell-visual-subcommands '(("git" "log" "diff" "show" "shortlog")
+      ;;                             ("aws" "cloudfront" "dynamodb"))
       my-eshell-names-alist '(("nix-config" . "~/prj/nix-config")
                               ("bash-scripts" . "~/prj/bash-scripts")
                               ("other")))
@@ -3564,7 +3572,7 @@ of the new org-mode file."
     (orgalist-mode 1)))
 
 (add-hook 'text-mode-hook #'my-orgalist-mode-config)
-(add-hook 'outline-mode-hook #'orgalist-mode)
+;; (add-hook 'outline-mode-hook #'orgalist-mode)
 
 
 ;;; origami

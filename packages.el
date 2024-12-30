@@ -45,6 +45,7 @@
 
         dockerfile-mode
         easy-kill
+        eat
         edit-indirect
         edit-server
         elpy
