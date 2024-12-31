@@ -2114,6 +2114,10 @@ When a prefix is used, ask where to insert the track and save it to `emms-my-ins
 (setq howm-view-header-format "\n--------------------------------------- >>> %s\n"
       howm-view-header-regexp "^--------------------------------------- >>> .*$"
       howm-view-keep-one-window t
+      howm-view-summary-format (let* ((path (format-time-string howm-file-name-format))
+                                      (width (length (file-name-nondirectory path)))
+                                      (max-width (int-to-string 30)))
+                                 (concat "%-" max-width "." max-width  "s" howm-view-summary-sep " "))
       howm-view-summary-window-size 20
       howm-view-split-horizontally nil
       ;; include timestamp part and note filenames
@@ -2168,43 +2172,42 @@ When a prefix is used, ask where to insert the track and save it to `emms-my-ins
       howm-content-from-region t
       howm-prepend nil
       howm-remember-first-line-to-title nil
-      howm-title-from-search nil
+      howm-title-from-search t
 
       howm-configuration-for-major-mode
-      '((text-mode . (;; (howm-view-preview-narrow . nil)
-                      ;; (howm-keyword-list-alias-sep . nil)
-                      (howm-keyword-header . "*")
-                      (howm-keyword-format . "^\\*+ %s$")
-                      (howm-keyword-regexp . "^\\(\\*+\\)[ \t]*\\([^ \t\r\n].*\\)$")
-                      (howm-keyword-regexp-hilit-pos . 1)
-                      (howm-keyword-regexp-pos . 2)
-                      (howm-view-title-header . "*")
-                      (howm-view-title-regexp . "^\\*+\\( +\\(.*\\)\\|\\)$")
-                      (howm-view-title-regexp-pos . 2)
-                      (howm-view-title-regexp-grep . "^\\*+ +")))
-        (org-mode . (;; (howm-view-preview-narrow . nil)
-                     ;; (howm-keyword-list-alias-sep . nil)
-                     (howm-keyword-header . "*")
-                     (howm-keyword-format . "^\\*+ %s$")
-                     (howm-keyword-regexp . "^\\(\\*+\\)[ \t]*\\([^ \t\r\n].*\\)$")
+      `((org-mode . ((howm-keyword-header . "*")
+                     (howm-keyword-format . "^\\* %s")
+                     (howm-keyword-regexp . "^\\(\\*\\)[ \t]+\\([^ \t\r\n].*\\)$")
                      (howm-keyword-regexp-hilit-pos . 1)
                      (howm-keyword-regexp-pos . 2)
-                     (howm-view-title-header . "*")
-                     (howm-view-title-regexp . "^\\*+\\( +\\(.*\\)\\|\\)$")
-                     (howm-view-title-regexp-pos . 2)
-                     (howm-view-title-regexp-grep . "^\\*+ +")))
-        (outline-mode . (;; (howm-view-preview-narrow . nil)
-                         ;; (howm-keyword-list-alias-sep . nil)
-                         (howm-keyword-header . "*")
-                         (howm-keyword-format . "^\\*+ %s$")
-                         (howm-keyword-regexp . "^\\(\\*+\\)[ \t]*\\([^ \t\r\n].*\\)$")
+                     ;; (howm-view-title-header . "#+title:")
+                     ;; (howm-view-title-regexp . "^#\\+title:\\( +\\(.*\\)\\|\\)$")
+                     ;; (howm-view-title-regexp-pos . 2)
+                     ;; (howm-view-title-regexp-grep . "^#\\+title: +.*")
+                     (howm-view-preview-narrow . nil)
+                     (howm-keyword-list-alias-sep . nil)))
+        (outline-mode . ((howm-keyword-header . "*")
+                         (howm-keyword-format . "\\* %s")
+                         (howm-keyword-regexp . "^\\(\\*\\)[ \t]+\\([^ \t\r\n].*\\)$")
                          (howm-keyword-regexp-hilit-pos . 1)
                          (howm-keyword-regexp-pos . 2)
-                         ;; (howm-mode-title-face . nil)
-                         (howm-view-title-header . "*")
-                         (howm-view-title-regexp . "^\\*+\\( +\\(.*\\)\\|\\)$")
-                         (howm-view-title-regexp-pos . 2)
-                         (howm-view-title-regexp-grep . "^\\*+ +"))))
+                         ;; (howm-view-title-header . "*")
+                         ;; (howm-view-title-regexp . "^\\*\\( +\\(.*\\)\\|\\)$")
+                         ;; (howm-view-title-regexp-pos . 2)
+                         ;; (howm-view-title-regexp-grep . "^\\* +.*")
+                         (howm-view-preview-narrow . nil)
+                         (howm-keyword-list-alias-sep . nil)))
+        (adoc-mode . ((howm-keyword-header . "=")
+                      (howm-keyword-format . "^= %s")
+                      (howm-keyword-regexp . "^\\(=\\)[ \t]+\\([^ \t\r\n].*\\)$")
+                      (howm-keyword-regexp-hilit-pos . 1)
+                      (howm-keyword-regexp-pos . 2)
+                      ;; (howm-view-title-header . "=")
+                      ;; (howm-view-title-regexp . "^=\\( +\\(.*\\)\\|\\)$")
+                      ;; (howm-view-title-regexp-pos . 2)
+                      ;; (howm-view-title-regexp-grep . "^= +.*")
+                      (howm-view-preview-narrow . nil)
+                      (howm-keyword-list-alias-sep . nil))))
       *howm-show-item-filename* nil)
 
 (defun my-howm-insert-keywords ()
@@ -2241,6 +2244,13 @@ When a prefix is used, ask where to insert the track and save it to `emms-my-ins
   (interactive)
   (howm-list-all)
   (howm-view-sort-by-name t))
+
+(defun my-howm-list-grep-title ()
+  "Search by title."
+  (interactive)
+  (howm-set-command 'my-howm-list-grep-title)
+  (let ((howm-list-title '(my-howm-list-grep-title)))
+    (howm-list-grep-general)))
 
 (defun my-howm-mode-keys ()
   (keymap-set howm-mode-map
@@ -2313,6 +2323,7 @@ When a prefix is used, ask where to insert the track and save it to `emms-my-ins
 (add-hook 'howm-view-summary-mode-hook #'my-howm-other-modes-keys)
 (add-hook 'howm-view-contents-mode-hook #'my-howm-other-modes-keys)
 (add-hook 'howm-mode-hook (lambda () (add-hook 'before-save-hook #'my-howm-collect-keywords nil t)))
+(add-hook 'howm-view-summary-mode-hook #'hl-line-mode)
 (add-hook 'howm-mode-hook #'howm-mode-set-buffer-name)
 (add-hook 'after-save-hook #'howm-mode-set-buffer-name)
 
