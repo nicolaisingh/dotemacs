@@ -2110,6 +2110,7 @@ When a prefix is used, ask where to insert the track and save it to `emms-my-ins
 (setq howm-default-key-table nil
       howm-view-summary-sep " |"
       howm-view-title-header "*")
+
 (require 'howm)
 (setq howm-view-header-format "\n--------------------------------------- >>> %s\n"
       howm-view-header-regexp "^--------------------------------------- >>> .*$"
@@ -2177,9 +2178,15 @@ When a prefix is used, ask where to insert the track and save it to `emms-my-ins
       howm-configuration-for-major-mode
       `((org-mode . ((howm-keyword-header . "*")
                      (howm-keyword-format . "^\\* %s")
-                     (howm-keyword-regexp . "^\\(\\*\\)[ \t]+\\([^ \t\r\n].*\\)$")
+                     ;; from org-complex-heading-regexp but match level 1 only
+                     (howm-keyword-regexp . ,(concat "^\\(\\*\\)"
+                                                     (format "\\(?: +%s\\)?" (regexp-opt '("TODO" "WIP" "DEFERRED" "WAITING" "DONE" "CANCELED" "INBOX" "TOPIC")))
+                                                     "\\(?: +\\(\\[#.\\]\\)\\)?"
+                                                     "\\(?: +\\(.*?\\)\\)??"
+                                                     "\\(?:[ \t]+\\(:[[:alnum:]_@#%:]+:\\)\\)?"
+                                                     "[ \t]*$"))
                      (howm-keyword-regexp-hilit-pos . 1)
-                     (howm-keyword-regexp-pos . 2)
+                     (howm-keyword-regexp-pos . 3)
                      ;; (howm-view-title-header . "#+title:")
                      ;; (howm-view-title-regexp . "^#\\+title:\\( +\\(.*\\)\\|\\)$")
                      ;; (howm-view-title-regexp-pos . 2)
@@ -2222,13 +2229,23 @@ When a prefix is used, ask where to insert the track and save it to `emms-my-ins
 (defun my-howm-collect-keywords ()
   "Write all keywords found in the current buffer."
   (interactive)
-  (let (all-keywords)
+  (let ((all-keywords)
+        (regexp (concat "\\(?:"
+                        "#\\+title: \\(.+\\)$"
+                        "\\|"
+                        ":keywords: \\(.+\\)$"
+                        "\\)")))
     (save-excursion
       (goto-char (point-min))
-      (while (re-search-forward ":keywords: \\(.*\\)$" nil t)
-        (let ((keywords (match-string-no-properties 1)))
-          (setq all-keywords (append all-keywords
-                                     (split-string keywords " ")))))
+      (while (re-search-forward regexp nil t)
+        (let ((org-title (match-string-no-properties 1))
+              (keywords (match-string-no-properties 2)))
+          (when org-title
+            (setq all-keywords (append all-keywords
+                                       (list org-title))))
+          (when keywords
+            (setq all-keywords (append all-keywords
+                                       (split-string keywords " "))))))
       (let ((save-silently t))
         (howm-keyword-add all-keywords)))))
 
@@ -3346,7 +3363,7 @@ of the new org-mode file."
       org-modern-block-fringe nil
       org-modern-checkbox nil
       org-modern-fold-stars '(("▶" . "▼") ("▷" . "▽") ("▶" . "▼") ("▷" . "▽") ("▶" . "▼"))
-      org-modern-hide-stars " "
+      org-modern-hide-stars nil
       org-modern-keyword nil
       org-modern-list nil
       org-modern-priority t
@@ -3356,7 +3373,7 @@ of the new org-mode file."
       org-modern-progress nil
       org-modern-radio-target '("「" t "」")
       org-modern-replace-stars "■▪■▪■▪"
-      org-modern-star 'replace
+      org-modern-star nil
       org-modern-tag t
       org-modern-tag-faces '((t :background "beige" :foreground "black" :weight normal :box (:style pressed-button :line-width (0 . -1))))
       org-modern-timestamp nil
@@ -3552,7 +3569,7 @@ of the new org-mode file."
 ;;; org-sticky-header
 
 (setq org-sticky-header-at-point t
-      org-sticky-header-heading-star "■"
+      org-sticky-header-heading-star "*"
       org-sticky-header-full-path 'full)
 
 
