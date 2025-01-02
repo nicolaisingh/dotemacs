@@ -513,6 +513,7 @@ times."
   (keymap-global-set "C-x D" (lambda () (interactive) (dired "~")))
   (keymap-global-set "C-x K" #'kill-current-buffer)
   (keymap-global-set "C-x a /" #'unexpand-abbrev)
+  (keymap-global-set "C-x M-x" #'switch-to-minibuffer)
   (keymap-global-set "C-z C-s" #'eshell-toggle)
   (keymap-global-set "C-z C-z" #'my-org-capture-inbox)
   (keymap-global-set "C-S-z" #'org-capture)
@@ -2107,11 +2108,13 @@ When a prefix is used, ask where to insert the track and save it to `emms-my-ins
 
 ;;; howm
 
+;; need to set before requiring
 (setq howm-default-key-table nil
       howm-view-summary-sep " |"
       howm-view-title-header "*")
 
 (require 'howm)
+
 (setq howm-view-header-format "\n--------------------------------------- >>> %s\n"
       howm-view-header-regexp "^--------------------------------------- >>> .*$"
       howm-view-keep-one-window t
@@ -2216,6 +2219,34 @@ When a prefix is used, ask where to insert the track and save it to `emms-my-ins
                       (howm-view-preview-narrow . nil)
                       (howm-keyword-list-alias-sep . nil))))
       *howm-show-item-filename* nil)
+
+(add-to-list 'howm-template-rules
+             '("%dateonly" . (lambda (arg)
+                               (let ((date (format-time-string howm-date-format)))
+                                 (insert (format howm-insert-date-format date))))))
+
+(defun my-howm-template (which-template previous-buffer)
+  "Howm template chooser."
+  (cond
+   ((= which-template 4) (let ((choice (completing-read "Template: "
+                                                        (mapcar #'car my-howm-templates) nil t)))
+                           (cadr (assoc choice my-howm-templates))))
+   (t (concat howm-view-title-header " %title%cursor\n%date %file\n\n"))))
+
+(setq howm-template #'my-howm-template
+      my-howm-templates `(("Task log"
+                           ,(concat "Tasklog for %dateonly"
+                                    "\n\n"
+                                    "tasklog%cursor"
+                                    "\n\n"
+                                    "%date"
+                                    "\n\n"))
+
+                          ("Meeting"
+                           ,(concat howm-view-title-header " Meeting: %title%cursor"
+                                    "\n\n"
+                                    "%date %file"
+                                    "\n\n"))))
 
 (defun my-howm-insert-keywords ()
   "Insert keywords line."
@@ -3286,10 +3317,16 @@ of the new org-mode file."
   (interactive)
   (dired org-directory))
 
+(defun my-org-inactive-timestamp (arg)
+  "Insert org-mode inactive timestamp without %a (day of week)."
+  (interactive "P")
+  (let ((org-timestamp-formats '("%Y-%m-%d" . "%Y-%m-%d %H:%M")))
+    (org-timestamp arg t)))
+
 (keymap-global-set "C-c C" #'org-capture)
 (keymap-global-set "C-c o a" #'org-agenda)
 (keymap-global-set "C-c o b" #'org-switchb)
-(keymap-global-set "C-c o d" #'my-org-dired)
+(keymap-global-set "C-c o d" #'my-org-inactive-timestamp)
 (keymap-global-set "C-c o s" #'org-store-link)
 (keymap-global-set "C-c o v" #'visible-mode)
 
@@ -3600,7 +3637,6 @@ of the new org-mode file."
     (orgalist-mode 1)))
 
 (add-hook 'text-mode-hook #'my-orgalist-mode-config)
-;; (add-hook 'outline-mode-hook #'orgalist-mode)
 
 
 ;;; origami

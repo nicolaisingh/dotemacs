@@ -1,0 +1,12 @@
+# -*- mode: snippet -*-
+# name: tasklog
+# key: tasklog
+# --
+Yesterday
+- ${1:(Progress yesterday)}
+
+Today
+- ${2:(Plans for today)}
+
+Blockers/delays
+- ${3:None}
