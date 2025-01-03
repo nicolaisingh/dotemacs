@@ -2351,8 +2351,7 @@ When a prefix is used, ask where to insert the track and save it to `emms-my-ins
                       (keymap-set map "t" #'howm-insert-dtime)
                       (keymap-set map "w" #'howm-random-walk)
                       (keymap-set map "x" #'howm-list-mark-ring)
-                      map))
-  (keymap-set howm-mode-map "C-c C-q" #'delete-window))
+                      map)))
 
 (defun my-howm-other-modes-keys ()
   (mapc (lambda (map)
@@ -2377,7 +2376,8 @@ When a prefix is used, ask where to insert the track and save it to `emms-my-ins
 (keymap-set howm-menu-mode-map "p" #'previous-line)
 
 (defun my-howm-mode-config ()
-  (setq-local outline-regexp "[*]+")
+  (setq-local outline-regexp "[*]+"
+              fill-column 100)
   (my-howm-mode-keys))
 
 (add-hook 'howm-mode-hook #'my-howm-mode-config)
@@ -2408,6 +2408,7 @@ When a prefix is used, ask where to insert the track and save it to `emms-my-ins
 (keymap-global-set "C-z e" #'howm-remember)
 (keymap-global-set "C-z g" #'howm-list-grep)
 (keymap-global-set "C-z h" #'howm-history)
+(keymap-global-set "C-z i" #'howm-insert-keyword)
 (keymap-global-set "C-z l" #'howm-list-recent)
 (keymap-global-set "C-z m" #'howm-menu)
 (keymap-global-set "C-z s" #'howm-list-grep-fixed)
@@ -3407,47 +3408,48 @@ of the new org-mode file."
 (keymap-set org-mode-map "C-c o D" #'org-decrypt-entries)
 
 
-;;; org-modern
+;;; org-modern (disabled)
 
-(require 'org-modern)
-(setq org-modern-block-name nil
-      org-modern-block-fringe nil
-      org-modern-checkbox nil
-      org-modern-fold-stars '(("▶" . "▼") ("▷" . "▽") ("▶" . "▼") ("▷" . "▽") ("▶" . "▼"))
-      org-modern-hide-stars nil
-      org-modern-keyword nil
-      org-modern-list nil
-      org-modern-priority t
-      org-modern-priority-faces '((?A :background "whitesmoke" :foreground "hotpink" :weight bold :box (:style released-button :line-width (0 . -1)))
-                                  (?B :background "whitesmoke" :foreground "cadetblue" :weight bold :box (:style released-button :line-width (0 . -1)))
-                                  (?C :background "whitesmoke" :foreground "gray" :weight bold :box (:style released-button :line-width (0 . -1))))
-      org-modern-progress nil
-      org-modern-radio-target '("「" t "」")
-      org-modern-replace-stars "■▪■▪■▪"
-      org-modern-star nil
-      org-modern-tag t
-      org-modern-tag-faces '((t :background "beige" :foreground "black" :weight normal :box (:style pressed-button :line-width (0 . -1))))
-      org-modern-timestamp nil
-      org-modern-todo nil
-      org-modern-todo-faces '(("CANCELED" :background "gainsboro" :foreground "black" :weight normal :box (:style released-button :line-width (0 . -1)))
-                              ("DEFERRED" :background "azure1" :foreground "black" :weight normal :box (:style released-button :line-width (0 . -1)))
-                              ("DONE" :background "honeydew1" :foreground "black" :weight normal :box (:style released-button :line-width (0 . -1)))
-                              ("INBOX" :background "lightskyblue1" :foreground "black" :weight normal :box (:style released-button :line-width (0 . -1)))
-                              ("TODO" :background "mistyrose1" :foreground "black" :weight normal :box (:style released-button :line-width (0 . -1)))
-                              ("TOPIC" :background "slategray1" :foreground "black" :weight normal :box (:style released-button :line-width (0 . -1)))
-                              ("WAITING" :background "plum1" :foreground "black" :weight normal :box (:style released-button :line-width (0 . -1)))
-                              ("WIP" :background "peachpuff1" :foreground "black" :weight normal :box (:style released-button :line-width (0 . -1)))))
+(when nil
+  (require 'org-modern)
+  (setq org-modern-block-name nil
+        org-modern-block-fringe nil
+        org-modern-checkbox nil
+        org-modern-fold-stars '(("▶" . "▼") ("▷" . "▽") ("▶" . "▼") ("▷" . "▽") ("▶" . "▼"))
+        org-modern-hide-stars nil
+        org-modern-keyword nil
+        org-modern-list nil
+        org-modern-priority t
+        org-modern-priority-faces '((?A :background "whitesmoke" :foreground "hotpink" :weight bold :box (:style released-button :line-width (0 . -1)))
+                                    (?B :background "whitesmoke" :foreground "cadetblue" :weight bold :box (:style released-button :line-width (0 . -1)))
+                                    (?C :background "whitesmoke" :foreground "gray" :weight bold :box (:style released-button :line-width (0 . -1))))
+        org-modern-progress nil
+        org-modern-radio-target '("「" t "」")
+        org-modern-replace-stars "■▪■▪■▪"
+        org-modern-star nil
+        org-modern-tag t
+        org-modern-tag-faces '((t :background "beige" :foreground "black" :weight normal :box (:style pressed-button :line-width (0 . -1))))
+        org-modern-timestamp nil
+        org-modern-todo nil
+        org-modern-todo-faces '(("CANCELED" :background "gainsboro" :foreground "black" :weight normal :box (:style released-button :line-width (0 . -1)))
+                                ("DEFERRED" :background "azure1" :foreground "black" :weight normal :box (:style released-button :line-width (0 . -1)))
+                                ("DONE" :background "honeydew1" :foreground "black" :weight normal :box (:style released-button :line-width (0 . -1)))
+                                ("INBOX" :background "lightskyblue1" :foreground "black" :weight normal :box (:style released-button :line-width (0 . -1)))
+                                ("TODO" :background "mistyrose1" :foreground "black" :weight normal :box (:style released-button :line-width (0 . -1)))
+                                ("TOPIC" :background "slategray1" :foreground "black" :weight normal :box (:style released-button :line-width (0 . -1)))
+                                ("WAITING" :background "plum1" :foreground "black" :weight normal :box (:style released-button :line-width (0 . -1)))
+                                ("WIP" :background "peachpuff1" :foreground "black" :weight normal :box (:style released-button :line-width (0 . -1)))))
 
-(defun my-org-modern-mode-toggle ()
-  "Toggle `org-modern-mode' with some minor customization."
-  (interactive)
-  (cond ((not org-modern-mode) (progn (org-modern-mode)
-                                      (setq line-spacing 0.1)))
-        (t (progn (org-modern-mode -1)
-                  (setq line-spacing nil)))))
+  (defun my-org-modern-mode-toggle ()
+    "Toggle `org-modern-mode' with some minor customization."
+    (interactive)
+    (cond ((not org-modern-mode) (progn (org-modern-mode)
+                                        (setq line-spacing 0.1)))
+          (t (progn (org-modern-mode -1)
+                    (setq line-spacing nil)))))
 
-(keymap-set org-mode-map "C-c o m" #'my-org-modern-mode-toggle)
-(add-hook 'org-mode-hook #'my-org-modern-mode-toggle)
+  (keymap-set org-mode-map "C-c o m" #'my-org-modern-mode-toggle)
+  (add-hook 'org-mode-hook #'my-org-modern-mode-toggle))
 
 
 ;;; org-present

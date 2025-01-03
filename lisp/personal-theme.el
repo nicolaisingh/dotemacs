@@ -255,8 +255,8 @@ numbered variants the same as the base color."
      `(org-date ((t (:inherit default :background ,color-magenta-light :height 0.9 :underline t))))
      `(org-done ((t (:weight normal))))
      `(org-drawer ((t (:height 0.85 :foreground "gray50"))))
-     `(org-level-1 ((t (:inherit outline-1 :height 1.1 :foreground ,color-blue))))
-     `(org-level-2 ((t (:inherit outline-2 :height 1.1 :foreground ,color-green))))
+     `(org-level-1 ((t (:inherit outline-1 :height 1.0 :foreground ,color-blue))))
+     `(org-level-2 ((t (:inherit outline-2 :height 1.0 :foreground ,color-green))))
      `(org-level-3 ((t (:inherit outline-3 :height 1.0 :foreground ,color-red))))
      `(org-level-4 ((t (:inherit outline-4 :height 1.0 :foreground ,color-magenta))))
      `(org-level-5 ((t (:inherit outline-5 :height 1.0 :foreground ,color-orange))))
@@ -269,6 +269,7 @@ numbered variants the same as the base color."
      `(org-roam-title ((t (:weight bold :background ,color-cyan-light))))
      `(org-special-keyword ((t (:height 0.85 :foreground "gray50"))))
      `(org-table ((t (:foreground ,color-blue-2 :background "gray97"))))
+     `(org-tag ((t (:height 0.85 :foreground "gray50"))))
      `(org-todo ((t (:weight normal))))
 
      ;; orderless
