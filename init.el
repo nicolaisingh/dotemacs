@@ -477,6 +477,14 @@ times."
   "Replace consecutive blank lines with single blank lines in the entire buffer."
   (replace-regexp-in-region "\n+$" "\n" (point-min) (point-max)))
 
+(defun my-presorted-completion-table (completions)
+  "Closure for achieving consistent sorting in completing-read."
+  (lambda (string pred action)
+    (if (eq action 'metadata)
+        `(metadata (cycle-sort-function . ,#'identity)
+                   (display-sort-function . ,#'identity))
+      (complete-with-action action completions string pred))))
+
 (keymap-global-set "C-c y o" #'my-yank-to-other-window)
 (keymap-global-set "C-c i TAB" #'indent-using-tabs-and-fixup)
 (keymap-global-set "C-c i SPC" #'indent-using-spaces-and-fixup)
@@ -2228,25 +2236,31 @@ When a prefix is used, ask where to insert the track and save it to `emms-my-ins
 (defun my-howm-template (which-template previous-buffer)
   "Howm template chooser."
   (cond
-   ((= which-template 4) (let ((choice (completing-read "Template: "
-                                                        (mapcar #'car my-howm-templates) nil t)))
-                           (cadr (assoc choice my-howm-templates))))
-   (t (concat howm-view-title-header " %title%cursor\n%date %file\n\n"))))
+   ((= which-template 4)
+    (let ((choice (completing-read "Template: "
+                                   (my-presorted-completion-table (mapcar #'car my-howm-templates))
+                                   nil t nil t)))
+      (cadr (assoc choice my-howm-templates))))
+   (t
+    (concat howm-view-title-header " %title%cursor\n%date %file\n\n"))))
 
 (setq howm-template #'my-howm-template
-      my-howm-templates `(("Task log"
-                           ,(concat "Tasklog for %dateonly"
-                                    "\n\n"
-                                    "tasklog%cursor"
-                                    "\n\n"
-                                    "%date"
-                                    "\n\n"))
+      my-howm-templates `(("default"
+                           ,(concat howm-view-title-header " %title%cursor\n%date %file\n\n"))
 
                           ("Meeting"
-                           ,(concat howm-view-title-header " Meeting: %title%cursor"
-                                    "\n\n"
-                                    "%date %file"
-                                    "\n\n"))))
+                           ,(concat howm-view-title-header " Meeting: %title%cursor\n"
+                                    "%date %file\n\n"))
+
+                          ("Meeting - Standup/DSM"
+                           ,(concat howm-view-title-header " Meeting: Standup\n"
+                                    "%date\n\n"
+                                    "%cursor"))
+
+                          ("Task log"
+                           ,(concat howm-view-title-header " Task Log\n"
+                                    "%date\n\n"
+                                    "tasklog%cursor"))))
 
 (defun my-howm-insert-keywords ()
   "Insert keywords line."
