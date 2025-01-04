@@ -2133,10 +2133,10 @@ When a prefix is used, ask where to insert the track and save it to `emms-my-ins
       howm-view-summary-window-size 20
       howm-view-split-horizontally nil
       ;; include timestamp part and note filenames
-      howm-highlight-date-regexp-format "\\(?:\\[%Y-%m-%d.*]\\|%Y-%m-%d\\)?"
+      howm-highlight-date-regexp-format "\\(?:\\[%Y-%m-%d.*?]\\|%Y-%m-%d\\)?"
       ;; Files
       howm-directory "~/howm/"
-      howm-file-name-format "%Y/%m/%Y-%m-%dT%H%M%S.txt"
+      howm-file-name-format "%Y/%m/%Y-%m-%dT%H%M%S.org"
       howm-keyword-file (expand-file-name ".howm-keys" howm-directory)
       ;; Menu
       howm-menu-file (expand-file-name "howm-menu.txt" user-emacs-directory)
@@ -2145,7 +2145,7 @@ When a prefix is used, ask where to insert the track and save it to `emms-my-ins
       howm-menu-name-format "*howm-menu*"
       ;; Reminder
       howm-action-lock-forward-save-buffer t
-      howm-menu-recent-num 50
+      howm-menu-recent-num 20
       howm-menu-schedule-days 30
       howm-menu-schedule-days-before 14
       howm-menu-todo-num 100
@@ -2157,9 +2157,10 @@ When a prefix is used, ask where to insert the track and save it to `emms-my-ins
                         howm-list-all
                         howm-list-around
                         howm-list-grep-fixed
+                        howm-keyword-search
                         howm-list-recent)
       howm-view-contents-name "*howm-contents:%s*"
-      howm-view-summary-name "*howm-search:%s*"
+      howm-view-summary-name "*howm-summary:%s*"
       howm-view-summary-persistent t
       howm-normalizer 'howm-sort-items-by-mtime
       ;; Search
@@ -2176,7 +2177,7 @@ When a prefix is used, ask where to insert the track and save it to `emms-my-ins
       howm-view-grep-extended-option nil
       howm-view-grep-file-stdin-option "-f -"
       howm-view-grep-fixed-option "-F"
-      howm-view-grep-option "-nH --smart-case --no-heading --color never"
+      howm-view-grep-option "-nH --no-heading --color never"
       ;; Misc
       howm-prefix nil
       howm-remember-insertion-format "%s\n"
@@ -2187,34 +2188,13 @@ When a prefix is used, ask where to insert the track and save it to `emms-my-ins
       howm-title-from-search t
 
       howm-configuration-for-major-mode
-      `((org-mode . ((howm-keyword-header . "*")
-                     (howm-keyword-format . "^\\* %s")
-                     ;; from org-complex-heading-regexp but match level 1 only
-                     (howm-keyword-regexp . ,(concat "^\\(\\*\\)"
-                                                     (format "\\(?: +%s\\)?" (regexp-opt '("TODO" "WIP" "DEFERRED" "WAITING" "DONE" "CANCELED" "INBOX" "TOPIC")))
-                                                     "\\(?: +\\(\\[#.\\]\\)\\)?"
-                                                     "\\(?: +\\(.*?\\)\\)??"
-                                                     "\\(?:[ \t]+\\(:[[:alnum:]_@#%:]+:\\)\\)?"
-                                                     "[ \t]*$"))
+      `((org-mode . ((howm-keyword-header . "#")
+                     (howm-keyword-format . "# %s")
+                     (howm-keyword-regexp . "\\(#\\) +\\(.*\\)")
                      (howm-keyword-regexp-hilit-pos . 1)
-                     (howm-keyword-regexp-pos . 3)
-                     ;; (howm-view-title-header . "#+title:")
-                     ;; (howm-view-title-regexp . "^#\\+title:\\( +\\(.*\\)\\|\\)$")
-                     ;; (howm-view-title-regexp-pos . 2)
-                     ;; (howm-view-title-regexp-grep . "^#\\+title: +.*")
-                     (howm-view-preview-narrow . nil)
-                     (howm-keyword-list-alias-sep . nil)))
-        (outline-mode . ((howm-keyword-header . "*")
-                         (howm-keyword-format . "\\* %s")
-                         (howm-keyword-regexp . "^\\(\\*\\)[ \t]+\\([^ \t\r\n].*\\)$")
-                         (howm-keyword-regexp-hilit-pos . 1)
-                         (howm-keyword-regexp-pos . 2)
-                         ;; (howm-view-title-header . "*")
-                         ;; (howm-view-title-regexp . "^\\*\\( +\\(.*\\)\\|\\)$")
-                         ;; (howm-view-title-regexp-pos . 2)
-                         ;; (howm-view-title-regexp-grep . "^\\* +.*")
-                         (howm-view-preview-narrow . nil)
-                         (howm-keyword-list-alias-sep . nil)))
+                     (howm-keyword-regexp-pos . 2)
+                     (howm-view-preview-narrow . nil)))
+        ;;  FIXME asciidoc config
         (adoc-mode . ((howm-keyword-header . "=")
                       (howm-keyword-format . "^= %s")
                       (howm-keyword-regexp . "^\\(=\\)[ \t]+\\([^ \t\r\n].*\\)$")
@@ -2262,35 +2242,48 @@ When a prefix is used, ask where to insert the track and save it to `emms-my-ins
                                     "%date\n\n"
                                     "tasklog%cursor"))))
 
-(defun my-howm-insert-keywords ()
+(defun my-howm-insert-keywords-line ()
   "Insert keywords line."
   (interactive)
   (let* ((completion-table (mapcar #'list (howm-keyword-list)))
          (keywords (completing-read-multiple "Keyword: " completion-table)))
     (unless (eolp) (goto-char (pos-eol)))
     (newline)
-    (insert ":keywords: " (string-join keywords " "))))
+    (insert "keywords: " (string-join keywords " "))))
 
 (defun my-howm-collect-keywords ()
   "Write all keywords found in the current buffer."
   (interactive)
-  (let ((all-keywords)
-        (regexp (concat "\\(?:"
-                        "#\\+title: \\(.+\\)$"
-                        "\\|"
-                        ":keywords: \\(.+\\)$"
-                        "\\)")))
+  (let* ((all-keywords)
+         (org-regexp (concat "\\(?:"
+                             ;; "#\\+title: \\(.+\\)$"
+                             ;; "\\|"
+                             "#\\+filetags: \\(.+\\)$"
+                             "\\)"))
+         (text-regexp (concat "\\(?:"
+                              "keywords: \\(.+\\)$"
+                              "\\)")))
     (save-excursion
       (goto-char (point-min))
-      (while (re-search-forward regexp nil t)
-        (let ((org-title (match-string-no-properties 1))
-              (keywords (match-string-no-properties 2)))
-          (when org-title
-            (setq all-keywords (append all-keywords
-                                       (list org-title))))
-          (when keywords
-            (setq all-keywords (append all-keywords
-                                       (split-string keywords " "))))))
+      (cond
+       ((eq major-mode 'org-mode)
+        (while (re-search-forward org-regexp nil t)
+          (let (;; (org-title (match-string-no-properties 1))
+                (org-filetags (match-string-no-properties 1)))
+            ;; (when org-title
+            ;;   (setq all-keywords (append all-keywords
+            ;;                              (list org-title))))
+            (when org-filetags
+              (setq all-keywords (append all-keywords
+                                         (split-string org-filetags ":" t)))))))
+
+       ((derived-mode-p 'text-mode)
+        (while (re-search-forward text-regexp nil t)
+          (let ((keywords (match-string-no-properties 1)))
+            (when keywords
+              (setq all-keywords (append all-keywords
+                                         (split-string keywords " "))))))))
+
       (let ((save-silently t))
         (howm-keyword-add all-keywords)))))
 
@@ -2340,7 +2333,7 @@ When a prefix is used, ask where to insert the track and save it to `emms-my-ins
                       (keymap-set map "g" #'howm-list-grep)
                       (keymap-set map "h" #'howm-history)
                       (keymap-set map "i" #'howm-insert-keyword)
-                      (keymap-set map "k" #'my-howm-insert-keywords)
+                      (keymap-set map "k" #'my-howm-insert-keywords-line)
                       (keymap-set map "l" #'howm-list-recent)
                       (keymap-set map "m" #'howm-menu)
                       (keymap-set map "n" #'action-lock-goto-next-link)
@@ -2376,14 +2369,28 @@ When a prefix is used, ask where to insert the track and save it to `emms-my-ins
 (keymap-set howm-menu-mode-map "p" #'previous-line)
 
 (defun my-howm-mode-config ()
-  (setq-local outline-regexp "[*]+"
-              fill-column 100)
+  (visual-line-fill-column-mode t)
+  (setq-local ;outline-regexp "[*]+"
+   fill-column 100)
   (my-howm-mode-keys))
 
+;; An experiment
+;; (define-minor-mode org-font-lock-minor-mode
+;;   "Minor mode to apply org-mode font locking to a buffer."
+;;   :lighter " orgFL"
+;;   (if org-font-lock-minor-mode
+;;       (progn
+;;         (org-set-font-lock-defaults)
+;;         (font-lock-add-keywords nil org-font-lock-keywords))
+;;     (font-lock-remove-keywords nil org-font-lock-keywords))
+;;   (font-lock-flush)
+;;   (font-lock-ensure))
+;; (add-hook 'howm-view-contents-mode-hook #'org-font-lock-minor-mode)
+
 (add-hook 'howm-mode-hook #'my-howm-mode-config)
-(add-hook 'howm-mode-hook #'visual-line-fill-column-mode)
-(add-hook 'howm-view-summary-mode-hook #'my-howm-other-modes-keys)
+(add-hook 'howm-view-contents-mode-hook #'my-howm-mode-config)
 (add-hook 'howm-view-contents-mode-hook #'my-howm-other-modes-keys)
+(add-hook 'howm-view-summary-mode-hook #'my-howm-other-modes-keys)
 (add-hook 'howm-mode-hook (lambda () (add-hook 'before-save-hook #'my-howm-collect-keywords nil t)))
 (add-hook 'howm-view-summary-mode-hook #'hl-line-mode)
 (add-hook 'howm-mode-hook #'howm-mode-set-buffer-name)
@@ -3090,9 +3097,9 @@ of the new org-mode file."
       org-complete-tags-always-offer-all-agenda-tags t
       org-cycle-inline-images-display t
       org-default-notes-file "~/org/inbox.org"
+      org-descriptive-links t
       org-edit-src-content-indentation 0
       org-export-with-sub-superscripts '{}
-      org-use-fast-todo-selection 'expert
       org-fontify-done-headline nil
       org-fontify-todo-headline nil
       org-hide-emphasis-markers t
@@ -3105,11 +3112,12 @@ of the new org-mode file."
       org-reverse-note-order t
       org-special-ctrl-a/e t
       org-special-ctrl-k t
-      org-src-window-setup 'current-window
       org-src-fontify-natively nil
+      org-src-window-setup 'current-window
       org-startup-indented nil
       org-startup-with-inline-images t
       org-tags-column 0
+      org-use-fast-todo-selection 'expert
       org-use-sub-superscripts '{}
 
       org-agenda-custom-commands
@@ -3649,7 +3657,9 @@ of the new org-mode file."
 (keymap-unset orgalist-mode-map "C-c -")
 
 (defun my-orgalist-mode-config ()
-  (when (eq major-mode 'text-mode)
+  (when (or (eq major-mode 'text-mode)
+            (and (buffer-file-name)
+                 (string-equal (file-name-extension (buffer-file-name)) "txt")))
     (orgalist-mode 1)))
 
 (add-hook 'text-mode-hook #'my-orgalist-mode-config)
