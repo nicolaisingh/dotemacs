@@ -2118,6 +2118,7 @@ When a prefix is used, ask where to insert the track and save it to `emms-my-ins
 
 ;; need to set before requiring
 (setq howm-default-key-table nil
+      howm-list-title-regexp "^(\\*|#\\+title:) +" ; passed to grep/rg
       howm-view-summary-sep " |"
       howm-view-title-header "*")
 
