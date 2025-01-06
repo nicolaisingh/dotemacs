@@ -2257,8 +2257,8 @@ When a prefix is used, ask where to insert the track and save it to `emms-my-ins
   (interactive)
   (let* ((all-keywords)
          (org-regexp (concat "\\(?:"
-                             ;; "#\\+title: \\(.+\\)$"
-                             ;; "\\|"
+                             "#\\+title: \\(.+\\)$"
+                             "\\|"
                              "#\\+filetags: \\(.+\\)$"
                              "\\)"))
          (text-regexp (concat "\\(?:"
@@ -2269,11 +2269,11 @@ When a prefix is used, ask where to insert the track and save it to `emms-my-ins
       (cond
        ((eq major-mode 'org-mode)
         (while (re-search-forward org-regexp nil t)
-          (let (;; (org-title (match-string-no-properties 1))
+          (let ((org-title (match-string-no-properties 1))
                 (org-filetags (match-string-no-properties 1)))
-            ;; (when org-title
-            ;;   (setq all-keywords (append all-keywords
-            ;;                              (list org-title))))
+            (when org-title
+              (setq all-keywords (append all-keywords
+                                         (list org-title))))
             (when org-filetags
               (setq all-keywords (append all-keywords
                                          (split-string org-filetags ":" t)))))))
@@ -2308,6 +2308,14 @@ When a prefix is used, ask where to insert the track and save it to `emms-my-ins
   (let ((howm-list-title '(my-howm-list-grep-title)))
     (howm-list-grep-general)))
 
+(defun my-howm-insert-keyword-header ()
+  (interactive)
+  (insert howm-keyword-header " "))
+
+(defun my-howm-insert-ref-header ()
+  (interactive)
+  (insert howm-ref-header " "))
+
 (defun my-howm-mode-keys ()
   (keymap-set howm-mode-map
               "C-z" (let ((map (make-sparse-keymap)))
@@ -2327,6 +2335,7 @@ When a prefix is used, ask where to insert the track and save it to `emms-my-ins
                       (keymap-set map "P" #'howm-previous-memo)
                       (keymap-set map "Q" #'howm-kill-all)
                       (keymap-set map "SPC" #'howm-toggle-buffer)
+                      (keymap-set map "[" #'my-org-inactive-timestamp)
                       (keymap-set map "a" #'my-howm-list-all-by-name)
                       (keymap-set map "c" #'howm-create)
                       (keymap-set map "d" #'my-howm-insert-date)
@@ -2345,6 +2354,8 @@ When a prefix is used, ask where to insert the track and save it to `emms-my-ins
                       (keymap-set map "t" #'howm-insert-dtime)
                       (keymap-set map "w" #'howm-random-walk)
                       (keymap-set map "x" #'howm-list-mark-ring)
+                      (keymap-set map "C-." #'my-howm-insert-ref-header)
+                      (keymap-set map "C-," #'my-howm-insert-keyword-header)
                       map)))
 
 (defun my-howm-other-modes-keys ()
@@ -3326,7 +3337,7 @@ of the new org-mode file."
 (add-hook 'org-mode-hook #'my-org-mode-config)
 (add-hook 'org-mode-hook #'my-org-update-org-agenda-on-save)
 (add-hook 'org-mode-hook #'visual-line-fill-column-mode)
-(add-hook 'org-mode-hook #'org-indent-mode)
+;; (add-hook 'org-mode-hook #'org-indent-mode)
 (add-hook 'org-after-refile-insert-hook #'my-org-id-get-create)
 (add-hook 'org-capture-prepare-finalize-hook #'beginning-of-buffer) ; so the ID property gets added to the root node
 (add-hook 'org-capture-prepare-finalize-hook #'whitespace-cleanup)
