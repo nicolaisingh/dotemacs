@@ -233,7 +233,6 @@ collection.  Use revert-gc-cons-percentage to restore the value."
 
 (setq same-window-regexps '("^magit: .*$"
                             "^magit-status: .*$"))
-(keymap-global-set "M-o" #'other-window)
 
 ;;; winner
 
@@ -2120,7 +2119,8 @@ When a prefix is used, ask where to insert the track and save it to `emms-my-ins
 (setq howm-default-key-table nil
       howm-list-title-regexp "^(\\*|#\\+title:) *" ; passed to grep/rg
       howm-view-summary-sep " |"
-      howm-view-title-header "*")
+      howm-view-title-header "*"
+      howm-excluded-dirs '("data" "RCS" "CVS" ".svn" ".git" "_darcs"))
 
 (require 'howm)
 
@@ -2165,7 +2165,7 @@ When a prefix is used, ask where to insert the track and save it to `emms-my-ins
       howm-view-summary-persistent nil
       howm-normalizer 'howm-sort-items-by-mtime
       ;; Search
-      howm-check-word-break nil
+      howm-check-word-break t
       howm-history-file (expand-file-name ".howm-history" howm-directory)
       howm-history-limit nil
       howm-iigrep-preview-items 50
@@ -2189,12 +2189,16 @@ When a prefix is used, ask where to insert the track and save it to `emms-my-ins
       howm-title-from-search t
 
       howm-configuration-for-major-mode
-      `((org-mode . ((howm-keyword-header . "#")
-                     (howm-keyword-format . "# %s")
-                     (howm-keyword-regexp . "\\(#\\) +\\(.*\\)")
+      `((org-mode . ((howm-keyword-header . "<<")
+                     (howm-keyword-format . "<< %s")
+                     (howm-keyword-regexp . "\\(<<\\) +\\(.*\\)")
                      (howm-keyword-regexp-hilit-pos . 1)
                      (howm-keyword-regexp-pos . 2)
-                     (howm-view-preview-narrow . nil)))
+                     (howm-view-preview-narrow . t)
+                     (howm-ref-header . ">>")
+                     (howm-ref-regexp . "\\(>>\\) +\\(.*\\)")
+                     (howm-ref-regexp-hilit-pos . 0)
+                     (howm-ref-regexp-pos . 2)))
         ;;  FIXME asciidoc config
         (adoc-mode . ((howm-keyword-header . "=")
                       (howm-keyword-format . "^= %s")
@@ -2722,7 +2726,7 @@ Useful for completion style 'partial-completion."
 
 (defun my-isearch-mode-config ()
   (keymap-set isearch-mode-map "C-g" #'my-isearch-control-g)
-  (keymap-set isearch-mode-map "C-o" #'other-window))
+  (keymap-set isearch-mode-map "C-`" #'other-window))
 (add-hook 'isearch-mode-hook #'my-isearch-mode-config)
 
 
@@ -2865,6 +2869,9 @@ Useful for completion style 'partial-completion."
 
 ;;; markdown
 
+(require 'markdown-mode)
+(setq markdown-asymmetric-header t
+      markdown-make-gfm-checkboxes-buttons nil)
 (with-eval-after-load 'markdown-mode
   (keymap-set markdown-mode-map "C-<return>" #'markdown-insert-header-dwim)
   (keymap-set markdown-mode-map "M-<left>" #'markdown-promote)
