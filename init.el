@@ -2118,7 +2118,7 @@ When a prefix is used, ask where to insert the track and save it to `emms-my-ins
 
 ;; need to set before requiring
 (setq howm-default-key-table nil
-      howm-list-title-regexp "^(\\*|#\\+title:) +" ; passed to grep/rg
+      howm-list-title-regexp "^(\\*|#\\+title:) *" ; passed to grep/rg
       howm-view-summary-sep " |"
       howm-view-title-header "*")
 
@@ -2137,7 +2137,7 @@ When a prefix is used, ask where to insert the track and save it to `emms-my-ins
       howm-highlight-date-regexp-format "\\(?:\\[%Y-%m-%d.*?]\\|%Y-%m-%d\\)?"
       ;; Files
       howm-directory "~/howm/"
-      howm-file-name-format "%Y/%m/%Y-%m-%dT%H%M%S.org"
+      howm-file-name-format "%Y/%m/%Y-%m-%d.org"
       howm-keyword-file (expand-file-name ".howm-keys" howm-directory)
       ;; Menu
       howm-menu-file (expand-file-name "howm-menu.txt" user-emacs-directory)
@@ -2162,7 +2162,7 @@ When a prefix is used, ask where to insert the track and save it to `emms-my-ins
                         howm-list-recent)
       howm-view-contents-name "*howm-contents:%s*"
       howm-view-summary-name "*howm-summary:%s*"
-      howm-view-summary-persistent t
+      howm-view-summary-persistent nil
       howm-normalizer 'howm-sort-items-by-mtime
       ;; Search
       howm-check-word-break nil
@@ -2334,6 +2334,7 @@ When a prefix is used, ask where to insert the track and save it to `emms-my-ins
                       (keymap-set map "N" #'howm-next-memo)
                       (keymap-set map "P" #'howm-previous-memo)
                       (keymap-set map "Q" #'howm-kill-all)
+                      (keymap-set map "S" #'howm-search-past)
                       (keymap-set map "SPC" #'howm-toggle-buffer)
                       (keymap-set map "[" #'my-org-inactive-timestamp)
                       (keymap-set map "a" #'my-howm-list-all-by-name)
@@ -2405,8 +2406,8 @@ When a prefix is used, ask where to insert the track and save it to `emms-my-ins
 (add-hook 'howm-view-summary-mode-hook #'my-howm-other-modes-keys)
 (add-hook 'howm-mode-hook (lambda () (add-hook 'before-save-hook #'my-howm-collect-keywords nil t)))
 (add-hook 'howm-view-summary-mode-hook #'hl-line-mode)
-(add-hook 'howm-mode-hook #'howm-mode-set-buffer-name)
-(add-hook 'after-save-hook #'howm-mode-set-buffer-name)
+;; (add-hook 'howm-mode-hook #'howm-mode-set-buffer-name)
+;; (add-hook 'after-save-hook #'howm-mode-set-buffer-name)
 
 (keymap-set howm-menu-mode-map "<backtab>" #'action-lock-goto-previous-link)
 (keymap-set howm-view-summary-mode-map "<backtab>" #'howm-view-summary-previous-section)
@@ -2420,6 +2421,7 @@ When a prefix is used, ask where to insert the track and save it to `emms-my-ins
 (keymap-global-set "C-z I" #'howm-create-interactively)
 (keymap-global-set "C-z K" #'howm-keyword-to-kill-ring)
 (keymap-global-set "C-z M" #'howm-open-named-file)
+(keymap-global-set "C-z S" #'howm-search-past)
 (keymap-global-set "C-z SPC" #'howm-toggle-buffer)
 (keymap-global-set "C-z a" #'my-howm-list-all-by-name)
 (keymap-global-set "C-z c" #'howm-create)
