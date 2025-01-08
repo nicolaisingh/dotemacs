@@ -2159,13 +2159,14 @@ When a prefix is used, ask where to insert the track and save it to `emms-my-ins
                         howm-list-around
                         howm-list-grep-fixed
                         howm-keyword-search
-                        howm-list-recent)
+                        howm-list-recent
+                        howm-list-related)
       howm-view-contents-name "*howm-contents:%s*"
       howm-view-summary-name "*howm-summary:%s*"
       howm-view-summary-persistent nil
       howm-normalizer 'howm-sort-items-by-mtime
       ;; Search
-      howm-check-word-break t
+      howm-check-word-break nil
       howm-history-file (expand-file-name ".howm-history" howm-directory)
       howm-history-limit nil
       howm-iigrep-preview-items 50
@@ -2188,29 +2189,29 @@ When a prefix is used, ask where to insert the track and save it to `emms-my-ins
       howm-remember-first-line-to-title nil
       howm-title-from-search t
 
-      howm-configuration-for-major-mode
-      `((org-mode . ((howm-keyword-header . "<<")
-                     (howm-keyword-format . "<< %s")
-                     (howm-keyword-regexp . "\\(<<\\) +\\(.*\\)")
-                     (howm-keyword-regexp-hilit-pos . 1)
-                     (howm-keyword-regexp-pos . 2)
-                     (howm-view-preview-narrow . t)
-                     (howm-ref-header . ">>")
-                     (howm-ref-regexp . "\\(>>\\) +\\(.*\\)")
-                     (howm-ref-regexp-hilit-pos . 0)
-                     (howm-ref-regexp-pos . 2)))
-        ;;  FIXME asciidoc config
-        (adoc-mode . ((howm-keyword-header . "=")
-                      (howm-keyword-format . "^= %s")
-                      (howm-keyword-regexp . "^\\(=\\)[ \t]+\\([^ \t\r\n].*\\)$")
-                      (howm-keyword-regexp-hilit-pos . 1)
-                      (howm-keyword-regexp-pos . 2)
-                      ;; (howm-view-title-header . "=")
-                      ;; (howm-view-title-regexp . "^=\\( +\\(.*\\)\\|\\)$")
-                      ;; (howm-view-title-regexp-pos . 2)
-                      ;; (howm-view-title-regexp-grep . "^= +.*")
-                      (howm-view-preview-narrow . nil)
-                      (howm-keyword-list-alias-sep . nil))))
+      ;; howm-configuration-for-major-mode
+      ;; `((org-mode . ((howm-keyword-header . "<<")
+      ;;                (howm-keyword-format . "<< %s")
+      ;;                (howm-keyword-regexp . "\\(<<\\) +\\(.*\\)")
+      ;;                (howm-keyword-regexp-hilit-pos . 1)
+      ;;                (howm-keyword-regexp-pos . 2)
+      ;;                (howm-view-preview-narrow . t)
+      ;;                (howm-ref-header . ">>")
+      ;;                (howm-ref-regexp . "\\(>>\\) +\\(.*\\)")
+      ;;                (howm-ref-regexp-hilit-pos . 0)
+      ;;                (howm-ref-regexp-pos . 2)))
+      ;;   ;;  FIXME asciidoc config
+      ;;   (adoc-mode . ((howm-keyword-header . "=")
+      ;;                 (howm-keyword-format . "^= %s")
+      ;;                 (howm-keyword-regexp . "^\\(=\\)[ \t]+\\([^ \t\r\n].*\\)$")
+      ;;                 (howm-keyword-regexp-hilit-pos . 1)
+      ;;                 (howm-keyword-regexp-pos . 2)
+      ;;                 ;; (howm-view-title-header . "=")
+      ;;                 ;; (howm-view-title-regexp . "^=\\( +\\(.*\\)\\|\\)$")
+      ;;                 ;; (howm-view-title-regexp-pos . 2)
+      ;;                 ;; (howm-view-title-regexp-grep . "^= +.*")
+      ;;                 (howm-view-preview-narrow . nil)
+      ;;                 (howm-keyword-list-alias-sep . nil))))
       *howm-show-item-filename* nil)
 
 (add-to-list 'howm-template-rules

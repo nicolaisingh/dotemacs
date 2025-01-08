@@ -227,7 +227,7 @@ numbered variants the same as the base color."
      `(gnus-header-subject ((t (:inherit gnus-header :foreground ,color-red-3))))
 
      ;; howm
-     `(action-lock-face ((t (:underline ,color-green-light))))
+     `(action-lock-face ((t (:underline ,color-blue-light))))
      `(howm-menu-key-face ((t (:foreground ,color-red-3))))
      `(howm-mode-keyword-face ((t (:foreground ,color-blue))))
      `(howm-mode-ref-face ((t (:foreground ,color-blue))))
