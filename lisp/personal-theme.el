@@ -105,13 +105,13 @@ numbered variants the same as the base color."
          (bg-inactive "gray95")
          (bg-inactive-border "gray90")
          (bg-active-tab "white")
-         (bg-inactive-tab "gray90")
-         (fg-inactive "gray50")
+         (bg-inactive-tab "gray85")
+         (fg-inactive "gray40")
          (font "Noto Sans Mono-9")
          (box-active `(:line-width 3 :color ,bg-active-border :style flat-button))
          (box-inactive `(:line-width 3 :color ,bg-inactive-border :style flat-button))
-         (box-active-tab `(:line-width 1 :color ,bg-active-tab :style released-button))
-         (box-inactive-tab `(:line-width 1 :color ,bg-inactive-tab :style flat-button)))
+         (box-active-tab `(:line-width 3 :color ,bg-active-tab :style flat-button))
+         (box-inactive-tab `(:line-width 3 :color ,bg-inactive-tab :style flat-button)))
     (custom-theme-set-faces
      'personal
 
@@ -284,7 +284,7 @@ numbered variants the same as the base color."
      `(orderless-match-face-3 ((t (:foreground ,color-orange-2 :weight bold))))
 
      ;; tab-bar
-     `(tab-bar ((t (:inherit default :background "gray97"))))
+     `(tab-bar ((t (:inherit default :background "gray90"))))
      `(tab-bar-tab ((t (:inherit tab-bar :weight bold :background ,bg-active-tab :box ,box-active-tab))))
      `(tab-bar-tab-inactive ((t (:inherit tab-bar :background ,bg-inactive-tab :box ,box-inactive-tab :foreground ,fg-inactive))))
 

@@ -2185,7 +2185,7 @@ When a prefix is used, ask where to insert the track and save it to `emms-my-ins
       howm-remember-insertion-format "%s\n"
       ;; Create
       howm-content-from-region t
-      howm-prepend nil
+      howm-prepend t
       howm-remember-first-line-to-title nil
       howm-title-from-search t
 
@@ -2228,11 +2228,11 @@ When a prefix is used, ask where to insert the track and save it to `emms-my-ins
                                    nil t nil t)))
       (cadr (assoc choice my-howm-templates))))
    (t
-    (concat howm-view-title-header " %title%cursor\n%date %file\n\n"))))
+    (concat howm-view-title-header " %title\n%date %file\n\n%cursor"))))
 
 (setq howm-template #'my-howm-template
       my-howm-templates `(("default"
-                           ,(concat howm-view-title-header " %title%cursor\n%date %file\n\n"))
+                           ,(concat howm-view-title-header " %title\n%date %file\n\n%cursor"))
 
                           ("Meeting"
                            ,(concat howm-view-title-header " Meeting: %title%cursor\n"
@@ -3365,13 +3365,12 @@ of the new org-mode file."
 (defun my-org-inactive-timestamp (arg)
   "Insert org-mode inactive timestamp without %a (day of week)."
   (interactive "P")
-  (let ((org-timestamp-formats '("%Y-%m-%d" . "%Y-%m-%d %H:%M")))
-    (org-timestamp arg t)))
+  (let ((org-time-stamp-formats '("%Y-%m-%d" . "%Y-%m-%d %H:%M")))
+    (org-time-stamp arg t)))
 
 (keymap-global-set "C-c C" #'org-capture)
 (keymap-global-set "C-c o a" #'org-agenda)
 (keymap-global-set "C-c o b" #'org-switchb)
-(keymap-global-set "C-c o d" #'my-org-inactive-timestamp)
 (keymap-global-set "C-c o s" #'org-store-link)
 (keymap-global-set "C-c o v" #'visible-mode)
 
