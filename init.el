@@ -2122,7 +2122,7 @@ When a prefix is used, ask where to insert the track and save it to `emms-my-ins
 
 ;; need to set before requiring
 (setq howm-default-key-table nil
-      howm-list-title-regexp "^(\\*|#\\+title:) *" ; passed to grep/rg
+      howm-list-title-regexp "^(\\*$|(\\*|#\\+title:) +)" ; passed to grep/rg
       howm-view-summary-sep " |"
       howm-view-title-header "*"
       howm-excluded-dirs '("data" "RCS" "CVS" ".svn" ".git" "_darcs"))
@@ -2233,11 +2233,11 @@ When a prefix is used, ask where to insert the track and save it to `emms-my-ins
                                    nil t nil t)))
       (cadr (assoc choice my-howm-templates))))
    (t
-    (concat howm-view-title-header " %title\n%date %file\n\n%cursor"))))
+    (concat howm-view-title-header " %title\n%date %file\n\n%cursor\n\n"))))
 
 (setq howm-template #'my-howm-template
       my-howm-templates `(("default"
-                           ,(concat howm-view-title-header " %title\n%date %file\n\n%cursor"))
+                           ,(concat howm-view-title-header " %title\n%date %file\n\n%cursor\n\n"))
 
                           ("Meeting"
                            ,(concat howm-view-title-header " Meeting: %title%cursor\n"
@@ -3061,6 +3061,9 @@ Useful for completion style 'partial-completion."
 (defun org-refile-target-projects ()
   (directory-files "~/org/projects" t directory-files-no-dot-files-regexp))
 
+(defun org-refile-target-howm-named-notes ()
+  (directory-files howm-directory t ".*\\.org"))
+
 (defun my-org-capture-file (path filename &optional template timestamp)
   "Return an org-mode file path of FILENAME stored under PATH within `org-directory'.
 
@@ -3203,9 +3206,10 @@ of the new org-mode file."
                                :prepend t))
 
       org-refile-targets '((nil :maxlevel . 2)
-                           ("~/org/inbox.org" :todo . "TOPIC")
-                           (org-refile-target-projects :todo . "INBOX")
-                           (org-refile-target-projects :todo . "TODO"))
+                           ;; ("~/org/inbox.org" :todo . "TOPIC")
+                           ;; (org-refile-target-projects :todo . "INBOX")
+                           ;; (org-refile-target-projects :todo . "TODO")
+                           (org-refile-target-howm-named-notes :maxlevel . 1))
 
       org-todo-keywords '((sequence "TODO(t)" "WIP(p)" "DEFERRED(f@)" "WAITING(w@)"
                                     "|" "DONE(d@/@)" "CANCELED(c@/@)")
@@ -4109,6 +4113,19 @@ of the new org-mode file."
 
 (require 'winfast)
 (keymap-global-set "M-`" #'winfast-mode)
+
+
+;;; writeroom-mode
+
+(setq writeroom-extra-line-spacing 0.2
+      writeroom-fringes-outside-margins t
+      writeroom-global-effects '(writeroom-set-alpha
+                                 writeroom-set-menu-bar-lines
+                                 writeroom-set-tool-bar-lines
+                                 writeroom-set-vertical-scroll-bars
+                                 writeroom-set-bottom-divider-width)
+      writeroom-maximize-window nil
+      writeroom-width 100)
 
 
 ;;; xref

@@ -57,12 +57,17 @@
       (newline 1)
       (insert time-stamp)
       (newline 2)
-      (yank)
-      (newline 1)
       (when filetags
         (insert "<<< ")
-        (insert (string-join filetags " <<< ")))
-      (newline 2))
+        (insert (string-join filetags "\n<<< ")))
+      (newline 2)
+      (yank)
+      (newline 1)
+
+      (while (not (= (point) (point-min)))
+        (org-previous-visible-heading 1)
+        (unless (= (point) (point-min))
+          (org-do-demote))))
     (switch-to-buffer output-buffer)))
 
 (provide 'org-roam-to-howm)
