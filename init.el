@@ -6,6 +6,11 @@
 
 ;;; Code:
 
+(defmacro skipped (&rest body)
+  "Discard BODY."
+  (declare (indent nil))
+  nil)
+
 ;;;; Startup
 
 (setq original-gc-cons-percentage gc-cons-percentage
@@ -688,111 +693,111 @@ times."
 (keymap-global-set "C-c b k" #'browse-kill-ring)
 
 
-;;; bs (disabled)
+;;; bs
 
-(when nil
-  (require 'bs)
+(skipped
+ (require 'bs)
 
-  (defun bs-must-show-modes (buf)
-    "Return non-nil for buffers matching specific modes.  Used for
+ (defun bs-must-show-modes (buf)
+   "Return non-nil for buffers matching specific modes.  Used for
 the configuration 'files-plus-some-buffers-and-modes."
-    (let ((major-mode (buffer-local-value 'major-mode buf)))
-      (memq major-mode '(term-mode
-                         shell-mode
-                         eshell-mode
-                         fundamental-mode))))
+   (let ((major-mode (buffer-local-value 'major-mode buf)))
+     (memq major-mode '(term-mode
+                        shell-mode
+                        eshell-mode
+                        fundamental-mode))))
 
-  (defun bs-dont-show-modes (buf)
-    "Return non-nil for buffers which should not be shown."
-    (or (bs-visits-non-file buf)
-        (let ((major-mode (buffer-local-value 'major-mode buf)))
+ (defun bs-dont-show-modes (buf)
+   "Return non-nil for buffers which should not be shown."
+   (or (bs-visits-non-file buf)
+       (let ((major-mode (buffer-local-value 'major-mode buf)))
+         (memq major-mode '(dired-mode)))))
+
+ (defun bs-not-dired-mode-p (buf)
+   "Return non-nil for dired buffers."
+   (not (let ((major-mode (buffer-local-value 'major-mode buf)))
           (memq major-mode '(dired-mode)))))
 
-  (defun bs-not-dired-mode-p (buf)
-    "Return non-nil for dired buffers."
-    (not (let ((major-mode (buffer-local-value 'major-mode buf)))
-           (memq major-mode '(dired-mode)))))
+ ;; Show only files, some buffers and modes
+ (add-to-list 'bs-configurations '("default--files-plus-some-buffers-and-modes"
+                                   "^\\(\\*scratch\\*\\|test\\)$"
+                                   bs-must-show-modes
+                                   "^\\(\\*Ilist\\*\\|\\*Messages\\*\\)$"
+                                   bs-dont-show-modes
+                                   bs-sort-buffer-interns-are-last))
 
-  ;; Show only files, some buffers and modes
-  (add-to-list 'bs-configurations '("default--files-plus-some-buffers-and-modes"
-                                    "^\\(\\*scratch\\*\\|test\\)$"
-                                    bs-must-show-modes
-                                    "^\\(\\*Ilist\\*\\|\\*Messages\\*\\)$"
-                                    bs-dont-show-modes
-                                    bs-sort-buffer-interns-are-last))
+ ;; Show only dired buffers
+ (add-to-list 'bs-configurations '("dired-only"
+                                   nil
+                                   nil
+                                   nil
+                                   bs-not-dired-mode-p
+                                   nil))
 
-  ;; Show only dired buffers
-  (add-to-list 'bs-configurations '("dired-only"
-                                    nil
-                                    nil
-                                    nil
-                                    bs-not-dired-mode-p
-                                    nil))
+ ;; Custom size column based on file size, not buffer size
+ (defun bs--get-filesize-string (_start-buffer _all-buffers)
+   "Return file size of the current buffer for Buffer Selection Menu."
+   (let* ((attributes (file-attributes (buffer-name)))
+          (filesize (if attributes (file-attribute-size attributes) 0))
+          (a-megabyte (* 1024 1024)))
+     (if (>= filesize a-megabyte)
+         (concat (format "%.01f" (/ (float filesize) a-megabyte)) "M")
+       (concat (format "%.01f" (/ (float filesize) 1024)) "K"))))
+ (defun bs--sort-by-filesize (b1 b2)
+   (let* ((b1-attributes (file-attributes (buffer-file-name b1)))
+          (b2-attributes (file-attributes (buffer-file-name b2)))
+          (b1-filesize (if b1-attributes (file-attribute-size b1-attributes) 0))
+          (b2-filesize (if b2-attributes (file-attribute-size b2-attributes) 0)))
+     (< b1-filesize b2-filesize)))
 
-  ;; Custom size column based on file size, not buffer size
-  (defun bs--get-filesize-string (_start-buffer _all-buffers)
-    "Return file size of the current buffer for Buffer Selection Menu."
-    (let* ((attributes (file-attributes (buffer-name)))
-           (filesize (if attributes (file-attribute-size attributes) 0))
-           (a-megabyte (* 1024 1024)))
-      (if (>= filesize a-megabyte)
-          (concat (format "%.01f" (/ (float filesize) a-megabyte)) "M")
-        (concat (format "%.01f" (/ (float filesize) 1024)) "K"))))
-  (defun bs--sort-by-filesize (b1 b2)
-    (let* ((b1-attributes (file-attributes (buffer-file-name b1)))
-           (b2-attributes (file-attributes (buffer-file-name b2)))
-           (b1-filesize (if b1-attributes (file-attribute-size b1-attributes) 0))
-           (b2-filesize (if b2-attributes (file-attribute-size b2-attributes) 0)))
-      (< b1-filesize b2-filesize)))
+ (defun bs-set-configuration-and-refresh (config-name)
+   (bs-set-configuration config-name)
+   (bs--redisplay t)
+   (bs-message-without-log config-name))
 
-  (defun bs-set-configuration-and-refresh (config-name)
-    (bs-set-configuration config-name)
-    (bs--redisplay t)
-    (bs-message-without-log config-name))
+ (defun my-bs-config ()
+   (keymap-set bs-mode-map "0" (lambda ()
+                                 (interactive)
+                                 (apply #'bs-set-configuration-and-refresh
+                                        '("default--files-plus-some-buffers-and-modes"))))
+   (keymap-set bs-mode-map "1" (lambda ()
+                                 (interactive)
+                                 (apply #'bs-set-configuration-and-refresh
+                                        '("dired-only"))))
+   (keymap-set bs-mode-map "2" (lambda ()
+                                 (interactive)
+                                 (apply #'bs-set-configuration-and-refresh
+                                        '("all"))))
+   (keymap-set bs-mode-map "/" #'isearch-forward)
+   (hl-line-mode)
+   (set (make-local-variable 'scroll-conservatively) 101))
 
-  (defun my-bs-config ()
-    (keymap-set bs-mode-map "0" (lambda ()
-                                  (interactive)
-                                  (apply #'bs-set-configuration-and-refresh
-                                         '("default--files-plus-some-buffers-and-modes"))))
-    (keymap-set bs-mode-map "1" (lambda ()
-                                  (interactive)
-                                  (apply #'bs-set-configuration-and-refresh
-                                         '("dired-only"))))
-    (keymap-set bs-mode-map "2" (lambda ()
-                                  (interactive)
-                                  (apply #'bs-set-configuration-and-refresh
-                                         '("all"))))
-    (keymap-set bs-mode-map "/" #'isearch-forward)
-    (hl-line-mode)
-    (set (make-local-variable 'scroll-conservatively) 101))
+ (add-hook 'bs-mode-hook #'my-bs-config)
 
-  (add-hook 'bs-mode-hook #'my-bs-config)
+ (setq bs-default-configuration "default--files-plus-some-buffers-and-modes"
+       bs-max-window-height 20
+       bs-minimal-buffer-name-column 20
+       bs-attributes-list '((""       1   1 left  bs--get-marked-string)
+                            ("M"      1   1 left  bs--get-modified-string)
+                            ("R"      2   2 left  bs--get-readonly-string)
+                            ("Buffer" bs--get-name-length 10 left  bs--get-name)
+                            (""       1   1 left  " ")
+                            ;; ("Size"   8   8 right bs--get-size-string)
+                            ;; (""       1   1 left  " ")
+                            ("Size" 8   8 right bs--get-filesize-string)
+                            (""       1   1 left  " ")
+                            ("Mode"   12 12 right bs--get-mode-name)
+                            (""       2   2 left  "  ")
+                            ("File"   12 12 left  bs--get-file-name)
+                            (""       2   2 left  "  "))
+       bs-sort-functions '(("by name"     bs--sort-by-name     "Buffer" region)
+                           ;; ("by size"     bs--sort-by-size     "Size"   region)
+                           ("by filesize" bs--sort-by-filesize "Size"  region)
+                           ("by mode"     bs--sort-by-mode     "Mode"   region)
+                           ("by filename" bs--sort-by-filename "File"   region)
+                           ("by nothing"  nil                  nil      nil)))
 
-  (setq bs-default-configuration "default--files-plus-some-buffers-and-modes"
-        bs-max-window-height 20
-        bs-minimal-buffer-name-column 20
-        bs-attributes-list '((""       1   1 left  bs--get-marked-string)
-                             ("M"      1   1 left  bs--get-modified-string)
-                             ("R"      2   2 left  bs--get-readonly-string)
-                             ("Buffer" bs--get-name-length 10 left  bs--get-name)
-                             (""       1   1 left  " ")
-                             ;; ("Size"   8   8 right bs--get-size-string)
-                             ;; (""       1   1 left  " ")
-                             ("Size" 8   8 right bs--get-filesize-string)
-                             (""       1   1 left  " ")
-                             ("Mode"   12 12 right bs--get-mode-name)
-                             (""       2   2 left  "  ")
-                             ("File"   12 12 left  bs--get-file-name)
-                             (""       2   2 left  "  "))
-        bs-sort-functions '(("by name"     bs--sort-by-name     "Buffer" region)
-                            ;; ("by size"     bs--sort-by-size     "Size"   region)
-                            ("by filesize" bs--sort-by-filesize "Size"  region)
-                            ("by mode"     bs--sort-by-mode     "Mode"   region)
-                            ("by filename" bs--sort-by-filename "File"   region)
-                            ("by nothing"  nil                  nil      nil)))
-
-  (keymap-global-set "C-x C-b" #'bs-show))
+ (keymap-global-set "C-x C-b" #'bs-show))
 
 
 ;;; calendar
@@ -997,35 +1002,35 @@ If ARG is Non-nil, the existing command log buffer is cleared."
 (keymap-global-set "C-c c l" #'clm/toggle-command-log-buffer)
 
 
-;;; company (disabled)
+;;; company
 
-(when nil
-  (require 'company)
-  (setq company-lighter-base "Comp"
-        company-minimum-prefix-length 2
-        company-idle-delay 0.3
-        company-show-quick-access 'left
-        company-selection-wrap-around 1
-        company-require-match nil
-        company-dabbrev-minimum-length 3
-        company-dabbrev-downcase nil
-        company-transformers '(company-sort-by-occurrence
-                               company-sort-by-backend-importance)
-        company-global-modes '(not eshell-mode term-mode))
-  (add-to-list 'company-backends 'company-native-complete)
-  (add-to-list 'company-backends 'company-go)
-  (add-to-list 'company-backends 'company-restclient)
-  ;; This backend sometimes produces an error when in other modes, so
-  ;; enable only on nix-mode
-  (with-eval-after-load 'nix-mode
-    (add-hook 'nix-mode-hook (lambda ()
-                               (interactive)
-                               (make-local-variable 'company-backends)
-                               (add-to-list 'company-backends 'company-nixos-options))))
-  (keymap-set company-active-map "C-n" #'company-select-next)
-  (keymap-set company-active-map "C-p" #'company-select-previous)
-  (keymap-set company-active-map "C-c C-/" #'company-other-backend)
-  (add-hook 'after-init-hook #'global-company-mode))
+(skipped
+ (require 'company)
+ (setq company-lighter-base "Comp"
+       company-minimum-prefix-length 2
+       company-idle-delay 0.3
+       company-show-quick-access 'left
+       company-selection-wrap-around 1
+       company-require-match nil
+       company-dabbrev-minimum-length 3
+       company-dabbrev-downcase nil
+       company-transformers '(company-sort-by-occurrence
+                              company-sort-by-backend-importance)
+       company-global-modes '(not eshell-mode term-mode))
+ (add-to-list 'company-backends 'company-native-complete)
+ (add-to-list 'company-backends 'company-go)
+ (add-to-list 'company-backends 'company-restclient)
+ ;; This backend sometimes produces an error when in other modes, so
+ ;; enable only on nix-mode
+ (with-eval-after-load 'nix-mode
+   (add-hook 'nix-mode-hook (lambda ()
+                              (interactive)
+                              (make-local-variable 'company-backends)
+                              (add-to-list 'company-backends 'company-nixos-options))))
+ (keymap-set company-active-map "C-n" #'company-select-next)
+ (keymap-set company-active-map "C-p" #'company-select-previous)
+ (keymap-set company-active-map "C-c C-/" #'company-other-backend)
+ (add-hook 'after-init-hook #'global-company-mode))
 
 
 ;;; conf-mode
@@ -2607,31 +2612,31 @@ Useful for completion style 'partial-completion."
     (icomplete-mode t))))
 
 
-;;; ido (disabled)
+;;; ido
 
-(when nil
-  (require 'ido)
-  (setq confirm-nonexistent-file-or-buffer nil
-        ido-auto-merge-delay-time 0.3
-        ido-completion-buffer nil
-        ido-create-new-buffer 'always
-        ido-decorations '(" { "
-                          " } "
-                          " | "
-                          " | ..."
-                          "["
-                          "]"
-                          " [No match]"
-                          " [Matched]"
-                          " [Not readable]"
-                          " [Too big]"
-                          " [Confirm]")
-        ido-max-prospects 10
-        ido-max-window-height 1
-        ido-use-virtual-buffers t
-        ido-enable-flex-matching 1)
-  (add-hook 'ido-minibuffer-setup-hook (lambda ()
-                                         (visual-line-mode 1))))
+(skipped
+ (require 'ido)
+ (setq confirm-nonexistent-file-or-buffer nil
+       ido-auto-merge-delay-time 0.3
+       ido-completion-buffer nil
+       ido-create-new-buffer 'always
+       ido-decorations '(" { "
+                         " } "
+                         " | "
+                         " | ..."
+                         "["
+                         "]"
+                         " [No match]"
+                         " [Matched]"
+                         " [Not readable]"
+                         " [Too big]"
+                         " [Confirm]")
+       ido-max-prospects 10
+       ido-max-window-height 1
+       ido-use-virtual-buffers t
+       ido-enable-flex-matching 1)
+ (add-hook 'ido-minibuffer-setup-hook (lambda ()
+                                        (visual-line-mode 1))))
 
 
 ;;; image-dired
@@ -2731,22 +2736,22 @@ Useful for completion style 'partial-completion."
 (add-hook 'isearch-mode-hook #'my-isearch-mode-config)
 
 
-;;; ivy (disabled)
+;;; ivy
 
-(when nil
-  (require 'ivy)
-  (ivy-mode 1)
-  (setq ivy-count-format ""
-        ivy-height 6
-        ivy-use-virtual-buffers 1
-        ivy-wrap 1)
-  (keymap-global-set "M-x" 'counsel-M-x)
-  ;; (keymap-global-set "C-x r b" 'counsel-bookmark)
-  (keymap-global-set "C-x C-f" 'counsel-find-file)
-  (keymap-global-set "C-h C-l" 'counsel-find-library)
-  (keymap-global-set "C-h f" 'counsel-describe-function)
-  (keymap-global-set "C-h v" 'counsel-describe-variable)
-  (keymap-global-set "C-h C-u" 'counsel-unicode-char))
+(skipped
+ (require 'ivy)
+ (ivy-mode 1)
+ (setq ivy-count-format ""
+       ivy-height 6
+       ivy-use-virtual-buffers 1
+       ivy-wrap 1)
+ (keymap-global-set "M-x" 'counsel-M-x)
+ ;; (keymap-global-set "C-x r b" 'counsel-bookmark)
+ (keymap-global-set "C-x C-f" 'counsel-find-file)
+ (keymap-global-set "C-h C-l" 'counsel-find-library)
+ (keymap-global-set "C-h f" 'counsel-describe-function)
+ (keymap-global-set "C-h v" 'counsel-describe-variable)
+ (keymap-global-set "C-h C-u" 'counsel-unicode-char))
 
 
 ;;; js
@@ -2975,14 +2980,14 @@ Useful for completion style 'partial-completion."
 (add-hook 'multiple-cursors-mode-hook #'my-multiple-cursors-config)
 
 
-;;; native-complete (disabled)
+;;; native-complete
 
-(when nil
-  ;; Put HISTCONTROL=ignoreboth in bashrc to avoid polluting the shell
-  ;; history with the `echo' commands made by this package
-  (with-eval-after-load 'shell
-    (require 'native-complete)
-    (native-complete-setup-bash)))
+(skipped
+ ;; Put HISTCONTROL=ignoreboth in bashrc to avoid polluting the shell
+ ;; history with the `echo' commands made by this package
+ (with-eval-after-load 'shell
+   (require 'native-complete)
+   (native-complete-setup-bash)))
 
 
 ;;; nav-flash
@@ -2991,20 +2996,20 @@ Useful for completion style 'partial-completion."
 (add-hook 'occur-mode-find-occurrence-hook #'nav-flash-show)
 
 
-;;; newsticker (disabled)
+;;; newsticker
 
-(when nil
-  (require 'newsticker)
-  (defun my-newsticker-custom-keys ()
-    (keymap-set newsticker-mode-map "<tab>" 'newsticker-show-entry))
-  (defun newsticker--cache-update-advice (orig-fun &rest args)
-    (message "newsticker--cache-update called, doing nothing"))
+(skipped
+ (require 'newsticker)
+ (defun my-newsticker-custom-keys ()
+   (keymap-set newsticker-mode-map "<tab>" 'newsticker-show-entry))
+ (defun newsticker--cache-update-advice (orig-fun &rest args)
+   (message "newsticker--cache-update called, doing nothing"))
 
-  (advice-add 'newsticker--cache-update :around #'newsticker--cache-update-advice)
+ (advice-add 'newsticker--cache-update :around #'newsticker--cache-update-advice)
 
-  (add-hook 'newsticker-mode-hook #'my-newsticker-custom-keys)
-  (add-hook 'newsticker-mode-hook #'hl-line-mode)
-  (add-hook 'newsticker-select-feed-hook (lambda () (recenter-top-bottom 2))))
+ (add-hook 'newsticker-mode-hook #'my-newsticker-custom-keys)
+ (add-hook 'newsticker-mode-hook #'hl-line-mode)
+ (add-hook 'newsticker-select-feed-hook (lambda () (recenter-top-bottom 2))))
 
 
 ;;; nix-mode
@@ -3051,6 +3056,7 @@ Useful for completion style 'partial-completion."
 ;;; org
 
 (require 'org)
+(require 'org-capture)
 
 (defun org-refile-target-projects ()
   (directory-files "~/org/projects" t directory-files-no-dot-files-regexp))
@@ -3437,48 +3443,48 @@ of the new org-mode file."
 (keymap-set org-mode-map "C-c o D" #'org-decrypt-entries)
 
 
-;;; org-modern (disabled)
+;;; org-modern
 
-(when nil
-  (require 'org-modern)
-  (setq org-modern-block-name nil
-        org-modern-block-fringe nil
-        org-modern-checkbox nil
-        org-modern-fold-stars '(("▶" . "▼") ("▷" . "▽") ("▶" . "▼") ("▷" . "▽") ("▶" . "▼"))
-        org-modern-hide-stars nil
-        org-modern-keyword nil
-        org-modern-list nil
-        org-modern-priority t
-        org-modern-priority-faces '((?A :background "whitesmoke" :foreground "hotpink" :weight bold :box (:style released-button :line-width (0 . -1)))
-                                    (?B :background "whitesmoke" :foreground "cadetblue" :weight bold :box (:style released-button :line-width (0 . -1)))
-                                    (?C :background "whitesmoke" :foreground "gray" :weight bold :box (:style released-button :line-width (0 . -1))))
-        org-modern-progress nil
-        org-modern-radio-target '("「" t "」")
-        org-modern-replace-stars "■▪■▪■▪"
-        org-modern-star nil
-        org-modern-tag t
-        org-modern-tag-faces '((t :background "beige" :foreground "black" :weight normal :box (:style pressed-button :line-width (0 . -1))))
-        org-modern-timestamp nil
-        org-modern-todo nil
-        org-modern-todo-faces '(("CANCELED" :background "gainsboro" :foreground "black" :weight normal :box (:style released-button :line-width (0 . -1)))
-                                ("DEFERRED" :background "azure1" :foreground "black" :weight normal :box (:style released-button :line-width (0 . -1)))
-                                ("DONE" :background "honeydew1" :foreground "black" :weight normal :box (:style released-button :line-width (0 . -1)))
-                                ("INBOX" :background "lightskyblue1" :foreground "black" :weight normal :box (:style released-button :line-width (0 . -1)))
-                                ("TODO" :background "mistyrose1" :foreground "black" :weight normal :box (:style released-button :line-width (0 . -1)))
-                                ("TOPIC" :background "slategray1" :foreground "black" :weight normal :box (:style released-button :line-width (0 . -1)))
-                                ("WAITING" :background "plum1" :foreground "black" :weight normal :box (:style released-button :line-width (0 . -1)))
-                                ("WIP" :background "peachpuff1" :foreground "black" :weight normal :box (:style released-button :line-width (0 . -1)))))
+(skipped
+ (require 'org-modern)
+ (setq org-modern-block-name nil
+       org-modern-block-fringe nil
+       org-modern-checkbox nil
+       org-modern-fold-stars '(("▶" . "▼") ("▷" . "▽") ("▶" . "▼") ("▷" . "▽") ("▶" . "▼"))
+       org-modern-hide-stars nil
+       org-modern-keyword nil
+       org-modern-list nil
+       org-modern-priority t
+       org-modern-priority-faces '((?A :background "whitesmoke" :foreground "hotpink" :weight bold :box (:style released-button :line-width (0 . -1)))
+                                   (?B :background "whitesmoke" :foreground "cadetblue" :weight bold :box (:style released-button :line-width (0 . -1)))
+                                   (?C :background "whitesmoke" :foreground "gray" :weight bold :box (:style released-button :line-width (0 . -1))))
+       org-modern-progress nil
+       org-modern-radio-target '("「" t "」")
+       org-modern-replace-stars "■▪■▪■▪"
+       org-modern-star nil
+       org-modern-tag t
+       org-modern-tag-faces '((t :background "beige" :foreground "black" :weight normal :box (:style pressed-button :line-width (0 . -1))))
+       org-modern-timestamp nil
+       org-modern-todo nil
+       org-modern-todo-faces '(("CANCELED" :background "gainsboro" :foreground "black" :weight normal :box (:style released-button :line-width (0 . -1)))
+                               ("DEFERRED" :background "azure1" :foreground "black" :weight normal :box (:style released-button :line-width (0 . -1)))
+                               ("DONE" :background "honeydew1" :foreground "black" :weight normal :box (:style released-button :line-width (0 . -1)))
+                               ("INBOX" :background "lightskyblue1" :foreground "black" :weight normal :box (:style released-button :line-width (0 . -1)))
+                               ("TODO" :background "mistyrose1" :foreground "black" :weight normal :box (:style released-button :line-width (0 . -1)))
+                               ("TOPIC" :background "slategray1" :foreground "black" :weight normal :box (:style released-button :line-width (0 . -1)))
+                               ("WAITING" :background "plum1" :foreground "black" :weight normal :box (:style released-button :line-width (0 . -1)))
+                               ("WIP" :background "peachpuff1" :foreground "black" :weight normal :box (:style released-button :line-width (0 . -1)))))
 
-  (defun my-org-modern-mode-toggle ()
-    "Toggle `org-modern-mode' with some minor customization."
-    (interactive)
-    (cond ((not org-modern-mode) (progn (org-modern-mode)
-                                        (setq line-spacing 0.1)))
-          (t (progn (org-modern-mode -1)
-                    (setq line-spacing nil)))))
+ (defun my-org-modern-mode-toggle ()
+   "Toggle `org-modern-mode' with some minor customization."
+   (interactive)
+   (cond ((not org-modern-mode) (progn (org-modern-mode)
+                                       (setq line-spacing 0.1)))
+         (t (progn (org-modern-mode -1)
+                   (setq line-spacing nil)))))
 
-  (keymap-set org-mode-map "C-c o m" #'my-org-modern-mode-toggle)
-  (add-hook 'org-mode-hook #'my-org-modern-mode-toggle))
+ (keymap-set org-mode-map "C-c o m" #'my-org-modern-mode-toggle)
+ (add-hook 'org-mode-hook #'my-org-modern-mode-toggle))
 
 
 ;;; org-present
@@ -3500,152 +3506,153 @@ of the new org-mode file."
 
 ;;; org-roam
 
-(require 'org-roam)
-(defvar org-roam-content-width 60)
+(skipped
+ (require 'org-roam)
+ (defvar org-roam-content-width 60)
 
-(setq org-roam-directory "~/org"
-      org-roam-db-location "~/org/org-roam.db"
-      org-roam-completion-everywhere t
-      org-roam-node-display-template (concat
-                                      "${title:100} "
-                                      (propertize "${tags}" 'foreground 'default)
-                                      "${myarchive-itags}"
-                                      "${mytodo}")
-      org-roam-capture-templates '(("d" "default" plain "%?"
-                                    :target (file+head "%<%Y%m%d%H%M%S>-${slug}.org" "#+title: ${title}\n")
-                                    :empty-lines 1
-                                    :unnarrowed t)
+ (setq org-roam-directory "~/org"
+       org-roam-db-location "~/org/org-roam.db"
+       org-roam-completion-everywhere t
+       org-roam-node-display-template (concat
+                                       "${title:100} "
+                                       (propertize "${tags}" 'foreground 'default)
+                                       "${myarchive-itags}"
+                                       "${mytodo}")
+       org-roam-capture-templates '(("d" "default" plain "%?"
+                                     :target (file+head "%<%Y%m%d%H%M%S>-${slug}.org" "#+title: ${title}\n")
+                                     :empty-lines 1
+                                     :unnarrowed t)
 
-                                   ("l" "literature" plain "%?"
-                                    :target (file+head "literature/%<%Y%m%d%H%M%S>-${slug}.org"
-                                                       "#+filetags: :@lit:\n#+title: ${title}")
-                                    :empty-lines 1
-                                    :unnarrowed t)
+                                    ("l" "literature" plain "%?"
+                                     :target (file+head "literature/%<%Y%m%d%H%M%S>-${slug}.org"
+                                                        "#+filetags: :@lit:\n#+title: ${title}")
+                                     :empty-lines 1
+                                     :unnarrowed t)
 
-                                   ("x" "index" plain "%?"
-                                    :target (file+head "index/%<%Y%m%d%H%M%S>-${slug}.org"
-                                                       "#+filetags: :@lit:index:\n#+title: ${title}\n#+author: %^{author}")
-                                    :empty-lines 1
-                                    :unnarrowed t)
+                                    ("x" "index" plain "%?"
+                                     :target (file+head "index/%<%Y%m%d%H%M%S>-${slug}.org"
+                                                        "#+filetags: :@lit:index:\n#+title: ${title}\n#+author: %^{author}")
+                                     :empty-lines 1
+                                     :unnarrowed t)
 
-                                   ("r" "reference" plain "%?"
-                                    :target (file+head "refs/%<%Y%m%d%H%M%S>-${slug}.org"
-                                                       "#+filetags: :ref:\n#+title: ${title}")
-                                    :empty-lines 1
-                                    :unnarrowed t)
+                                    ("r" "reference" plain "%?"
+                                     :target (file+head "refs/%<%Y%m%d%H%M%S>-${slug}.org"
+                                                        "#+filetags: :ref:\n#+title: ${title}")
+                                     :empty-lines 1
+                                     :unnarrowed t)
 
-                                   ("I" "ideate" plain "%?"
-                                    :target (file+head "ideate/%<%Y%m%d%H%M%S>-${slug}.org"
-                                                       "#+filetags: :ideate:\n#+title: ${title}")
-                                    :empty-lines 1
-                                    :unnarrowed t))
+                                    ("I" "ideate" plain "%?"
+                                     :target (file+head "ideate/%<%Y%m%d%H%M%S>-${slug}.org"
+                                                        "#+filetags: :ideate:\n#+title: ${title}")
+                                     :empty-lines 1
+                                     :unnarrowed t))
 
-      org-roam-dailies-capture-templates '(("d" "default" entry "* %?"
-                                            :target (file+head "%<%Y-%m-%d>.org" "#+title: Journal - %<%Y-%m-%d>\n")
-                                            :empty-lines 1)))
+       org-roam-dailies-capture-templates '(("d" "default" entry "* %?"
+                                             :target (file+head "%<%Y-%m-%d>.org" "#+title: Journal - %<%Y-%m-%d>\n")
+                                             :empty-lines 1)))
 
-(cl-defmethod org-roam-node-mytodo ((node org-roam-node))
-  ;; Show the todo keywords when doing `org-roam-node-find'.
-  (let ((todo (org-roam-node-todo node)))
-    (when todo
-      (format " #%s" (cond ((equal todo "DONE") (propertize todo 'face 'bold))
-                           ((equal todo "CANCELED") (propertize todo 'face 'bold))
-                           (t (propertize todo 'face 'bold)))))))
+ (cl-defmethod org-roam-node-mytodo ((node org-roam-node))
+   ;; Show the todo keywords when doing `org-roam-node-find'.
+   (let ((todo (org-roam-node-todo node)))
+     (when todo
+       (format " #%s" (cond ((equal todo "DONE") (propertize todo 'face 'bold))
+                            ((equal todo "CANCELED") (propertize todo 'face 'bold))
+                            (t (propertize todo 'face 'bold)))))))
 
-(cl-defmethod org-roam-node-myarchive-itags ((node org-roam-node))
-  ;; Show some tags for archived entries when doing `org-roam-node-find'.
-  (let* ((archive-tags (cdr (assoc "ARCHIVE_ITAGS" (org-roam-node-properties node))))
-         (dropped-tags '("@inbox" "@archive" "INBOX" "ARCHIVE")))
-    (when archive-tags
-      (let ((tags))
-        (mapcar (lambda (elt)
-                  (unless (member elt dropped-tags) (push (concat "#" elt) tags)))
-                (string-split archive-tags " "))
-        (format " %s" (propertize (string-join tags " ") 'foreground 'default))))))
+ (cl-defmethod org-roam-node-myarchive-itags ((node org-roam-node))
+   ;; Show some tags for archived entries when doing `org-roam-node-find'.
+   (let* ((archive-tags (cdr (assoc "ARCHIVE_ITAGS" (org-roam-node-properties node))))
+          (dropped-tags '("@inbox" "@archive" "INBOX" "ARCHIVE")))
+     (when archive-tags
+       (let ((tags))
+         (mapcar (lambda (elt)
+                   (unless (member elt dropped-tags) (push (concat "#" elt) tags)))
+                 (string-split archive-tags " "))
+         (format " %s" (propertize (string-join tags " ") 'foreground 'default))))))
 
-(add-to-list 'display-buffer-alist
-             `("\\*org-roam\\*"
-               (display-buffer-in-direction)
-               (direction . left)
-               (window-width . ,(+ 5 org-roam-content-width))
-               (window-height . fit-window-to-buffer)))
+ (add-to-list 'display-buffer-alist
+              `("\\*org-roam\\*"
+                (display-buffer-in-direction)
+                (direction . left)
+                (window-width . ,(+ 5 org-roam-content-width))
+                (window-height . fit-window-to-buffer)))
 
-(org-roam-db-autosync-mode)
+ (org-roam-db-autosync-mode)
 
-(defun my-org-subtree-root-tags ()
-  "Return the tags of the root header of the current subtree."
-  (save-excursion
-    (org-back-to-heading t)
-    (while (org-up-heading-safe))
-    (org-get-tags nil t)))
+ (defun my-org-subtree-root-tags ()
+   "Return the tags of the root header of the current subtree."
+   (save-excursion
+     (org-back-to-heading t)
+     (while (org-up-heading-safe))
+     (org-get-tags nil t)))
 
-(defun my-org-roam-extract-subtree-inbox-entry ()
-  "Use the tag in the root topic node as the destination directory within `org-roam-directory'."
-  (interactive)
-  (let* ((root-tags (my-org-subtree-root-tags))
-         (subdir (string-replace "@" "" (car root-tags)))
-         (subdir-sanitized (if subdir (my-sanitize-string subdir) nil))
-         (relative-path (if subdir-sanitized (concat "/projects/" subdir-sanitized "/") ""))
-         (org-roam-directory (concat org-roam-directory relative-path)))
-    ;; Apply the root's tags to the extracted child
-    (save-excursion
-      (org-back-to-heading)
-      (org-set-tags (append (org-get-tags nil t) root-tags)))
-    (org-roam-extract-subtree)))
+ (defun my-org-roam-extract-subtree-inbox-entry ()
+   "Use the tag in the root topic node as the destination directory within `org-roam-directory'."
+   (interactive)
+   (let* ((root-tags (my-org-subtree-root-tags))
+          (subdir (string-replace "@" "" (car root-tags)))
+          (subdir-sanitized (if subdir (my-sanitize-string subdir) nil))
+          (relative-path (if subdir-sanitized (concat "/projects/" subdir-sanitized "/") ""))
+          (org-roam-directory (concat org-roam-directory relative-path)))
+     ;; Apply the root's tags to the extracted child
+     (save-excursion
+       (org-back-to-heading)
+       (org-set-tags (append (org-get-tags nil t) root-tags)))
+     (org-roam-extract-subtree)))
 
-(defun org-roam-node-insert-immediate-finish ()
-  (interactive)
-  (let ((org-roam-capture-templates (mapcar (lambda (elt)
-                                              (append elt '(:immediate-finish t)))
-                                            org-roam-capture-templates)))
-    (call-interactively #'org-roam-node-insert)))
+ (defun org-roam-node-insert-immediate-finish ()
+   (interactive)
+   (let ((org-roam-capture-templates (mapcar (lambda (elt)
+                                               (append elt '(:immediate-finish t)))
+                                             org-roam-capture-templates)))
+     (call-interactively #'org-roam-node-insert)))
 
-(defun my-org-roam-add-link-to-region ()
-  "Link the selected region to an org-roam node."
-  (interactive)
-  (add-hook 'minibuffer-setup-hook
-            #'(lambda () (when (minibufferp) (delete-minibuffer-contents))))
-  (org-roam-node-insert)
-  (remove-hook 'minibuffer-setup-hook
-               #'(lambda () (when (minibufferp) (delete-minibuffer-contents)))))
+ (defun my-org-roam-add-link-to-region ()
+   "Link the selected region to an org-roam node."
+   (interactive)
+   (add-hook 'minibuffer-setup-hook
+             #'(lambda () (when (minibufferp) (delete-minibuffer-contents))))
+   (org-roam-node-insert)
+   (remove-hook 'minibuffer-setup-hook
+                #'(lambda () (when (minibufferp) (delete-minibuffer-contents)))))
 
-(cl-defun my-org-roam-capture (&optional goto keys &key filter-fn templates info)
-  (interactive "P")
-  (org-roam-capture- :goto goto
-                     :info info
-                     :keys keys
-                     :templates templates
-                     :node (org-roam-node-create :title "notitle")
-                     :props '(:immediate-finish nil)))
+ (cl-defun my-org-roam-capture (&optional goto keys &key filter-fn templates info)
+   (interactive "P")
+   (org-roam-capture- :goto goto
+                      :info info
+                      :keys keys
+                      :templates templates
+                      :node (org-roam-node-create :title "notitle")
+                      :props '(:immediate-finish nil)))
 
 
-(add-hook 'org-roam-mode-hook (lambda ()
-                                (visual-line-fill-column-mode)
-                                (set-fill-column org-roam-content-width)))
+ (add-hook 'org-roam-mode-hook (lambda ()
+                                 (visual-line-fill-column-mode)
+                                 (set-fill-column org-roam-content-width)))
 
-(keymap-global-set "C-c n %" #'org-roam-node-random)
-(keymap-global-set "C-c n ," #'org-roam-dailies-goto-previous-note)
-(keymap-global-set "C-c n ." #'org-roam-dailies-goto-next-note)
-(keymap-global-set "C-c n C" #'org-roam-capture)
-(keymap-global-set "C-c n J" #'org-roam-dailies-capture-date)
-(keymap-global-set "C-c n c" #'my-org-roam-capture)
-(keymap-global-set "C-c n f" #'org-roam-node-find)
-(keymap-global-set "C-c n j" #'org-roam-dailies-capture-today)
-(keymap-global-set "C-c n y" #'org-roam-dailies-goto-yesterday)
-(keymap-set org-mode-map "C-c n A" #'org-roam-alias-remove)
-(keymap-set org-mode-map "C-c n I" #'org-roam-node-insert-immediate-finish)
-(keymap-set org-mode-map "C-c n R" #'org-roam-ref-remove)
-(keymap-set org-mode-map "C-c n T" #'org-roam-tag-remove)
-(keymap-set org-mode-map "C-c n X" #'my-org-roam-extract-subtree-inbox-entry)
-(keymap-set org-mode-map "C-c n a" #'org-roam-alias-add)
-(keymap-set org-mode-map "C-c n b" #'org-roam-buffer-toggle)
-(keymap-set org-mode-map "C-c n i" #'org-roam-node-insert)
-(keymap-set org-mode-map "C-c n l" #'my-org-roam-add-link-to-region)
-(keymap-set org-mode-map "C-c n n" #'org-id-get-create)
-(keymap-set org-mode-map "C-c n r" #'org-roam-ref-add)
-(keymap-set org-mode-map "C-c n t" #'org-roam-tag-add)
-(keymap-set org-mode-map "C-c n x" #'org-roam-extract-subtree)
-(keymap-set org-roam-mode-map "C-c n l" #'org-roam-buffer-toggle)
+ (keymap-global-set "C-c n %" #'org-roam-node-random)
+ (keymap-global-set "C-c n ," #'org-roam-dailies-goto-previous-note)
+ (keymap-global-set "C-c n ." #'org-roam-dailies-goto-next-note)
+ (keymap-global-set "C-c n C" #'org-roam-capture)
+ (keymap-global-set "C-c n J" #'org-roam-dailies-capture-date)
+ (keymap-global-set "C-c n c" #'my-org-roam-capture)
+ (keymap-global-set "C-c n f" #'org-roam-node-find)
+ (keymap-global-set "C-c n j" #'org-roam-dailies-capture-today)
+ (keymap-global-set "C-c n y" #'org-roam-dailies-goto-yesterday)
+ (keymap-set org-mode-map "C-c n A" #'org-roam-alias-remove)
+ (keymap-set org-mode-map "C-c n I" #'org-roam-node-insert-immediate-finish)
+ (keymap-set org-mode-map "C-c n R" #'org-roam-ref-remove)
+ (keymap-set org-mode-map "C-c n T" #'org-roam-tag-remove)
+ (keymap-set org-mode-map "C-c n X" #'my-org-roam-extract-subtree-inbox-entry)
+ (keymap-set org-mode-map "C-c n a" #'org-roam-alias-add)
+ (keymap-set org-mode-map "C-c n b" #'org-roam-buffer-toggle)
+ (keymap-set org-mode-map "C-c n i" #'org-roam-node-insert)
+ (keymap-set org-mode-map "C-c n l" #'my-org-roam-add-link-to-region)
+ (keymap-set org-mode-map "C-c n n" #'org-id-get-create)
+ (keymap-set org-mode-map "C-c n r" #'org-roam-ref-add)
+ (keymap-set org-mode-map "C-c n t" #'org-roam-tag-add)
+ (keymap-set org-mode-map "C-c n x" #'org-roam-extract-subtree)
+ (keymap-set org-roam-mode-map "C-c n l" #'org-roam-buffer-toggle))
 
 
 ;;; org-sticky-header
@@ -3724,17 +3731,17 @@ of the new org-mode file."
 (add-hook 'typescript-ts-mode-hook #'prettier-js-mode)
 
 
-;;; prism (disabled)
+;;; prism
 
-(when nil
-  (add-hook 'lisp-mode-hook #'prism-mode)
-  (add-hook 'emacs-lisp-mode-hook #'prism-mode)
-  (add-hook 'clojure-mode-hook #'prism-mode)
-  (add-hook 'clojurescript-mode-hook #'prism-mode)
-  (add-hook 'scheme-mode-hook #'prism-mode)
-  (add-hook 'python-mode-hook #'prism-whitespace-mode)
-  (add-hook 'yaml-mode-hook #'prism-whitespace-mode)
-  (keymap-global-set "C-c h b" #'prism-mode))
+(skipped
+ (add-hook 'lisp-mode-hook #'prism-mode)
+ (add-hook 'emacs-lisp-mode-hook #'prism-mode)
+ (add-hook 'clojure-mode-hook #'prism-mode)
+ (add-hook 'clojurescript-mode-hook #'prism-mode)
+ (add-hook 'scheme-mode-hook #'prism-mode)
+ (add-hook 'python-mode-hook #'prism-whitespace-mode)
+ (add-hook 'yaml-mode-hook #'prism-whitespace-mode)
+ (keymap-global-set "C-c h b" #'prism-mode))
 
 
 ;;; prodigy
@@ -4089,13 +4096,13 @@ of the new org-mode file."
 (add-hook 'typescript-ts-mode-hook #'subword-mode)
 
 
-;;; which-key (disabled)
+;;; which-key
 
-(when nil
-  (require 'which-key)
-  (setq which-key-idle-delay 1
-        which-key-lighter nil)
-  (add-hook 'after-init-hook #'which-key-mode))
+(skipped
+ (require 'which-key)
+ (setq which-key-idle-delay 1
+       which-key-lighter nil)
+ (add-hook 'after-init-hook #'which-key-mode))
 
 
 ;;; winfast
