@@ -116,7 +116,7 @@ numbered variants the same as the base color."
      'personal
 
      ;; faces
-     `(cursor ((t (:background "black"))))
+     `(cursor ((t (:background ,color-red-light-4))))
      `(default ((t (:font ,font :foreground "black" :background "white"))))
      `(fixed-pitch ((t (:font ,font))))
      `(fringe ((t (:background "gray98"))))
@@ -243,7 +243,7 @@ numbered variants the same as the base color."
      `(howm-reminder-tomorrow-face ((t (:box (:color "gray" :line-width (-1 . -1))))))
      `(howm-view-empty-face ((t (:inherit default))))
      `(howm-view-hilit-face ((t (:foreground ,color-red))))
-     `(howm-view-name-face ((t (:inherit default))))
+     `(howm-view-name-face ((t (:inherit default :foreground "gray30" :overline "gray85"))))
 
      ;; isearch
      `(isearch ((t (:foreground "white" :background ,color-magenta-2))))
@@ -251,16 +251,16 @@ numbered variants the same as the base color."
      `(lazy-highlight ((t (:distant-foreground "black" :background ,color-cyan-light))))
 
      ;; org, org-modern, org-roam
-     `(org-block ((t (:inherit (fixed-pitch shadow) :extend t :background "gray97" :foreground "gray40"))))
-     `(org-block-begin-line ((t (:inherit (fixed-pitch org-meta-line) :extend t :background "gray97"))))
-     `(org-block-end-line ((t (:inherit (fixed-pitch org-meta-line) :extend t :background "gray97"))))
+     `(org-block ((t (:inherit (fixed-pitch shadow) :extend t :background "gray95" :foreground "gray30"))))
+     `(org-block-begin-line ((t (:inherit (fixed-pitch org-meta-line) :extend t :background "gray95" :overline t))))
+     `(org-block-end-line ((t (:inherit (fixed-pitch org-meta-line) :extend t :background "gray95" :underline t))))
      `(org-checkbox ((t (:inherit default))))
      `(org-code ((t (:inherit (fixed-pitch shadow)))))
      `(org-date ((t (:inherit default :height 1.0 :underline nil))))
      `(org-done ((t (:weight normal))))
      `(org-drawer ((t (:height 0.85 :foreground "gray50"))))
-     `(org-level-1 ((t (:inherit outline-1 :height 1.0))))
-     `(org-level-2 ((t (:inherit outline-2 :height 1.0))))
+     `(org-level-1 ((t (:inherit outline-1 :height 1.2 :weight bold :overline "gray50" :background "gray95"))))
+     `(org-level-2 ((t (:inherit outline-2 :height 1.0 :weight bold :overline "gray80"))))
      `(org-level-3 ((t (:inherit outline-3 :height 1.0))))
      `(org-level-4 ((t (:inherit outline-4 :height 1.0))))
      `(org-level-5 ((t (:inherit outline-5 :height 1.0))))
@@ -273,7 +273,7 @@ numbered variants the same as the base color."
      `(org-roam-title ((t (:weight bold :background ,color-cyan-light))))
      `(org-special-keyword ((t (:height 0.85 :foreground "gray50"))))
      `(org-table ((t (:foreground ,color-blue-2 :background "gray97"))))
-     `(org-tag ((t (:height 0.85 :foreground "gray50"))))
+     `(org-tag ((t (:height 1.0 :foreground "gray50"))))
      `(org-todo ((t (:weight normal))))
      `(org-verbatim ((t (:inherit (fixed-pitch shadow)))))
 

@@ -194,7 +194,9 @@ collection.  Use revert-gc-cons-percentage to restore the value."
 
 ;;; simple
 
-(setq kill-do-not-save-duplicates t
+(setq eval-expression-print-length nil  ; don't truncate when evaluating exprs
+      ;; eval-expression-print-level nil
+      kill-do-not-save-duplicates t
       kill-whole-line t
       next-line-add-newlines t
       save-interprogram-paste-before-kill t
@@ -2123,7 +2125,6 @@ When a prefix is used, ask where to insert the track and save it to `emms-my-ins
 ;; need to set before requiring
 (setq howm-default-key-table nil
       howm-list-title-regexp "^(\\*$|(\\*|#\\+title:) +)" ; passed to grep/rg
-      howm-view-summary-sep " |"
       howm-view-title-header "*"
       howm-excluded-dirs '("data" "RCS" "CVS" ".svn" ".git" "_darcs"))
 
@@ -2163,7 +2164,7 @@ When a prefix is used, ask where to insert the track and save it to `emms-my-ins
                         howm-list-all
                         howm-list-around
                         howm-list-grep-fixed
-                        howm-keyword-search
+                        ;;howm-keyword-search
                         howm-list-recent
                         howm-list-related)
       howm-view-contents-name "*howm-contents:%s*"
@@ -3357,7 +3358,7 @@ of the new org-mode file."
 (add-hook 'org-mode-hook #'my-org-mode-config)
 (add-hook 'org-mode-hook #'my-org-update-org-agenda-on-save)
 (add-hook 'org-mode-hook #'visual-line-fill-column-mode)
-;; (add-hook 'org-mode-hook #'org-indent-mode)
+(add-hook 'org-mode-hook #'org-indent-mode)
 (add-hook 'org-after-refile-insert-hook #'my-org-id-get-create)
 (add-hook 'org-capture-prepare-finalize-hook #'beginning-of-buffer) ; so the ID property gets added to the root node
 (add-hook 'org-capture-prepare-finalize-hook #'whitespace-cleanup)
