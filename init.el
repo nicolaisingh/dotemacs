@@ -2195,17 +2195,17 @@ When a prefix is used, ask where to insert the track and save it to `emms-my-ins
       howm-remember-first-line-to-title nil
       howm-title-from-search t
 
-      ;; howm-configuration-for-major-mode
-      ;; `((org-mode . ((howm-keyword-header . "<<")
-      ;;                (howm-keyword-format . "<< %s")
-      ;;                (howm-keyword-regexp . "\\(<<\\) +\\(.*\\)")
-      ;;                (howm-keyword-regexp-hilit-pos . 1)
-      ;;                (howm-keyword-regexp-pos . 2)
-      ;;                (howm-view-preview-narrow . t)
-      ;;                (howm-ref-header . ">>")
-      ;;                (howm-ref-regexp . "\\(>>\\) +\\(.*\\)")
-      ;;                (howm-ref-regexp-hilit-pos . 0)
-      ;;                (howm-ref-regexp-pos . 2)))
+      howm-configuration-for-major-mode
+      `((org-mode . ((howm-keyword-header . "<<<")
+                     (howm-keyword-format . "<<< %s")
+                     (howm-keyword-regexp . "\\(<<<\\) +\\(.*\\)")
+                     (howm-keyword-regexp-hilit-pos . 1)
+                     (howm-keyword-regexp-pos . 2)
+                     (howm-view-preview-narrow . t)
+                     (howm-ref-header . ">>>")
+                     (howm-ref-regexp . "\\(>>>\\) +\\(.*\\)")
+                     (howm-ref-regexp-hilit-pos . 0)
+                     (howm-ref-regexp-pos . 2))))
       ;;   ;;  FIXME asciidoc config
       ;;   (adoc-mode . ((howm-keyword-header . "=")
       ;;                 (howm-keyword-format . "^= %s")
@@ -3358,7 +3358,7 @@ of the new org-mode file."
 (add-hook 'org-mode-hook #'my-org-mode-config)
 (add-hook 'org-mode-hook #'my-org-update-org-agenda-on-save)
 (add-hook 'org-mode-hook #'visual-line-fill-column-mode)
-(add-hook 'org-mode-hook #'org-indent-mode)
+;; (add-hook 'org-mode-hook #'org-indent-mode)
 (add-hook 'org-after-refile-insert-hook #'my-org-id-get-create)
 (add-hook 'org-capture-prepare-finalize-hook #'beginning-of-buffer) ; so the ID property gets added to the root node
 (add-hook 'org-capture-prepare-finalize-hook #'whitespace-cleanup)
