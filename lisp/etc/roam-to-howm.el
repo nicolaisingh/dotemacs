@@ -39,8 +39,10 @@
     ;; body
     (save-excursion
       (forward-char 1)
-      (while (not (bolp))
-        (re-search-forward "^\\(?:[^#\\+]\\|[^:]\\)" nil t))
+      (catch 'notfound
+        (while (not (bolp))
+          (let ((result (re-search-forward "^\\(?:[^#\\+]\\|[^:]\\)" nil t)))
+            (unless result (throw 'notfound nil)))))
       (kill-ring-save (point) (point-max)))
 
     (setq output-buffer
