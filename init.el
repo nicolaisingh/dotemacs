@@ -2412,6 +2412,7 @@ When a prefix is used, ask where to insert the track and save it to `emms-my-ins
 ;; (add-hook 'howm-view-contents-mode-hook #'org-font-lock-minor-mode)
 
 (add-hook 'howm-mode-hook #'my-howm-mode-config)
+(add-hook 'howm-view-contents-mode-hook #'howm-mode)
 (add-hook 'howm-view-contents-mode-hook #'my-howm-mode-config)
 (add-hook 'howm-view-contents-mode-hook #'my-howm-other-modes-keys)
 (add-hook 'howm-view-summary-mode-hook #'my-howm-other-modes-keys)

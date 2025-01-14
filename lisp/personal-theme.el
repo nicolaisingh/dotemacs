@@ -259,7 +259,7 @@ numbered variants the same as the base color."
      `(org-date ((t (:inherit default :height 1.0 :underline nil))))
      `(org-done ((t (:weight normal))))
      `(org-drawer ((t (:height 0.85 :foreground "gray50"))))
-     `(org-level-1 ((t (:inherit outline-1 :height 1.2 :weight bold :overline "gray50" :background "gray95"))))
+     `(org-level-1 ((t (:inherit outline-1 :height 1.0 :weight bold :overline "gray50" :background "gray90"))))
      `(org-level-2 ((t (:inherit outline-2 :height 1.0 :weight bold :overline "gray80"))))
      `(org-level-3 ((t (:inherit outline-3 :height 1.0))))
      `(org-level-4 ((t (:inherit outline-4 :height 1.0))))
