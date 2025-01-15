@@ -16,21 +16,35 @@
       (re-search-forward "^#\\+title: \\(.*\\)$" nil t)
       (setq title (match-string 1)))
     ;; time-stamp
-    (string-match (concat "\\`\\([0-9]\\{4\\}\\)" ; year
-                          "\\([0-9]\\{2\\}\\)"    ; month
-                          "\\([0-9]\\{2\\}\\)"    ; day
-                          "\\([0-9]\\{2\\}\\)"    ; hour
-                          "\\([0-9]\\{2\\}\\)")   ; minute
-                  file-name-base)
-    (setq year (match-string 1 file-name-base)
-          month (match-string 2 file-name-base)
-          day (match-string 3 file-name-base)
-          hour (match-string 4 file-name-base)
-          minute (match-string 5 file-name-base)
-          time-stamp (format "[%s %s]"
-                             (string-join (list year month day) "-")
-                             (string-join (list hour minute) ":"))
-          output-file-name (format "%s.org" (string-join (list year month day) "-")))
+    (cond
+     ((string-match (concat "\\`\\([0-9]\\{4\\}\\)" ; year
+                            "\\([0-9]\\{2\\}\\)"    ; month
+                            "\\([0-9]\\{2\\}\\)"    ; day
+                            "\\([0-9]\\{2\\}\\)"    ; hour
+                            "\\([0-9]\\{2\\}\\)")   ; minute
+                    file-name-base)
+      (setq year (match-string 1 file-name-base)
+            month (match-string 2 file-name-base)
+            day (match-string 3 file-name-base)
+            hour (match-string 4 file-name-base)
+            minute (match-string 5 file-name-base)
+            time-stamp (format "[%s %s]"
+                               (string-join (list year month day) "-")
+                               (string-join (list hour minute) ":"))
+            output-file-name (format "%s.org" (string-join (list year month day) "-"))))
+     ((string-match (concat "\\`\\([0-9]\\{4\\}\\)-" ; year
+                            "\\([0-9]\\{2\\}\\)-"    ; month
+                            "\\([0-9]\\{2\\}\\)")    ; day
+                    file-name-base)
+      (setq year (match-string 1 file-name-base)
+            month (match-string 2 file-name-base)
+            day (match-string 3 file-name-base)
+            hour "00"
+            minute "00"
+            time-stamp (format "[%s %s]"
+                               (string-join (list year month day) "-")
+                               (string-join (list hour minute) ":"))
+            output-file-name (format "%s.org" (string-join (list year month day) "-")))))
     ;; filetags
     (save-excursion
       (when (re-search-forward "^#\\+filetags: \\(.*\\)$" nil t)
