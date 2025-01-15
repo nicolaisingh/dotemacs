@@ -2319,13 +2319,29 @@ When a prefix is used, ask where to insert the track and save it to `emms-my-ins
   (let ((howm-list-title '(my-howm-list-grep-title)))
     (howm-list-grep-general)))
 
-(defun my-howm-insert-keyword-header ()
-  (interactive)
-  (insert howm-keyword-header " "))
+(defun my-howm-insert-before-symbol (header)
+  (let* ((bounds (bounds-of-thing-at-point 'symbol))
+         (bounds-start (car bounds))
+         (bounds-end (cdr bounds)))
+    (when (and bounds
+               (> (point) bounds-start)
+               (< (point) bounds-end))
+      (goto-char bounds-start))
+
+    (when (or (eolp)
+              (and bounds (= (point) bounds-end)))
+      (insert " "))
+    (insert header)
+    (unless (equal " " (char-to-string (char-after (point))))
+      (insert " "))))
 
 (defun my-howm-insert-ref-header ()
   (interactive)
-  (insert howm-ref-header " "))
+  (my-howm-insert-before-symbol howm-ref-header))
+
+(defun my-howm-insert-keyword-header ()
+  (interactive)
+  (my-howm-insert-before-symbol howm-keyword-header))
 
 (defun my-howm-mode-keys ()
   (keymap-set howm-mode-map
