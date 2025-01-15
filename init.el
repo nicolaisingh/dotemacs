@@ -2327,12 +2327,11 @@ When a prefix is used, ask where to insert the track and save it to `emms-my-ins
                (> (point) bounds-start)
                (< (point) bounds-end))
       (goto-char bounds-start))
-
-    (when (or (eolp)
-              (and bounds (= (point) bounds-end)))
+    (unless (string-match-p "[ \t\n]" (char-to-string (char-before (point))))
       (insert " "))
     (insert header)
-    (unless (equal " " (char-to-string (char-after (point))))
+    (when (or (eobp)
+              (not (equal " " (char-to-string (char-after (point))))))
       (insert " "))))
 
 (defun my-howm-insert-ref-header ()
@@ -3306,6 +3305,7 @@ of the new org-mode file."
   (keymap-set org-mode-map "C-c o L" #'org-link-retain-description)
   (keymap-set org-mode-map "C-c o >" #'my-calendar-mark-org-headings)
   (keymap-set org-capture-mode-map "C-c C-M-t" #'org-capture-refile-to-topic)
+  (keymap-unset org-mode-map "C-,")
   ;; requires consult
   (keymap-set org-mode-map "C-c *" #'consult-org-heading))
 
