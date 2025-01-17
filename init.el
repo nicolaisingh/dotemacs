@@ -2185,7 +2185,7 @@ When a prefix is used, ask where to insert the track and save it to `emms-my-ins
       howm-view-grep-extended-option nil
       howm-view-grep-file-stdin-option "-f -"
       howm-view-grep-fixed-option "-F"
-      howm-view-grep-option "-nH --no-heading --color never"
+      howm-view-grep-option "-nH --no-heading --color never -g !data/"
       ;; Misc
       howm-prefix nil
       howm-remember-insertion-format "%s\n"
