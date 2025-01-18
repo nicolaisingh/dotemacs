@@ -2263,6 +2263,13 @@ When a prefix is used, ask where to insert the track and save it to `emms-my-ins
     (newline)
     (insert "keywords: " (string-join keywords " "))))
 
+(defun my-howm-insert-ref ()
+  "Insert a ref or goto-link to a file."
+  (interactive)
+  (insert howm-ref-header
+          " "
+          (abbreviate-file-name (read-file-name "Insert ref to: " (concat howm-directory "data/")))))
+
 (defun my-howm-collect-keywords ()
   "Write all keywords found in the current buffer."
   (interactive)
@@ -2349,13 +2356,13 @@ When a prefix is used, ask where to insert the track and save it to `emms-my-ins
                       (keymap-set map "1" #'howm-list-schedule)
                       (keymap-set map "2" #'howm-list-todo)
                       (keymap-set map ":" #'howm-find-yesterday)
-                      (keymap-set map "<" #'howm-first-memo)
-                      (keymap-set map ">" #'howm-last-memo)
                       (keymap-set map "A" #'howm-list-around)
                       (keymap-set map "C" #'howm-create-here)
                       (keymap-set map "D" #'howm-dup)
+                      (keymap-set map "F" #'howm-first-memo)
                       (keymap-set map "I" #'howm-create-interactively)
                       (keymap-set map "K" #'howm-keyword-to-kill-ring)
+                      (keymap-set map "L" #'howm-last-memo)
                       (keymap-set map "M" #'howm-open-named-file)
                       (keymap-set map "N" #'howm-next-memo)
                       (keymap-set map "P" #'howm-previous-memo)
@@ -2381,6 +2388,7 @@ When a prefix is used, ask where to insert the track and save it to `emms-my-ins
                       (keymap-set map "t" #'howm-insert-dtime)
                       (keymap-set map "w" #'howm-random-walk)
                       (keymap-set map "x" #'howm-list-mark-ring)
+                      (keymap-set map ">" #'my-howm-insert-ref)
                       (keymap-set map "C-." #'my-howm-insert-ref-header)
                       (keymap-set map "C-," #'my-howm-insert-keyword-header)
                       map)))

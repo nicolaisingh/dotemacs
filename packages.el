@@ -145,6 +145,7 @@
         typescript-mode
         typing
         unfill
+        uniline
         uuidgen
         visual-fill-column
         which-key
