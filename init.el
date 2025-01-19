@@ -185,8 +185,8 @@ collection.  Use revert-gc-cons-percentage to restore the value."
     "p" #'action-lock-goto-previous-link
     "N" #'howm-next-memo
     "P" #'howm-previous-memo
-    "<" #'howm-first-memo
-    ">" #'howm-last-memo))
+    "F" #'howm-first-memo
+    "L" #'howm-last-memo))
 
 ;;; saveplace
 
@@ -4008,10 +4008,15 @@ of the new org-mode file."
 
 (defun turn-off-selected-minor-mode ()
   (selected-minor-mode -1))
+
+(defun my-mc-toggle-selected-minor-mode ()
+  (if multiple-cursors-mode
+      (selected-minor-mode -1)
+    (selected-minor-mode 1)))
 (with-eval-after-load 'magit
   (add-hook 'magit-mode-hook #'turn-off-selected-minor-mode))
 (with-eval-after-load 'multiple-cursors
-  (add-hook 'multiple-cursors-mode-hook #'turn-off-selected-minor-mode))
+  (add-hook 'multiple-cursors-mode-hook #'my-mc-toggle-selected-minor-mode))
 
 
 ;;; slime

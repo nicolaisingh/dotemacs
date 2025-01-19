@@ -1,22 +1,19 @@
-* howm menu
-
-** Reminder
+= <<< %menu%
+ %"e"[Remember] %"c"[New] %"D"[Dup] Search(%"s"[String] %"g"[Regexp] %"o"[Occur])
+ %"a"[All] %"l"[Recent] %"A"[Around] %"y"[Schedule] %"t"[Todo] %"b"[Buffers] %"x"[Marks]
+ %"K"[<Title] [<Name] %"d"[Date>] %"i"[Key>] %"r"[Update] %"w"[Random Walk] [Killall]
+ %"."[Today] %":"[Yesterday] %"h"[History] %"R"[Update Menu] [Edit Menu] [Preference]
+-------------------------------------
 [Schedule, Todo] -- @schedule, !deadline (until %sdays days from now)
 !deadline, +todo, -reminder, ~defer (top %tnum entries)
 %reminder
-
-** Recent
+-------------------------------------
+Recent
 %recent
-
-** Random
+-------------------------------------
+Random -- If you do not like this, [Edit Menu] to erase it.
 %random
-
- %"e"[Remember] %"c"[New] %"D"[Dup] %"s"[String] %"g"[Regexp] %"o"[Occur]
- %"a"[All] %"l"[Recent] %"A"[Around] %"y"[Schedule] %"t"[Todo] %"b"[Buffers] %"x"[Marks]
- %"K"[<Title] [<Name] %"d"[Date>] %"i"[Key>] %"r"[Update] %"w"[Random Walk] [Killall]
- %"."[Today] %":"[Yesterday] %"h"[History] %"m"[Update Menu] %"E"[Edit Menu] [Preference]
-
-* (cutoff)
+-------------------------------------
 
 Format of schedule and todo (Please replace {} with []):
 {2002-10-21}@1  schedule -- (shown in schedule part. @3 = "3 days schedule to 10-23")

@@ -107,15 +107,15 @@ numbered variants the same as the base color."
          (bg-active-tab "white")
          (bg-inactive-tab "gray85")
          (fg-inactive "gray40")
-         (font "Noto Sans Mono-9")
+         (font "Inconsolata-12")
          (box-active `(:line-width 2 :color ,bg-active-border :style flat-button))
          (box-inactive `(:line-width 2 :color ,bg-inactive-border :style flat-button))
          (box-active-tab `(:line-width 2 :color ,bg-active-tab :style flat-button))
          (box-inactive-tab `(:line-width 2 :color ,bg-inactive-tab :style flat-button))
          (color-box-black-text (lambda (bg)
-                                 `(:foreground "black" :background ,bg :box (:color "black" :line-width (1 . -1)))))
+                                 `(:foreground "black" :background ,bg :box (:color "black"))))
          (color-box-white-text (lambda (bg)
-                                 `(:foreground "white" :background ,bg :box (:color "black" :line-width (1 . -1))))))
+                                 `(:foreground "white" :background ,bg :box (:color "black")))))
     (custom-theme-set-faces
      'personal
 
