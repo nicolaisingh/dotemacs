@@ -2191,7 +2191,7 @@ When a prefix is used, ask where to insert the track and save it to `emms-my-ins
       howm-remember-insertion-format "%s\n"
       ;; Create
       howm-content-from-region t
-      howm-prepend t
+      howm-prepend nil
       howm-remember-first-line-to-title nil
       howm-title-from-search t
 
