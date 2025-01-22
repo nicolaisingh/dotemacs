@@ -3381,7 +3381,7 @@ of the new org-mode file."
 (add-hook 'org-agenda-mode-hook #'hl-line-mode)
 (add-hook 'org-mode-hook #'no-indent-tabs-mode)
 (add-hook 'org-mode-hook #'my-org-mode-config)
-(add-hook 'org-mode-hook #'my-org-update-org-agenda-on-save)
+;; (add-hook 'org-mode-hook #'my-org-update-org-agenda-on-save)
 (add-hook 'org-mode-hook #'visual-line-fill-column-mode)
 ;; (add-hook 'org-mode-hook #'org-indent-mode)
 (add-hook 'org-after-refile-insert-hook #'my-org-id-get-create)

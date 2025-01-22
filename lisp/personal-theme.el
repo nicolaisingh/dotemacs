@@ -244,7 +244,7 @@ numbered variants the same as the base color."
      `(howm-reminder-schedule-face ((t (,@(funcall color-box-black-text color-green-light)))))
      `(howm-reminder-todo-face ((t (,@(funcall color-box-white-text color-orange)))))
      `(howm-reminder-late-deadline-face ((t (:weight bold ,@(funcall color-box-white-text color-red-3)))))
-     `(howm-reminder-today-face ((t (,@(funcall color-box-black-text color-yellow-light)))))
+     `(howm-reminder-today-face ((t (:foreground "gray30" :inverse-video t))))
      `(howm-reminder-tomorrow-face ((t (,@(funcall color-box-black-text "gray85")))))
      `(howm-view-empty-face ((t (:inherit default))))
      `(howm-view-hilit-face ((t (:foreground ,color-red))))
