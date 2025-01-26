@@ -2122,6 +2122,8 @@ When a prefix is used, ask where to insert the track and save it to `emms-my-ins
 
 ;;; howm
 
+(require 'org)
+
 ;; need to set before requiring
 (setq howm-default-key-table nil
       howm-list-title-regexp "^(\\*$|(\\*|#\\+title:) +)" ; passed to grep/rg
@@ -2129,6 +2131,7 @@ When a prefix is used, ask where to insert the track and save it to `emms-my-ins
       howm-excluded-dirs '("data" "RCS" "CVS" ".svn" ".git" "_darcs"))
 
 (require 'howm)
+(require 'howm-attach)
 
 (setq howm-view-header-format "\n--------------------------------------- >>> %s\n"
       howm-view-header-regexp "^--------------------------------------- >>> .*$"
@@ -2391,6 +2394,7 @@ When a prefix is used, ask where to insert the track and save it to `emms-my-ins
                       (keymap-set map ">" #'my-howm-insert-ref)
                       (keymap-set map "C-." #'my-howm-insert-ref-header)
                       (keymap-set map "C-," #'my-howm-insert-keyword-header)
+                      (keymap-set map "C-a" #'howm-attach)
                       map)))
 
 (defun my-howm-other-modes-keys ()
