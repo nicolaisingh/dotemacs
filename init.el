@@ -2146,7 +2146,7 @@ When a prefix is used, ask where to insert the track and save it to `emms-my-ins
       howm-highlight-date-regexp-format "\\(?:\\[%Y-%m-%d.*?]\\|%Y-%m-%d\\)?"
       ;; Files
       howm-directory "~/howm/"
-      howm-file-name-format "%Y/%m/%Y-%m-%d.org"
+      howm-file-name-format "%Y/%m/%Y-%m-%d-%H%M%S.org"
       howm-keyword-file (expand-file-name ".howm-keys" howm-directory)
       ;; Menu
       howm-menu-file (expand-file-name "howm-menu.txt" user-emacs-directory)
@@ -2173,7 +2173,7 @@ When a prefix is used, ask where to insert the track and save it to `emms-my-ins
       howm-view-contents-name "*howm-contents:%s*"
       howm-view-summary-name "*howm-summary:%s*"
       howm-view-summary-persistent nil
-      howm-normalizer 'howm-sort-items-by-mtime
+      howm-normalizer 'howm-sort-items-by-date
       ;; Search
       howm-check-word-break nil
       howm-history-file (expand-file-name ".howm-history" howm-directory)
