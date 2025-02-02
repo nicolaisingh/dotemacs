@@ -2162,7 +2162,7 @@ When a prefix is used, ask where to insert the track and save it to `emms-my-ins
       howm-menu-todo-priority-format nil;;"(%8.1f)"
       howm-reminder-cancel-string "cancel"
       ;; List
-      howm-list-recent-days 14
+      howm-list-recent-days 7
       howm-list-title '(howm-action-lock-date-search
                         howm-list-all
                         howm-list-around
@@ -2173,7 +2173,7 @@ When a prefix is used, ask where to insert the track and save it to `emms-my-ins
       howm-view-contents-name "*howm-contents:%s*"
       howm-view-summary-name "*howm-summary:%s*"
       howm-view-summary-persistent nil
-      howm-normalizer 'howm-sort-items-by-date
+      howm-normalizer 'howm-sort-items-by-mtime
       ;; Search
       howm-check-word-break nil
       howm-history-file (expand-file-name ".howm-history" howm-directory)
@@ -2320,7 +2320,7 @@ When a prefix is used, ask where to insert the track and save it to `emms-my-ins
 (defun my-howm-list-all-by-name ()
   (interactive)
   (howm-list-all)
-  (howm-view-sort-by-name t))
+  (howm-view-sort-by-date t))
 
 (defun my-howm-list-grep-title ()
   "Search by title."
@@ -2350,7 +2350,8 @@ When a prefix is used, ask where to insert the track and save it to `emms-my-ins
 
 (defun my-howm-insert-keyword-header ()
   (interactive)
-  (my-howm-insert-before-symbol howm-keyword-header))
+  (my-howm-insert-before-symbol howm-keyword-header)
+  (howm-insert-keyword))
 
 (defun my-howm-mode-keys ()
   (keymap-set howm-mode-map
@@ -2421,9 +2422,15 @@ When a prefix is used, ask where to insert the track and save it to `emms-my-ins
 
 (defun my-howm-mode-config ()
   (visual-line-fill-column-mode t)
-  (setq-local ;outline-regexp "[*]+"
-   fill-column 100)
+  (setq-local fill-column 100)
   (my-howm-mode-keys))
+
+(defun my-howm-before-save ()
+  (my-howm-collect-keywords)
+  (save-excursion
+    (goto-char (point-min))
+    (while (re-search-forward "^\\*+$" nil t)
+      (replace-match (concat (match-string 0) " ")))))
 
 ;; An experiment
 ;; (define-minor-mode org-font-lock-minor-mode
@@ -2432,6 +2439,7 @@ When a prefix is used, ask where to insert the track and save it to `emms-my-ins
 ;;   (if org-font-lock-minor-mode
 ;;       (progn
 ;;         (org-set-font-lock-defaults)
+;;         (setq-local font-lock-keywords nil)
 ;;         (font-lock-add-keywords nil org-font-lock-keywords))
 ;;     (font-lock-remove-keywords nil org-font-lock-keywords))
 ;;   (font-lock-flush)
@@ -2443,7 +2451,8 @@ When a prefix is used, ask where to insert the track and save it to `emms-my-ins
 (add-hook 'howm-view-contents-mode-hook #'my-howm-mode-config)
 (add-hook 'howm-view-contents-mode-hook #'my-howm-other-modes-keys)
 (add-hook 'howm-view-summary-mode-hook #'my-howm-other-modes-keys)
-(add-hook 'howm-mode-hook (lambda () (add-hook 'before-save-hook #'my-howm-collect-keywords nil t)))
+;; Make sure this runs late to make `delete-trailing-whitespace' not remove the trailing header spaces
+(add-hook 'howm-mode-hook (lambda () (add-hook 'before-save-hook #'my-howm-before-save 90 t)))
 (add-hook 'howm-view-summary-mode-hook #'hl-line-mode)
 ;; (add-hook 'howm-mode-hook #'howm-mode-set-buffer-name)
 ;; (add-hook 'after-save-hook #'howm-mode-set-buffer-name)
