@@ -2051,75 +2051,6 @@ When a prefix is used, ask where to insert the track and save it to `emms-my-ins
 (keymap-global-set "C-c e l" #'hippie-expand-line-mode)
 
 
-;;; outline
-
-(require 'outline)
-(setq outline-default-state nil)
-
-(defun my-outline-ensure-space-after-heading ()
-  (unless (char-equal ?\s (char-before))
-    (insert " ")))
-(add-hook 'outline-insert-heading-hook #'my-outline-ensure-space-after-heading)
-
-(defun my-outline-convert-to-heading ()
-  "Convert current line to a heading."
-  (interactive)
-  (save-excursion
-    (cond ((outline-on-heading-p)
-           (goto-char (pos-bol))
-           (re-search-forward "^\\*+ " nil t)
-           (replace-match ""))
-          (t (kill-region (pos-bol) (pos-eol))
-             (condition-case err
-                 (outline-insert-heading)
-               (error (insert "* ")))
-             (yank)
-             ;; handle case where only a space is inserted by outline-insert-heading
-             ;; (happens when there are no other headings in the buffer)
-             (goto-char (pos-bol))
-             (when (not (char-equal (following-char) ?*))
-               (insert "*"))))))
-
-(defun my-outline-mode-config ()
-  (keymap-set outline-mode-map "C-c"
-              (let ((map (make-sparse-keymap)))
-                (keymap-set map "@" #'outline-mark-subtree)
-                (keymap-set map "C-8" #'my-outline-convert-to-heading)
-                (keymap-set map "C-n" #'outline-next-visible-heading)
-                (keymap-set map "C-p" #'outline-previous-visible-heading)
-                (keymap-set map "C-u" #'outline-up-heading)
-                (keymap-set map "C-f" #'outline-forward-same-level)
-                (keymap-set map "C-b" #'outline-backward-same-level)
-                (keymap-set map "C-o" #'outline-hide-other)
-                map))
-  (keymap-set outline-mode-map "M-<up>" #'outline-move-subtree-up)
-  (keymap-set outline-mode-map "M-<down>" #'outline-move-subtree-down)
-  (keymap-set outline-mode-map "M-<left>" #'outline-promote)
-  (keymap-set outline-mode-map "M-<right>" #'outline-demote)
-  (keymap-set outline-mode-map "C-<return>" #'outline-insert-heading))
-
-(defun my-outline-minor-mode-config ()
-  (keymap-set outline-minor-mode-map "C-c"
-              (let ((map (make-sparse-keymap)))
-                (keymap-set map "@" #'outline-mark-subtree)
-                (keymap-set map "C-8" #'my-outline-convert-to-heading)
-                (keymap-set map "C-b" #'outline-backward-same-level)
-                (keymap-set map "C-f" #'outline-forward-same-level)
-                (keymap-set map "C-n" #'outline-next-visible-heading)
-                (keymap-set map "C-o" #'outline-hide-other)
-                (keymap-set map "C-p" #'outline-previous-visible-heading)
-                (keymap-set map "C-u" #'outline-up-heading)
-                map))
-  (keymap-set outline-minor-mode-map "M-<up>" #'outline-move-subtree-up)
-  (keymap-set outline-minor-mode-map "M-<down>" #'outline-move-subtree-down)
-  (keymap-set outline-minor-mode-map "M-<left>" #'outline-promote)
-  (keymap-set outline-minor-mode-map "M-<right>" #'outline-demote)
-  (keymap-set outline-minor-mode-map "C-<return>" #'outline-insert-heading))
-
-(add-hook 'outline-mode-hook #'my-outline-mode-config)
-;; (add-hook 'outline-minor-mode-hook #'my-outline-minor-mode-config)
-
-
 ;;; howm
 
 (require 'org)
@@ -3747,6 +3678,75 @@ of the new org-mode file."
 
 ;; Calling (global-origami-mode) directly causes issues on emacs --fg-daemon
 (add-hook 'after-init-hook #'global-origami-mode)
+
+
+;;; outline
+
+(require 'outline)
+(setq outline-default-state nil)
+
+(defun my-outline-ensure-space-after-heading ()
+  (unless (char-equal ?\s (char-before))
+    (insert " ")))
+(add-hook 'outline-insert-heading-hook #'my-outline-ensure-space-after-heading)
+
+(defun my-outline-convert-to-heading ()
+  "Convert current line to a heading."
+  (interactive)
+  (save-excursion
+    (cond ((outline-on-heading-p)
+           (goto-char (pos-bol))
+           (re-search-forward "^\\*+ " nil t)
+           (replace-match ""))
+          (t (kill-region (pos-bol) (pos-eol))
+             (condition-case err
+                 (outline-insert-heading)
+               (error (insert "* ")))
+             (yank)
+             ;; handle case where only a space is inserted by outline-insert-heading
+             ;; (happens when there are no other headings in the buffer)
+             (goto-char (pos-bol))
+             (when (not (char-equal (following-char) ?*))
+               (insert "*"))))))
+
+(defun my-outline-mode-config ()
+  (keymap-set outline-mode-map "C-c"
+              (let ((map (make-sparse-keymap)))
+                (keymap-set map "@" #'outline-mark-subtree)
+                (keymap-set map "C-8" #'my-outline-convert-to-heading)
+                (keymap-set map "C-n" #'outline-next-visible-heading)
+                (keymap-set map "C-p" #'outline-previous-visible-heading)
+                (keymap-set map "C-u" #'outline-up-heading)
+                (keymap-set map "C-f" #'outline-forward-same-level)
+                (keymap-set map "C-b" #'outline-backward-same-level)
+                (keymap-set map "C-o" #'outline-hide-other)
+                map))
+  (keymap-set outline-mode-map "M-<up>" #'outline-move-subtree-up)
+  (keymap-set outline-mode-map "M-<down>" #'outline-move-subtree-down)
+  (keymap-set outline-mode-map "M-<left>" #'outline-promote)
+  (keymap-set outline-mode-map "M-<right>" #'outline-demote)
+  (keymap-set outline-mode-map "C-<return>" #'outline-insert-heading))
+
+(defun my-outline-minor-mode-config ()
+  (keymap-set outline-minor-mode-map "C-c"
+              (let ((map (make-sparse-keymap)))
+                (keymap-set map "@" #'outline-mark-subtree)
+                (keymap-set map "C-8" #'my-outline-convert-to-heading)
+                (keymap-set map "C-b" #'outline-backward-same-level)
+                (keymap-set map "C-f" #'outline-forward-same-level)
+                (keymap-set map "C-n" #'outline-next-visible-heading)
+                (keymap-set map "C-o" #'outline-hide-other)
+                (keymap-set map "C-p" #'outline-previous-visible-heading)
+                (keymap-set map "C-u" #'outline-up-heading)
+                map))
+  (keymap-set outline-minor-mode-map "M-<up>" #'outline-move-subtree-up)
+  (keymap-set outline-minor-mode-map "M-<down>" #'outline-move-subtree-down)
+  (keymap-set outline-minor-mode-map "M-<left>" #'outline-promote)
+  (keymap-set outline-minor-mode-map "M-<right>" #'outline-demote)
+  (keymap-set outline-minor-mode-map "C-<return>" #'outline-insert-heading))
+
+(add-hook 'outline-mode-hook #'my-outline-mode-config)
+;; (add-hook 'outline-minor-mode-hook #'my-outline-minor-mode-config)
 
 
 ;;; pdf-tools
