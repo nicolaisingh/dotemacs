@@ -1371,7 +1371,7 @@ be file B."
 (require 'emms-source-file)
 (require 'emms-source-playlist)
 (require 'emms-player-simple)
-(require 'emms-player-vlc)
+(require 'emms-player-mpv)
 (require 'emms-cache)
 ;; track information
 (require 'emms-cue)
@@ -1389,6 +1389,7 @@ be file B."
 (defvar my-emms-playlist-directory "~/Music/playlists/")
 (defvar my-emms-library-directory "~/Music/library/")
 (defvar my-emms-flac-directory "~/Music/flac/")
+(defvar my-emms-loop-timer nil)
 
 ;; track filters
 (emms-browser-make-filter "all" 'ignore)
@@ -1425,7 +1426,7 @@ be file B."
           (optional-flag-string (with-current-emms-playlist emms-repeat-track) " repeat-track")
           " ] "))
 
-(setq emms-player-list '(emms-player-vlc
+(setq emms-player-list '(emms-player-mpv
                          emms-player-alsaplayer
                          emms-player-mpg321
                          emms-player-ogg123)
@@ -1435,7 +1436,8 @@ be file B."
       emms-playlist-mode-open-playlists t
       emms-source-playlist-default-format 'm3u
       emms-track-description-function #'emms-info-my-track-description
-      emms-mode-line-mode-line-function #'emms-my-mode-line-display)
+      emms-mode-line-mode-line-function #'emms-my-mode-line-display
+      emms-seek-seconds 5)
 
 (add-to-list 'emms-track-initialize-functions #'emms-info-initialize-track)
 (add-hook 'emms-player-paused-hook #'emms-mode-line-alter)
@@ -1552,6 +1554,23 @@ The default format is specified by `emms-source-playlist-default-format'."
     (customize-set-variable 'emms-random-playlist nil))
   (emms-mode-line-alter))
 
+(defun emms-my-stop-loop ()
+  "Stop the currently running loop."
+  (interactive)
+  (when (timerp my-emms-loop-timer)
+    (message "Stopping EMMS loop")
+    (cancel-timer my-emms-loop-timer)))
+
+(defun emms-my-toggle-loop (arg)
+  "Continuously loop a the last ARG seconds of the currently playing track.
+Use a negative argument to stop the loop."
+  (interactive "p")
+  (emms-my-stop-loop)
+  (when (>= arg 1)
+    (let ((length (if (= 1 arg) 5 arg)))
+      (message "Starting EMMS loop of %s seconds" length)
+      (setq my-emms-loop-timer (run-with-timer 0 length (lambda () (emms-seek (- length))))))))
+
 (defun emms-playlist-my-add-track-to-playlist (buffer)
   (interactive
    (list (let* ((buf-list (mapcar #'(lambda (buf)
@@ -1624,8 +1643,11 @@ When a prefix is used, ask where to insert the track and save it to `emms-my-ins
 (keymap-set emms-metaplaylist-mode-map "q" #'kill-current-buffer)
 (keymap-set emms-metaplaylist-mode-map "z" #'emms-playlist-mode-go)
 (keymap-set emms-playlist-mode-map "%" #'emms-shuffle)
+(keymap-set emms-playlist-mode-map "&" #'emms-my-toggle-loop)
 (keymap-set emms-playlist-mode-map "," #'emms-seek-backward)
 (keymap-set emms-playlist-mode-map "." #'emms-seek-forward)
+(keymap-set emms-playlist-mode-map "<left>" #'emms-seek-backward)
+(keymap-set emms-playlist-mode-map "<right>" #'emms-seek-forward)
 (keymap-set emms-playlist-mode-map "A" #'emms-playlist-my-add-track-to-playlist)
 (keymap-set emms-playlist-mode-map "C-x C-w" #'emms-my-playlist-write)
 (keymap-set emms-playlist-mode-map "F" #'emms-show-all)
@@ -2102,7 +2124,7 @@ When a prefix is used, ask where to insert the track and save it to `emms-my-ins
                         howm-list-recent
                         howm-list-related)
       howm-view-contents-name "*howm-contents:%s*"
-      howm-view-summary-name "*howm-summary:%s*"
+      howm-view-summary-name "*howm-summary*"
       howm-view-summary-persistent nil
       howm-normalizer 'howm-sort-items-by-mtime
       ;; Search
