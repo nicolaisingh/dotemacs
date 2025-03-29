@@ -482,6 +482,13 @@ times."
                    (display-sort-function . ,#'identity))
       (complete-with-action action completions string pred))))
 
+(defun region-bytes (start end)
+  "Return the number of bytes used by the region."
+  (interactive "r")
+  (message "Region has %d bytes"
+           (- (bufferpos-to-filepos end 'exact)
+              (bufferpos-to-filepos start 'exact))))
+
 (keymap-global-set "C-c y o" #'my-yank-to-other-window)
 (keymap-global-set "C-c i TAB" #'indent-using-tabs-and-fixup)
 (keymap-global-set "C-c i SPC" #'indent-using-spaces-and-fixup)
@@ -911,6 +918,8 @@ the configuration 'files-plus-some-buffers-and-modes."
 
 (keymap-global-set "C-c l C-SPC" #'chatgpt-shell-send-and-review-region)
 (keymap-global-set "C-c l SPC" #'chatgpt-shell-send-region)
+(keymap-global-set "C-c l c" #'chatgpt-shell-prompt-compose)
+(keymap-global-set "C-c l i" #'chatgpt-shell-quick-insert)
 (keymap-global-set "C-c l l" #'chatgpt-shell)
 (keymap-global-set "C-c l m" #'chatgpt-shell-inline)
 (keymap-global-set "C-c l o" #'chatgpt-shell-other-buffer)
@@ -3977,6 +3986,8 @@ of the new org-mode file."
   (if multiple-cursors-mode
       (selected-minor-mode -1)
     (selected-minor-mode 1)))
+(with-eval-after-load 'chatgpt-shell
+  (add-hook 'chatgpt-shell-prompt-compose-mode-hook #'turn-off-selected-minor-mode))
 (with-eval-after-load 'magit
   (add-hook 'magit-mode-hook #'turn-off-selected-minor-mode))
 (with-eval-after-load 'multiple-cursors
