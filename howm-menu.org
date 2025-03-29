@@ -1,22 +1,25 @@
 * howm menu
+%last-update %"R"[Update Menu]
 
-** Reminder
-[Schedule, Todo] -- @schedule, !deadline (until %sdays days from now)
-!deadline, +todo, -reminder, ~defer (top %tnum entries)
+ Create:   %"e"[Remember]  %"c"[New]    %"D"[Dup]
+ Search:   %"s"[String]    %"g"[Regexp] %"o"[Occur]  %"h"[History]
+ List:     %"a"[All]       %"l"[Recent] %"A"[Around] %"w"[Random Walk]
+ Dates:    %"y"[Schedule]  %"t"[Todo]   %"."[Today]  %":"[Yesterday]
+ Buffers:  %"b"[Buffers]   %"x"[Marks]  %"r"[Update] %"Q"[Killall]
+ Copy:     %"K"[<Title]     [<Name]
+ Insert:   %"d"[Date>]     %"i"[Key>]
+ Settings: %"m"[Edit Menu]  [Preference]
+
+-------------------------------------
+%here%(howm-menu-legend-en)
 %reminder
-
-** Recent
+-------------------------------------
+Recent
 %recent
-
-** Random
+-------------------------------------
+Random
 %random
-
- %"e"[Remember] %"c"[New] %"D"[Dup] %"s"[String] %"g"[Regexp] %"o"[Occur]
- %"a"[All] %"l"[Recent] %"A"[Around] %"y"[Schedule] %"t"[Todo] %"b"[Buffers] %"x"[Marks]
- %"K"[<Title] [<Name] %"d"[Date>] %"i"[Key>] %"r"[Update] %"w"[Random Walk] [Killall]
- %"."[Today] %":"[Yesterday] %"h"[History] %"m"[Update Menu] %"E"[Edit Menu] [Preference]
-
-* (cutoff)
+-------------------------------------
 
 Format of schedule and todo (Please replace {} with []):
 {2002-10-21}@1  schedule -- (shown in schedule part. @3 = "3 days schedule to 10-23")
@@ -28,43 +31,46 @@ Format of schedule and todo (Please replace {} with []):
 (Numbers after marks are default values.)
 
 How to remember:
-* Schedule at(@) the date
-* Reminder sinks down(-).
-* Todo floats up(+).
-* Deadline needs attention!
-* Defer waves(~) up and down.
-* Done is the end(.).
+- Schedule at(@) the date
+- Reminder sinks down(-).
+- Todo floats up(+).
+- Deadline needs attention!
+- Defer waves(~) up and down.
+- Done is the end(.).
 
 -------------------------------------
 
-Think of this menu as a "modal dialog" rather than a workspace. Typically, the commands listed in the menu apply to the buffer BEHIND the menu, not the menu buffer itself. In other words, they affect the buffer that was active before the menu appeared.
+Think of this menu as a "modal dialog" rather than a
+workspace. Typically, the commands listed in the menu apply to the
+buffer BEHIND the menu, not the menu buffer itself. In other words,
+they affect the buffer that was active before the menu appeared.
 
 You can edit this menu itself.
 >>> %Editing Menu%
 
 
-= <<< %Editing Menu%
+* <<< %Editing Menu%
 [Edit Menu] Hit RET on the left button to edit this menu.
 [Update Menu] Hit RET on the left button to update this menu.
 --------------------------------------------------------
 
-*** Format of the menu file ***
+Format of the menu file
 (Please hit RET on [Edit Menu] and read the source file.)
 
-== Basic format
+** Basic format
 
 As you see...
 
-* [xxx] is button.
-* %REMINDER (in small letters) is schedule and todo list.
-* %RECENT (in small letters) is list of recent entries.
-* %RANDOM (in small letters) is list of random entries.
+- [xxx] is button.
+- %REMINDER (in small letters) is schedule and todo list.
+- %RECENT (in small letters) is list of recent entries.
+- %RANDOM (in small letters) is list of random entries.
 
 You can arrange their places as you like.
 Writing favorite files or goto links may be also convenient.
 (ex) file:///etc/services   >>> wiki
 
-== Shortcut
+** Shortcut
 
 %"foo"[All]
 This is displayed as foo[All], and the key "f" executes [All].
@@ -74,7 +80,7 @@ Exactly speaking, it executes the following sequence:
 %"bar%"
 If you put % at the tail like this, the key "b" means "move cursor here".
 
-== For lispers
+** For lispers
 
 Display:
 %here%howm-congrats-count ;; embed value of variable howm-congrats-count
@@ -88,13 +94,13 @@ Action:
 %call%find-file  ;; call function interactively
 Both are evaluated in the previous buffer before raising menu.
 
-== Hiding
+** Hiding
 
 '%' + '|' toggles invisibility
 like this: visible%|invisible%|appear%|disappear  - until the end of line
 (Newline is removed when the end of line is invisible.)
 
-== Multiple menus
+** Multiple menus
 
 Links to %xxx% open "<< < %xxx%" with menu-mode: >>> %menu%
 When you add new menu, [[%menu%]] may be more convenient because corresponding

@@ -122,6 +122,7 @@ numbered variants the same as the base color."
      ;; faces
      `(cursor ((t (:background ,color-red-light-4))))
      `(default ((t (:font ,font :foreground "black" :background "white"))))
+     `(display-time-date-and-time ((t (:foreground ,color-red-3))))
      `(fixed-pitch ((t (:font ,font))))
      `(fringe ((t (:background "gray98"))))
      `(highlight ((t (:background "gray95"))))

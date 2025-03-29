@@ -295,13 +295,6 @@ collection.  Use revert-gc-cons-percentage to restore the value."
 
 ;;;; Minor modes
 
-(define-minor-mode window-dedicated-mode
-  "Minor mode for making windows dedicated."
-  :global nil
-  :init-value nil
-  :lighter " DEDICATED"
-  (set-window-dedicated-p (get-buffer-window) window-dedicated-mode))
-
 (define-minor-mode reader-mode
   "Make a reader-friendly view by removing screen distractions and adding margins."
   :init-value nil
@@ -330,8 +323,6 @@ From https://www.emacswiki.org/emacs/XModMapMode")
   nil
   nil
   "Generic major mode for the Miranda programming language.")
-
-(keymap-global-set "C-c w d" #'window-dedicated-mode)
 
 
 ;;;; Functions
@@ -1656,6 +1647,12 @@ When a prefix is used, ask where to insert the track and save it to `emms-my-ins
 (keymap-set emms-playlist-mode-map "z" #'emms-metaplaylist-mode-go)
 
 
+;;; epa
+
+(require 'epa)
+(setq epa-keys-select-method 'minibuffer)
+
+
 ;;; epg
 
 (setq epg-pinentry-mode 'loopback)
@@ -2076,105 +2073,63 @@ When a prefix is used, ask where to insert the track and save it to `emms-my-ins
 ;;; howm
 
 (require 'org)
+;; (require 'howm-org) I don't like using org-style timestamps within howm
 
-;; need to set before requiring
 (setq howm-default-key-table nil
+      howm-excluded-dirs '("data" "RCS" "CVS" ".svn" ".git" "_darcs")
       howm-list-title-regexp "^(\\*$|(\\*|#\\+title:) +)" ; passed to grep/rg
+      howm-menu-file-extension ".org"
+      howm-prefix nil
       howm-view-title-header "*"
-      howm-excluded-dirs '("data" "RCS" "CVS" ".svn" ".git" "_darcs"))
+      howm-wiki-regexp nil)
 
 (require 'howm)
 (require 'howm-attach)
 
-(setq howm-view-header-format "\n--------------------------------------- >>> %s\n"
-      howm-view-header-regexp "^--------------------------------------- >>> .*$"
-      howm-view-keep-one-window t
-      howm-view-summary-format (let* ((path (format-time-string howm-file-name-format))
-                                      (width (length (file-name-nondirectory path)))
-                                      (max-width (int-to-string 30)))
-                                 (concat "%-" max-width "." max-width  "s" howm-view-summary-sep " "))
-      howm-view-summary-window-size 20
-      howm-view-split-horizontally nil
+(setq *howm-show-item-filename* nil  ;; don't show filenames in the echo area when browsing notes
+      howm-action-lock-forward-save-buffer t
+      howm-check-word-break nil
+      howm-content-from-region t
+      howm-directory "~/howm/"
+      howm-file-name-format "%Y/%m/%Y-%m-%d.org"
       ;; include timestamp part and note filenames
       howm-highlight-date-regexp-format "\\(?:\\[%Y-%m-%d.*?]\\|%Y-%m-%d\\)?"
-      ;; Files
-      howm-directory "~/howm/"
-      howm-file-name-format "%Y/%m/%Y-%m-%d-%H%M%S.org"
-      howm-keyword-file (expand-file-name ".howm-keys" howm-directory)
-      ;; Menu
-      howm-menu-file (expand-file-name "howm-menu.txt" user-emacs-directory)
-      howm-menu-footer ""
-      howm-menu-lang 'en
-      howm-menu-name-format "*howm-menu*"
-      ;; Reminder
-      howm-action-lock-forward-save-buffer t
-      howm-menu-recent-num 20
-      howm-menu-schedule-days 30
-      howm-menu-schedule-days-before 14
-      howm-menu-todo-num 100
-      howm-menu-todo-priority-format nil;;"(%8.1f)"
-      howm-reminder-cancel-string "cancel"
-      ;; List
-      howm-list-recent-days 7
-      howm-list-title '(howm-action-lock-date-search
-                        howm-list-all
-                        howm-list-around
-                        howm-list-grep-fixed
-                        ;;howm-keyword-search
-                        howm-list-recent
-                        howm-list-related)
-      howm-view-contents-name "*howm-contents:%s*"
-      howm-view-summary-name "*howm-summary*"
-      howm-view-summary-persistent nil
-      howm-normalizer 'howm-sort-items-by-mtime
-      ;; Search
-      howm-check-word-break nil
       howm-history-file (expand-file-name ".howm-history" howm-directory)
       howm-history-limit nil
       howm-iigrep-preview-items 50
-      howm-iigrep-show-what 'counts
       howm-keyword-case-fold-search t
+      howm-keyword-file (expand-file-name ".howm-keys" howm-directory)
+      howm-list-recent-days 14
+      howm-menu-file (expand-file-name "howm-menu.org" user-emacs-directory)
+      howm-menu-footer ""
+      howm-menu-name-format "*howm-menu:%s*"
+      howm-menu-recent-num 20
+      howm-menu-schedule-days 30
+      howm-menu-schedule-days-before 14
+      howm-menu-todo-num 50
+      ;; howm-menu-todo-priority-format nil;;"(%8.1f)"
       howm-message-time nil
-      howm-view-use-grep t
+      howm-normalizer 'howm-sort-items-by-mtime
+      howm-prepend nil
+
+      howm-view-contents-name "*howm-contents:%s*"
       howm-view-grep-command "rg"
       howm-view-grep-expr-option "-e"
       howm-view-grep-extended-option nil
       howm-view-grep-file-stdin-option "-f -"
       howm-view-grep-fixed-option "-F"
       howm-view-grep-option "-nH --no-heading --color never -g !data/"
-      ;; Misc
-      howm-prefix nil
-      howm-remember-insertion-format "%s\n"
-      ;; Create
-      howm-content-from-region t
-      howm-prepend nil
-      howm-remember-first-line-to-title nil
-      howm-title-from-search t
+      howm-view-keep-one-window t
+      howm-view-split-horizontally nil
+      howm-view-summary-format (let* ((path (format-time-string howm-file-name-format))
+                                      (width (length (file-name-nondirectory path)))
+                                      (max-width (int-to-string 30)))
+                                 (concat "%-" max-width "." max-width "s" howm-view-summary-sep " "))
+      howm-view-summary-name "*howm-summary*"
+      howm-view-summary-window-size 20
+      howm-view-use-grep t)
 
-      howm-configuration-for-major-mode
-      `((org-mode . ((howm-keyword-header . "<<<")
-                     (howm-keyword-format . "<<< %s")
-                     (howm-keyword-regexp . "\\(<<<\\) +\\(.*\\)")
-                     (howm-keyword-regexp-hilit-pos . 1)
-                     (howm-keyword-regexp-pos . 2)
-                     (howm-view-preview-narrow . t)
-                     (howm-ref-header . ">>>")
-                     (howm-ref-regexp . "\\(>>>\\) +\\(.*\\)")
-                     (howm-ref-regexp-hilit-pos . 0)
-                     (howm-ref-regexp-pos . 2))))
-      ;;   ;;  FIXME asciidoc config
-      ;;   (adoc-mode . ((howm-keyword-header . "=")
-      ;;                 (howm-keyword-format . "^= %s")
-      ;;                 (howm-keyword-regexp . "^\\(=\\)[ \t]+\\([^ \t\r\n].*\\)$")
-      ;;                 (howm-keyword-regexp-hilit-pos . 1)
-      ;;                 (howm-keyword-regexp-pos . 2)
-      ;;                 ;; (howm-view-title-header . "=")
-      ;;                 ;; (howm-view-title-regexp . "^=\\( +\\(.*\\)\\|\\)$")
-      ;;                 ;; (howm-view-title-regexp-pos . 2)
-      ;;                 ;; (howm-view-title-regexp-grep . "^= +.*")
-      ;;                 (howm-view-preview-narrow . nil)
-      ;;                 (howm-keyword-list-alias-sep . nil))))
-      *howm-show-item-filename* nil)
+(add-to-list 'howm-list-title 'howm-list-grep-fixed)
 
 (add-to-list 'howm-template-rules
              '("%dateonly" . (lambda (arg)
@@ -2262,26 +2217,6 @@ When a prefix is used, ask where to insert the track and save it to `emms-my-ins
       (let ((save-silently t))
         (howm-keyword-add all-keywords)))))
 
-(defun my-howm-insert-date ()
-  "Insert date without any prompt when prefix is given."
-  (interactive)
-  (let ((date (format-time-string howm-date-format)))
-    (insert (format howm-insert-date-format date))
-    (unless current-prefix-arg
-      (howm-action-lock-date date t howm-insert-date-future))))
-
-(defun my-howm-list-all-by-name ()
-  (interactive)
-  (howm-list-all)
-  (howm-view-sort-by-date t))
-
-(defun my-howm-list-grep-title ()
-  "Search by title."
-  (interactive)
-  (howm-set-command 'my-howm-list-grep-title)
-  (let ((howm-list-title '(my-howm-list-grep-title)))
-    (howm-list-grep-general)))
-
 (defun my-howm-insert-before-symbol (header)
   (let* ((bounds (bounds-of-thing-at-point 'symbol))
          (bounds-start (car bounds))
@@ -2299,7 +2234,8 @@ When a prefix is used, ask where to insert the track and save it to `emms-my-ins
 
 (defun my-howm-insert-ref-header ()
   (interactive)
-  (my-howm-insert-before-symbol howm-ref-header))
+  (my-howm-insert-before-symbol howm-ref-header)
+  (howm-insert-keyword))
 
 (defun my-howm-insert-keyword-header ()
   (interactive)
@@ -2327,9 +2263,9 @@ When a prefix is used, ask where to insert the track and save it to `emms-my-ins
                       (keymap-set map "S" #'howm-search-past)
                       (keymap-set map "SPC" #'howm-toggle-buffer)
                       (keymap-set map "[" #'my-org-inactive-timestamp)
-                      (keymap-set map "a" #'my-howm-list-all-by-name)
+                      (keymap-set map "a" #'howm-list-all)
                       (keymap-set map "c" #'howm-create)
-                      (keymap-set map "d" #'my-howm-insert-date)
+                      (keymap-set map "d" #'howm-insert-date)
                       (keymap-set map "e" #'howm-remember)
                       (keymap-set map "g" #'howm-list-grep)
                       (keymap-set map "h" #'howm-history)
@@ -2343,7 +2279,7 @@ When a prefix is used, ask where to insert the track and save it to `emms-my-ins
                       (keymap-set map "r" #'howm-refresh)
                       (keymap-set map "s" #'howm-list-grep-fixed)
                       (keymap-set map "t" #'howm-insert-dtime)
-                      (keymap-set map "w" #'howm-random-walk)
+                      (keymap-set map "w" #'howm-toggle-narrow)
                       (keymap-set map "x" #'howm-list-mark-ring)
                       (keymap-set map ">" #'my-howm-insert-ref)
                       (keymap-set map "C-." #'my-howm-insert-ref-header)
@@ -2360,7 +2296,7 @@ When a prefix is used, ask where to insert the track and save it to `emms-my-ins
           (keymap-set map "M" #'howm-open-named-file)
           (keymap-set map "Q" #'howm-kill-all)
           (keymap-set map "s" #'howm-list-grep-fixed)
-          (keymap-set map "a" #'my-howm-list-all-by-name)
+          (keymap-set map "a" #'howm-list-all)
           (keymap-set map "c" #'howm-create)
           (keymap-set map "e" #'howm-remember)
           (keymap-set map "m" #'howm-menu)
@@ -2370,47 +2306,34 @@ When a prefix is used, ask where to insert the track and save it to `emms-my-ins
         (list howm-view-summary-mode-map
               howm-view-contents-mode-map)))
 
-(keymap-set howm-menu-mode-map "n" #'next-line)
-(keymap-set howm-menu-mode-map "p" #'previous-line)
-
 (defun my-howm-mode-config ()
-  (visual-line-fill-column-mode t)
   (setq-local fill-column 100)
-  (my-howm-mode-keys))
+  (visual-line-fill-column-mode t))
 
 (defun my-howm-before-save ()
   (my-howm-collect-keywords)
+  ;; ensure there is a trailing space at the end of headers
   (save-excursion
     (goto-char (point-min))
     (while (re-search-forward "^\\*+$" nil t)
       (replace-match (concat (match-string 0) " ")))))
 
-;; An experiment
-;; (define-minor-mode org-font-lock-minor-mode
-;;   "Minor mode to apply org-mode font locking to a buffer."
-;;   :lighter " orgFL"
-;;   (if org-font-lock-minor-mode
-;;       (progn
-;;         (org-set-font-lock-defaults)
-;;         (setq-local font-lock-keywords nil)
-;;         (font-lock-add-keywords nil org-font-lock-keywords))
-;;     (font-lock-remove-keywords nil org-font-lock-keywords))
-;;   (font-lock-flush)
-;;   (font-lock-ensure))
-;; (add-hook 'howm-view-contents-mode-hook #'org-font-lock-minor-mode)
-
+(add-hook 'howm-view-contents-mode-hook #'howm-org-font-lock-minor-mode)
 (add-hook 'howm-mode-hook #'my-howm-mode-config)
+(add-hook 'howm-mode-hook #'my-howm-mode-keys)
 (add-hook 'howm-view-contents-mode-hook #'howm-mode)
 (add-hook 'howm-view-contents-mode-hook #'my-howm-mode-config)
+(add-hook 'howm-view-contents-mode-hook #'my-howm-mode-keys)
 (add-hook 'howm-view-contents-mode-hook #'my-howm-other-modes-keys)
+(add-hook 'howm-view-open-hook #'howm-narrow-to-memo)
 (add-hook 'howm-view-summary-mode-hook #'my-howm-other-modes-keys)
 ;; Make sure this runs late to make `delete-trailing-whitespace' not remove the trailing header spaces
 (add-hook 'howm-mode-hook (lambda () (add-hook 'before-save-hook #'my-howm-before-save 90 t)))
 (add-hook 'howm-view-summary-mode-hook #'hl-line-mode)
-;; (add-hook 'howm-mode-hook #'howm-mode-set-buffer-name)
-;; (add-hook 'after-save-hook #'howm-mode-set-buffer-name)
 
 (keymap-set howm-menu-mode-map "<backtab>" #'action-lock-goto-previous-link)
+(keymap-set howm-menu-mode-map "n" #'next-line)
+(keymap-set howm-menu-mode-map "p" #'previous-line)
 (keymap-set howm-view-summary-mode-map "<backtab>" #'howm-view-summary-previous-section)
 (keymap-set howm-view-contents-mode-map "<backtab>" #'riffle-contents-goto-previous-item)
 (keymap-global-set "C-z ." #'howm-find-today)
@@ -2424,9 +2347,9 @@ When a prefix is used, ask where to insert the track and save it to `emms-my-ins
 (keymap-global-set "C-z M" #'howm-open-named-file)
 (keymap-global-set "C-z S" #'howm-search-past)
 (keymap-global-set "C-z SPC" #'howm-toggle-buffer)
-(keymap-global-set "C-z a" #'my-howm-list-all-by-name)
+(keymap-global-set "C-z a" #'howm-list-all)
 (keymap-global-set "C-z c" #'howm-create)
-(keymap-global-set "C-z d" #'my-howm-insert-date)
+(keymap-global-set "C-z d" #'howm-insert-date)
 (keymap-global-set "C-z e" #'howm-remember)
 (keymap-global-set "C-z g" #'howm-list-grep)
 (keymap-global-set "C-z h" #'howm-history)
@@ -2918,6 +2841,11 @@ Useful for completion style 'partial-completion."
                                          (mermaid-compile)))
 (keymap-set mermaid-mode-map "C-c C-s" #'my-mermaid-compile-svg)
 (add-hook 'mermaid-mode-hook #'my-mermaid-config)
+
+
+;;; misearch
+
+(keymap-global-set "C-c d M-%" #'replace-regexp-as-diff)
 
 
 ;;; multi-term
@@ -3705,7 +3633,8 @@ of the new org-mode file."
 ;;; outline
 
 (require 'outline)
-(setq outline-default-state nil)
+(setq outline-default-state nil
+      outline-minor-mode-cycle t)
 
 (defun my-outline-ensure-space-after-heading ()
   (unless (char-equal ?\s (char-before))
@@ -4132,7 +4061,8 @@ of the new org-mode file."
 
 (require 'time)
 (setq display-time-24hr-format t
-      display-time-default-load-average 0)
+      display-time-default-load-average 0
+      display-time-day-and-date nil)
 (display-time-mode t)
 
 
