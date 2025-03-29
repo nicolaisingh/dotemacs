@@ -237,7 +237,7 @@ numbered variants the same as the base color."
      `(howm-menu-key-face ((t (:foreground ,color-red))))
      `(howm-mode-keyword-face ((t (:foreground ,color-blue))))
      `(howm-mode-ref-face ((t (:foreground ,color-blue))))
-     `(howm-mode-title-face ((t (:inherit org-level-1))))
+     `(howm-mode-title-face ((t (:inherit outline-1))))
      `(howm-mode-wiki-face ((t (:foreground ,color-blue))))
      `(howm-reminder-deadline-face ((t (:foreground ,color-red))))
      `(howm-reminder-defer-face ((t (:foreground ,color-magenta))))
