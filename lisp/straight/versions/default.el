@@ -5,6 +5,7 @@
  ("adoc-mode" . "2c2eb8043623aa99d35aacbad2ee39188bf1bad3")
  ("ag.el" . "ed7e32064f92f1315cecbfc43f120bbc7508672c")
  ("aggressive-indent-mode" . "a437a45868f94b77362c6b913c5ee8e67b273c42")
+ ("aider.el" . "4aa24f139dfd5d77f17c7fff8d14fca750e2e7ce")
  ("alert" . "7774b5fd2feb98d4910ff06435d08c19fba93e26")
  ("atomic-chrome" . "072a137a19d7e6a300ca3e87c0e142a7f4ccb5fb")
  ("avy" . "933d1f36cca0f71e4acb5fac707e9ae26c536264")

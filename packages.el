@@ -10,6 +10,7 @@
         adoc-mode
         ag
         aggressive-indent
+        (aider :host github :repo "tninja/aider.el")
         alert
         atomic-chrome
         avy

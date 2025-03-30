@@ -641,6 +641,24 @@ times."
           (lambda () (interactive) (aggressive-indent-mode -1)))
 
 
+;;; aider
+
+(require 'aider)
+
+(defun my-aider-run-aider (orig-fn edit-args)
+  "Call `aider-run-aider' with needed args and logging disabled."
+  (interactive "P")
+  (let ((aider-args `("--model" "o3-mini"
+                      "--openai-api-key" ,(auth-source-pick-first-password :host "api.openai.com")
+                      "--no-auto-commits"))
+        (message-log-max nil)
+        (inhibit-message t))
+    (funcall orig-fn)))
+(advice-add 'aider-run-aider :around #'my-aider-run-aider)
+
+(keymap-global-set "C-c l a" #'aider-transient-menu)
+
+
 ;;; alert
 
 (require 'alert)
