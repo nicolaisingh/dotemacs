@@ -4110,6 +4110,10 @@ of the new org-mode file."
 (add-hook 'typescript-ts-mode-hook #'subword-mode)
 
 
+;;; visual-wrap
+(global-visual-wrap-prefix-mode 1)
+
+
 ;;; which-key
 
 (skipped
