@@ -2118,8 +2118,8 @@ When a prefix is used, ask where to insert the track and save it to `emms-my-ins
       howm-menu-todo-num 50
       ;; howm-menu-todo-priority-format nil;;"(%8.1f)"
       howm-message-time nil
-      howm-normalizer 'howm-sort-items-by-mtime
-      howm-prepend nil
+      howm-normalizer 'howm-sort-items-by-reverse-date
+      howm-prepend t
 
       howm-view-contents-name "*howm-contents:%s*"
       howm-view-grep-command "rg"
@@ -2138,7 +2138,7 @@ When a prefix is used, ask where to insert the track and save it to `emms-my-ins
       howm-view-summary-window-size 20
       howm-view-use-grep t)
 
-(add-to-list 'howm-list-title 'howm-list-grep-fixed)
+;; (add-to-list 'howm-list-title 'howm-list-grep-fixed)
 
 (add-to-list 'howm-template-rules
              '("%dateonly" . (lambda (arg)
@@ -2167,12 +2167,12 @@ When a prefix is used, ask where to insert the track and save it to `emms-my-ins
                           ("Meeting - Standup/DSM"
                            ,(concat howm-view-title-header " Meeting: Standup\n"
                                     "%date\n\n"
-                                    "%cursor"))
+                                    "%cursor\n\n"))
 
                           ("Task log"
                            ,(concat howm-view-title-header " Task Log\n"
                                     "%date\n\n"
-                                    "tasklog%cursor"))))
+                                    "tasklog%cursor\n\n"))))
 
 (defun my-howm-insert-keywords-line ()
   "Insert keywords line."
@@ -2327,10 +2327,13 @@ When a prefix is used, ask where to insert the track and save it to `emms-my-ins
     (while (re-search-forward "^\\*+$" nil t)
       (replace-match (concat (match-string 0) " ")))))
 
-(add-hook 'howm-view-contents-mode-hook #'howm-org-font-lock-minor-mode)
+(advice-add 'howm-list-recent :after #'howm-view-sort-by-mtime)
+
+(add-hook 'howm-create-hook #'howm-narrow-to-memo)
 (add-hook 'howm-mode-hook #'my-howm-mode-config)
 (add-hook 'howm-mode-hook #'my-howm-mode-keys)
 (add-hook 'howm-view-contents-mode-hook #'howm-mode)
+(add-hook 'howm-view-contents-mode-hook #'howm-org-font-lock-minor-mode)
 (add-hook 'howm-view-contents-mode-hook #'my-howm-mode-config)
 (add-hook 'howm-view-contents-mode-hook #'my-howm-mode-keys)
 (add-hook 'howm-view-contents-mode-hook #'my-howm-other-modes-keys)
