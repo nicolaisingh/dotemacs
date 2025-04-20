@@ -904,10 +904,11 @@ the configuration 'files-plus-some-buffers-and-modes."
 
 (setq chatgpt-shell-openai-key (lambda ()
                                  (auth-source-pick-first-password :host "api.openai.com"))
+      chatgpt-shell-model-temperature 0
       chatgpt-shell-prompt-query-response-style 'shell
       chatgpt-shell-welcome-function nil
       ;; Set default system prompt
-      chatgpt-shell-system-prompt (seq-position (map-keys chatgpt-shell-system-prompts) "Concise"))
+      chatgpt-shell-system-prompt (seq-position (map-keys chatgpt-shell-system-prompts) "Programming"))
 
 (defun chatgpt-shell-rephrase-sentences ()
   (interactive)
@@ -2156,7 +2157,7 @@ When a prefix is used, ask where to insert the track and save it to `emms-my-ins
       howm-view-summary-window-size 20
       howm-view-use-grep t)
 
-;; (add-to-list 'howm-list-title 'howm-list-grep-fixed)
+(add-to-list 'howm-list-title 'howm-list-grep-fixed)
 
 (add-to-list 'howm-template-rules
              '("%dateonly" . (lambda (arg)
@@ -2269,6 +2270,11 @@ When a prefix is used, ask where to insert the track and save it to `emms-my-ins
   (my-howm-insert-before-symbol howm-keyword-header)
   (howm-insert-keyword))
 
+(defun my-howm-list-grep-contents ()
+  (interactive)
+  (howm-list-grep t)
+  (riffle-summary-to-contents))
+
 (defun my-howm-mode-keys ()
   (keymap-set howm-mode-map
               "C-z" (let ((map (make-sparse-keymap)))
@@ -2370,6 +2376,7 @@ When a prefix is used, ask where to insert the track and save it to `emms-my-ins
 (keymap-global-set "C-z 1" #'howm-list-schedule)
 (keymap-global-set "C-z 2" #'howm-list-todo)
 (keymap-global-set "C-z :" #'howm-find-yesterday)
+(keymap-global-set "C-z @" #'my-howm-list-grep-contents)
 (keymap-global-set "C-z D" #'howm-dup)
 (keymap-global-set "C-z H" #'howm-mode)
 (keymap-global-set "C-z I" #'howm-create-interactively)
