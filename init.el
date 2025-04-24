@@ -2113,6 +2113,7 @@ When a prefix is used, ask where to insert the track and save it to `emms-my-ins
 
 (require 'howm)
 (require 'howm-attach)
+(require 'howm-shift)
 
 (setq *howm-show-item-filename* nil  ;; don't show filenames in the echo area when browsing notes
       howm-action-lock-forward-save-buffer t
@@ -2276,6 +2277,10 @@ When a prefix is used, ask where to insert the track and save it to `emms-my-ins
   (riffle-summary-to-contents))
 
 (defun my-howm-mode-keys ()
+  (keymap-set howm-mode-map "S-<down>" #'howm-shift-down)
+  (keymap-set howm-mode-map "S-<left>" #'howm-shift-left)
+  (keymap-set howm-mode-map "S-<right>" #'howm-shift-right)
+  (keymap-set howm-mode-map "S-<up>" #'howm-shift-up)
   (keymap-set howm-mode-map
               "C-z" (let ((map (make-sparse-keymap)))
                       (keymap-set map "." #'howm-find-today)
