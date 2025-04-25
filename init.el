@@ -645,12 +645,26 @@ times."
 
 (require 'aider)
 
+(setq aider-todo-keyword-pair '("AI!" . "comment line ending with string: AI!"))
+
 (defun my-aider-run-aider (orig-fn edit-args)
   "Call `aider-run-aider' with needed args and logging disabled."
   (interactive "P")
-  (let ((aider-args `("--model" "o3-mini"
-                      "--openai-api-key" ,(auth-source-pick-first-password :host "api.openai.com")
-                      "--no-auto-commits"))
+  (setenv "OPENAI_API_KEY" (auth-source-pick-first-password :host "api.openai.com"))
+  (setenv "DEEPSEEK_API_KEY" (auth-source-pick-first-password :host "api.deepseek.com"))
+  (let ((aider-args `(;; DeepSeek
+                      ;; "--model" "deepseek/deepseek-chat"
+                      "--model" "deepseek/deepseek-coder"
+                      ;; "--model" "deepseek/deepseek-reasoner"
+
+                      ;; OpenAI
+                      ;; "--model" "o3-mini"
+
+                      ;; Other options
+                      "--no-auto-commits"
+                      "--no-auto-lint"
+                      "--no-analytics"
+                      "--yes-always"))
         (message-log-max nil)
         (inhibit-message t))
     (funcall orig-fn)))
@@ -904,6 +918,8 @@ the configuration 'files-plus-some-buffers-and-modes."
 
 (setq chatgpt-shell-openai-key (lambda ()
                                  (auth-source-pick-first-password :host "api.openai.com"))
+      chatgpt-shell-deepseek-key (lambda ()
+                                   (auth-source-pick-first-password :host "api.deepseek.com"))
       chatgpt-shell-model-temperature 0
       chatgpt-shell-prompt-query-response-style 'shell
       chatgpt-shell-welcome-function nil
