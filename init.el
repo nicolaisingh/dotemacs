@@ -2303,7 +2303,7 @@ When a prefix is used, ask where to insert the track and save it to `emms-my-ins
 
 (defun my-howm-create-other-window (&optional which-template here)
   (interactive "p")
-  (split-window-right)
+  (split-window-sensibly)
   (other-window 1)
   (howm-create which-template here))
 
