@@ -911,10 +911,19 @@ the configuration 'files-plus-some-buffers-and-modes."
 ;;; chatgpt-shell
 
 (require 'chatgpt-shell)
-(add-to-list 'chatgpt-shell-system-prompts
-             `("Concise" . ,(string-join '("I need you to reply as concise and direct to the point as possible."
-                                           "If including source code, please format them in org-mode."
-                                           "Don't wrap responses in markdown.") "  ")) t)
+(add-to-list
+ 'chatgpt-shell-system-prompts
+ `("Family Travel Planning" . ,(string-join
+                                '("The user is planning for a vacation with family and kid/s."
+                                  "Suggest an itinerary that considers given events like flight schedules, commuting, walking, and even rest times."
+                                  "Mention places that are known to be worth visiting and seeing."
+                                  "Don't suggest activities and destinations that are not family-friendly."
+                                  "Give me links to blogs or information that I can review."
+                                  "The itinerary destinations preferrably should be sequenced such that it is travel-friendly."
+                                  "If you will suggest a destination that is quite far from the others, mention it explicitly."
+                                  "When you make the itinerary, include the travel times and an estimate of how long to stay on that area before going to the next one.")
+                                "  "))
+ t)
 
 (setq chatgpt-shell-openai-key (lambda ()
                                  (auth-source-pick-first-password :host "api.openai.com"))
@@ -2289,8 +2298,14 @@ When a prefix is used, ask where to insert the track and save it to `emms-my-ins
 
 (defun my-howm-list-grep-contents ()
   (interactive)
-  (howm-list-grep t)
-  (riffle-summary-to-contents))
+  (when (howm-list-grep t)
+    (riffle-summary-to-contents)))
+
+(defun my-howm-create-other-window (&optional which-template here)
+  (interactive "p")
+  (split-window-right)
+  (other-window 1)
+  (howm-create which-template here))
 
 (defun my-howm-mode-keys ()
   (keymap-set howm-mode-map "S-<down>" #'howm-shift-down)
@@ -2348,6 +2363,7 @@ When a prefix is used, ask where to insert the track and save it to `emms-my-ins
           (keymap-set map "2" #'howm-list-todo)
           (keymap-set map "K" #'howm-keyword-to-kill-ring)
           (keymap-set map "M" #'howm-open-named-file)
+          (keymap-set map "O" #'my-howm-create-other-window)
           (keymap-set map "Q" #'howm-kill-all)
           (keymap-set map "s" #'howm-list-grep-fixed)
           (keymap-set map "a" #'howm-list-all)
