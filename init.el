@@ -489,6 +489,11 @@ times."
            (- (bufferpos-to-filepos end 'exact)
               (bufferpos-to-filepos start 'exact))))
 
+(defun my-sort-strings (reverse beg end)
+  "Sort string literals in the region."
+  (interactive "P\nr")
+  (sort-regexp-fields reverse "\"[^\"]*\"" "\\&" beg end))
+
 (keymap-global-set "C-c y o" #'my-yank-to-other-window)
 (keymap-global-set "C-c i TAB" #'indent-using-tabs-and-fixup)
 (keymap-global-set "C-c i SPC" #'indent-using-spaces-and-fixup)
@@ -4039,6 +4044,7 @@ of the new org-mode file."
 (keymap-set selected-keymap "f" #'fill-region)
 (keymap-set selected-keymap "r" #'reverse-region)
 (keymap-set selected-keymap "s" #'sort-lines)
+(keymap-set selected-keymap "S" #'my-sort-strings)
 (keymap-set selected-keymap "u" #'unfill-region)
 (keymap-set selected-keymap "q" #'selected-off)
 (keymap-set selected-keymap "R" #'replace-region-with)
