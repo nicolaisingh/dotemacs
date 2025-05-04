@@ -2170,6 +2170,7 @@ When a prefix is used, ask where to insert the track and save it to `emms-my-ins
       howm-message-time nil
       howm-normalizer 'howm-sort-items-by-reverse-date
       howm-prepend t
+      howm-user-font-lock-keywords '(("keywords:" . (0 'error)))
 
       howm-view-contents-name "*howm-contents:%s*"
       howm-view-grep-command "rg"
@@ -2189,6 +2190,7 @@ When a prefix is used, ask where to insert the track and save it to `emms-my-ins
       howm-view-use-grep t)
 
 (add-to-list 'howm-list-title 'howm-list-grep-fixed)
+(add-to-list 'howm-list-title 'howm-keyword-search)
 
 (add-to-list 'howm-template-rules
              '("%dateonly" . (lambda (arg)
@@ -2197,32 +2199,34 @@ When a prefix is used, ask where to insert the track and save it to `emms-my-ins
 
 (defun my-howm-template (which-template previous-buffer)
   "Howm template chooser."
-  (cond
-   ((= which-template 4)
-    (let ((choice (completing-read "Template: "
-                                   (my-presorted-completion-table (mapcar #'car my-howm-templates))
-                                   nil t nil t)))
-      (cadr (assoc choice my-howm-templates))))
-   (t
-    (concat howm-view-title-header " %title\n%date %file\n\n%cursor\n\n"))))
+  (let ((templates `(("default"
+                      ,(concat howm-view-title-header " %title\n%date %file\n\n%cursor\n\n"))
 
-(setq howm-template #'my-howm-template
-      my-howm-templates `(("default"
-                           ,(concat howm-view-title-header " %title\n%date %file\n\n%cursor\n\n"))
+                     ("Meeting"
+                      ,(concat howm-view-title-header " Meeting: %title%cursor\n"
+                               "%date %file\n\n"))
 
-                          ("Meeting"
-                           ,(concat howm-view-title-header " Meeting: %title%cursor\n"
-                                    "%date %file\n\n"))
+                     ("Meeting - Standup/DSM"
+                      ,(concat howm-view-title-header " Meeting: Standup\n"
+                               "%date\n\n"
+                               "%cursor\n\n"))
 
-                          ("Meeting - Standup/DSM"
-                           ,(concat howm-view-title-header " Meeting: Standup\n"
-                                    "%date\n\n"
-                                    "%cursor\n\n"))
+                     ("Task log"
+                      ,(concat howm-view-title-header " Task Log\n"
+                               "%date\n\n"
+                               "tasklog%cursor\n\n")))))
+    (cond
+     ((= which-template 2)
+      (concat howm-view-title-header " %title\n%date %file\n\n%cursor\n\n"))
+     ((= which-template 4)
+      (let ((choice (completing-read "Template: "
+                                     (my-presorted-completion-table (mapcar #'car templates))
+                                     nil t nil t)))
+        (cadr (assoc choice templates))))
+     (t
+      (concat howm-view-title-header " %title\n%date\n\n%cursor\n\n")))))
 
-                          ("Task log"
-                           ,(concat howm-view-title-header " Task Log\n"
-                                    "%date\n\n"
-                                    "tasklog%cursor\n\n"))))
+(setq howm-template #'my-howm-template)
 
 (defun my-howm-insert-keywords-line ()
   "Insert keywords line."
