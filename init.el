@@ -2168,7 +2168,7 @@ When a prefix is used, ask where to insert the track and save it to `emms-my-ins
       howm-menu-todo-num 50
       ;; howm-menu-todo-priority-format nil;;"(%8.1f)"
       howm-message-time nil
-      howm-normalizer 'howm-sort-items-by-reverse-date
+      howm-normalizer 'howm-sort-items-by-mtime
       howm-prepend t
       howm-user-font-lock-keywords '(("keywords:" . (0 'error)))
 
@@ -2189,8 +2189,9 @@ When a prefix is used, ask where to insert the track and save it to `emms-my-ins
       howm-view-summary-window-size 20
       howm-view-use-grep t)
 
-(add-to-list 'howm-list-title 'howm-list-grep-fixed)
-(add-to-list 'howm-list-title 'howm-keyword-search)
+;; When titles are shown, it seems the  ordering (howm-normalize) sometimes is not followed?
+;; (add-to-list 'howm-list-title 'howm-list-grep-fixed)
+;; (add-to-list 'howm-list-title 'howm-keyword-search)
 
 (add-to-list 'howm-template-rules
              '("%dateonly" . (lambda (arg)
@@ -2397,7 +2398,11 @@ When a prefix is used, ask where to insert the track and save it to `emms-my-ins
     (while (re-search-forward "^\\*+$" nil t)
       (replace-match (concat (match-string 0) " ")))))
 
+(defun my-howm-message-title-state (&optional undo)
+  (message "Titles: %s" (if howm-list-title-previous "On" "Off")))
+
 (advice-add 'howm-list-recent :after #'howm-view-sort-by-mtime)
+(advice-add 'howm-list-toggle-title :after #'my-howm-message-title-state)
 
 (add-hook 'howm-create-hook #'howm-narrow-to-memo)
 (add-hook 'howm-mode-hook #'my-howm-mode-config)
