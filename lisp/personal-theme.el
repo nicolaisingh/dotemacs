@@ -235,7 +235,7 @@ numbered variants the same as the base color."
      ;; howm
      `(action-lock-face ((t (:underline t))))
      `(howm-menu-key-face ((t (:foreground ,color-red))))
-     `(howm-mode-keyword-face ((t (:foreground ,color-blue))))
+     `(howm-mode-keyword-face ((t (:foreground ,color-blue-2 :background ,color-cyan-light))))
      `(howm-mode-ref-face ((t (:foreground ,color-blue))))
      `(howm-mode-title-face ((t (:inherit outline-1))))
      `(howm-mode-wiki-face ((t (:foreground ,color-blue))))
@@ -245,11 +245,11 @@ numbered variants the same as the base color."
      `(howm-reminder-schedule-face ((t (:foreground ,color-green))))
      `(howm-reminder-todo-face ((t (:foreground ,color-orange))))
      `(howm-reminder-late-deadline-face ((t (:weight bold :foreground ,color-red :inverse-video t))))
-     `(howm-reminder-today-face ((t (:weight bold :inverse-video t))))
-     `(howm-reminder-tomorrow-face ((t (:weight bold))))
-     `(howm-view-empty-face ((t (:inherit default))))
+     `(howm-reminder-today-face ((t (:foreground "black" :weight bold :background ,color-yellow))))
+     `(howm-reminder-tomorrow-face ((t (:foreground "black" :background ,color-yellow-light))))
+     `(howm-view-empty-face ((t (:inherit default :background "gray80"))))
      `(howm-view-hilit-face ((t (:foreground ,color-red :background ,color-yellow-light))))
-     `(howm-view-name-face ((t (:inherit default :foreground "gray30"))))
+     `(howm-view-name-face ((t (:inherit default :background "gray90"))))
 
      ;; isearch
      `(isearch ((t (:foreground "white" :background ,color-magenta))))

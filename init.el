@@ -2147,7 +2147,7 @@ When a prefix is used, ask where to insert the track and save it to `emms-my-ins
 
 (setq *howm-show-item-filename* nil  ;; don't show filenames in the echo area when browsing notes
       howm-action-lock-forward-save-buffer t
-      howm-check-word-break nil
+      howm-check-word-break t ;; keywords starting with @#*-+/~ won't be marked (only %$ work)
       howm-content-from-region t
       howm-directory "~/howm/"
       howm-file-name-format "%Y/%m/%Y-%m-%d.org"
@@ -2170,8 +2170,7 @@ When a prefix is used, ask where to insert the track and save it to `emms-my-ins
       howm-message-time nil
       howm-normalizer 'howm-sort-items-by-mtime
       howm-prepend t
-      howm-user-font-lock-keywords '(("keywords:" . (0 'error)))
-
+      howm-user-font-lock-keywords '(("keywords:" . (0 'howm-mode-ref-face)))
       howm-view-contents-name "*howm-contents:%s*"
       howm-view-grep-command "rg"
       howm-view-grep-expr-option "-e"
@@ -2253,6 +2252,8 @@ When a prefix is used, ask where to insert the track and save it to `emms-my-ins
                              "#\\+title: \\(.+\\)$"
                              "\\|"
                              "#\\+filetags: \\(.+\\)$"
+                             "\\|"
+                             "keywords: \\(.+\\)$"
                              "\\)"))
          (text-regexp (concat "\\(?:"
                               "keywords: \\(.+\\)$"
@@ -2263,20 +2264,24 @@ When a prefix is used, ask where to insert the track and save it to `emms-my-ins
        ((eq major-mode 'org-mode)
         (while (re-search-forward org-regexp nil t)
           (let ((org-title (match-string-no-properties 1))
-                (org-filetags (match-string-no-properties 1)))
+                (org-filetags (match-string-no-properties 2))
+                (keywords-line (match-string-no-properties 3)))
             (when org-title
               (setq all-keywords (append all-keywords
                                          (list org-title))))
             (when org-filetags
               (setq all-keywords (append all-keywords
-                                         (split-string org-filetags ":" t)))))))
+                                         (split-string org-filetags ":" t))))
+            (when keywords-line
+              (setq all-keywords (append all-keywords
+                                         (split-string keywords-line " ")))))))
 
        ((derived-mode-p 'text-mode)
         (while (re-search-forward text-regexp nil t)
-          (let ((keywords (match-string-no-properties 1)))
-            (when keywords
+          (let ((keywords-line (match-string-no-properties 1)))
+            (when keywords-line
               (setq all-keywords (append all-keywords
-                                         (split-string keywords " "))))))))
+                                         (split-string keywords-line " "))))))))
 
       (let ((save-silently t))
         (howm-keyword-add all-keywords)))))
