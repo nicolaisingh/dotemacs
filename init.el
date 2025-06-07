@@ -37,6 +37,12 @@ collection.  Use revert-gc-cons-percentage to restore the value."
                              (revert-gc-cons-percentage)
                              (garbage-collect)))
 
+;; Manually load early-init.el for older versions of Emacs
+(when (< emacs-major-version 27)
+  (let ((early-init-file (expand-file-name "early-init.el" user-emacs-directory)))
+    (when (file-exists-p early-init-file)
+      (load early-init-file))))
+
 
 ;;;; General settings
 
@@ -572,15 +578,6 @@ times."
 
 (when (memq window-system '(mac ns))
   (exec-path-from-shell-initialize))
-
-
-;;; 02 early-init
-
-(when (< emacs-major-version 27)
-  ;; Manually load early-init.el for older versions of Emacs
-  (let ((early-init-file (expand-file-name "early-init.el" user-emacs-directory)))
-    (when (file-exists-p early-init-file)
-      (load early-init-file))))
 
 
 ;;; adoc-mode / asciidoc
