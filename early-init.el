@@ -6,13 +6,14 @@
 
 ;;; Code:
 
-(setq blink-cursor-blinks 15)
-(setq blink-cursor-interval 0.25)
+(setq blink-cursor-blinks 0)
+(setq blink-cursor-interval 0.2)
+(setq blink-cursor-delay 0.2)
 (setq cursor-type t)
 (setq inhibit-startup-screen t)
 (setq ring-bell-function 'ignore)
 (setq visible-bell t)
-(blink-cursor-mode -1)
+(blink-cursor-mode)
 (column-number-mode 1)
 (menu-bar-mode -1)
 (scroll-bar-mode -1)
