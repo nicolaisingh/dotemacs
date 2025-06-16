@@ -2798,8 +2798,7 @@ Useful for completion style 'partial-completion."
 ;;; jsonian
 
 (use-package jsonian
-  :disabled
-  )
+  :disabled)
 
 
 ;;; know-your-http-well
