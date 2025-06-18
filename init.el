@@ -498,11 +498,11 @@ From https://www.emacswiki.org/emacs/XModMapMode")
 
 ;;; 10 personal-theme
 
-(use-package personal-theme
+(use-package personal-2-theme
   :demand t
   :ensure nil
   :config
-  (enable-theme 'personal))
+  (enable-theme 'personal-2))
 
 
 ;;; 99 exec-path-from-shell
