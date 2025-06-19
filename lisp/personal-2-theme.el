@@ -92,14 +92,14 @@ numbered variants the same as the base color."
      ("color-pale-gray" "#dddddd"))
   (let* ((fg-inactive color-gray-4)
          (font "Inconsolata-11")
-         (flat-box `(:line-width 3 :style flat-button)))
+         (flat-box `(:line-width 1 :style flat-button)))
     (custom-theme-set-faces
      'personal-2
 
      ;; faces
-     `(cursor ((t (:background ,color-red-2))))
+     `(cursor ((t (:background ,color-red-3))))
      `(default ((t (:font ,font :foreground ,color-black :background ,color-white))))
-     `(display-time-date-and-time ((t (:foreground ,color-blue))))
+     `(display-time-date-and-time ((t (:foreground ,color-blue-2))))
      `(fixed-pitch ((t (:font ,font))))
      `(fringe ((t (:background "gray95"))))
      `(highlight ((t (:background ,color-pale-yellow))))
@@ -110,7 +110,7 @@ numbered variants the same as the base color."
      `(mode-line-inactive ((t (:background ,color-pale-gray :box ,flat-box :foreground ,fg-inactive))))
      `(region ((t (:background ,color-pale-yellow))))
      `(secondary-selection ((t (:background ,color-pale-gray))))
-     `(show-paren-match ((t (:background ,color-pale-green))))
+     `(show-paren-match ((t (:background ,color-light-blue))))
      `(show-paren-mismatch ((t (:background ,color-red-2 :foreground ,color-white))))
      `(variable-pitch ((t (:family "Noto Serif" :height 1.1))))
      `(window-divider ((t (:foreground ,color-black))))
@@ -139,7 +139,7 @@ numbered variants the same as the base color."
      `(avy-lead-face-2 ((t (:background ,color-pale-red :foreground ,color-black))))
 
      ;; completions, icomplete
-     `(completions-common-part ((t (:foreground ,color-blue))))
+     `(completions-common-part ((t (:foreground ,color-green-2 :weight bold))))
      `(completions-highlight ((t (:background ,color-pale-yellow))))
      `(icomplete-selected-match ((t (:foreground ,color-black :background ,color-pale-yellow :weight bold))))
 
@@ -167,12 +167,12 @@ numbered variants the same as the base color."
 
      ;; font-lock
      `(font-lock-builtin-face ((t (:foreground ,color-blue))))
-     `(font-lock-comment-face ((t (:foreground ,color-red-3))))
+     `(font-lock-comment-face ((t (:foreground ,color-red-2))))
      `(font-lock-constant-face ((t (:foreground ,color-olive))))
      `(font-lock-function-name-face ((t (:foreground ,color-blue))))
      `(font-lock-keyword-face ((t (:foreground ,color-purple))))
      `(font-lock-string-face ((t (:foreground ,color-green))))
-     `(font-lock-type-face ((t (:foreground ,color-mint))))
+     `(font-lock-type-face ((t (:foreground ,color-mint-2))))
      `(font-lock-variable-name-face ((t (:foreground ,color-red))))
 
      ;; gnus
@@ -243,10 +243,10 @@ numbered variants the same as the base color."
      `(org-verbatim ((t (:inherit (fixed-pitch shadow)))))
 
      ;; orderless
-     `(orderless-match-face-0 ((t (:foreground ,color-red :weight bold))))
+     `(orderless-match-face-0 ((t (:foreground ,color-green :weight bold))))
      `(orderless-match-face-1 ((t (:foreground ,color-purple :weight bold))))
-     `(orderless-match-face-2 ((t (:foreground ,color-green :weight bold))))
-     `(orderless-match-face-3 ((t (:foreground ,color-orange :weight bold))))
+     `(orderless-match-face-2 ((t (:foreground ,color-red :weight bold))))
+     `(orderless-match-face-3 ((t (:foreground ,color-blue :weight bold))))
 
      ;; tab-bar
      `(tab-bar ((t (:inherit default :background ,color-pale-gray))))

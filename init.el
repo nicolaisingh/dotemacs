@@ -436,8 +436,8 @@ From https://www.emacswiki.org/emacs/XModMapMode")
   (tab-bar-close-button-show nil)
   (tab-bar-format '(tab-bar-format-history
                     tab-bar-format-tabs tab-bar-separator
-			              tab-bar-format-align-right
-			              tab-bar-format-global))
+			        tab-bar-format-align-right
+			        tab-bar-format-global))
   (tab-bar-show t)
   (tab-bar-tab-hints t)
   ;; time.el
