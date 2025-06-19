@@ -100,7 +100,7 @@ numbered variants the same as the base color."
      `(cursor ((t (:background ,color-red-3))))
      `(default ((t (:font ,font :foreground ,color-black :background ,color-white))))
      `(display-time-date-and-time ((t (:foreground ,color-blue-2))))
-     `(fixed-pitch ((t (:font ,font))))
+     `(fixed-pitch ((t (:font ,font :height 1.0))))
      `(fringe ((t (:background "gray95"))))
      `(highlight ((t (:background ,color-pale-yellow))))
      `(hl-line ((t (:underline ,color-gray))))
@@ -194,7 +194,7 @@ numbered variants the same as the base color."
      ;; howm
      `(action-lock-face ((t (:underline t))))
      `(howm-menu-key-face ((t (:foreground ,color-black :background ,color-pale-yellow :weight bold))))
-     `(howm-mode-keyword-face ((t (:foreground ,color-black :background ,color-pale-yellow :weight bold))))
+     `(howm-mode-keyword-face ((t (:foreground ,color-black :background ,color-pale-blue :weight bold))))
      `(howm-mode-ref-face ((t (:foreground ,color-blue))))
      `(howm-mode-title-face ((t (:inherit outline-1))))
      `(howm-mode-wiki-face ((t (:foreground ,color-blue))))
@@ -247,6 +247,16 @@ numbered variants the same as the base color."
      `(orderless-match-face-1 ((t (:foreground ,color-purple :weight bold))))
      `(orderless-match-face-2 ((t (:foreground ,color-red :weight bold))))
      `(orderless-match-face-3 ((t (:foreground ,color-blue :weight bold))))
+
+     ;; outline
+     `(outline-1 ((t (:foreground ,color-purple))))
+     `(outline-2 ((t (:foreground ,color-red))))
+     `(outline-3 ((t (:foreground ,color-green))))
+     `(outline-4 ((t (:foreground ,color-blue))))
+     `(outline-5 ((t (:foreground ,color-red))))
+     `(outline-6 ((t (:foreground ,color-purple))))
+     `(outline-7 ((t (:foreground ,color-green))))
+     `(outline-8 ((t (:foreground ,color-blue))))
 
      ;; tab-bar
      `(tab-bar ((t (:inherit default :background ,color-pale-gray))))

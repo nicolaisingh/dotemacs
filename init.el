@@ -280,6 +280,31 @@ times."
   (require 'tramp)
   (find-alternate-file (concat "/sudoedit::" (buffer-file-name))))
 
+(defun file-split-buffer-by-lines (lines-per-file header-line)
+  "Split buffer into multiple files with LINES-PER-FILE each having HEADER-LINE on top."
+  (interactive (list (read-number "Lines per file: ")
+                     (read-string "Header per file (empty for none): ")))
+  (let ((part 1)
+        (file-base-name (file-name-sans-extension (buffer-name)))
+        (extension (file-name-extension (buffer-name)))
+        (line-start 1))
+    (save-excursion
+      (goto-char (point-min))
+      (while (not (eobp))
+        (let ((file-part-name (format "%s.part-%d.%s" file-base-name part extension))
+              (orig-buffer (current-buffer))
+              (start)
+              (end))
+          (setq start (point))
+          (forward-line lines-per-file)
+          (setq end (point))
+          (with-temp-buffer
+            (when (and header-line (not (string-empty-p header-line)))
+              (insert header-line "\n"))
+            (insert-buffer-substring orig-buffer start end)
+            (write-region (point-min) (point-max) file-part-name)))
+        (setq part (1+ part))))))
+
 
 ;;;; Minor modes
 
@@ -2231,7 +2256,7 @@ The default format is specified by `emms-source-playlist-default-format'."
   ((howm-mode-hook . (lambda ()
                        (add-hook 'before-save-hook #'my-howm-before-save 90 t)))
    (howm-mode-hook . my-howm-config))
-  :init
+  :preface
   (setq howm-default-key-table nil
         howm-template #'my-howm-template
         howm-wiki-regexp nil)
