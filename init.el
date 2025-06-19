@@ -2117,7 +2117,8 @@ The default format is specified by `emms-source-playlist-default-format'."
   :ensure nil
   :bind (:map
          howm-mode-map
-         ("C-z C-a" . howm-attach)))
+         ("C-z C-a" . howm-attach)
+         ("C-z C-j" . howm-attach-jump-to-dired)))
 
 ;;; howm-backend
 
