@@ -685,7 +685,7 @@
 		 :inherit t :depth treeless :remotes
 		 (("origin" :repo "kaorahi/howm")
 		  ("fork" :repo "nicolaisingh/howm"))
-		 :ref "ad8385817e478f97eeb65d8e13081fede7d6f8a5"))
+		 :ref "36a4b970d631ff6aaf1388ca4f5115f23611cde8"))
  (htmlize :source "elpaca-menu-lock-file" :recipe
 	  (:package "htmlize" :fetcher github :repo
 		    "hniksic/emacs-htmlize" :files
@@ -1297,6 +1297,19 @@
 		   :source "elpaca-menu-lock-file" :protocol https
 		   :inherit t :depth treeless :ref
 		   "8692f965bf4ddf3d755cf1fbf77a7a768e22460e"))
+ (pyvenv :source "elpaca-menu-lock-file" :recipe
+	 (:package "pyvenv" :fetcher github :repo
+		   "jorgenschaefer/pyvenv" :files
+		   ("*.el" "*.el.in" "dir" "*.info" "*.texi"
+		    "*.texinfo" "doc/dir" "doc/*.info" "doc/*.texi"
+		    "doc/*.texinfo" "lisp/*.el" "docs/dir"
+		    "docs/*.info" "docs/*.texi" "docs/*.texinfo"
+		    (:exclude ".dir-locals.el" "test.el" "tests.el"
+			      "*-test.el" "*-tests.el" "LICENSE"
+			      "README*" "*-pkg.el"))
+		   :source "elpaca-menu-lock-file" :protocol https
+		   :inherit t :depth treeless :ref
+		   "31ea715f2164dd611e7fc77b26390ef3ca93509b"))
  (qrencode :source "elpaca-menu-lock-file" :recipe
 	   (:package "qrencode" :fetcher github :repo
 		     "ruediger/qrencode-el" :files
@@ -1554,6 +1567,31 @@
 			   :source "elpaca-menu-lock-file" :protocol
 			   https :inherit t :depth treeless :ref
 			   "cca2b4b3cfcfea1919e1870519d79ed1a69aa5e2"))
+ (yaml :source "elpaca-menu-lock-file" :recipe
+       (:package "yaml" :repo "zkry/yaml.el" :fetcher github :files
+		 ("*.el" "*.el.in" "dir" "*.info" "*.texi" "*.texinfo"
+		  "doc/dir" "doc/*.info" "doc/*.texi" "doc/*.texinfo"
+		  "lisp/*.el" "docs/dir" "docs/*.info" "docs/*.texi"
+		  "docs/*.texinfo"
+		  (:exclude ".dir-locals.el" "test.el" "tests.el"
+			    "*-test.el" "*-tests.el" "LICENSE"
+			    "README*" "*-pkg.el"))
+		 :source "elpaca-menu-lock-file" :protocol https
+		 :inherit t :depth treeless :ref
+		 "f99ef76c80e6fc3fcf650c4fe34e10726594a4c4"))
+ (yaml-pro :source "elpaca-menu-lock-file" :recipe
+	   (:package "yaml-pro" :repo "zkry/yaml-pro" :fetcher github
+		     :files
+		     ("*.el" "*.el.in" "dir" "*.info" "*.texi"
+		      "*.texinfo" "doc/dir" "doc/*.info" "doc/*.texi"
+		      "doc/*.texinfo" "lisp/*.el" "docs/dir"
+		      "docs/*.info" "docs/*.texi" "docs/*.texinfo"
+		      (:exclude ".dir-locals.el" "test.el" "tests.el"
+				"*-test.el" "*-tests.el" "LICENSE"
+				"README*" "*-pkg.el"))
+		     :source "elpaca-menu-lock-file" :protocol https
+		     :inherit t :depth treeless :ref
+		     "8dce99ba3e5fcb5e2c3de360c4ee658055051f33"))
  (yasnippet :source "elpaca-menu-lock-file" :recipe
 	    (:package "yasnippet" :repo "joaotavora/yasnippet"
 		      :fetcher github :files

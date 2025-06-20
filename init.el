@@ -461,8 +461,8 @@ From https://www.emacswiki.org/emacs/XModMapMode")
   (tab-bar-close-button-show nil)
   (tab-bar-format '(tab-bar-format-history
                     tab-bar-format-tabs tab-bar-separator
-			        tab-bar-format-align-right
-			        tab-bar-format-global))
+                    tab-bar-format-align-right
+                    tab-bar-format-global))
   (tab-bar-show t)
   (tab-bar-tab-hints t)
   ;; time.el
@@ -2117,7 +2117,7 @@ The default format is specified by `emms-source-playlist-default-format'."
   :config
   (defvar my-action-lock-checkbox '("[ ]" "[X]" "[-]" "[*]"))
   (defvar my-action-lock-datebox '("[@]" "[%Y-%m-%d %H:%M]"))
-  (defvar my-action-lock-jira-issue-regexp "\\(JIRA-[0-9]+\\)")
+  (defvar my-action-lock-jira-issue-regexp "\\(\\(?:JIRA\\|ABCD\\)-[0-9]+\\)")
 
   (defun my-action-lock-jira-browse (issue)
     "action-lock to browse a Jira issue."
@@ -2488,7 +2488,7 @@ The default format is specified by `emms-source-playlist-default-format'."
   (howm-view-grep-fixed-option "-F")
   (howm-view-grep-option "-nH --no-heading --color never -g !data/")
 
-  :init
+  :preface
   (setq howm-excluded-dirs '("data" "RCS" "CVS" ".svn" ".git" "_darcs")
         howm-prefix nil)
   :config
@@ -3045,6 +3045,20 @@ Useful for completion style 'partial-completion."
                                         (current-column)))))
     (setq-local nov-text-width n)
     (nov-render-document)))
+
+
+;;; nxml
+
+(use-package nxml-mode
+  :ensure nil
+  :custom
+  (nxml-child-indent 4))
+
+(use-package nxml-outln
+  :after (nxml-mode)
+  :ensure nil
+  :custom
+  (nxml-outline-child-indent 4))
 
 
 ;;; ob-chatgpt-shell
@@ -3925,13 +3939,19 @@ of the new org-mode file."
 ;;; prism
 
 (use-package prism
+  :after (personal-2-theme)
   :bind (:map my-ctl-c-h-map
               ("b" . prism-mode)
               ("w" . prism-whitespace-mode))
+  :hook ((yaml-ts-mode-hook . prism-whitespace-mode))
   :custom
+  (prism-comments nil)
+  (prism-desaturations '(0))
+  (prism-lightens '(0))
   (prism-whitespace-mode-indents '((python-mode . python-indent-offset)
                                    (haskell-mode . haskell-indentation-left-offset)
                                    (yaml-mode . yaml-indent-offset)
+                                   (yaml-ts-mode . 2)
                                    (t . tab-width))))
 
 
@@ -4048,6 +4068,11 @@ of the new org-mode file."
           (json-pretty-print-buffer)
           (write-file (concat out-dir out-filename))
           (message "Wrote config to %s" (concat out-dir out-filename)))))))
+
+
+;;; pyvenv
+
+(use-package pyvenv)
 
 
 ;;; qrencode
@@ -4402,6 +4427,20 @@ of the new org-mode file."
               ("b" . outline-backward-same-level)
               ("f" . outline-forward-same-level))
   :hook ((xref--xref-buffer-mode-hook . outline-minor-mode)))
+
+
+;;; yaml-pro
+
+(use-package yaml-pro
+  :bind (:map
+         yaml-pro-ts-mode-map
+         ("C-c C-x C-j" . yaml-pro-jump)
+         ("C-c C-x C-p" . yaml-pro-copy-node-path-at-point)
+         ("M-<down>" . yaml-pro-ts-move-subtree-down)
+         ("M-<left>" . yaml-pro-ts-unindent-subtree)
+         ("M-<right>" . yaml-pro-ts-indent-subtree)
+         ("M-<up>" . yaml-pro-ts-move-subtree-up))
+  :hook ((yaml-ts-mode-hook . yaml-pro-ts-mode)))
 
 
 ;;; yaml-ts-mode
