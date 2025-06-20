@@ -132,6 +132,26 @@ numbered variants the same as the base color."
      `(adoc-title-3-face ((t (:inherit adoc-title-face :foreground ,color-purple :height 1.0))))
      `(adoc-title-4-face ((t (:inherit adoc-title-face :foreground ,color-orange :height 1.0))))
 
+     ;; ansi-color
+     `(ansi-color-black ((t (:foreground ,color-black :background "gray30"))))
+     `(ansi-color-blue ((t (:foreground ,color-blue :background ,color-pale-blue))))
+     `(ansi-color-cyan ((t (:foreground ,color-cyan :background ,color-pale-cyan))))
+     `(ansi-color-green ((t (:foreground ,color-green :background ,color-pale-green))))
+     `(ansi-color-purple ((t (:foreground ,color-purple :background ,color-purple))))
+     `(ansi-color-red ((t (:foreground ,color-red :background ,color-pale-red))))
+     `(ansi-color-white ((t (:foreground ,color-white :background "gray90"))))
+     `(ansi-color-yellow ((t (:foreground ,color-yellow :background ,color-pale-yellow))))
+
+     ;; ansi-color (bright)
+     `(ansi-color-bright-black ((t (:foreground ,color-black :background "gray30"))))
+     `(ansi-color-bright-blue ((t (:foreground ,color-blue :background ,color-pale-blue))))
+     `(ansi-color-bright-cyan ((t (:foreground ,color-cyan :background ,color-pale-cyan))))
+     `(ansi-color-bright-green ((t (:foreground ,color-green :background ,color-pale-green))))
+     `(ansi-color-bright-magenta ((t (:foreground ,color-purple :background ,color-purple))))
+     `(ansi-color-bright-red ((t (:foreground ,color-red :background ,color-pale-red))))
+     `(ansi-color-bright-white ((t (:foreground ,color-white :background "gray90"))))
+     `(ansi-color-bright-yellow ((t (:foreground ,color-yellow :background ,color-pale-yellow))))
+
      ;; avy
      `(avy-lead-face ((t (:background ,color-pale-red :foreground ,color-black :weight bold))))
      `(avy-lead-face-0 ((t (:background ,color-pale-red :foreground ,color-black))))
