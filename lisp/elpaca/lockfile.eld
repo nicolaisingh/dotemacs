@@ -226,6 +226,19 @@
 			     :source "MELPA" :protocol https :inherit
 			     t :depth treeless :ref
 			     "a6dec09dcd06a3014409044399c4f8860ca45ef1"))
+ (copilot :source "elpaca-menu-lock-file" :recipe
+	  (:package "copilot" :fetcher github :repo
+		    "copilot-emacs/copilot.el" :files
+		    ("*.el" "*.el.in" "dir" "*.info" "*.texi"
+		     "*.texinfo" "doc/dir" "doc/*.info" "doc/*.texi"
+		     "doc/*.texinfo" "lisp/*.el" "docs/dir"
+		     "docs/*.info" "docs/*.texi" "docs/*.texinfo"
+		     (:exclude ".dir-locals.el" "test.el" "tests.el"
+			       "*-test.el" "*-tests.el" "LICENSE"
+			       "README*" "*-pkg.el"))
+		    :source "MELPA" :protocol https :inherit t :depth
+		    treeless :ref
+		    "fe3f51b636dea1c9ac55a0d5dc5d7df02dcbaa48"))
  (corfu :source "elpaca-menu-lock-file" :recipe
 	(:package "corfu" :repo "minad/corfu" :files
 		  (:defaults "extensions/corfu-*.el") :fetcher github

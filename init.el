@@ -983,6 +983,25 @@ If ARG is Non-nil, the existing command log buffer is cleared."
   (consult-org-roam-mode 1))
 
 
+;;; copilot
+(use-package copilot
+  :disabled
+  :hook ((python-mode-hook . copilot-mode)
+         (typescript-ts-mode-hook . copilot-mode))
+  :bind (:map
+         copilot-completion-map
+         ("<tab>" . copilot-accept-completion)
+         ("C-w" . copilot-accept-completion-by-word)
+         ("C-M-w" . copilot-accept-completion-by-line)
+         ("C-." . copilot-next-completion)
+         ("C-," . copilot-next-completion))
+  :custom
+  (copilot-idle-delay 0.5)
+  :config
+  (add-to-list 'copilot-major-mode-alist '("typescript-ts" . "typescript"))
+  (add-to-list 'copilot-major-mode-alist '("yaml-ts" . "yaml")))
+
+
 ;;; corfu
 
 (use-package corfu
@@ -3932,6 +3951,7 @@ of the new org-mode file."
 ;;; prettier-js
 
 (use-package prettier-js
+  :diminish
   :hook ((js2-mode-hook . prettier-js-mode)
          (typescript-ts-mode-hook . prettier-js-mode)))
 
