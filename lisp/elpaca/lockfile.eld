@@ -1481,6 +1481,14 @@
 		      :source "elpaca-menu-lock-file" :protocol https
 		      :inherit t :depth treeless :ref
 		      "b06078826d5875d74b0e7b7ac47b0d0917610534"))
+ (treesit-fold :source "elpaca-menu-lock-file" :recipe
+	       (:package "treesit-fold" :repo
+			 ("https://github.com/emacs-tree-sitter/treesit-fold"
+			  . "treesit-fold")
+			 :files ("*" (:exclude ".git")) :source
+			 "NonGNU ELPA" :protocol https :inherit t
+			 :depth treeless :ref
+			 "5b76926c14436b252150f88a8cd7e125ab295bcb"))
  (typing :source "elpaca-menu-lock-file" :recipe
 	 (:package "typing" :fetcher github :repo "kensanata/typing"
 		   :files

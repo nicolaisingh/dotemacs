@@ -3020,7 +3020,6 @@ Useful for completion style 'partial-completion."
 ;;; multiple-cursors
 
 (use-package multiple-cursors
-  :demand t
   :bind (:map my-ctl-c-m-map
               ("c ." . mc/mark-all-like-this-dwim)
               ("c C-M-SPC" . mc/mark-all-in-region-regexp)
@@ -3524,7 +3523,6 @@ of the new org-mode file."
 
 (use-package ob
   :after (org)
-  :demand t
   :ensure nil
   :config
   (org-babel-do-load-languages
@@ -4368,12 +4366,33 @@ of the new org-mode file."
         ;; https://github.com/tree-sitter-grammars
         ;; https://github.com/tree-sitter
         '((bash       "https://github.com/tree-sitter/tree-sitter-bash")
+          (elisp      "https://github.com/Wilfred/tree-sitter-elisp")
           (json       "https://github.com/tree-sitter/tree-sitter-json")
           (mermaid    "https://github.com/monaqa/tree-sitter-mermaid")
           (nix        "https://github.com/nix-community/tree-sitter-nix")
           (typescript "https://github.com/tree-sitter/tree-sitter-typescript" nil "typescript/src")
           (tsx        "https://github.com/tree-sitter/tree-sitter-typescript" nil "tsx/src")
-          (yaml       "https://github.com/tree-sitter-grammars/tree-sitter-yaml"))))
+          (yaml       "https://github.com/tree-sitter-grammars/tree-sitter-yaml")))
+  (when nil
+    (mapc #'treesit-install-language-grammar
+	        (mapcar #'car treesit-language-source-alist))))
+
+
+;;; treesit-fold
+
+(use-package treesit-fold
+  :diminish
+  :bind (:map
+         my-ctl-c-f-map
+         ("f" . treesit-fold-toggle)
+         ("F" . treesit-fold-open-all)
+         ("C" . treesit-fold-close-all)
+         ("O" . treesit-fold-open-recursively))
+  :config
+  (global-treesit-fold-mode)
+  (add-hook 'emacs-lisp-mode-hook (lambda () (treesit-parser-create 'elisp))))
+
+(treesit-language-available-p 'bash)
 
 
 ;;; typescript-ts-mode
