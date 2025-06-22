@@ -2868,12 +2868,12 @@ Useful for completion style 'partial-completion."
 ;;; magit
 
 (use-package magit
-  :bind (:map my-ctl-c-g-map
-              ("G" . magit-dispatch)
-              ("f" . magit-file-dispatch)
-              ("g" . magit-status))
+  :bind (("C-c g" . magit-dispatch)
+         ("C-x g" . magit-status))
   :custom
+  (magit-define-global-key-bindings nil)
   (magit-diff-refine-hunk t)
+  (magit-status-goto-file-position t)
   (magit-status-show-hashes-in-headers t)
   :config
   (defun magit-commit-create-updates ()
