@@ -1636,6 +1636,7 @@ The default format is specified by `emms-source-playlist-default-format'."
   :custom
   (emms-info-asynchronously nil)
   (emms-info-functions '(emms-info-native emms-info-cueinfo))
+  :config
   (add-to-list 'emms-track-initialize-functions #'emms-info-initialize-track))
 
 ;;; emms-cue
