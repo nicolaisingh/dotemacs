@@ -1758,13 +1758,15 @@ The default format is specified by `emms-source-playlist-default-format'."
 ;;; eshell-up
 
 (use-package eshell-up
-  :after (eshell))
+  :after (eshell)
+  :demand t)
 
 
 ;;; eshell-z
 
 (use-package eshell-z
-  :after (eshell))
+  :after (eshell)
+  :demand t)
 
 
 ;;; expand-region
