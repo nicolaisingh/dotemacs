@@ -2891,6 +2891,9 @@ Useful for completion style 'partial-completion."
 (use-package magit-todos
   :after (magit)
   :demand t
+  :custom
+  (magit-todos-branch-list nil) ;; fixes perf issues on large files added in repo
+  (magit-todos-exclude-globs '(".git/" "node_modules/" "*.json"))
   :config
   (magit-todos-mode 1))
 
