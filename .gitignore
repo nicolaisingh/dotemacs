@@ -1,3 +1,4 @@
 *.elc
 .aider*
 .env
+/transient/history.el

@@ -346,10 +346,12 @@ From https://www.emacswiki.org/emacs/XModMapMode")
   :ensure nil ; built-in package
   :bind (([remap eval-last-sexp] . pp-eval-last-sexp)
          ("C-`" . my-select-tab-or-other-window)
-         ("C-c j" . (lambda ()
-                      (interactive)
-                      (browse-url (concat "https://JIRA.atlassian.net/browse/"
-                                          (symbol-name (symbol-at-point))))))
+         ("C-c j" . (lambda (jira-issue)
+                      (interactive
+                       (list (let ((initial-input (symbol-name (or (symbol-at-point)
+                                                                   (intern "")))))
+                               (completing-read "Jira issue: " nil nil nil initial-input))))
+                      (browse-url (format "https://JIRA.atlassian.net/browse/%s" jira-issue))))
          ("C-h C-c" . find-function-on-key)
          ("C-h C-f" . find-function)
          ("C-h C-k" . describe-keymap)
@@ -1272,12 +1274,13 @@ be file B."
 (use-package ediff
   :ensure nil
   :bind (:map my-ctl-c-d-map
-              ("b" . ediff-buffers)
               ("." . ediff-current-file)
               ("f" . ediff-files)
               ("k" . ediff-last-2-kills)
               ("r l" . ediff-regions-linewise)
-              ("r w" . ediff-regions-wordwise))
+              ("r w" . ediff-regions-wordwise)
+              ("w" . ediff-buffers-in-window)
+              ("b" . ediff-buffers))
   :custom
   (ediff-window-setup-function 'ediff-setup-windows-plain)
   (ediff-split-window-function 'split-window-horizontally)
@@ -1293,6 +1296,12 @@ be file B."
     (set-window-configuration ediff-previous-window-config)
     (when (get-buffer ediff-temp-buffer-a) (kill-buffer ediff-temp-buffer-a))
     (when (get-buffer ediff-temp-buffer-b) (kill-buffer ediff-temp-buffer-b)))
+
+  (defun ediff-buffers-in-window ()
+    "Run ediff on the current and the next buffer in the window."
+    (interactive)
+    (ediff-buffers (window-buffer (car (window-list)))
+                   (window-buffer (cadr (window-list)))))
   :config
   (defvar ediff-temp-buffer-a "*diff-a*")
   (defvar ediff-temp-buffer-b "*diff-b*")
@@ -4281,7 +4290,8 @@ of the new org-mode file."
               ("M-U" . sp-unwrap-sexp)
               ("M-W" . sp-wrap-round)
               :map my-ctl-c-s-map
-              ("C" . sp-convolute-sexp))
+              ("C" . sp-convolute-sexp)
+              ("n" . sp-narrow-to-sexp))
   :hook (prog-mode-hook text-mode-hook)
   :custom
   (sp-highlight-pair-overlay nil)

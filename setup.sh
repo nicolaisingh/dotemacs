@@ -18,3 +18,5 @@ ln -sn $initdir/snippets	~/.emacs.d/snippets
 ln -sn $initdir/tree-sitter	~/.emacs.d/tree-sitter
 
 ln -sn $initdir/howm-menu.org	~/.emacs.d/howm-menu.org
+
+ln -sn $initdir/transient	~/.emacs.d/transient
