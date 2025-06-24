@@ -1836,6 +1836,12 @@ The default format is specified by `emms-source-playlist-default-format'."
 (use-package focus)
 
 
+;;; forge
+
+(use-package forge
+  :after (magit))
+
+
 ;;; form-feed
 
 (use-package form-feed
