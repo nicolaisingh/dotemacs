@@ -4181,7 +4181,7 @@ of the new org-mode file."
 ;;; saveplace-pdf-view
 
 (use-package saveplace-pdf-view
-  :after (pdf-tools)
+  :after (:any doc-view pdf-tools)
   :demand t
   :ensure (:protocol ssh))
 
@@ -4280,24 +4280,33 @@ of the new org-mode file."
 (use-package smartparens
   :demand t
   :diminish smartparens-mode
-  :bind (:map smartparens-mode-map
-              ;; barf/slurp
-              ("C-(" . sp-backward-slurp-sexp)
-              ("C-)" . my-sp-slurp-sexp)
-              ("M-(" . sp-backward-barf-sexp)
-              ("M-)" . sp-forward-barf-sexp)
-              ;; editing
-              ("M-C" . sp-change-enclosing)
-              ("M-D" . sp-kill-symbol)
-              ("M-J" . sp-join-sexp)
-              ("M-R" . sp-raise-sexp)
-              ("M-S" . sp-splice-sexp)
-              ("M-S-<backspace>" . sp-backward-kill-symbol)
-              ("M-U" . sp-unwrap-sexp)
-              ("M-W" . sp-wrap-round)
-              :map my-ctl-c-s-map
-              ("C" . sp-convolute-sexp)
-              ("n" . sp-narrow-to-sexp))
+  :bind (:map
+         smartparens-mode-map
+         ;; movement
+         ("C-M-b" . sp-backward-sexp)
+         ("C-M-d" . sp-down-sexp)
+         ("C-M-f" . sp-forward-sexp)
+         ("C-M-n" . sp-next-sexp)
+         ("C-M-p" . sp-previous-sexp)
+         ("C-M-u" . sp-backward-up-sexp)
+         ;; barf/slurp
+         ("C-(" . sp-backward-slurp-sexp)
+         ("C-)" . my-sp-slurp-sexp)
+         ("M-(" . sp-backward-barf-sexp)
+         ("M-)" . sp-forward-barf-sexp)
+         ;; editing
+         ("M-C" . sp-change-enclosing)
+         ("M-D" . sp-kill-symbol)
+         ("M-J" . sp-join-sexp)
+         ("M-R" . sp-raise-sexp)
+         ("M-S" . sp-splice-sexp)
+         ("M-S-<backspace>" . sp-backward-kill-symbol)
+         ("M-U" . sp-unwrap-sexp)
+         ("M-W" . sp-wrap-round)
+         :map
+         my-ctl-c-s-map
+         ("C" . sp-convolute-sexp)
+         ("n" . sp-narrow-to-sexp))
   :hook (prog-mode-hook text-mode-hook)
   :custom
   (sp-highlight-pair-overlay nil)
