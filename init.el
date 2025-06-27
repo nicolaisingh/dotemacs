@@ -69,6 +69,7 @@ collection.  Use revert-gc-cons-percentage to restore the value."
   (elpaca-use-package-mode))
 (keymap-global-set "C-h u m" #'elpaca-manager)
 (keymap-global-set "C-h u l" #'elpaca-log)
+(keymap-global-set "C-h u v" #'elpaca-visit)
 (setopt elpaca-lock-file
         (expand-file-name "lisp/elpaca/lockfile.eld" user-emacs-directory))
 
@@ -1760,9 +1761,29 @@ The default format is specified by `emms-source-playlist-default-format'."
 
 (use-package eshell-toggle
   :bind (:map my-ctl-z-map
-              ("C-s" . eshell-toggle))
+              ("C-s" . my-eshell-toggle))
   :custom
-  (eshell-toggle-size-fraction 2))
+  (eshell-toggle-run-command nil)
+  ;; (eshell-toggle-size-fraction 2)
+  :config
+  (defun eshell-toggle--make-buffer-name ()
+    eshell-buffer-name)
+
+  (defun my-eshell-toggle (arg)
+    "Toggle eshell, and cd to buffer directory if a prefix ARG is given."
+    (interactive "P")
+    (if arg
+        (my-eshell-toggle-cd)
+      (eshell-toggle)))
+
+  (defun my-eshell-toggle-cd ()
+    (interactive)
+    (let ((buffer-dir default-directory))
+      (eshell-toggle)
+      (when (and eshell-toggle--toggle-buffer-p
+                 (not (string-equal default-directory buffer-dir)))
+        (insert (format "cd %s" buffer-dir))
+        (eshell-send-input)))))
 
 
 ;;; eshell-up
