@@ -306,6 +306,12 @@ times."
             (write-region (point-min) (point-max) file-part-name)))
         (setq part (1+ part))))))
 
+(defun unhighlight-all-regexp ()
+  (interactive)
+  (mapc (lambda (elt)
+          (unhighlight-regexp (car elt)))
+        hi-lock-interactive-lighters))
+
 
 ;;;; Minor modes
 
@@ -366,6 +372,7 @@ From https://www.emacswiki.org/emacs/XModMapMode")
          ("C-x a /" . unexpand-abbrev)
          ("C-x t T" . tab-bar-mode)
          ("M-SPC" . cycle-spacing)
+         ("M-s h U" . unhighlight-all-regexp)
          :map my-ctl-c-D-map
          ("." . benchmark-this)
          ("T" . cancel-debug-on-entry)
@@ -4223,19 +4230,20 @@ of the new org-mode file."
   :demand t
   :diminish selected-minor-mode
   :bind (:map selected-keymap
+              ("'" . edit-indirect-region)
               ("C" . capitalize-region)
               ("E" . flush-empty-lines)
               ("F" . flush-lines)
               ("K" . keep-lines)
+              ("R" . replace-region-with)
+              ("S" . my-sort-strings)
               ("SPC" . canonically-space-region)
               ("a" . align-regexp)
               ("f" . fill-region)
+              ("q" . selected-off)
               ("r" . reverse-region)
               ("s" . sort-lines)
-              ("S" . my-sort-strings)
-              ("u" . unfill-region)
-              ("q" . selected-off)
-              ("R" . replace-region-with))
+              ("u" . unfill-region))
   :hook ((chatgpt-shell-prompt-compose-mode-hook . turn-off-selected-minor-mode)
          (magit-mode-hook . turn-off-selected-minor-mode)
          (multiple-cursors-mode-hook . my-mc-toggle-selected-minor-mode))
