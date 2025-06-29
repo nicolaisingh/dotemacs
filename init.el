@@ -312,6 +312,43 @@ times."
           (unhighlight-regexp (car elt)))
         hi-lock-interactive-lighters))
 
+
+(defun delete-leading-whitespace (&optional start end)
+  "Delete leading whitespace between START and END.
+If called interactively, START and END are the start/end of the
+region if the mark is active, or of the buffer's accessible
+portion if the mark is inactive."
+  (interactive (progn
+                 (barf-if-buffer-read-only)
+                 (if (use-region-p)
+                     (list (region-beginning) (region-end))
+                   (list nil nil))))
+  (save-match-data
+    (save-excursion
+      (let ((end-marker (and end (copy-marker end))))
+        (goto-char (or start (point-min)))
+        (with-syntax-table (make-syntax-table (syntax-table))
+          ;; Don't delete formfeeds, even if they are considered whitespace.
+          (modify-syntax-entry ?\f "_")
+          (while (re-search-forward "^\\s-" end-marker t)
+            (skip-syntax-forward "-" (line-end-position))
+            (let ((b (point)) (e (line-beginning-position)))
+              (if (region-modifiable-p b e)
+                  (delete-region b e)
+                (goto-char e)))))
+        (if end
+            (set-marker end-marker nil)
+          ;; Delete trailing empty lines.
+          (and  delete-trailing-lines
+                ;; Really the end of buffer.
+                (= (goto-char (point-max)) (1+ (buffer-size)))
+                (<= (skip-chars-backward "\n") -2)
+                (region-modifiable-p (1+ (point)) (point-max))
+                (delete-region (1+ (point)) (point-max)))))))
+  ;; Return nil for the benefit of `write-file-functions'.
+  nil)
+
+
 
 ;;;; Minor modes
 
@@ -907,6 +944,20 @@ If ARG is Non-nil, the existing command log buffer is cleared."
       (set-window-dedicated-p new-win t))))
 
 
+;;; completion-preview
+
+(use-package completion-preview
+  :ensure nil
+  :demand t
+  :diminish
+  :config
+  (defun turn-off-completion-preview-mode ()
+    (interactive)
+    (completion-preview-mode -1))
+
+  (global-completion-preview-mode))
+
+
 ;;; conf-mode
 
 (use-package conf-mode
@@ -996,7 +1047,8 @@ If ARG is Non-nil, the existing command log buffer is cleared."
 ;;; copilot
 (use-package copilot
   :disabled
-  :hook ((python-mode-hook . copilot-mode)
+  :hook ((copilot-mode-hook . turn-off-completion-preview-mode)
+         (python-mode-hook . copilot-mode)
          (typescript-ts-mode-hook . copilot-mode))
   :bind (:map
          copilot-completion-map
@@ -1760,7 +1812,7 @@ The default format is specified by `emms-source-playlist-default-format'."
     (let ((eshell-buffer-name "*eshell-other*"))
       (eshell)))
   :config
-  (add-to-list 'eshell-modules-list 'eshell-rebind)
+  ;; (add-to-list 'eshell-modules-list 'eshell-rebind)
   (add-to-list 'eshell-modules-list 'eshell-xtra))
 
 
@@ -4236,13 +4288,13 @@ of the new org-mode file."
               ("F" . flush-lines)
               ("K" . keep-lines)
               ("R" . replace-region-with)
-              ("S" . my-sort-strings)
+              ("S" . my-sort-string-literals)
               ("SPC" . canonically-space-region)
               ("a" . align-regexp)
               ("f" . fill-region)
               ("q" . selected-off)
               ("r" . reverse-region)
-              ("s" . sort-lines)
+              ("s" . my-sort-lines)
               ("u" . unfill-region))
   :hook ((chatgpt-shell-prompt-compose-mode-hook . turn-off-selected-minor-mode)
          (magit-mode-hook . turn-off-selected-minor-mode)
@@ -4256,7 +4308,13 @@ of the new org-mode file."
         (selected-minor-mode -1)
       (selected-minor-mode 1)))
 
-  (defun my-sort-strings (reverse beg end)
+  (defun my-sort-lines (reverse beg end)
+    "Sort lines in region, excluding leading whitespaces, alphabetically."
+    (interactive "P\nr")
+    ;; Only sort non-whitespace chars
+    (sort-regexp-fields reverse "^\\s-*\\(.+\\)$" "\\1" beg end))
+
+  (defun my-sort-string-literals (reverse beg end)
     "Sort string literals in the region."
     (interactive "P\nr")
     (sort-regexp-fields reverse "\"[^\"]*\"" "\\&" beg end))
