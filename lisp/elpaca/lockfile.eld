@@ -139,7 +139,7 @@
 				     "ob-dall-e-shell.el"))
 			  :source "elpaca-menu-lock-file" :protocol
 			  https :inherit t :depth treeless :ref
-			  "052973946b8cf556ff36e3a360628175c50fce5d"))
+			  "9586e22f33076803077741486904d83d1644ad84"))
  (chess :source "elpaca-menu-lock-file" :recipe
 	(:package "chess" :repo
 		  ("https://github.com/emacsmirror/gnu_elpa" . "chess")

@@ -312,7 +312,6 @@ times."
           (unhighlight-regexp (car elt)))
         hi-lock-interactive-lighters))
 
-
 (defun delete-leading-whitespace (&optional start end)
   "Delete leading whitespace between START and END.
 If called interactively, START and END are the start/end of the
@@ -347,7 +346,6 @@ portion if the mark is inactive."
                 (delete-region (1+ (point)) (point-max)))))))
   ;; Return nil for the benefit of `write-file-functions'.
   nil)
-
 
 
 ;;;; Minor modes
@@ -604,8 +602,7 @@ From https://www.emacswiki.org/emacs/XModMapMode")
 ;;; aider
 
 (use-package aider
-  :bind (:map my-ctl-c-l-map
-              ("a" . aider-transient-menu))
+  :bind (("C-c a" . aider-transient-menu))
   :custom
   (aider-todo-keyword-pair '("AI!" . "comment line ending with string: AI!"))
   :config
@@ -813,7 +810,8 @@ From https://www.emacswiki.org/emacs/XModMapMode")
               ("C-c C-S-p" . chatgpt-shell-load-awesome-prompts)
               ("C-c C-S-s" . chatgpt-shell-show-prompt))
   :custom
-  ((chatgpt-shell-model-temperature 0)
+  ((chatgpt-shell-always-create-new nil)
+   (chatgpt-shell-model-temperature 0)
    (chatgpt-shell-model-version "deepseek-chat")
    (chatgpt-shell-prompt-query-response-style 'shell)
    (chatgpt-shell-system-prompt (seq-position (map-keys chatgpt-shell-system-prompts) "Programming"))
