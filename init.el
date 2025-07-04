@@ -401,7 +401,8 @@ From https://www.emacswiki.org/emacs/XModMapMode")
          ("C-h u f" . find-library)
          ("C-x B" . bury-buffer)
          ("C-x C-M-c" . save-buffers-kill-emacs)
-         ("C-x D" . (lambda () (interactive) (dired "~")))
+         ("C-x D" . (lambda () (interactive) (dired "~/Downloads")))
+         ("C-x H" . (lambda () (interactive) (dired "~")))
          ("C-x K" . kill-current-buffer)
          ("C-x M-x" . switch-to-minibuffer)
          ("C-x a /" . unexpand-abbrev)
@@ -2348,6 +2349,7 @@ The default format is specified by `emms-source-playlist-default-format'."
          ("C-z i" . howm-insert-keyword)
          ("C-z l" . howm-list-recent)
          ("C-z s" . howm-list-grep-fixed)
+         ("C-z #" . my-howm-jump-to-last-view)
          :map howm-mode-map
          ("C-z >" . my-howm-insert-file-ref)
          ("C-z @" . my-howm-list-grep-contents)
@@ -2383,6 +2385,15 @@ The default format is specified by `emms-source-playlist-default-format'."
                '("%dateonly" . (lambda (arg)
                                  (let ((date (format-time-string howm-date-format)))
                                    (insert (format howm-insert-date-format date))))))
+
+  (defun my-howm-jump-to-last-view ()
+    (interactive)
+    (let ((history-buffer-name (format howm-menu-name-format howm-history-file)))
+      (save-excursion
+        (howm-history)
+        (with-current-buffer history-buffer-name
+          (action-lock-magic-return)
+          (kill-buffer history-buffer-name)))))
 
   (defun my-howm-before-save ()
     (my-howm-collect-keywords)
@@ -2620,9 +2631,10 @@ The default format is specified by `emms-source-playlist-default-format'."
          :map
          howm-view-contents-mode-map
          ("<backtab>" . riffle-contents-goto-previous-item))
-  :hook ((howm-view-contents-mode-hook . my-howm-config)
+  :hook ((howm-view-contents-mode-hook . hl-line-mode)
          (howm-view-contents-mode-hook . howm-mode)
          (howm-view-contents-mode-hook . howm-org-font-lock-minor-mode)
+         (howm-view-contents-mode-hook . my-howm-config)
          (howm-view-contents-mode-hook . my-howm-other-modes-keys)
          (howm-view-summary-mode-hook . hl-line-mode)
          (howm-view-summary-mode-hook . my-howm-other-modes-keys))

@@ -21,7 +21,7 @@
 		  :files (:defaults "snippets") :source
 		  "elpaca-menu-lock-file" :protocol https :inherit t
 		  :depth treeless :ref
-		  "4c2f579f5b5da7bb100ace7e16614a7576f7b8b4"))
+		  "e11be58103c03b49f6dce4d89a4068017fdfa95c"))
  (alert :source "elpaca-menu-lock-file" :recipe
 	(:package "alert" :fetcher github :repo "jwiegley/alert"
 		  :files
