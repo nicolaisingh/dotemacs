@@ -139,7 +139,7 @@
 				     "ob-dall-e-shell.el"))
 			  :source "elpaca-menu-lock-file" :protocol
 			  https :inherit t :depth treeless :ref
-			  "9586e22f33076803077741486904d83d1644ad84"))
+			  "d5a6c91d80de7bbf9958fc6782bcdd0a852d8963"))
  (chess :source "elpaca-menu-lock-file" :recipe
 	(:package "chess" :repo
 		  ("https://github.com/emacsmirror/gnu_elpa" . "chess")
@@ -482,6 +482,12 @@
 		 :source "GNU ELPA" :protocol https :inherit t :depth
 		 treeless :ref
 		 "e5f46561c3c140d774354f91d1e95c60039a1934"))
+ (emojify :source "elpaca-menu-lock-file" :recipe
+	  (:package "emojify" :fetcher github :repo
+		    "iqbalansari/emacs-emojify" :files
+		    (:defaults "data" "images") :source "MELPA"
+		    :protocol https :inherit t :depth treeless :ref
+		    "1b726412f19896abf5e4857d4c32220e33400b55"))
  (eshell-toggle :source "elpaca-menu-lock-file" :recipe
 		(:package "eshell-toggle" :repo "4DA/eshell-toggle"
 			  :fetcher github :files
@@ -725,6 +731,18 @@
 		 (("origin" :repo "kaorahi/howm")
 		  ("fork" :repo "nicolaisingh/howm"))
 		 :ref "36a4b970d631ff6aaf1388ca4f5115f23611cde8"))
+ (ht :source "elpaca-menu-lock-file" :recipe
+     (:package "ht" :fetcher github :repo "Wilfred/ht.el" :files
+	       ("*.el" "*.el.in" "dir" "*.info" "*.texi" "*.texinfo"
+		"doc/dir" "doc/*.info" "doc/*.texi" "doc/*.texinfo"
+		"lisp/*.el" "docs/dir" "docs/*.info" "docs/*.texi"
+		"docs/*.texinfo"
+		(:exclude ".dir-locals.el" "test.el" "tests.el"
+			  "*-test.el" "*-tests.el" "LICENSE" "README*"
+			  "*-pkg.el"))
+	       :source "MELPA" :protocol https :inherit t :depth
+	       treeless :ref
+	       "1c49aad1c820c86f7ee35bf9fff8429502f60fef"))
  (htmlize :source "elpaca-menu-lock-file" :recipe
 	  (:package "htmlize" :fetcher github :repo
 		    "hniksic/emacs-htmlize" :files
@@ -1430,7 +1448,7 @@
 				   "LICENSE" "README*" "*-pkg.el"))
 			:source "elpaca-menu-lock-file" :protocol
 			https :inherit t :depth treeless :ref
-			"b55e2e8d28f1c0ecac1d45b4a299ddddc42f479f"))
+			"e2f05eed5bc7d10af0fc90891138d9581456914d"))
  (slime :source "elpaca-menu-lock-file" :recipe
 	(:package "slime" :fetcher github :repo "slime/slime" :files
 		  ("*.el" ("lib" "lib/hyperspec.el") "swank" "*.lisp"

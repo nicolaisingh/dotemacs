@@ -794,27 +794,36 @@ From https://www.emacswiki.org/emacs/XModMapMode")
 ;;; chatgpt-shell
 
 (use-package chatgpt-shell
-  :bind (:map my-ctl-c-l-map
-              ("C-SPC" . chatgpt-shell-send-and-review-region)
-              ("SPC" . chatgpt-shell-send-region)
-              ("c" . chatgpt-shell-prompt-compose)
-              ("i" . chatgpt-shell-quick-insert)
-              ("l" . chatgpt-shell)
-              ("m" . chatgpt-shell-inline)
-              ("o" . chatgpt-shell-other-buffer)
-              ("p" . chatgpt-shell-proofread-region)
-              ("r" . chatgpt-shell-refactor-code)
-              ("s" . chatgpt-shell-rephrase-sentences)
-              ("u" . chatgpt-shell-generate-unit-test)
-              ("x" . chatgpt-shell-explain-code)
-              :map chatgpt-shell-mode-map
-              ("C-c C-S-p" . chatgpt-shell-load-awesome-prompts)
-              ("C-c C-S-s" . chatgpt-shell-show-prompt))
+  :bind (:map
+         my-ctl-c-l-map
+         ("P" . (lambda () (interactive) (message "%s" (chatgpt-shell-system-prompt))))
+         ("SPC" . chatgpt-shell-send-region)
+         ("c" . chatgpt-shell-prompt-compose)
+         ("f" . chatgpt-shell-fix-error-at-point)
+         ("i" . chatgpt-shell-quick-insert)
+         ("l" . chatgpt-shell)
+         ("p" . chatgpt-shell-proofread-region)
+         ("r" . chatgpt-shell-refactor-code)
+         ("s" . chatgpt-shell-rephrase-sentences)
+         ("t" . chatgpt-shell-generate-unit-test)
+         ("x i" . chatgpt-shell-describe-image)
+         ("x x" . chatgpt-shell-describe-code)
+         :map
+         chatgpt-shell-mode-map
+         ("C-c <backspace>" . chatgpt-shell-delete-interaction-at-point)
+         ("C-c C-<backspace>" . chatgpt-shell-clear-buffer)
+         ("C-c C-S-p" . chatgpt-shell-load-awesome-prompts)
+         ("C-c C-o" . nil) ;; unbind comint-delete-output
+         :map
+         chatgpt-shell-prompt-compose-mode-map
+         ("C-c C-<backspace>" . chatgpt-shell-prompt-compose-clear-history))
   :custom
   ((chatgpt-shell-always-create-new nil)
+   (chatgpt-shell-models (append (chatgpt-shell-deepseek-models)
+                                 (chatgpt-shell-openai-models)))
    (chatgpt-shell-model-temperature 0)
    (chatgpt-shell-model-version "deepseek-chat")
-   (chatgpt-shell-prompt-query-response-style 'shell)
+   (chatgpt-shell-prompt-query-response-style 'other-buffer)
    (chatgpt-shell-system-prompt (seq-position (map-keys chatgpt-shell-system-prompts) "Programming"))
    (chatgpt-shell-welcome-function nil)
    (chatgpt-shell-openai-key (lambda ()
@@ -841,27 +850,9 @@ From https://www.emacswiki.org/emacs/XModMapMode")
   (defun chatgpt-shell-rephrase-sentences ()
     (interactive)
     (chatgpt-shell-send-region-with-header
-     (string-join
-      '("I need you to improve and rephrase sentences without sounding too formal."
-        "Give me only 3 improvements for each sentence, nothing else.") "  ")))
-
-  (defun chatgpt-shell-show-prompt ()
-    (interactive)
-    (let ((message-log-max nil))
-      (if (not chatgpt-shell-system-prompt)
-          (message "No prompt selected.")
-        (message "%s" (cdr (nth chatgpt-shell-system-prompt
-                                chatgpt-shell-system-prompts))))))
-
-  (defun chatgpt-shell-inline ()
-    (interactive)
-    (let ((chatgpt-shell-prompt-query-response-style 'inline))
-      (call-interactively #'chatgpt-shell-prompt)))
-
-  (defun chatgpt-shell-other-buffer ()
-    (interactive)
-    (let ((chatgpt-shell-prompt-query-response-style 'other-buffer))
-      (call-interactively #'chatgpt-shell-prompt))))
+     (string-join '("I need you to improve and rephrase sentences without sounding too formal."
+                    "Give me only 3 improvements for each sentence, nothing else.")
+                  "  "))))
 
 
 ;;; chess
@@ -949,6 +940,8 @@ If ARG is Non-nil, the existing command log buffer is cleared."
   :ensure nil
   :demand t
   :diminish
+  :custom
+  (completion-preview-idle-delay 0.2)
   :config
   (defun turn-off-completion-preview-mode ()
     (interactive)
@@ -1761,6 +1754,15 @@ The default format is specified by `emms-source-playlist-default-format'."
   (emms-later-do-interval 0.001))
 
 
+;;; emojify
+
+(use-package emojify
+  :disabled
+  :demand t
+  :config
+  (global-emojify-mode))
+
+
 ;;; epa
 
 (use-package epa
@@ -1789,10 +1791,14 @@ The default format is specified by `emms-source-playlist-default-format'."
 
 (use-package eshell
   :ensure nil
-  :bind (:map my-ctl-c-e-map
-              ("e" . eshell)
-              ("E" . eshell-other)
-              :map eshell-mode-map)
+  :bind (:map
+         my-ctl-c-e-map
+         ("e" . eshell)
+         ("E" . eshell-other)
+         :map
+         eshell-mode-map
+         ("C-c ?" . chatgpt-shell-eshell-whats-wrong-with-last-command)
+         ("C-c !" . chatgpt-shell-eshell-summarize-last-command-output))
   :custom
   (eshell-hist-ignoredups t)
   (eshell-history-size 10000)
