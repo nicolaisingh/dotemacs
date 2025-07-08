@@ -804,7 +804,6 @@ From https://www.emacswiki.org/emacs/XModMapMode")
          ("l" . chatgpt-shell)
          ("p" . chatgpt-shell-proofread-region)
          ("r" . chatgpt-shell-refactor-code)
-         ("s" . chatgpt-shell-rephrase-sentences)
          ("t" . chatgpt-shell-generate-unit-test)
          ("x i" . chatgpt-shell-describe-image)
          ("x x" . chatgpt-shell-describe-code)
@@ -818,18 +817,18 @@ From https://www.emacswiki.org/emacs/XModMapMode")
          chatgpt-shell-prompt-compose-mode-map
          ("C-c C-<backspace>" . chatgpt-shell-prompt-compose-clear-history))
   :custom
-  ((chatgpt-shell-always-create-new nil)
-   (chatgpt-shell-models (append (chatgpt-shell-deepseek-models)
-                                 (chatgpt-shell-openai-models)))
-   (chatgpt-shell-model-temperature 0)
-   (chatgpt-shell-model-version "deepseek-chat")
-   (chatgpt-shell-prompt-query-response-style 'other-buffer)
-   (chatgpt-shell-system-prompt (seq-position (map-keys chatgpt-shell-system-prompts) "Programming"))
-   (chatgpt-shell-welcome-function nil)
-   (chatgpt-shell-openai-key (lambda ()
-                               (auth-source-pick-first-password :host "api.openai.com")))
-   (chatgpt-shell-deepseek-key (lambda ()
-                                 (auth-source-pick-first-password :host "api.deepseek.com"))))
+  (chatgpt-shell-always-create-new nil)
+  (chatgpt-shell-models (append (chatgpt-shell-deepseek-models)
+                                (chatgpt-shell-openai-models)))
+  (chatgpt-shell-model-temperature 0)
+  (chatgpt-shell-model-version "deepseek-chat")
+  (chatgpt-shell-prompt-query-response-style 'other-buffer)
+  (chatgpt-shell-system-prompt (seq-position (map-keys chatgpt-shell-system-prompts) "Programming"))
+  (chatgpt-shell-welcome-function nil)
+  (chatgpt-shell-openai-key (lambda ()
+                              (auth-source-pick-first-password :host "api.openai.com")))
+  (chatgpt-shell-deepseek-key (lambda ()
+                                (auth-source-pick-first-password :host "api.deepseek.com")))
   :config
   (add-to-list
    'chatgpt-shell-system-prompts
@@ -845,14 +844,7 @@ From https://www.emacswiki.org/emacs/XModMapMode")
          "If you will suggest a destination that is quite far from the others, mention it explicitly."
          "When you make the itinerary, include the travel times and an estimate of how long to stay on that area before going to the next one.")
        "  "))
-   t)
-
-  (defun chatgpt-shell-rephrase-sentences ()
-    (interactive)
-    (chatgpt-shell-send-region-with-header
-     (string-join '("I need you to improve and rephrase sentences without sounding too formal."
-                    "Give me only 3 improvements for each sentence, nothing else.")
-                  "  "))))
+   t))
 
 
 ;;; chess
@@ -909,11 +901,11 @@ From https://www.emacswiki.org/emacs/XModMapMode")
 (use-package command-log-mode
   :bind (("C-c c l" . clm/toggle-command-log-buffer))
   :custom
-  ((command-log-mode-is-global t)
-   (command-log-mode-key-binding-open-log nil)
-   (command-log-mode-open-log-turns-on-mode t)
-   (command-log-mode-window-font-size 1)
-   (command-log-mode-window-size 60))
+  (command-log-mode-is-global t)
+  (command-log-mode-key-binding-open-log nil)
+  (command-log-mode-open-log-turns-on-mode t)
+  (command-log-mode-window-font-size 1)
+  (command-log-mode-window-size 60)
   :config
   ;; The original function definition hard-coded the text scale,
   ;; ignoring `command-log-mode-window-font-size'.
@@ -2337,7 +2329,8 @@ The default format is specified by `emms-source-playlist-default-format'."
          ("F" . howm-first-memo)
          ("L" . howm-last-memo))
   :hook ((howm-create-hook . howm-narrow-to-memo)
-         (howm-view-open-hook . howm-narrow-to-memo)))
+         (howm-view-open-hook . howm-narrow-to-memo)
+         (org-mode-hook . howm-set-mode)))
 
 ;;; howm-mode
 
@@ -2586,7 +2579,7 @@ The default format is specified by `emms-source-playlist-default-format'."
   :ensure nil
   :custom
   (howm-action-lock-forward-save-buffer t)
-  (howm-check-word-break t) ; keywords starting with @#*-+/~ won't be marked (only %$ work)
+  (howm-check-word-break "^[[:alnum:]]+$")
   (howm-content-from-region t)
   (howm-directory "~/howm/")
   (howm-history-file (expand-file-name ".howm-history" howm-directory))
