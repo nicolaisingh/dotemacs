@@ -1493,6 +1493,19 @@
 		    :source "elpaca-menu-lock-file" :protocol https
 		    :inherit t :depth treeless :ref
 		    "fcd37147121fabdf003a70279cf86fbe08cfac6f"))
+ (tempel :source "elpaca-menu-lock-file" :recipe
+	 (:package "tempel" :repo "minad/tempel" :fetcher github
+		   :files
+		   ("*.el" "*.el.in" "dir" "*.info" "*.texi"
+		    "*.texinfo" "doc/dir" "doc/*.info" "doc/*.texi"
+		    "doc/*.texinfo" "lisp/*.el" "docs/dir"
+		    "docs/*.info" "docs/*.texi" "docs/*.texinfo"
+		    (:exclude ".dir-locals.el" "test.el" "tests.el"
+			      "*-test.el" "*-tests.el" "LICENSE"
+			      "README*" "*-pkg.el"))
+		   :source "MELPA" :protocol https :inherit t :depth
+		   treeless :ref
+		   "9fa2c59660fe9473429a51872d3c00e1b95cab86"))
  (tide :source "elpaca-menu-lock-file" :recipe
        (:package "tide" :fetcher github :repo "ananthakumaran/tide"
 		 :files (:defaults "tsserver") :source

@@ -1,0 +1,15 @@
+# key: file-header-footer
+# name: Elisp file header/footer
+# --
+;;; ${1:`(buffer-name)`} --- ${2:TODO: short description}
+
+;;; Commentary:
+
+;; ${3:TODO: commentary}
+
+;;; Code:
+
+$0
+
+(provide ' ${4:`(string-replace ".el" "" (buffer-name))`})
+;;; $1 ends here

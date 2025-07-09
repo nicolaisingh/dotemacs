@@ -15,8 +15,8 @@ ln -sn $initdir/eshell/alias	~/.emacs.d/eshell/alias
 ln -sn $initdir/lisp		~/.emacs.d/lisp
 ln -sn $initdir/org-templates	~/.emacs.d/org-templates
 ln -sn $initdir/snippets	~/.emacs.d/snippets
+ln -sn $initdir/templates	~/.emacs.d/templates
+ln -sn $initdir/transient	~/.emacs.d/transient
 ln -sn $initdir/tree-sitter	~/.emacs.d/tree-sitter
 
 ln -sn $initdir/howm-menu.org	~/.emacs.d/howm-menu.org
-
-ln -sn $initdir/transient	~/.emacs.d/transient

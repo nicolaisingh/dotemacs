@@ -1,0 +1,40 @@
+fundamental-mode
+
+(date
+ (format-time-string "%Y-%m-%d"))
+
+(datetime-iso8601
+ (format-time-string "%FT%T%z"))
+
+(datetime-iso8601-utc
+ (format-time-string "%FT%T%z" nil t))
+
+(time12h
+ (format-time-string "%I:%M:%S %p"))
+
+(time
+ (format-time-string "%H:%M:%S"))
+
+(tasklog
+ "Yesterday" n
+ "- " (p "(task/plan)") n
+ "Today" n>
+ "- " (p "(task/plan)") n
+ "Blockers/Delays" n
+ "- " (p "None") n)
+
+emacs-lisp-mode
+
+(file-header
+ ";;; " (p (buffer-name) bufname) "--- " (p "TODO: short description") n n
+ ";;; Commentary:" n n
+ ";; " (p "TODO: commentary") n n
+ ";;; Code:" n n
+ (r "(code)") n n
+ "(provide '" (s bufname) ")" n
+ ";;; " (s bufname) " ends here")
+
+;; Local Variables:
+;; mode: lisp-data
+;; outline-regexp: "[a-z]"
+;; End:

@@ -4434,6 +4434,17 @@ of the new org-mode file."
   :diminish subword-mode)
 
 
+;;; tempel
+
+(use-package tempel
+  :disabled
+  :demand t
+  :bind (:map
+         my-ctl-c-t-map
+         ("c" . tempel-complete)
+         ("i" . tempel-insert)))
+
+
 ;;; tex-mode
 
 (use-package tex-mode
@@ -4622,21 +4633,20 @@ of the new org-mode file."
 (use-package yasnippet
   :demand t
   :diminish yas-minor-mode
-  :bind-keymap (("C-c y s" . yas-minor-mode-map))
+  :bind (:map
+         yas-minor-mode-map
+         ("C-c y s d" . yas-describe-tables)
+         ("C-c y s i" . yas-insert-snippet)
+         ("C-c y s n" . yas-new-snippet)
+         ("C-c y s r" . yas-reload-all)
+         ("C-c y s s" . yas-expand)
+         ("C-c y s v" . yas-visit-snippet-file)
+         ("TAB" . nil))
   :custom
   (yas-prompt-functions '(yas-completing-prompt yas-no-prompt))
   (yas-triggers-in-field t)
   (yas-wrap-around-region t)
   :config
-  (setq yas-minor-mode-map (let ((map (make-sparse-keymap)))
-                             (keymap-set map "s" 'yas-expand)
-                             (keymap-set map "i" 'yas-insert-snippet)
-                             (keymap-set map "n" 'yas-new-snippet)
-                             (keymap-set map "v" 'yas-visit-snippet-file)
-                             (keymap-set map "t" 'yas-tryout-snippet)
-                             (keymap-set map "d" 'yas-describe-tables)
-                             (keymap-set map "r" 'yas-reload-all)
-                             map))
   (yas-global-mode))
 
 
