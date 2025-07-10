@@ -2379,6 +2379,8 @@ The default format is specified by `emms-source-playlist-default-format'."
   :config
   (advice-add 'howm-list-recent :after #'howm-view-sort-by-mtime)
   (advice-add 'howm-list-toggle-title :after #'my-howm-message-title-state)
+  ;; Advising instead of hooking since the buffer still needs to be narrowed
+  (advice-add 'howm-save-buffer :before #'my-howm-add-final-newlines)
 
   (add-to-list 'howm-template-rules
                '("%dateonly" . (lambda (arg)
@@ -2393,6 +2395,18 @@ The default format is specified by `emms-source-playlist-default-format'."
         (with-current-buffer history-buffer-name
           (action-lock-magic-return)
           (kill-buffer history-buffer-name)))))
+
+  (defun my-howm-add-final-newlines (&optional arg)
+    (save-excursion
+      (when (buffer-narrowed-p)
+        ;; Ensure prepended note has newlines before previous note header
+        ;; Add 2 newlines
+        (when (/= (char-after (- (point-max) 1)) ?\n)
+          (goto-char (point-max))
+          (insert ?\n))
+        (when (/= (char-after (- (point-max) 2)) ?\n)
+          (goto-char (point-max))
+          (insert ?\n)))))
 
   (defun my-howm-before-save ()
     (my-howm-collect-keywords)
@@ -2585,10 +2599,11 @@ The default format is specified by `emms-source-playlist-default-format'."
   (howm-history-file (expand-file-name ".howm-history" howm-directory))
   (howm-history-limit nil)
   (howm-iigrep-preview-items 50)
+  (howm-iigrep-show-what 'counts)
   (howm-keyword-case-fold-search t)
   (howm-keyword-file (expand-file-name ".howm-keys" howm-directory))
-  (howm-list-title-regexp "^(\\*$|(\\*|#\\+title:) +)") ; passed to grep/rg
   (howm-list-recent-days 14)
+  (howm-list-title-regexp "^(\\*$|(\\*|#\\+title:) +)") ; passed to grep/rg
   (howm-menu-file (expand-file-name "howm-menu.org" user-emacs-directory))
   (howm-menu-footer "")
   (howm-menu-name-format "*howm-menu:%s*")
@@ -4293,6 +4308,7 @@ of the new org-mode file."
   :bind (:map selected-keymap
               ("'" . edit-indirect-region)
               ("C" . capitalize-region)
+              ("D" . delete-duplicate-lines)
               ("E" . flush-empty-lines)
               ("F" . flush-lines)
               ("K" . keep-lines)
@@ -4304,7 +4320,11 @@ of the new org-mode file."
               ("q" . selected-off)
               ("r" . reverse-region)
               ("s" . my-sort-lines)
-              ("u" . unfill-region))
+              ("u" . unfill-region)
+              ("C-c C-a" . mc/edit-beginnings-of-lines)
+              ("C-c C-e" . mc/edit-ends-of-lines)
+              ("C-c C-SPC" . mc/mark-all-in-region)
+              ("C-c C-M-SPC" . mc/mark-all-in-region-regexp))
   :hook ((chatgpt-shell-prompt-compose-mode-hook . turn-off-selected-minor-mode)
          (magit-mode-hook . turn-off-selected-minor-mode)
          (multiple-cursors-mode-hook . my-mc-toggle-selected-minor-mode))
