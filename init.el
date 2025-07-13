@@ -162,8 +162,15 @@ collection.  Use revert-gc-cons-percentage to restore the value."
   (interactive "P")
   (cond
    ((eq 0 arg) (tab-recent))
+   ((eq '- arg) (window-swap-states))
+   ((equal '(4) arg) (delete-other-windows))
+   ((equal '(16) arg) (delete-other-windows-vertically))
    ((numberp arg) (tab-bar-select-tab arg))
-   (t (other-window 1))))
+   (t (if (> (count-windows) 1)
+          (other-window 1)
+        (split-window-right)
+        (other-window 1)
+        (call-interactively (key-binding (kbd "C-x b")))))))
 
 (defun find-init-file ()
   "Find my Emacs init file."
@@ -2617,7 +2624,9 @@ The default format is specified by `emms-source-playlist-default-format'."
   (howm-prepend t)
   (howm-user-font-lock-keywords '(("^keywords:" . (0 'howm-mode-ref-face))))
   (howm-view-contents-name "*howm-contents:%s*")
+  (howm-view-contents-persistent nil)
   (howm-view-summary-name "*howm-summary*")
+  (howm-view-summary-persistent nil)
 
   ;; Use rg/ripgrep for searching
   (howm-view-use-grep t)
@@ -3168,7 +3177,15 @@ Useful for completion style 'partial-completion."
 
 (use-package nix-ts-mode
   :mode "\\.nix\\'"
-  :hook (eglot-ensure))
+  :hook ((nix-ts-mode-hook . eglot-ensure))
+  :config
+  (add-to-list 'major-mode-remap-alist '(nix-mode . nix-ts-mode)))
+
+
+;;; nixfmt
+
+(use-package nixfmt
+  :hook ((nix-ts-mode-hook . nixfmt-on-save-mode)))
 
 
 ;;; nov
