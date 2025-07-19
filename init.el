@@ -1309,7 +1309,36 @@ be file B."
 (use-package easy-kill
   :demand t
   :bind (([remap kill-ring-save] . easy-kill)
-         ([remap mark-word] . easy-mark)))
+         :map easy-kill-base-map
+         ("C" . easy-kill-cycle)
+         ("M-@" . easy-kill-mark-region))
+  :custom
+  (easy-kill-unhighlight-key " ")
+  (easy-kill-try-things '(url email uuid sexp line)))
+
+
+;;; easy-kill-extras
+
+(use-package easy-kill-extras
+  :demand t
+  :after (easy-kill))
+
+(use-package extra-things
+  :after (easy-kill-extras)
+  :demand t
+  :ensure nil
+  :config
+  (add-to-list 'easy-kill-alist '(?<  angles-pair "\n") t)
+  (add-to-list 'easy-kill-alist '(?>  angles-pair-content "\n") t)
+  (add-to-list 'easy-kill-alist '(?\" dquoted-string-universal "") t)
+  (add-to-list 'easy-kill-alist '(?\' squoted-string-universal "") t)
+  (add-to-list 'easy-kill-alist '(?\( parentheses-pair "\n") t)
+  (add-to-list 'easy-kill-alist '(?\) parentheses-pair-content "\n") t)
+  (add-to-list 'easy-kill-alist '(?\[ brackets-pair "\n") t)
+  (add-to-list 'easy-kill-alist '(?\] brackets-pair-content "\n") t)
+  (add-to-list 'easy-kill-alist '(?\` bquoted-string-universal "") t)
+  (add-to-list 'easy-kill-alist '(?{  curlies-pair "\n") t)
+  (add-to-list 'easy-kill-alist '(?}  curlies-pair-content "\n") t))
 
 
 ;;; eat

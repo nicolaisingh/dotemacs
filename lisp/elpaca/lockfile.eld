@@ -977,6 +977,19 @@
 			:source "elpaca-menu-lock-file" :protocol
 			https :inherit t :depth treeless :ref
 			"62ce3a2dc39529c5db3516427e84b2c96b8efcfd"))
+ (nixfmt :source "elpaca-menu-lock-file" :recipe
+	 (:package "nixfmt" :fetcher github :repo
+		   "purcell/emacs-nixfmt" :files
+		   ("*.el" "*.el.in" "dir" "*.info" "*.texi"
+		    "*.texinfo" "doc/dir" "doc/*.info" "doc/*.texi"
+		    "doc/*.texinfo" "lisp/*.el" "docs/dir"
+		    "docs/*.info" "docs/*.texi" "docs/*.texinfo"
+		    (:exclude ".dir-locals.el" "test.el" "tests.el"
+			      "*-test.el" "*-tests.el" "LICENSE"
+			      "README*" "*-pkg.el"))
+		   :source "MELPA" :protocol https :inherit t :depth
+		   treeless :ref
+		   "0c449ae48b95ff7a02f3ccec6cf66963b8e4d677"))
  (nov :source "elpaca-menu-lock-file" :recipe
       (:package "nov" :fetcher git :url
 		"https://depp.brause.cc/nov.el.git" :files
@@ -1380,6 +1393,21 @@
 		     :source "elpaca-menu-lock-file" :protocol https
 		     :inherit t :depth treeless :ref
 		     "30d42b3401841ebbf2036840a2189bf62c18f507"))
+ (reformatter :source "elpaca-menu-lock-file" :recipe
+	      (:package "reformatter" :repo
+			"purcell/emacs-reformatter" :fetcher github
+			:files
+			("*.el" "*.el.in" "dir" "*.info" "*.texi"
+			 "*.texinfo" "doc/dir" "doc/*.info"
+			 "doc/*.texi" "doc/*.texinfo" "lisp/*.el"
+			 "docs/dir" "docs/*.info" "docs/*.texi"
+			 "docs/*.texinfo"
+			 (:exclude ".dir-locals.el" "test.el"
+				   "tests.el" "*-test.el" "*-tests.el"
+				   "LICENSE" "README*" "*-pkg.el"))
+			:source "MELPA" :protocol https :inherit t
+			:depth treeless :ref
+			"6ac08cebafb9e04b825ed22d82269ff69cc5f87f"))
  (request :source "elpaca-menu-lock-file"
    :recipe
    (:package "request" :repo "tkf/emacs-request" :fetcher github
