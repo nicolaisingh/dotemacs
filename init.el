@@ -1311,7 +1311,8 @@ be file B."
   :bind (([remap kill-ring-save] . easy-kill)
          :map easy-kill-base-map
          ("C" . easy-kill-cycle)
-         ("M-@" . easy-kill-mark-region))
+         ("M-@" . easy-kill-mark-region)
+         ("M-SPC" . easy-kill-mark-region))
   :custom
   (easy-kill-unhighlight-key " ")
   (easy-kill-try-things '(url email uuid sexp line)))
@@ -2474,15 +2475,13 @@ The default format is specified by `emms-source-playlist-default-format'."
                                  "%date %dateonly\n\n"
                                  "tasklog%cursor\n\n")))))
       (cond
-       ((= which-template 2)
-        (concat howm-view-title-header " %title\n%date %file\n\n%cursor\n\n"))
        ((= which-template 4)
         (let ((choice (completing-read "Template: "
                                        (my-presorted-completion-table (mapcar #'car templates))
                                        nil t nil t)))
           (cadr (assoc choice templates))))
        (t
-        (concat howm-view-title-header " %title\n%date\n\n%cursor\n\n")))))
+        (concat howm-view-title-header " %title\n%date %file\n\n%cursor\n\n")))))
 
   (defun my-howm-insert-keywords-line ()
     "Insert keywords line."
@@ -2651,6 +2650,8 @@ The default format is specified by `emms-source-playlist-default-format'."
   (howm-message-time nil)
   (howm-normalizer 'howm-sort-items-by-mtime)
   (howm-prepend t)
+  (howm-remember-first-line-to-title t)
+  (howm-remember-insertion-format "%s")
   (howm-user-font-lock-keywords '(("^keywords:" . (0 'howm-mode-ref-face))))
   (howm-view-contents-name "*howm-contents:%s*")
   (howm-view-contents-persistent nil)
