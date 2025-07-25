@@ -91,7 +91,7 @@ numbered variants the same as the base color."
      ("color-pale-red" "#ffcccc")
      ("color-pale-gray" "#dddddd"))
   (let* ((fg-inactive color-gray-4)
-         (font "Inconsolata-11")
+         (font "Intel One Mono-10")
          (flat-box `(:line-width 1 :style flat-button)))
     (custom-theme-set-faces
      'personal-2

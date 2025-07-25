@@ -619,22 +619,27 @@ From https://www.emacswiki.org/emacs/XModMapMode")
     (interactive "P")
     (setenv "OPENAI_API_KEY" (auth-source-pick-first-password :host "api.openai.com"))
     (setenv "DEEPSEEK_API_KEY" (auth-source-pick-first-password :host "api.deepseek.com"))
-    (let ((aider-args `(;; DeepSeek
-                        ;; "--model" "deepseek/deepseek-chat"
-                        "--model" "deepseek/deepseek-coder"
-                        ;; "--model" "deepseek/deepseek-reasoner"
+    (let* (;; Ordering based on Aider LLM leaderboard (https://aider.chat/docs/leaderboards/)
+           (args-openai-o3-pro       '("--model" "openai/o3-pro"))
+           (args-openai-o3-high      '("--model" "openai/o3" "--reasoning-effort" "high"))
+           (args-openai-o3           '("--model" "openai/o3"))
+           (args-openai-o4-mini-high '("--model" "openai/o4-mini" "--reasoning-effort" "high"))
+           (args-deepseek-r1         '("--model" "deepseek/deepseek-reasoner"))
+           (args-openai-o3-mini-high '("--model" "openai/o3-mini" "--reasoning-effort" "high"))
+           (args-deepseek-v3         '("--model" "deepseek/deepseek-chat"))
 
-                        ;; OpenAI
-                        ;; "--model" "o3-mini"
-
-                        ;; Other options
-                        "--no-auto-commits"
-                        "--no-auto-lint"
-                        "--no-analytics"
-                        "--yes-always"))
-          (message-log-max nil)
-          (inhibit-message t))
-      (funcall orig-fn)))
+           ;; Other options
+           (args-other               '("--cache-prompts"
+                                       "--no-analytics"
+                                       ;; "--no-auto-commits"
+                                       "--no-gitignore"
+                                       "--no-stream"
+                                       "--notifications"))
+           (aider-args `(,@args-deepseek-r1
+                         ,@args-other))
+           (message-log-max nil)
+           (inhibit-message t))
+      (funcall orig-fn edit-args)))
   (advice-add 'aider-run-aider :around #'my-aider-run-aider))
 
 
@@ -3301,7 +3306,7 @@ Useful for completion style 'partial-completion."
   (org-default-notes-file "~/org/inbox.org")
   (org-fontify-done-headline nil)
   (org-fontify-todo-headline nil)
-  (org-hide-emphasis-markers t)
+  (org-hide-emphasis-markers nil)
   (org-hide-leading-stars nil)
   (org-image-actual-width 500)
   (org-log-into-drawer t)
