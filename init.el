@@ -1597,6 +1597,8 @@ Use a negative argument to stop the loop."
   :after (emms)
   :demand t
   :hook ((emms-browser-mode-hook . hl-line-mode))
+  ;; :custom
+  ;; (emms-browser-covers #'emms-browser-cache-thumbnail-async)
   :config
   (emms-browser-make-filter "all" 'ignore)
   (emms-browser-make-filter "flac" (emms-browser-filter-only-dir my-music-flac-directory))
@@ -2643,7 +2645,8 @@ The default format is specified by `emms-source-playlist-default-format'."
   (howm-keyword-case-fold-search t)
   (howm-keyword-file (expand-file-name ".howm-keys" howm-directory))
   (howm-list-recent-days 14)
-  (howm-list-title-regexp "^(\\*$|(\\*|#\\+title:) +)") ; passed to grep/rg
+  (howm-list-title t)
+  (howm-list-title-regexp "^\\(\\*$\\|\\(\\*\\|#\\+title:\\) +\\)") ; passed to grep/rg
   (howm-menu-file (expand-file-name "howm-menu.org" user-emacs-directory))
   (howm-menu-footer "")
   (howm-menu-name-format "*howm-menu:%s*")
@@ -2683,6 +2686,11 @@ The default format is specified by `emms-source-playlist-default-format'."
 (use-package howm-view
   :after (howm howm-vars)
   :ensure nil
+  :custom
+  (howm-entitle-items-style2-format "%-50.50s | %s")
+  (howm-entitle-items-style2-max-length 50)
+  (howm-entitle-items-style2-title-line nil)
+  (howm-view-list-title-type 2)
   :bind (:map
          howm-view-summary-mode-map
          ("<backtab>" . howm-view-summary-previous-section)
@@ -2702,7 +2710,7 @@ The default format is specified by `emms-source-playlist-default-format'."
   (setq *howm-show-item-filename* nil ; don't show filenames in the echo area when browsing notes
         howm-view-summary-format (let* ((path (format-time-string howm-file-name-format))
                                         (width (length (file-name-nondirectory path)))
-                                        (max-width (int-to-string 30)))
+                                        (max-width (int-to-string 20)))
                                    (concat "%-" max-width "." max-width "s" howm-view-summary-sep " ")))
 
   (defun my-howm-other-modes-keys ()
