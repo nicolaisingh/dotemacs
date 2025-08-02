@@ -2646,8 +2646,7 @@ The default format is specified by `emms-source-playlist-default-format'."
   (howm-keyword-case-fold-search t)
   (howm-keyword-file (expand-file-name ".howm-keys" howm-directory))
   (howm-list-recent-days 14)
-  (howm-list-title t)
-  (howm-list-title-regexp "^\\(\\*$\\|\\(\\*\\|#\\+title:\\) +\\)") ; passed to grep/rg
+  (howm-list-title-regexp "^(\\*$|(\\*|#\\+title:) +)") ; passed to grep/rg
   (howm-menu-file (expand-file-name "howm-menu.org" user-emacs-directory))
   (howm-menu-footer "")
   (howm-menu-name-format "*howm-menu:%s*")
@@ -2693,7 +2692,7 @@ The default format is specified by `emms-source-playlist-default-format'."
   (howm-entitle-items-style2-format "%-50.50s | %s")
   (howm-entitle-items-style2-max-length 50)
   (howm-entitle-items-style2-title-line nil)
-  (howm-view-list-title-type 2)
+  (howm-view-list-title-type 1)
   :bind (:map
          howm-view-summary-mode-map
          ("<backtab>" . howm-view-summary-previous-section)
