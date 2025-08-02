@@ -354,6 +354,14 @@ portion if the mark is inactive."
   ;; Return nil for the benefit of `write-file-functions'.
   nil)
 
+(defun completion-metadata-get-category ()
+  "Return the current completion category."
+  (interactive)
+  (message "Completion category: %s"
+           (completion-metadata-get
+            (completion-metadata "" minibuffer-completion-table minibuffer-completion-predicate)
+            'category)))
+
 
 ;;;; Minor modes
 
@@ -2834,8 +2842,13 @@ The default format is specified by `emms-source-playlist-default-format'."
                 ;; Completion falls back to using completion-styles if
                 ;; completion-category-overrides doesn't yield a
                 ;; result
-                completion-category-overrides '((file (styles . (basic flex partial-completion)))
-                                                (buffer (styles . (basic flex partial-completion)))))
+                completion-category-overrides '((buffer
+                                                 (styles . (basic flex partial-completion)))
+                                                (file
+                                                 (cycle-sort-function . minibuffer-sort-by-history)
+                                                 (styles . (basic flex partial-completion)))
+                                                (project-file
+                                                 (cycle-sort-function . minibuffer-sort-by-history))))
     (keymap-set icomplete-minibuffer-map "C-?" #'minibuffer-hide-completions)
     (keymap-set icomplete-minibuffer-map "C-S-j" #'icomplete-force-complete)
     (keymap-set icomplete-minibuffer-map "C-<return>" #'icomplete-force-complete)
@@ -3278,12 +3291,7 @@ Useful for completion style 'partial-completion."
 (use-package orderless
   :demand t
   :custom
-  (completion-styles '(orderless basic))
-  ;; Completion falls back to using completion-styles if
-  ;; completion-category-overrides doesn't yield a
-  ;; result
-  (completion-category-overrides '((file (styles . (basic flex partial-completion)))
-                                   (buffer (styles . (basic flex partial-completion))))))
+  (completion-styles '(orderless basic)))
 
 
 ;;; org
