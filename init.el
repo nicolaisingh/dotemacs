@@ -2687,8 +2687,8 @@ The default format is specified by `emms-source-playlist-default-format'."
   :after (howm howm-vars)
   :ensure nil
   :custom
-  (howm-view-header-format "\n\n                                                  >>> %s\n\n")
-  (howm-view-header-regexp "^                                                  >>> .*$")
+  (howm-view-header-format "\n\n\n      [%s]\n\n")
+  (howm-view-header-regexp nil)
   (howm-entitle-items-style2-format "%-50.50s | %s")
   (howm-entitle-items-style2-max-length 50)
   (howm-entitle-items-style2-title-line nil)
