@@ -2621,9 +2621,11 @@ The default format is specified by `emms-source-playlist-default-format'."
   :after (howm)
   :ensure nil
   :custom
+  (howm-view-close-frame/tab-on-exit nil)
   (howm-view-keep-one-window t)
   (howm-view-split-horizontally nil)
-  (howm-view-summary-window-size 20))
+  (howm-view-summary-window-size 20)
+  (howm-view-window-location 'tab))
 
 ;;; howm-shift
 
