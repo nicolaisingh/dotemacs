@@ -416,6 +416,21 @@
 		      :source "elpaca-menu-lock-file" :protocol https
 		      :inherit t :depth treeless :ref
 		      "de7d66c3c864a4722a973ee9bc228a14be49ba0c"))
+ (easy-kill-extras :source "elpaca-menu-lock-file" :recipe
+		   (:package "easy-kill-extras" :fetcher github :repo
+			     "knu/easy-kill-extras.el" :files
+			     ("*.el" "*.el.in" "dir" "*.info" "*.texi"
+			      "*.texinfo" "doc/dir" "doc/*.info"
+			      "doc/*.texi" "doc/*.texinfo" "lisp/*.el"
+			      "docs/dir" "docs/*.info" "docs/*.texi"
+			      "docs/*.texinfo"
+			      (:exclude ".dir-locals.el" "test.el"
+					"tests.el" "*-test.el"
+					"*-tests.el" "LICENSE"
+					"README*" "*-pkg.el"))
+			     :source "MELPA" :protocol https :inherit
+			     t :depth treeless :ref
+			     "ffc8a332893f26b43eb28ba56a714f875cc14183"))
  (eat :source "elpaca-menu-lock-file" :recipe
       (:package "eat" :repo
 		("https://codeberg.org/akib/emacs-eat" . "eat") :files
@@ -730,7 +745,6 @@
 		 :inherit t :depth treeless :remotes
 		 (("origin" :repo "kaorahi/howm")
 		  ("fork" :repo "nicolaisingh/howm"))
-		 :ref "36a4b970d631ff6aaf1388ca4f5115f23611cde8"))
  (ht :source "elpaca-menu-lock-file" :recipe
      (:package "ht" :fetcher github :repo "Wilfred/ht.el" :files
 	       ("*.el" "*.el.in" "dir" "*.info" "*.texi" "*.texinfo"
@@ -743,6 +757,7 @@
 	       :source "MELPA" :protocol https :inherit t :depth
 	       treeless :ref
 	       "1c49aad1c820c86f7ee35bf9fff8429502f60fef"))
+		 :ref "15ef80bc6ed46447027b59769be16108a0fc4a9e"))
  (htmlize :source "elpaca-menu-lock-file" :recipe
 	  (:package "htmlize" :fetcher github :repo
 		    "hniksic/emacs-htmlize" :files
@@ -987,8 +1002,8 @@
 		    (:exclude ".dir-locals.el" "test.el" "tests.el"
 			      "*-test.el" "*-tests.el" "LICENSE"
 			      "README*" "*-pkg.el"))
-		   :source "MELPA" :protocol https :inherit t :depth
-		   treeless :ref
+		   :source "elpaca-menu-lock-file" :protocol https
+		   :inherit t :depth treeless :ref
 		   "0c449ae48b95ff7a02f3ccec6cf66963b8e4d677"))
  (nov :source "elpaca-menu-lock-file" :recipe
       (:package "nov" :fetcher git :url
@@ -1405,8 +1420,8 @@
 			 (:exclude ".dir-locals.el" "test.el"
 				   "tests.el" "*-test.el" "*-tests.el"
 				   "LICENSE" "README*" "*-pkg.el"))
-			:source "MELPA" :protocol https :inherit t
-			:depth treeless :ref
+			:source "elpaca-menu-lock-file" :protocol
+			https :inherit t :depth treeless :ref
 			"6ac08cebafb9e04b825ed22d82269ff69cc5f87f"))
  (request :source "elpaca-menu-lock-file"
    :recipe
