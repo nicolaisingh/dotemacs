@@ -4666,6 +4666,12 @@ of the new org-mode file."
 (use-package visual-fill-column)
 
 
+;;; vundo
+
+(use-package vundo
+  :bind (("C-c u" . vundo)))
+
+
 ;;; winfast
 
 (use-package winfast
