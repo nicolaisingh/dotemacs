@@ -92,10 +92,10 @@ numbered variants the same as the base color."
      ("color-pale-gray" "#dddddd"))
   (let* ((fg-inactive color-gray-4)
          ;; (font "Intel One Mono-10")
-         (default-font "Atkinson Hyperlegible Mono-10")
+         (default-font "Atkinson Hyperlegible Mono")
          (variable-font "Atkinson Hyperlegible Next")
          (fixed-serif-font "Monospace Serif")
-         (flat-box `(:line-width 1 :style flat-button)))
+         (flat-box `(:line-width 3 :style flat-button)))
     (custom-theme-set-faces
      'personal-2
 

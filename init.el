@@ -2173,6 +2173,15 @@ The default format is specified by `emms-source-playlist-default-format'."
 (use-package go-mode)
 
 
+;;; goggles
+
+(use-package goggles
+  :demand t
+  :diminish
+  :hook ((prog-mode-hook . goggles-mode)
+         (text-mode-hook . goggles-mode)))
+
+
 ;;; graphviz-dot-mode
 
 (use-package graphviz-dot-mode)
