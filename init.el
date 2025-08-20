@@ -2399,7 +2399,9 @@ The default format is specified by `emms-source-playlist-default-format'."
 (use-package howm-mode
   :after (howm)
   :ensure nil
-  :bind (("C-z @" . my-howm-list-grep-contents)
+  :bind (("C-z #" . my-howm-jump-to-last-view)
+         ("C-z 0" . my-howm-list-grep-contents)
+         ("C-z @" . my-howm-list-grep-tag)
          ("C-z D" . howm-dup)
          ("C-z H" . howm-mode)
          ("C-z K" . howm-keyword-to-kill-ring)
@@ -2410,10 +2412,8 @@ The default format is specified by `emms-source-playlist-default-format'."
          ("C-z i" . howm-insert-keyword)
          ("C-z l" . howm-list-recent)
          ("C-z s" . howm-list-grep-fixed)
-         ("C-z #" . my-howm-jump-to-last-view)
          :map howm-mode-map
          ("C-z >" . my-howm-insert-file-ref)
-         ("C-z @" . my-howm-list-grep-contents)
          ("C-z A" . howm-list-around)
          ("C-z C" . howm-create-here)
          ("C-z C-," . my-howm-insert-keyword-header)
@@ -2600,7 +2600,18 @@ The default format is specified by `emms-source-playlist-default-format'."
     (interactive "p")
     (split-window-sensibly)
     (other-window 1)
-    (howm-create which-template here)))
+    (howm-create which-template here))
+
+  (defun my-howm-list-grep-tag ()
+    ;; based on howm-list-grep-general
+    "Search notes using tags (@strings)."
+    (interactive)
+    (howm-set-command 'my-howm-list-grep-tag)
+    (let* ((tag-regexp "^@")
+           (regexp (howm-completing-read-keyword
+                    (lambda (a) (string-match tag-regexp (car a))))))
+      (howm-write-history regexp)
+      (howm-search regexp t))))
 
 ;;; howm-org
 
@@ -2665,7 +2676,6 @@ The default format is specified by `emms-source-playlist-default-format'."
   (howm-keyword-case-fold-search t)
   (howm-keyword-file (expand-file-name ".howm-keys" howm-directory))
   (howm-list-recent-days 14)
-  ;; (howm-list-title t) FIXME: Set only on tag search
   (howm-list-title-regexp "^(\\*$|(\\*|#\\+title:) +)") ; passed to grep/rg
   (howm-menu-file (expand-file-name "howm-menu.org" user-emacs-directory))
   (howm-menu-footer "")
@@ -2699,7 +2709,8 @@ The default format is specified by `emms-source-playlist-default-format'."
   (setq howm-excluded-dirs '("data" "RCS" "CVS" ".svn" ".git" "_darcs")
         howm-prefix nil)
   :config
-  (setopt howm-file-name-format "%Y/%m/%Y-%m-%d.org"))
+  (setopt howm-file-name-format "%Y/%m/%Y-%m-%d.org")
+  (add-to-list 'howm-list-title 'my-howm-list-grep-tag))
 
 ;;; howm-view
 
