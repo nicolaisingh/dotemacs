@@ -2319,7 +2319,10 @@ The default format is specified by `emms-source-playlist-default-format'."
   :bind (:map
          howm-mode-map
          ("C-z C-a" . howm-attach)
-         ("C-z C-j" . howm-attach-jump-to-dired)))
+         ("C-z C-j" . howm-attach-jump-to-dired)
+         :map
+         dired-mode-map
+         ("C-z C-j" . howm-attach-jump-to-note)))
 
 ;;; howm-backend
 
@@ -2641,7 +2644,7 @@ The default format is specified by `emms-source-playlist-default-format'."
   :after (howm)
   :ensure nil
   :custom
-  (howm-view-close-frame/tab-on-exit nil)
+  (howm-view-close-frame/tab-on-exit t)
   (howm-view-keep-one-window t)
   (howm-view-split-horizontally nil)
   (howm-view-summary-window-size 20)

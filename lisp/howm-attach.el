@@ -30,6 +30,7 @@
             (abbreviate-file-name dest))))
 
 (defun howm-attach-jump-to-dired ()
+  "Open the current note's attachment directory in dired."
   (interactive)
   (let* ((dest-dir (expand-file-name
                     (file-name-sans-extension (buffer-name))
@@ -43,6 +44,14 @@
                                           (line-end-position)))))))
     (dired dest-dir)
     (dired-goto-file dest-file)))
+
+(defun howm-attach-jump-to-note ()
+  "Search within howm the current file in dired."
+  (interactive)
+  (if (not (eq major-mode 'dired-mode))
+      (message "Not in dired-mode")
+    (let* ((file (dired-get-filename)))
+      (howm-search (abbreviate-file-name file) nil))))
 
 (provide 'howm-attach)
 ;;; howm-attach.el ends here
