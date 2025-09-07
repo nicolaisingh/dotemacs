@@ -21,7 +21,7 @@
 		  :files (:defaults "snippets") :source
 		  "elpaca-menu-lock-file" :protocol https :inherit t
 		  :depth treeless :ref
-		  "e11be58103c03b49f6dce4d89a4068017fdfa95c"))
+		  "a9a3336f799d26fb7daacf1f5da560f373cb5f4d"))
  (alert :source "elpaca-menu-lock-file" :recipe
 	(:package "alert" :fetcher github :repo "jwiegley/alert"
 		  :files
@@ -34,7 +34,7 @@
 			     "README*" "*-pkg.el"))
 		  :source "elpaca-menu-lock-file" :protocol https
 		  :inherit t :depth treeless :ref
-		  "7774b5fd2feb98d4910ff06435d08c19fba93e26"))
+		  "79f6936ab4d85227530959811143429347a6971b"))
  (async :source "elpaca-menu-lock-file" :recipe
 	(:package "async" :repo "jwiegley/emacs-async" :fetcher github
 		  :files
@@ -428,8 +428,8 @@
 					"tests.el" "*-test.el"
 					"*-tests.el" "LICENSE"
 					"README*" "*-pkg.el"))
-			     :source "MELPA" :protocol https :inherit
-			     t :depth treeless :ref
+			     :source "elpaca-menu-lock-file" :protocol
+			     https :inherit t :depth treeless :ref
 			     "ffc8a332893f26b43eb28ba56a714f875cc14183"))
  (eat :source "elpaca-menu-lock-file" :recipe
       (:package "eat" :repo
@@ -662,6 +662,19 @@
 		    "elpaca-menu-lock-file" :protocol https :inherit t
 		    :depth treeless :ref
 		    "0ed3c5227e7f622589f1411b4939c3ee34711ebd"))
+ (goggles :source "elpaca-menu-lock-file" :recipe
+	  (:package "goggles" :repo "minad/goggles" :fetcher github
+		    :files
+		    ("*.el" "*.el.in" "dir" "*.info" "*.texi"
+		     "*.texinfo" "doc/dir" "doc/*.info" "doc/*.texi"
+		     "doc/*.texinfo" "lisp/*.el" "docs/dir"
+		     "docs/*.info" "docs/*.texi" "docs/*.texinfo"
+		     (:exclude ".dir-locals.el" "test.el" "tests.el"
+			       "*-test.el" "*-tests.el" "LICENSE"
+			       "README*" "*-pkg.el"))
+		    :source "elpaca-menu-lock-file" :protocol https
+		    :inherit t :depth treeless :ref
+		    "791140df23e11436ba825043e85c47a41fd65c5c"))
  (graphviz-dot-mode :source "elpaca-menu-lock-file" :recipe
 		    (:package "graphviz-dot-mode" :repo
 			      "ppareit/graphviz-dot-mode" :fetcher
@@ -1672,6 +1685,13 @@
 			       :protocol https :inherit t :depth
 			       treeless :ref
 			       "e391b52922086ac38397a3325933900b6d90f9f0"))
+ (vundo :source "elpaca-menu-lock-file" :recipe
+	(:package "vundo" :repo
+		  ("https://github.com/casouri/vundo" . "vundo")
+		  :files ("*" (:exclude ".git" "test")) :source
+		  "elpaca-menu-lock-file" :protocol https :inherit t
+		  :depth treeless :ref
+		  "30f85b4ae1f2a7189d44bb738b49559928d046cb"))
  (with-editor :source "elpaca-menu-lock-file"
    :recipe
    (:package "with-editor" :fetcher github :repo "magit/with-editor"
