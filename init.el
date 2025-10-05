@@ -4402,7 +4402,6 @@ of the new org-mode file."
   :demand t
   :diminish selected-minor-mode
   :bind (:map selected-keymap
-              ("'" . edit-indirect-region)
               ("C" . capitalize-region)
               ("D" . delete-duplicate-lines)
               ("E" . flush-empty-lines)

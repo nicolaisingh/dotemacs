@@ -72,7 +72,7 @@
 			       "README*" "*-pkg.el"))
 		    :source "elpaca-menu-lock-file" :protocol https
 		    :inherit t :depth treeless :ref
-		    "196cc080f2aaec33caa1b9298e3a9f3dc52c26c5"))
+		    "7d8dc2ae21257e91b7646a6f3bb97c8b8bd95434"))
  (browse-kill-ring :source "elpaca-menu-lock-file" :recipe
 		   (:package "browse-kill-ring" :repo
 			     "browse-kill-ring/browse-kill-ring"
@@ -108,7 +108,7 @@
 			    "README*" "*-pkg.el"))
 		 :source "elpaca-menu-lock-file" :protocol https
 		 :inherit t :depth treeless :ref
-		 "c9191ee9e13e86a7b40c3d25c8bf7907c085a1cf"))
+		 "a9b78ac918df991716de3f84a95db91bb4df44b6"))
  (centered-cursor-mode :source "elpaca-menu-lock-file" :recipe
 		       (:package "centered-cursor-mode" :fetcher
 				 github :repo
@@ -257,7 +257,7 @@
 		  (:defaults "extensions/corfu-*.el") :fetcher github
 		  :source "elpaca-menu-lock-file" :protocol https
 		  :inherit t :depth treeless :ref
-		  "e032f32c7ff24f5aaa44946551920aa94cd2a7f9"))
+		  "d6cc682c15b594f2bc9f55196a382a5fda7a7fc6"))
  (cov :source "elpaca-menu-lock-file" :recipe
       (:package "cov" :fetcher github :repo "AdamNiederer/cov" :files
 		("*.el" "*.el.in" "dir" "*.info" "*.texi" "*.texinfo"
@@ -338,7 +338,7 @@
 			       "README*" "*-pkg.el"))
 		    :source "elpaca-menu-lock-file" :protocol https
 		    :inherit t :depth treeless :ref
-		    "9b032018fda8eb6c241bba1ec0e5c354ad523b2c"))
+		    "a44db7a69a17a39d5c51bcf22de4decabf0183ad"))
  (diminish :source "elpaca-menu-lock-file" :recipe
 	   (:package "diminish" :fetcher github :repo
 		     "myrjola/diminish.el" :files
@@ -489,7 +489,7 @@
 		    :files (:defaults "README.md" "sqlite") :source
 		    "elpaca-menu-lock-file" :protocol https :inherit t
 		    :depth treeless :ref
-		    "ced062890061b6e4fbe4d00c0617f7ff84fff25c"))
+		    "3e015ab99e061f3967a154683f068ce6553f168a"))
  (emms :source "elpaca-menu-lock-file" :recipe
        (:package "emms" :fetcher git :url
 		 "https://git.savannah.gnu.org/git/emms.git" :files
