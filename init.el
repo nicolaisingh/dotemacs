@@ -169,8 +169,7 @@ collection.  Use revert-gc-cons-percentage to restore the value."
    (t (if (> (count-windows) 1)
           (other-window 1)
         (split-window-right)
-        (other-window 1)
-        (call-interactively (key-binding (kbd "C-x b")))))))
+        (other-window 1)))))
 
 (defun find-init-file ()
   "Find my Emacs init file."

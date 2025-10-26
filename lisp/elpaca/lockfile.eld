@@ -590,7 +590,7 @@
 				"README*" "*-pkg.el"))
 		     :source "elpaca-menu-lock-file" :protocol https
 		     :inherit t :depth treeless :ref
-		     "a4d782e7af12e20037c0cecf0d4386cd2676c085"))
+		     "8c0dbfaa463e69efb41ef2cda9c4e89b99e266a0"))
  (focus :source "elpaca-menu-lock-file" :recipe
 	(:package "focus" :fetcher github :repo "larstvei/Focus"
 		  :files
@@ -674,7 +674,7 @@
 			       "README*" "*-pkg.el"))
 		    :source "elpaca-menu-lock-file" :protocol https
 		    :inherit t :depth treeless :ref
-		    "791140df23e11436ba825043e85c47a41fd65c5c"))
+		    "6f87a700137c838568966bc8099dc15786897c32"))
  (graphviz-dot-mode :source "elpaca-menu-lock-file" :recipe
 		    (:package "graphviz-dot-mode" :repo
 			      "ppareit/graphviz-dot-mode" :fetcher
@@ -692,7 +692,7 @@
 			      :source "elpaca-menu-lock-file"
 			      :protocol https :inherit t :depth
 			      treeless :ref
-			      "8ff793b13707cb511875f56e167ff7f980a31136"))
+			      "516c151b845a3eb2da73eb4ee648ad99172087ac"))
  (highlight-indent-guides :source "elpaca-menu-lock-file" :recipe
 			  (:package "highlight-indent-guides" :fetcher
 				    github :repo
@@ -712,7 +712,7 @@
 				    :source "elpaca-menu-lock-file"
 				    :protocol https :inherit t :depth
 				    treeless :ref
-				    "d3969faba28b942ae3c13e89277c292213813b89"))
+				    "d05c63f395329c6e331e0b44c7db708005b3316f"))
  (highlight-numbers :source "elpaca-menu-lock-file" :recipe
 		    (:package "highlight-numbers" :fetcher github
 			      :repo "Fanael/highlight-numbers"
@@ -744,7 +744,7 @@
 			       "README*" "*-pkg.el"))
 		    :source "elpaca-menu-lock-file" :protocol https
 		    :inherit t :depth treeless :ref
-		    "7ed8bbcadb5229d648b194e0e4c4d261825aa91b"))
+		    "2e9504511aa393686f44a36716c1d2ebdc5def1f"))
  (howm :source "elpaca-menu-lock-file" :recipe
        (:package "howm" :fetcher github :repo "kaorahi/howm" :files
 		 ("*.el" "*.el.in" "dir" "*.info" "*.texi" "*.texinfo"
@@ -756,8 +756,6 @@
 			    "README*" "*-pkg.el"))
 		 :source "elpaca-menu-lock-file" :protocol ssh
 		 :inherit t :depth treeless :remotes
-		 (("origin" :repo "kaorahi/howm")
-		  ("fork" :repo "nicolaisingh/howm"))
  (ht :source "elpaca-menu-lock-file" :recipe
      (:package "ht" :fetcher github :repo "Wilfred/ht.el" :files
 	       ("*.el" "*.el.in" "dir" "*.info" "*.texi" "*.texinfo"
@@ -770,7 +768,9 @@
 	       :source "MELPA" :protocol https :inherit t :depth
 	       treeless :ref
 	       "1c49aad1c820c86f7ee35bf9fff8429502f60fef"))
-		 :ref "15ef80bc6ed46447027b59769be16108a0fc4a9e"))
+		 (("origin" :repo "kaorahi/howm")
+		  ("fork" :repo "nicolaisingh/howm"))
+		 :ref "d1431c9e678de6e0c179b2a2bf405e8804472fee"))
  (htmlize :source "elpaca-menu-lock-file" :recipe
 	  (:package "htmlize" :fetcher github :repo
 		    "hniksic/emacs-htmlize" :files
@@ -783,7 +783,7 @@
 			       "README*" "*-pkg.el"))
 		    :source "elpaca-menu-lock-file" :protocol https
 		    :inherit t :depth treeless :ref
-		    "8e3841c837b4b78bd72ad7f0436e919f39315a46"))
+		    "a24ed5a939a32c625b034b0b6d7f46340c100394"))
  (json-navigator :source "elpaca-menu-lock-file" :recipe
 		 (:package "json-navigator" :fetcher github :repo
 			   "DamienCassou/json-navigator" :files
