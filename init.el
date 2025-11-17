@@ -2264,8 +2264,7 @@ The default format is specified by `emms-source-playlist-default-format'."
 (use-package howm
   :after (org)
   :demand t
-  :ensure (:protocol ssh :remotes (("origin" :repo "kaorahi/howm")
-                                   ("fork" :repo "nicolaisingh/howm")))
+  :ensure (:protocol ssh :remotes (("fork" :repo "nicolaisingh/howm")))
   :init
   (defun my-howm-config ()
     (setq-local fill-column 100)
@@ -2694,9 +2693,9 @@ The default format is specified by `emms-source-playlist-default-format'."
   (howm-remember-insertion-format "%s")
   (howm-user-font-lock-keywords '(("^keywords:" . (0 'howm-mode-ref-face))))
   (howm-view-contents-name "*howm-contents:%s*")
-  (howm-view-contents-persistent nil)
+  (howm-view-contents-persistent t)
   (howm-view-summary-name "*howm-summary*")
-  (howm-view-summary-persistent nil)
+  (howm-view-summary-persistent t)
 
   ;; Use rg/ripgrep for searching
   (howm-view-use-grep t)
@@ -4134,7 +4133,12 @@ of the new org-mode file."
 
 ;;; pass
 
-(use-package pass)
+(use-package pass
+  :custom
+  (pass-suppress-confirmations t)
+  :bind (:map
+         my-ctl-c-P-map
+         ("P" . pass)))
 
 
 ;;; password-store
