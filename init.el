@@ -2193,10 +2193,14 @@ The default format is specified by `emms-source-playlist-default-format'."
   :demand t
   :bind (:map
          my-meta-=-map
-         ("M-SPC" . gptel-send)
-         ("SPC" . gptel-send)
+         ("=" . gptel-send)
+         ("M-=" . gptel-send)
          ("m" . gptel-menu)
          ("q" . gptel-abort))
+  :hook ((gptel-mode-hook . my-gptel-mode-config))
+  :init
+  (defun my-gptel-mode-config ()
+    (setq-local gptel-stream t))
   :config
   (setopt gptel-backend (gptel-make-deepseek "DeepSeek"
                           :stream t :key #'gptel-api-key)
@@ -2206,6 +2210,11 @@ The default format is specified by `emms-source-playlist-default-format'."
   (gptel-org-branching-context t)
   (gptel-stream nil)
   (gptel-track-media t))
+
+(use-package gptel-integrations
+  :after (gptel)
+  :demand t
+  :ensure nil)
 
 
 ;;; graphviz-dot-mode
@@ -3163,6 +3172,17 @@ Useful for completion style 'partial-completion."
     (visual-line-fill-column-mode t)
     (setq fill-column 100
           markdown-unordered-list-item-prefix "  * ")))
+
+
+;;; mcp
+
+(use-package mcp
+  :after (gptel)
+  :custom
+  (mcp-hub-servers
+   '(("fetch" . (:command "uvx" :args ("mcp-server-fetch")))
+     ("filesystem" . (:command "npx" :args ("-y" "@modelcontextprotocol/server-filesystem")
+                               :roots ("/home/nas/mcp-filesystem/"))))))
 
 
 ;;; mermaid-mode
@@ -4432,6 +4452,7 @@ of the new org-mode file."
   :demand t
   :diminish selected-minor-mode
   :bind (:map selected-keymap
+              ("=" . gptel-send)
               ("C" . capitalize-region)
               ("D" . delete-duplicate-lines)
               ("E" . flush-empty-lines)
@@ -4715,7 +4736,10 @@ of the new org-mode file."
 
 ;;; visual-fill-column
 
-(use-package visual-fill-column)
+(use-package visual-fill-column
+  :hook ((minibuffer-setup-hook . (lambda ()
+                                    (when (minibufferp)
+                                      (visual-line-fill-column-mode -1))))))
 
 
 ;;; vundo

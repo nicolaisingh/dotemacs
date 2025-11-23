@@ -685,8 +685,8 @@
 		   (:exclude ".dir-locals.el" "test.el" "tests.el"
 			     "*-test.el" "*-tests.el" "LICENSE"
 			     "README*" "*-pkg.el"))
-		  :source "MELPA" :protocol https :inherit t :depth
-		  treeless :ref
+		  :source "elpaca-menu-lock-file" :protocol https
+		  :inherit t :depth treeless :ref
 		  "9d6313ce7c6eb71bfb24a8d1edcd60fe4534eea3"))
  (graphviz-dot-mode :source "elpaca-menu-lock-file" :recipe
 		    (:package "graphviz-dot-mode" :repo
@@ -945,6 +945,19 @@
 		    "elpaca-menu-lock-file" :protocol https :inherit t
 		    :depth treeless :ref
 		    "db669451bbee7d2ea9872c28661c4679391b9644"))
+ (mcp :source "elpaca-menu-lock-file" :recipe
+      (:package "mcp" :fetcher github :repo "lizqwerscott/mcp.el"
+		:files
+		("*.el" "*.el.in" "dir" "*.info" "*.texi" "*.texinfo"
+		 "doc/dir" "doc/*.info" "doc/*.texi" "doc/*.texinfo"
+		 "lisp/*.el" "docs/dir" "docs/*.info" "docs/*.texi"
+		 "docs/*.texinfo"
+		 (:exclude ".dir-locals.el" "test.el" "tests.el"
+			   "*-test.el" "*-tests.el" "LICENSE"
+			   "README*" "*-pkg.el"))
+		:source "MELPA" :protocol https :inherit t :depth
+		treeless :ref
+		"963b4af6ce743fbb6224f61bb61f05de1c37f511"))
  (mermaid-mode :source "elpaca-menu-lock-file" :recipe
 	       (:package "mermaid-mode" :repo "abrochard/mermaid-mode"
 			 :fetcher github :files
