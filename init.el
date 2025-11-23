@@ -3180,9 +3180,14 @@ Useful for completion style 'partial-completion."
   :after (gptel)
   :custom
   (mcp-hub-servers
-   '(("fetch" . (:command "uvx" :args ("mcp-server-fetch")))
-     ("filesystem" . (:command "npx" :args ("-y" "@modelcontextprotocol/server-filesystem")
-                               :roots ("/home/nas/mcp-filesystem/"))))))
+   `(
+     ;; ("fetch" . (:command "uvx" :args ("mcp-server-fetch")))
+     ("filesystem" . (:command "npx"
+                               :args ("-y" "@modelcontextprotocol/server-filesystem")
+                               :roots ("~/mcp-filesystem/")))
+     ("org-mcp" . (:command "uvx"
+                            :args ("org-mcp")
+                            :env (:ORG_DIR ,(expand-file-name howm-directory)))))))
 
 
 ;;; mermaid-mode
