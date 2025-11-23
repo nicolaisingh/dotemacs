@@ -675,6 +675,19 @@
 		    :source "elpaca-menu-lock-file" :protocol https
 		    :inherit t :depth treeless :ref
 		    "6f87a700137c838568966bc8099dc15786897c32"))
+ (gptel :source "elpaca-menu-lock-file" :recipe
+	(:package "gptel" :repo "karthink/gptel" :fetcher github
+		  :files
+		  ("*.el" "*.el.in" "dir" "*.info" "*.texi"
+		   "*.texinfo" "doc/dir" "doc/*.info" "doc/*.texi"
+		   "doc/*.texinfo" "lisp/*.el" "docs/dir"
+		   "docs/*.info" "docs/*.texi" "docs/*.texinfo"
+		   (:exclude ".dir-locals.el" "test.el" "tests.el"
+			     "*-test.el" "*-tests.el" "LICENSE"
+			     "README*" "*-pkg.el"))
+		  :source "MELPA" :protocol https :inherit t :depth
+		  treeless :ref
+		  "9d6313ce7c6eb71bfb24a8d1edcd60fe4534eea3"))
  (graphviz-dot-mode :source "elpaca-menu-lock-file" :recipe
 		    (:package "graphviz-dot-mode" :repo
 			      "ppareit/graphviz-dot-mode" :fetcher

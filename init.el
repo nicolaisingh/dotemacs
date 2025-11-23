@@ -104,6 +104,7 @@ collection.  Use revert-gc-cons-percentage to restore the value."
 (define-prefix-command 'my-ctl-c-w-map)
 (define-prefix-command 'my-ctl-c-y-map)
 (define-prefix-command 'my-ctl-z-map)
+(define-prefix-command 'my-meta-=-map)
 (define-prefix-command 'my-meta-o-map)
 (keymap-global-set "C-c D" 'my-ctl-c-D-map)
 (keymap-global-set "C-c M" 'my-ctl-c-M-map)
@@ -127,6 +128,7 @@ collection.  Use revert-gc-cons-percentage to restore the value."
 (keymap-global-set "C-c w" 'my-ctl-c-w-map)
 (keymap-global-set "C-c y" 'my-ctl-c-y-map)
 (keymap-global-set "C-z" 'my-ctl-z-map)
+(keymap-global-set "M-=" 'my-meta-=-map)
 (keymap-global-set "M-o" 'my-meta-o-map)
 
 
@@ -423,6 +425,8 @@ From https://www.emacswiki.org/emacs/XModMapMode")
          ("C-x t T" . tab-bar-mode)
          ("M-SPC" . cycle-spacing)
          ("M-s h U" . unhighlight-all-regexp)
+         ;; Move this to C-c c w
+         ;; ("M-=" . nil)
          :map my-ctl-c-D-map
          ("." . benchmark-this)
          ("T" . cancel-debug-on-entry)
@@ -433,6 +437,8 @@ From https://www.emacswiki.org/emacs/XModMapMode")
          ("q" . toggle-debug-on-quit)
          ("t" . debug-on-entry)
          ("v" . debug-on-variable-change)
+         :map my-ctl-c-c-map
+         ("w" . count-words-region)
          :map my-ctl-c-d-map
          ("l" . dictionary-search)
          :map my-ctl-c-e-map
@@ -2179,6 +2185,27 @@ The default format is specified by `emms-source-playlist-default-format'."
   :diminish
   :hook ((prog-mode-hook . goggles-mode)
          (text-mode-hook . goggles-mode)))
+
+
+;;; gptel
+
+(use-package gptel
+  :demand t
+  :bind (:map
+         my-meta-=-map
+         ("M-SPC" . gptel-send)
+         ("SPC" . gptel-send)
+         ("m" . gptel-menu)
+         ("q" . gptel-abort))
+  :config
+  (setopt gptel-backend (gptel-make-deepseek "DeepSeek"
+                          :stream t :key #'gptel-api-key)
+          gptel-model 'deepseek-chat)
+  :custom
+  (gptel-default-mode 'org-mode)
+  (gptel-org-branching-context t)
+  (gptel-stream nil)
+  (gptel-track-media t))
 
 
 ;;; graphviz-dot-mode
@@ -4486,7 +4513,7 @@ of the new org-mode file."
 
 (use-package slime
   :config
-  (setq inferior-lisp-program "clisp"))
+  (setq inferior-lisp-program "sbcl"))
 
 
 ;;; smartparens
