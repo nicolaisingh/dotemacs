@@ -688,6 +688,10 @@
 		  :source "elpaca-menu-lock-file" :protocol https
 		  :inherit t :depth treeless :ref
 		  "9d6313ce7c6eb71bfb24a8d1edcd60fe4534eea3"))
+ (gptel-quick :source "elpaca-menu-lock-file" :recipe
+	      (:source nil :host github :repo "karthink/gptel-quick"
+		       :inherit nil :package "gptel-quick" :ref
+		       "018ff2be8f860a1e8fe3966eec418ad635620c38"))
  (graphviz-dot-mode :source "elpaca-menu-lock-file" :recipe
 		    (:package "graphviz-dot-mode" :repo
 			      "ppareit/graphviz-dot-mode" :fetcher

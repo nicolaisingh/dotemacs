@@ -2195,6 +2195,7 @@ The default format is specified by `emms-source-playlist-default-format'."
          my-meta-=-map
          ("=" . gptel-send)
          ("M-=" . gptel-send)
+         ("g" . gptel)
          ("m" . gptel-menu)
          ("q" . gptel-abort))
   :hook ((gptel-mode-hook . my-gptel-mode-config))
@@ -2205,9 +2206,13 @@ The default format is specified by `emms-source-playlist-default-format'."
   (setopt gptel-backend (gptel-make-deepseek "DeepSeek"
                           :stream t :key #'gptel-api-key)
           gptel-model 'deepseek-chat)
+  (setq gptel-expert-commands t)
+  (setf (alist-get 'org-mode gptel-prompt-prefix-alist) "*Prompt*: ")
+  (setf (alist-get 'org-mode gptel-response-prefix-alist) "*Response*:\n")
   :custom
   (gptel-default-mode 'org-mode)
   (gptel-org-branching-context t)
+  (gptel-rewrite-default-action 'dispatch)
   (gptel-stream nil)
   (gptel-track-media t))
 
@@ -2215,6 +2220,15 @@ The default format is specified by `emms-source-playlist-default-format'."
   :after (gptel)
   :demand t
   :ensure nil)
+
+
+;;; gptel-quick
+
+(use-package gptel-quick
+  :ensure (:host github :repo "karthink/gptel-quick" :inherit nil)
+  :bind (:map
+         my-meta-=-map
+         ("M-q" . gptel-quick)))
 
 
 ;;; graphviz-dot-mode
@@ -4457,7 +4471,6 @@ of the new org-mode file."
   :demand t
   :diminish selected-minor-mode
   :bind (:map selected-keymap
-              ("=" . gptel-send)
               ("C" . capitalize-region)
               ("D" . delete-duplicate-lines)
               ("E" . flush-empty-lines)
@@ -4468,10 +4481,12 @@ of the new org-mode file."
               ("SPC" . canonically-space-region)
               ("a" . align-regexp)
               ("f" . fill-region)
+              ("l" . gptel-send)
               ("q" . selected-off)
               ("r" . reverse-region)
               ("s" . my-sort-lines)
               ("u" . unfill-region)
+              ("w" . gptel-rewrite)
               ("C-c C-a" . mc/edit-beginnings-of-lines)
               ("C-c C-e" . mc/edit-ends-of-lines)
               ("C-c C-SPC" . mc/mark-all-in-region)
