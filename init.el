@@ -2314,11 +2314,7 @@ The default format is specified by `emms-source-playlist-default-format'."
 (use-package howm
   :after (org)
   :demand t
-  :ensure (:protocol ssh :remotes (("fork" :repo "nicolaisingh/howm")))
-  :init
-  (defun my-howm-config ()
-    (setq-local fill-column 100)
-    (visual-line-fill-column-mode t)))
+  :ensure (:protocol ssh :remotes (("fork" :repo "nicolaisingh/howm"))))
 
 ;;; howm-action-lock (action-lock)
 
@@ -2483,8 +2479,7 @@ The default format is specified by `emms-source-playlist-default-format'."
   :hook
   ;; Make sure this runs late to make `delete-trailing-whitespace' not remove the trailing header spaces
   ((howm-mode-hook . (lambda ()
-                       (add-hook 'before-save-hook #'my-howm-before-save 90 t)))
-   (howm-mode-hook . my-howm-config))
+                       (add-hook 'before-save-hook #'my-howm-before-save 90 t))))
   :preface
   (setq howm-default-key-table nil
         howm-template #'my-howm-template
@@ -2761,7 +2756,8 @@ The default format is specified by `emms-source-playlist-default-format'."
         howm-prefix nil)
   :config
   (setopt howm-file-name-format "%Y/%m/%Y-%m-%d.org")
-  (add-to-list 'howm-list-title 'my-howm-list-grep-tag))
+  (add-to-list 'howm-list-title 'my-howm-list-grep-tag)
+  (add-to-list 'howm-view-open-by-myself "image/.*"))
 
 ;;; howm-view
 
@@ -2784,7 +2780,6 @@ The default format is specified by `emms-source-playlist-default-format'."
   :hook ((howm-view-contents-mode-hook . hl-line-mode)
          (howm-view-contents-mode-hook . howm-mode)
          (howm-view-contents-mode-hook . howm-org-font-lock-minor-mode)
-         (howm-view-contents-mode-hook . my-howm-config)
          (howm-view-contents-mode-hook . my-howm-other-modes-keys)
          (howm-view-summary-mode-hook . hl-line-mode)
          (howm-view-summary-mode-hook . my-howm-other-modes-keys))
@@ -3403,6 +3398,8 @@ Useful for completion style 'partial-completion."
          ("C-M-h" . org-mark-subtree)
          ("C-," . nil))
   :hook ((org-mode-hook . no-indent-tabs-mode)
+         (org-mode-hook . (lambda ()
+                            (set-fill-column 100)))
          (org-mode-hook . visual-line-fill-column-mode))
   :custom
   (org-adapt-indentation nil)
@@ -4631,6 +4628,11 @@ of the new org-mode file."
          ("i" . tempel-insert)))
 
 
+;;; terraform-mode
+
+(use-package terraform-mode)
+
+
 ;;; tex-mode
 
 (use-package tex-mode
@@ -4757,9 +4759,14 @@ of the new org-mode file."
 ;;; visual-fill-column
 
 (use-package visual-fill-column
-  :hook ((minibuffer-setup-hook . (lambda ()
+  :hook ((image-mode-hook . turn-off-visual-line-fill-column-mode)
+         (minibuffer-setup-hook . (lambda ()
                                     (when (minibufferp)
-                                      (visual-line-fill-column-mode -1))))))
+                                      (turn-off-visual-line-fill-column-mode))))
+         (transient-setup-buffer-hook . turn-off-visual-line-fill-column-mode))
+  :config
+  (defun turn-off-visual-line-fill-column-mode ()
+    (visual-line-fill-column-mode -1)))
 
 
 ;;; vundo
