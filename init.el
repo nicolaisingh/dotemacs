@@ -2202,6 +2202,28 @@ The default format is specified by `emms-source-playlist-default-format'."
   :init
   (defun my-gptel-mode-config ()
     (setq-local gptel-stream t))
+
+  (defun my-gptel-load-prompts ()
+    "Read contents of llm-prompts/ and return an alist according to `gptel-directives'."
+    (let* ((dir (expand-file-name "llm-prompts" user-emacs-directory))
+           (files (directory-files-recursively dir ".*" nil t nil)))
+      (mapcar (lambda (file)
+                (when (file-regular-p file)
+                  (let ((name (intern
+                               (replace-regexp-in-string
+                                "/" "-"
+                                (file-name-sans-extension
+                                 (file-relative-name file dir)))))
+                        (prompt (with-temp-buffer
+                                  (insert-file-contents file)
+                                  (buffer-string))))
+                    (cons name prompt))))
+              files)))
+
+  (defun my-gptel-update-prompts ()
+    "Read llm-prompts/ and update `gptel-directives'."
+    (interactive)
+    (setopt gptel-directives (my-gptel-load-prompts)))
   :config
   (setopt gptel-backend (gptel-make-deepseek "DeepSeek"
                           :stream t :key #'gptel-api-key)
@@ -2211,6 +2233,7 @@ The default format is specified by `emms-source-playlist-default-format'."
   (setf (alist-get 'org-mode gptel-response-prefix-alist) "*Response*:\n")
   :custom
   (gptel-default-mode 'org-mode)
+  (gptel-directives (my-gptel-load-prompts))
   (gptel-org-branching-context t)
   (gptel-rewrite-default-action 'dispatch)
   (gptel-stream nil)
