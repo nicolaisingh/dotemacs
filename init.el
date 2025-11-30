@@ -2199,6 +2199,14 @@ The default format is specified by `emms-source-playlist-default-format'."
          ("m" . gptel-menu)
          ("q" . gptel-abort))
   :hook ((gptel-mode-hook . my-gptel-mode-config))
+  :custom
+  (gptel-default-mode 'org-mode)
+  (gptel-directives (my-gptel-load-prompts))
+  (gptel-display-buffer-action '(pop-to-buffer-same-window))
+  (gptel-org-branching-context t)
+  (gptel-rewrite-default-action 'dispatch)
+  (gptel-stream nil)
+  (gptel-track-media t)
   :init
   (defun my-gptel-mode-config ()
     (setq-local gptel-stream t))
@@ -2225,21 +2233,38 @@ The default format is specified by `emms-source-playlist-default-format'."
     (interactive)
     (setopt gptel-directives (my-gptel-load-prompts)))
   :config
-  (setopt gptel-backend (gptel-make-deepseek "DeepSeek"
-                          :stream t :key #'gptel-api-key)
-          gptel-model 'deepseek-chat)
+  (setf (alist-get 'org-mode gptel-prompt-prefix-alist) "*User*: "
+        (alist-get 'org-mode gptel-response-prefix-alist) "*Assistant*:\n")
   (setq gptel-expert-commands t)
-  (setf (alist-get 'org-mode gptel-prompt-prefix-alist) "*Prompt*: ")
-  (setf (alist-get 'org-mode gptel-response-prefix-alist) "*Response*:\n")
-  :custom
-  (gptel-default-mode 'org-mode)
-  (gptel-directives (my-gptel-load-prompts))
-  (gptel-org-branching-context t)
-  (gptel-rewrite-default-action 'dispatch)
-  (gptel-stream nil)
-  (gptel-track-media t))
+
+  (defun my-gptel-proofread (beg end)
+    "Ask gptel to proofread the region."
+    (interactive "r")
+    (let ((prompt (buffer-substring-no-properties beg end)))
+      (gptel-with-preset 'proofread
+        (gptel-request prompt
+          :in-place t
+          :callback (lambda (response info)
+                      (when (stringp response)
+                        (with-current-buffer (plist-get info :buffer)
+                          (delete-region beg end)
+                          (goto-char (plist-get info :position))
+                          (insert response))))))))
+
+  ;; Define backends
+  (let ((chatgpt gptel--openai)
+        (deepseek (gptel-make-deepseek "DeepSeek"
+                    :stream t
+                    :key #'gptel-api-key)))
+    (setopt gptel-backend deepseek
+            gptel-model 'deepseek-chat)))
 
 (use-package gptel-integrations
+  :after (gptel)
+  :demand t
+  :ensure nil)
+
+(use-package gptel-my-presets
   :after (gptel)
   :demand t
   :ensure nil)
@@ -3151,6 +3176,7 @@ Useful for completion style 'partial-completion."
 (use-package magit
   :bind (("C-c g" . magit-dispatch)
          ("C-x g" . magit-status))
+  ;; :hook ((magit-status-sections-hook . magit-insert-modules))
   :custom
   (magit-define-global-key-bindings nil)
   (magit-diff-refine-hunk t)
@@ -4491,6 +4517,7 @@ of the new org-mode file."
   :demand t
   :diminish selected-minor-mode
   :bind (:map selected-keymap
+              ("= p" . my-gptel-proofread)
               ("C" . capitalize-region)
               ("D" . delete-duplicate-lines)
               ("E" . flush-empty-lines)

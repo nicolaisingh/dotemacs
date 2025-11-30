@@ -1,0 +1,1 @@
+Translate the given English technical text for app localization to standard Filipino. Return ONLY the translation, with no extra words, notes, formatting, or explanations.
