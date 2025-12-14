@@ -854,6 +854,12 @@
 		  "elpaca-menu-lock-file" :protocol https :inherit t
 		  :depth treeless :ref
 		  "6a67e4253cc02aa9ce85ef96290c95198b65d913"))
+ (llm-tool-collection :source "elpaca-menu-lock-file" :recipe
+		      (:source "elpaca-menu-lock-file" :protocol https
+			       :inherit t :depth treeless :repo
+			       "~/.emacs.d/packages/llm-tool-collection"
+			       :package "llm-tool-collection" :ref
+			       "a383ccf3df6c86684da77fb61ea4ebe67a21eedb"))
  (log4e :source "elpaca-menu-lock-file" :recipe
 	(:package "log4e" :repo "aki2o/log4e" :fetcher github :files
 		  ("*.el" "*.el.in" "dir" "*.info" "*.texi"
@@ -1750,20 +1756,20 @@
 		  "elpaca-menu-lock-file" :protocol https :inherit t
 		  :depth treeless :ref
 		  "30f85b4ae1f2a7189d44bb738b49559928d046cb"))
- (with-editor :source "elpaca-menu-lock-file"
-   :recipe
-   (:package "with-editor" :fetcher github :repo "magit/with-editor"
-	     :files
-	     ("*.el" "*.el.in" "dir" "*.info" "*.texi" "*.texinfo"
-	      "doc/dir" "doc/*.info" "doc/*.texi" "doc/*.texinfo"
-	      "lisp/*.el" "docs/dir" "docs/*.info" "docs/*.texi"
-	      "docs/*.texinfo"
-	      (:exclude ".dir-locals.el" "test.el" "tests.el"
-			"*-test.el" "*-tests.el" "LICENSE" "README*"
-			"*-pkg.el"))
-	     :source "elpaca-menu-lock-file" :protocol https :inherit
-	     t :depth treeless :ref
-	     "f32cd7b09d518b629bfaa3eeb92b539891c6b9bc"))
+ (with-editor :source "elpaca-menu-lock-file" :recipe
+	      (:package "with-editor" :fetcher github :repo
+			"magit/with-editor" :files
+			("*.el" "*.el.in" "dir" "*.info" "*.texi"
+			 "*.texinfo" "doc/dir" "doc/*.info"
+			 "doc/*.texi" "doc/*.texinfo" "lisp/*.el"
+			 "docs/dir" "docs/*.info" "docs/*.texi"
+			 "docs/*.texinfo"
+			 (:exclude ".dir-locals.el" "test.el"
+				   "tests.el" "*-test.el" "*-tests.el"
+				   "LICENSE" "README*" "*-pkg.el"))
+			:source "elpaca-menu-lock-file" :protocol
+			https :inherit t :depth treeless :ref
+			"f32cd7b09d518b629bfaa3eeb92b539891c6b9bc"))
  (writeroom-mode :source "elpaca-menu-lock-file" :recipe
 		 (:package "writeroom-mode" :fetcher github :repo
 			   "joostkremers/writeroom-mode" :files

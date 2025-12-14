@@ -2193,9 +2193,9 @@ The default format is specified by `emms-source-playlist-default-format'."
   :bind (:map
          my-meta-=-map
          ("=" . gptel-send)
+         ("M-+" . gptel-menu)
          ("M-=" . gptel-send)
          ("g" . gptel)
-         ("m" . gptel-menu)
          ("q" . gptel-abort))
   :hook ((gptel-mode-hook . my-gptel-mode-config))
   :custom
