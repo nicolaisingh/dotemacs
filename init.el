@@ -1170,6 +1170,8 @@ If ARG is Non-nil, the existing command log buffer is cleared."
   :bind (:map dired-mode-map
               ("C-." . my-dired-toggle-other-files-visibility)
               ("C-c C-a" . org-attach-dired-to-subtree)
+              ("C-c M A" . emms-play-dired)
+              ("C-c M a" . emms-add-dired)
               ("C-c d d" . dired-ediff-a-b)
               ("C-c m !" . dired-apply-to-marked-files)
               ("C-c m d" . dired-ediff-marked-files)
@@ -1464,7 +1466,6 @@ be file B."
          ("%" . my-emms-toggle-random-playlist)
          ("1" . my-emms-toggle-repeat-track)
          ("B" . emms-smart-browse)
-         ("L" . my-emms-metaplaylist-play-playlist)
          ("P" . emms-pause)
          ("b" . my-emms-metaplaylist-mode-go)
          ("i" . emms-show-all)
@@ -1473,8 +1474,6 @@ be file B."
          ("n" . emms-next)
          ("p" . emms-previous)
          ("s" . emms-stop)
-         ("A" . emms-play-dired)
-         ("a" . emms-add-dired)
          :map emms-browser-mode-map
          ("R" . emms-browser-replace-playlist)
          ("a" . emms-add-directory-tree)
@@ -2972,7 +2971,11 @@ The default format is specified by `emms-source-playlist-default-format'."
     (keymap-set icomplete-minibuffer-map "C-^" (lambda ()
                                                  (interactive)
                                                  (setq-local max-mini-window-height
-                                                             (if (< max-mini-window-height 0.3) 0.3 0.75))))
+                                                             (or (car (let ((window-sizes '(0.3 0.8)))
+                                                                        (cl-remove-if (lambda (h)
+                                                                                        (>= max-mini-window-height h))
+                                                                                      window-sizes)))
+                                                                 max-mini-window-height))))
     (keymap-set icomplete-minibuffer-map "C-c M-w" #'minibuffer-selection-kill-ring-save)
     (keymap-set icomplete-minibuffer-map "C-n" #'icomplete-forward-completions)
     (keymap-set icomplete-minibuffer-map "C-p" #'icomplete-backward-completions)
