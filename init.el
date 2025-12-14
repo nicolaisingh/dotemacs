@@ -3160,6 +3160,19 @@ Useful for completion style 'partial-completion."
 (use-package know-your-http-well)
 
 
+;;; llm-tool-collection
+
+(use-package llm-tool-collection
+  :after (gptel)
+  :demand t
+  :ensure (:repo "~/.emacs.d/packages/llm-tool-collection")
+  :config
+  (mapcar (apply-partially #'apply #'gptel-make-tool)
+          (llm-tool-collection-get-category "filesystem"))
+  (mapcar (apply-partially #'apply #'gptel-make-tool)
+          (llm-tool-collection-get-category "buffers")))
+
+
 ;;; localsend
 
 (use-package localsend
@@ -3239,6 +3252,9 @@ Useful for completion style 'partial-completion."
 
 (use-package mcp
   :after (gptel)
+  :bind (:map
+         my-meta-=-map
+         ("m" . mcp-hub))
   :custom
   (mcp-hub-servers
    `(

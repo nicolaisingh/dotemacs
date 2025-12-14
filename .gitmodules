@@ -1,0 +1,3 @@
+[submodule "packages/llm-tool-collection"]
+	path = packages/llm-tool-collection
+	url = https://github.com/skissue/llm-tool-collection

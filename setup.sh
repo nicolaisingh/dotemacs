@@ -15,6 +15,7 @@ ln -sn $initdir/eshell/alias	~/.emacs.d/eshell/alias
 ln -sn $initdir/lisp		~/.emacs.d/lisp
 ln -sn $initdir/llm-prompts	~/.emacs.d/llm-prompts
 ln -sn $initdir/org-templates	~/.emacs.d/org-templates
+ln -sn $initdir/packages	~/.emacs.d/packages
 ln -sn $initdir/snippets	~/.emacs.d/snippets
 ln -sn $initdir/templates	~/.emacs.d/templates
 ln -sn $initdir/transient	~/.emacs.d/transient
