@@ -77,7 +77,7 @@
 ;;;; System prompts
 
 (gptel-make-preset 'coder-deepseek
-  :description "Generate/Intepret code (deepseek-chat)"
+  :description "Generate/Intepret code (deepseek-reasoner)"
   :system 'programming
   :backend "DeepSeek"
   :model 'deepseek-reasoner
@@ -114,6 +114,11 @@
   :system 'summarizer
   :backend "ChatGPT"
   :model 'gpt-4.1-mini)
+
+(gptel-make-preset 'git-commit
+  :description "Git commit assistant"
+  :system 'git-commit
+  :parents '(coder-o4-mini))
 
 
 (provide ' gptel-my-presets)

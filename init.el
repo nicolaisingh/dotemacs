@@ -819,6 +819,7 @@ From https://www.emacswiki.org/emacs/XModMapMode")
 ;;; chatgpt-shell
 
 (use-package chatgpt-shell
+  :disabled
   :bind (:map
          my-ctl-c-l-map
          ("P" . (lambda () (interactive) (message "%s" (chatgpt-shell-system-prompt))))
@@ -2248,6 +2249,20 @@ The default format is specified by `emms-source-playlist-default-format'."
                         (with-current-buffer (plist-get info :buffer)
                           (delete-region beg end)
                           (goto-char (plist-get info :position))
+                          (insert response))))))))
+
+  (defun my-gptel-git-commit-message ()
+    "Ask gptel to assist in writing a good git commit message."
+    (interactive)
+    (let ((staged-diff (magit-git-output "diff" "--cached")))
+      (gptel-with-preset 'git-commit
+        (gptel-request staged-diff
+          :in-place t
+          :stream t
+          :context nil
+          :callback (lambda (response info)
+                      (when (stringp response)
+                        (with-current-buffer (plist-get info :buffer)
                           (insert response))))))))
 
   ;; Define backends
