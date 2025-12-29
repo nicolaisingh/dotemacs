@@ -120,6 +120,11 @@
   :system 'git-commit
   :parents '(coder-o4-mini))
 
+(gptel-make-preset 'cli-assistant
+  :description "CLI command assistant"
+  :system 'cli-assistant
+  :backend "ChatGPT"
+  :model 'gpt-4.1-mini)
 
 (provide ' gptel-my-presets)
 ;;; gptel-my-presets.el ends here

@@ -3279,7 +3279,9 @@ Useful for completion style 'partial-completion."
                                :roots ("~/mcp-filesystem/")))
      ("org-mcp" . (:command "uvx"
                             :args ("org-mcp")
-                            :env (:ORG_DIR ,(expand-file-name howm-directory)))))))
+                            :env (:ORG_DIR ,(expand-file-name howm-directory))))
+     ("mcp-nixos" . (:command "uvx"
+                              :args ("mcp-nixos"))))))
 
 
 ;;; mermaid-mode
