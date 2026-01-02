@@ -1805,11 +1805,7 @@ The default format is specified by `emms-source-playlist-default-format'."
 
 ;;; emojify
 
-(use-package emojify
-  :disabled
-  :demand t
-  :config
-  (global-emojify-mode))
+(use-package emojify)
 
 
 ;;; epa
@@ -2197,8 +2193,16 @@ The default format is specified by `emms-source-playlist-default-format'."
          ("M-+" . gptel-menu)
          ("M-=" . gptel-send)
          ("g" . gptel)
-         ("q" . gptel-abort))
-  :hook ((gptel-mode-hook . my-gptel-mode-config))
+         ("q" . gptel-abort)
+         :map gptel-mode-map
+         ("M-n" . gptel-end-of-response)
+         ("M-p" . gptel-beginning-of-response)
+         :repeat-map
+         gptel-mode-repeat-map
+         ("M-n" . gptel-end-of-response)
+         ("M-p" . gptel-beginning-of-response))
+  :hook ((gptel-mode-hook . my-gptel-mode-config)
+         (gptel-post-response-functions . my-gptel-post-response-config))
   :custom
   (gptel-default-mode 'org-mode)
   (gptel-directives (my-gptel-load-prompts))
@@ -2210,6 +2214,10 @@ The default format is specified by `emms-source-playlist-default-format'."
   :init
   (defun my-gptel-mode-config ()
     (setq-local gptel-stream t))
+
+  (defun my-gptel-post-response-config (beg end)
+    (gptel-end-of-response)
+    (recenter-top-bottom))
 
   (defun my-gptel-load-prompts ()
     "Read contents of llm-prompts/ and return an alist according to `gptel-directives'."
