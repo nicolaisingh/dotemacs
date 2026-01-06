@@ -2213,7 +2213,11 @@ The default format is specified by `emms-source-playlist-default-format'."
   (gptel-track-media t)
   :init
   (defun my-gptel-mode-config ()
-    (setq-local gptel-stream t))
+    (setq-local gptel-stream t)
+    (font-lock-add-keywords nil `((,(regexp-quote (alist-get 'org-mode gptel-prompt-prefix-alist)) 0
+                                   '(:inherit font-lock-builtin-face))
+                                  (,(regexp-quote (alist-get 'org-mode gptel-response-prefix-alist)) 0
+                                   '(:inherit font-lock-variable-name-face)))))
 
   (defun my-gptel-post-response-config (beg end)
     (gptel-end-of-response)
