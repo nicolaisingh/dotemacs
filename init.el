@@ -2762,10 +2762,11 @@ The default format is specified by `emms-source-playlist-default-format'."
   :ensure nil
   :custom
   (howm-view-close-frame/tab-on-exit t)
+  (howm-view-search-recenter 5)
   (howm-view-keep-one-window t)
   (howm-view-split-horizontally nil)
-  (howm-view-summary-window-size 20)
-  (howm-view-window-location 'tab))
+  (howm-view-summary-window-size 30)
+  (howm-view-window-location nil))
 
 ;;; howm-shift
 
@@ -2811,10 +2812,10 @@ The default format is specified by `emms-source-playlist-default-format'."
   (howm-remember-first-line-to-title t)
   (howm-remember-insertion-format "%s")
   (howm-user-font-lock-keywords '(("^keywords:" . (0 'howm-mode-ref-face))))
-  (howm-view-contents-name "*howm-contents:%s*")
-  (howm-view-contents-persistent t)
+  (howm-view-contents-name "*howm-contents*")
+  (howm-view-contents-persistent nil)
   (howm-view-summary-name "*howm-summary*")
-  (howm-view-summary-persistent t)
+  (howm-view-summary-persistent nil)
 
   ;; Use rg/ripgrep for searching
   (howm-view-use-grep t)
@@ -2848,12 +2849,23 @@ The default format is specified by `emms-source-playlist-default-format'."
   :bind (:map
          howm-view-summary-mode-map
          ("<backtab>" . howm-view-summary-previous-section)
+         ("M-n" . howm-view-summary-next-section)
+         ("M-p" . howm-view-summary-previous-section)
          :map
          howm-view-contents-mode-map
-         ("<backtab>" . riffle-contents-goto-previous-item))
+         ("C-c C-b" . outline-backward-same-level)
+         ("C-c C-f" . outline-forward-same-level)
+         ("C-c C-n" . outline-next-heading)
+         ("C-c C-p" . outline-previous-heading)
+         ("M-n" . riffle-contents-goto-next-item)
+         ("M-p" . riffle-contents-goto-previous-item)
+         ;; unset both for `outline-minor-mode-cycle'
+         ("<tab>" . nil)
+         ("TAB" . nil))
   :hook ((howm-view-contents-mode-hook . hl-line-mode)
          (howm-view-contents-mode-hook . howm-mode)
          (howm-view-contents-mode-hook . howm-org-font-lock-minor-mode)
+         (howm-view-contents-mode-hook . outline-minor-mode)
          (howm-view-contents-mode-hook . my-howm-other-modes-keys)
          (howm-view-summary-mode-hook . hl-line-mode)
          (howm-view-summary-mode-hook . my-howm-other-modes-keys))
@@ -2884,7 +2896,8 @@ The default format is specified by `emms-source-playlist-default-format'."
             (keymap-set map "m" #'howm-menu)
             (keymap-set map "o" #'howm-occur)
             (keymap-set map "s" #'howm-list-grep-fixed)
-            (keymap-set map "x" #'howm-list-mark-ring))
+            (keymap-set map "x" #'howm-list-mark-ring)
+            (keymap-set map "M-h" #'outline-mark-subtree))
           (list howm-view-summary-mode-map
                 howm-view-contents-mode-map))))
 

@@ -230,9 +230,9 @@ numbered variants the same as the base color."
      `(howm-reminder-late-deadline-face ((t (:weight bold :foreground ,color-red-2 :background ,color-pale-red))))
      `(howm-reminder-today-face ((t (:background ,color-pale-green))))
      `(howm-reminder-tomorrow-face ((t (:background ,color-pale-gray))))
-     `(howm-view-empty-face ((t (:inherit default :background ,color-white))))
+     `(howm-view-empty-face ((t (:inherit default :background ,color-pale-gray-2))))
      `(howm-view-hilit-face ((t (:background ,color-pale-cyan))))
-     `(howm-view-name-face ((t (:inherit default :background ,color-white))))
+     `(howm-view-name-face ((t (:inherit default :background ,color-pale-gray))))
 
      ;; isearch
      `(isearch ((t (:background ,color-pale-yellow))))
