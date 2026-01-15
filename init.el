@@ -526,7 +526,8 @@ From https://www.emacswiki.org/emacs/XModMapMode")
   (tab-bar-auto-width-max '((200) 20))
   (tab-bar-close-button-show nil)
   (tab-bar-format '(tab-bar-format-history
-                    tab-bar-format-tabs tab-bar-separator
+                    tab-bar-format-tabs-groups
+                    tab-bar-separator
                     tab-bar-format-align-right
                     tab-bar-format-global))
   (tab-bar-show t)
@@ -2568,6 +2569,9 @@ The default format is specified by `emms-source-playlist-default-format'."
                '("%dateonly" . (lambda (arg)
                                  (let ((date (format-time-string howm-date-format)))
                                    (insert (format howm-insert-date-format date))))))
+  (add-to-list 'howm-template-rules
+               '("%notitle" . (lambda (arg)
+                                (insert "Notes"))))
 
   (defun my-howm-jump-to-last-view ()
     (interactive)
@@ -2592,11 +2596,11 @@ The default format is specified by `emms-source-playlist-default-format'."
 
   (defun my-howm-before-save ()
     (my-howm-collect-keywords)
-    ;; Ensures there is a trailing space at the end of org headers
+    ;; Ensures old notes have proper titles
     (save-excursion
       (goto-char (point-min))
       (while (re-search-forward "^\\*+$" nil t)
-        (replace-match (concat (match-string 0) " ")))))
+        (replace-match (concat (match-string 0) " Notes")))))
 
   (defun my-howm-message-title-state (&optional undo)
     (message "Titles: %s" (if howm-list-title-previous "On" "Off")))
@@ -2604,7 +2608,7 @@ The default format is specified by `emms-source-playlist-default-format'."
   (defun my-howm-template (which-template previous-buffer)
     "Howm template chooser."
     (let ((templates `(("default"
-                        ,(concat howm-view-title-header " %title\n%date %file\n\n%cursor\n\n"))
+                        ,(concat howm-view-title-header " %notitle\n%date %file\n\n%cursor\n\n"))
 
                        ("Meeting"
                         ,(concat howm-view-title-header " Meeting: %title%cursor\n"
@@ -2626,16 +2630,18 @@ The default format is specified by `emms-source-playlist-default-format'."
                                        nil t nil t)))
           (cadr (assoc choice templates))))
        (t
-        (concat howm-view-title-header " %title\n%date %file\n\n%cursor\n\n")))))
+        (concat howm-view-title-header " %notitle\n%date %file\n\n%cursor\n\n")))))
 
   (defun my-howm-insert-keywords-line ()
     "Insert keywords line."
     (interactive)
     (let* ((completion-table (mapcar #'list (howm-keyword-list)))
-           (keywords (completing-read-multiple "Keyword: " completion-table)))
-      (unless (eolp) (goto-char (pos-eol)))
-      (newline)
-      (insert "keywords: " (string-join keywords " "))))
+           (keywords (completing-read-multiple "Keyword: " completion-table nil nil "@")))
+      (save-excursion
+        (goto-char (pos-eol))
+        (unless (and (bolp) (eolp))
+          (newline))
+        (insert "keywords: " (string-join keywords " ")))))
 
   (defun my-howm-insert-file-ref ()
     "Insert a ref or goto-link to a file."
@@ -2899,7 +2905,16 @@ The default format is specified by `emms-source-playlist-default-format'."
             (keymap-set map "x" #'howm-list-mark-ring)
             (keymap-set map "M-h" #'outline-mark-subtree))
           (list howm-view-summary-mode-map
-                howm-view-contents-mode-map))))
+                howm-view-contents-mode-map)))
+  :config
+  ;; Cannot put in :custom due to howm-if-ver1dot3 check in howm code
+  (setopt howm-view-title-skip-regexp
+          (let* ((h (regexp-quote howm-view-title-header))
+                 (titles (regexp-opt '(" Notes" "")))
+                 ;; Skip default title headers
+                 (r1 (format "^\\(%s%s\\)? *$" h titles))
+                 (r3 (format "\\(%s\\)\\|\\(^\\[[-: 0-9]+\\]\\( \\|$\\)\\)" r1)))
+            r3)))
 
 
 ;;; htmlize

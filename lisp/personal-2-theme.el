@@ -95,7 +95,9 @@ numbered variants the same as the base color."
          (default-font "Atkinson Hyperlegible Mono")
          (variable-font "Atkinson Hyperlegible Next")
          (fixed-serif-font "Monospace Serif")
-         (flat-box `(:line-width 3 :style flat-button)))
+         (flat-box `(:line-width 3 :style flat-button))
+         (released `(:line-width 1 :style released-button))
+         (pressed `(:line-width 1 :style pressed-button)))
     (custom-theme-set-faces
      'personal-2
 
@@ -286,6 +288,8 @@ numbered variants the same as the base color."
      `(tab-bar ((t (:inherit default :background ,color-pale-gray))))
      `(tab-bar-tab ((t (:inherit tab-bar :weight bold :background ,color-white :box ,flat-box))))
      `(tab-bar-tab-inactive ((t (:inherit tab-bar :background ,color-pale-gray :box ,flat-box :foreground ,fg-inactive))))
+     `(tab-bar-tab-group-current ((t (:inherit tab-bar-tab :weight normal :box ,flat-box :background ,color-pale-blue))))
+     `(tab-bar-tab-group-inactive ((t (:inherit tab-bar-tab :weight normal :box ,released :background ,color-pale-gray))))
 
      ;; yas
      `(yas-field-highlight-face ((t (:inherit minibuffer-prompt)))))))
