@@ -2752,14 +2752,15 @@ The default format is specified by `emms-source-playlist-default-format'."
   :after (howm)
   :ensure nil
   :bind (("C-z 1" . howm-list-schedule)
-         ("C-z 2" . howm-list-todo)
-         :map
-         howm-mode-map
-         ("C-z 1" . howm-list-schedule)
-         ("C-z 2" . howm-list-todo))
+         ("C-z 2" . my-howm-list-todo))
   :config
   ;; include timestamp part and note filenames
-  (setopt howm-highlight-date-regexp-format "\\(?:\\[%Y-%m-%d.*?]\\|%Y-%m-%d\\)?"))
+  (setopt howm-highlight-date-regexp-format "\\(?:\\[%Y-%m-%d.*?]\\|%Y-%m-%d\\)?")
+
+  (defun my-howm-list-todo ()
+    (interactive)
+    (howm-list-todo)
+    (howm-reminder-goto-today)))
 
 ;;; howm-riffle (riffle)
 
@@ -2909,12 +2910,27 @@ The default format is specified by `emms-source-playlist-default-format'."
   :config
   ;; Cannot put in :custom due to howm-if-ver1dot3 check in howm code
   (setopt howm-view-title-skip-regexp
-          (let* ((h (regexp-quote howm-view-title-header))
-                 (titles (regexp-opt '(" Notes" "")))
-                 ;; Skip default title headers
-                 (r1 (format "^\\(%s%s\\)? *$" h titles))
-                 (r3 (format "\\(%s\\)\\|\\(^\\[[-: 0-9]+\\]\\( \\|$\\)\\)" r1)))
-            r3)))
+          (rx (or
+               ;; Default/empty header line
+               (group
+                bol
+                (opt
+                 (eval howm-view-title-header)
+                 (or " Notes" ""))
+                (* " ")
+                eol)
+
+               ;; Line that starts with a timestamp (excluding todo items)
+               (group
+                bol
+                "[" (+ (any "-" ":" " " digit)) "]"
+                (or " " eol))
+
+               ;; Keywords line
+               (group
+                bol
+                "keywords:"
+                (1+ (* space) "@" (+ any)))))))
 
 
 ;;; htmlize
