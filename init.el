@@ -2633,15 +2633,22 @@ The default format is specified by `emms-source-playlist-default-format'."
         (concat howm-view-title-header " %notitle\n%date %file\n\n%cursor\n\n")))))
 
   (defun my-howm-insert-keywords-line ()
-    "Insert keywords line."
+    "Insert keywords line or append if on one."
     (interactive)
     (let* ((completion-table (mapcar #'list (howm-keyword-list)))
-           (keywords (completing-read-multiple "Keyword: " completion-table nil nil "@")))
+           (keywords (completing-read-multiple "Keyword: " completion-table nil nil "@"))
+           (method))
       (save-excursion
-        (goto-char (pos-eol))
-        (unless (and (bolp) (eolp))
-          (newline))
-        (insert "keywords: " (string-join keywords " ")))))
+        (beginning-of-line)
+        (cond ((looking-at-p "keywords: ")
+               (end-of-line)
+               (insert " "))
+              ((looking-at-p "^$")
+               (insert "keywords: "))
+              (t
+               (end-of-line)
+               (insert "\nkeywords: ")))
+        (insert (string-join keywords " ")))))
 
   (defun my-howm-insert-file-ref ()
     "Insert a ref or goto-link to a file."
