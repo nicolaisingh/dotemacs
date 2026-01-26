@@ -1133,7 +1133,18 @@ If ARG is Non-nil, the existing command log buffer is cleared."
 
 ;;; deadgrep
 
-(use-package deadgrep)
+(use-package deadgrep
+  :bind (:map deadgrep-mode-map
+              ("C-o" . my-deadgrep-open-result-other-window))
+  :config
+  (defun my-deadgrep-open-result-other-window ()
+    (interactive)
+    (let* ((deadgrep-buffer (current-buffer))
+           (deadgrep-window (get-buffer-window deadgrep-buffer)))
+      (select-window (next-window (get-buffer-window deadgrep-buffer)))
+      (set-buffer deadgrep-buffer)
+      (deadgrep-visit-result)
+      (select-window deadgrep-window))))
 
 
 ;;; devdocs
@@ -2208,6 +2219,7 @@ The default format is specified by `emms-source-playlist-default-format'."
   (gptel-default-mode 'org-mode)
   (gptel-directives (my-gptel-load-prompts))
   (gptel-display-buffer-action '(pop-to-buffer-same-window))
+  (gptel-log-level 'info)
   (gptel-org-branching-context t)
   (gptel-rewrite-default-action 'dispatch)
   (gptel-stream nil)
@@ -4531,6 +4543,11 @@ of the new org-mode file."
 ;;; qrencode
 
 (use-package qrencode)
+
+
+;;; rainbow-mode
+
+(use-package rainbow-mode)
 
 
 ;;; recentf
