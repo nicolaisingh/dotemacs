@@ -2476,7 +2476,18 @@ The default format is specified by `emms-source-playlist-default-format'."
          :map howm-mode-map
          ("C-z S" . howm-search-past)
          ("C-z d" . howm-insert-date)
-         ("C-z t" . howm-insert-dtime)))
+         ("C-z t" . howm-insert-dtime)
+         ("C-z +" . my-howm-insert-reminder))
+  :config
+  (defun my-howm-insert-reminder ()
+    (interactive)
+    (let ((reminder-type (read-char-choice
+                          (format "Reminder type (%s): " howm-reminder-marks)
+                          (mapcar #'identity "-+~!@."))))
+      (insert reminder-type))
+    (backward-char 1)
+    (howm-insert-date)
+    (forward-char 1)))
 
 ;;; howm-menu
 
