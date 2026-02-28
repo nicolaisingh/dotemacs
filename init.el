@@ -1197,6 +1197,7 @@ If ARG is Non-nil, the existing command log buffer is cleared."
   (dired-dwim-target t)
   (dired-hide-details-hide-information-lines nil)
   (dired-hide-details-hide-symlink-targets nil)
+  (dired-mouse-drag-files t)
   (dired-isearch-filenames t)
   (dired-kill-when-opening-new-dired-buffer nil)
   (dired-recursive-copies 'always)
@@ -2850,9 +2851,9 @@ The default format is specified by `emms-source-playlist-default-format'."
   (howm-remember-insertion-format "%s")
   (howm-user-font-lock-keywords '(("^keywords:" . (0 'howm-mode-ref-face))))
   (howm-view-contents-name "*howm-contents*")
-  (howm-view-contents-persistent nil)
+  (howm-view-contents-persistent t)
   (howm-view-summary-name "*howm-summary*")
-  (howm-view-summary-persistent nil)
+  (howm-view-summary-persistent t)
 
   ;; Use rg/ripgrep for searching
   (howm-view-use-grep t)
