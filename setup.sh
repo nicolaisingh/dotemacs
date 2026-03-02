@@ -3,22 +3,22 @@
 initdir=${1:-$(pwd)}
 
 mkdir -p ~/.emacs.d
-mkdir -p ~/.emacs.d/autosaves
+mkdir -p ~/.emacs.d/auto-save-files
 mkdir -p ~/.emacs.d/eshell
 
-ln -sn $initdir/abbrev-defs.el	~/.emacs.d/abbrev-defs.el
-ln -sn $initdir/early-init.el	~/.emacs.d/early-init.el
-ln -sn $initdir/init.el		~/.emacs.d/init.el
+ln -sni $initdir/abbrev-defs.el ~/.emacs.d/abbrev-defs.el
+ln -sni $initdir/early-init.el  ~/.emacs.d/early-init.el
+ln -sni $initdir/init.el        ~/.emacs.d/init.el
 
-ln -sn $initdir/eshell/alias	~/.emacs.d/eshell/alias
+ln -sni $initdir/eshell/alias   ~/.emacs.d/eshell/alias
 
-ln -sn $initdir/lisp		~/.emacs.d/lisp
-ln -sn $initdir/llm-prompts	~/.emacs.d/llm-prompts
-ln -sn $initdir/org-templates	~/.emacs.d/org-templates
-ln -sn $initdir/packages	~/.emacs.d/packages
-ln -sn $initdir/snippets	~/.emacs.d/snippets
-ln -sn $initdir/templates	~/.emacs.d/templates
-ln -sn $initdir/transient	~/.emacs.d/transient
-ln -sn $initdir/tree-sitter	~/.emacs.d/tree-sitter
+ln -sni $initdir/lisp           ~/.emacs.d/lisp
+ln -sni $initdir/llm-prompts    ~/.emacs.d/llm-prompts
+ln -sni $initdir/org-templates  ~/.emacs.d/org-templates
+ln -sni $initdir/packages       ~/.emacs.d/packages
+ln -sni $initdir/snippets       ~/.emacs.d/snippets
+ln -sni $initdir/templates      ~/.emacs.d/templates
+ln -sni $initdir/transient      ~/.emacs.d/transient
+ln -sni $initdir/tree-sitter    ~/.emacs.d/tree-sitter
 
-ln -sn $initdir/howm-menu.org	~/.emacs.d/howm-menu.org
+ln -sni $initdir/howm-menu.org  ~/.emacs.d/howm-menu.org

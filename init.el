@@ -1059,6 +1059,7 @@ If ARG is Non-nil, the existing command log buffer is cleared."
 (use-package copilot
   :disabled
   :hook ((copilot-mode-hook . turn-off-completion-preview-mode)
+         (hcl-mode-hook . copilot-mode)
          (python-mode-hook . copilot-mode)
          (typescript-ts-mode-hook . copilot-mode))
   :bind (:map
@@ -1071,6 +1072,7 @@ If ARG is Non-nil, the existing command log buffer is cleared."
   :custom
   (copilot-idle-delay 0.5)
   :config
+  (add-to-list 'copilot-major-mode-alist '("scala-ts" . "scala"))
   (add-to-list 'copilot-major-mode-alist '("typescript-ts" . "typescript"))
   (add-to-list 'copilot-major-mode-alist '("yaml-ts" . "yaml")))
 
@@ -1442,6 +1444,11 @@ be file B."
 
 (use-package eglot
   :ensure nil
+  :hook ((js-mode-hook . eglot-ensure)
+         (nix-ts-mode-hook . eglot-ensure)
+         (python-mode-hook . eglot-ensure)
+         (tsx-ts-mode-hook . eglot-ensure)
+         (typescript-ts-mode-hook . eglot-ensure))
   :custom
   (eglot-autoshutdown t)
   :config
@@ -3206,8 +3213,7 @@ Useful for completion style 'partial-completion."
 
 (use-package js
   :ensure nil
-  :hook ((js-mode-hook . eglot-ensure)
-         (js-mode-hook . subword-mode))
+  :hook ((js-mode-hook . subword-mode))
   :custom
   (js-indent-level 2)
   (js-switch-indent-offset 2))
@@ -3492,7 +3498,9 @@ Useful for completion style 'partial-completion."
 
 (use-package nix-ts-mode
   :mode "\\.nix\\'"
-  :hook ((nix-ts-mode-hook . eglot-ensure))
+  :hook ((nix-ts-mode-hook . no-indent-tabs-mode)
+         (nix-ts-mode-hook . (lambda ()
+                               (add-hook 'before-save-hook #'eglot-format nil t))))
   :config
   (add-to-list 'major-mode-remap-alist '(nix-mode . nix-ts-mode)))
 
@@ -3500,6 +3508,7 @@ Useful for completion style 'partial-completion."
 ;;; nixfmt
 
 (use-package nixfmt
+  :disabled
   :hook ((nix-ts-mode-hook . nixfmt-on-save-mode)))
 
 
@@ -3541,6 +3550,15 @@ Useful for completion style 'partial-completion."
 (use-package ob-chatgpt-shell
   :config
   (ob-chatgpt-shell-setup))
+
+
+;;; ob-mermaid
+
+(use-package ob-mermaid
+  :after (org ob)
+  :demand t
+  :config
+  (add-to-list 'org-babel-load-languages '(mermaid . t)))
 
 
 ;;; orderless
@@ -4370,7 +4388,7 @@ of the new org-mode file."
 
 (use-package pass
   :custom
-  (pass-suppress-confirmations t)
+  (pass-suppress-confirmations nil)
   :bind (:map
          my-ctl-c-P-map
          ("P" . pass)))
@@ -4522,8 +4540,7 @@ of the new org-mode file."
               ("C-c C-t" . python-shell-restart))
   :custom
   (python-indent-def-block-scale 1)
-  :hook ((python-mode-hook . subword-mode)
-         (python-mode-hook . eglot-ensure))
+  :hook ((python-mode-hook . subword-mode))
   :config
   (defun python-pyright-make-config (selection)
     "Write pyrightconfig.json venv settings for a project."
@@ -4832,14 +4849,6 @@ of the new org-mode file."
     (call-interactively #'tex-file)))
 
 
-;;; tide
-
-(use-package tide
-  :after (typescript-ts-mode)
-  :hook ((typescript-ts-mode-hook . eglot-ensure)
-         (tsx-ts-mode-hook . eglot-ensure)))
-
-
 ;;; transient
 
 (use-package transient)
@@ -4874,6 +4883,7 @@ of the new org-mode file."
           (json       "https://github.com/tree-sitter/tree-sitter-json")
           (mermaid    "https://github.com/monaqa/tree-sitter-mermaid")
           (nix        "https://github.com/nix-community/tree-sitter-nix")
+          (scala      "https://github.com/tree-sitter/tree-sitter-scala")
           (typescript "https://github.com/tree-sitter/tree-sitter-typescript" nil "typescript/src")
           (tsx        "https://github.com/tree-sitter/tree-sitter-typescript" nil "tsx/src")
           (yaml       "https://github.com/tree-sitter-grammars/tree-sitter-yaml")))
@@ -4912,11 +4922,6 @@ of the new org-mode file."
          (typescript-ts-mode-hook . no-indent-tabs-mode))
   :custom
   (typescript-ts-mode-indent-offset 2))
-
-
-;;; typing
-
-(use-package typing)
 
 
 ;;; unfill
