@@ -25,7 +25,7 @@
 
 ;; (add-to-list 'default-frame-alist '(fullscreen . maximized))
 (add-to-list 'default-frame-alist '(width . 240))
-(add-to-list 'default-frame-alist '(height . 90))
+(add-to-list 'default-frame-alist '(height . 70))
 
 (provide 'early-init)
 ;;; early-init.el ends here

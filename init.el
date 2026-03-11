@@ -2320,6 +2320,7 @@ The default format is specified by `emms-source-playlist-default-format'."
 ;;; gptel-quick
 
 (use-package gptel-quick
+  :disabled
   :ensure (:host github :repo "karthink/gptel-quick" :inherit nil)
   :bind (:map
          my-meta-=-map
