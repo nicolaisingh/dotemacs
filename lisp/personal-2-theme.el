@@ -94,7 +94,7 @@ numbered variants the same as the base color."
          ;; (font "Intel One Mono-10")
          (default-font "Atkinson Hyperlegible Mono")
          (variable-font "Atkinson Hyperlegible Next")
-         (fixed-serif-font "Monospace Serif")
+         (fixed-serif-font "Cutive Mono")
          (flat-box `(:line-width 3 :style flat-button))
          (released `(:line-width 1 :style released-button))
          (pressed `(:line-width 1 :style pressed-button)))

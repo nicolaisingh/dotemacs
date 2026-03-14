@@ -571,9 +571,9 @@ From https://www.emacswiki.org/emacs/XModMapMode")
   (minibuffer-depth-indicate-mode)
 
   ;; Set emacs source code location
-  (unless (memq window-system '(mac ns))
-    (setq find-function-C-source-directory "/run/current-system/sw/share/emacs/source/src")
-    (visit-tags-table (format "/run/current-system/sw/share/emacs/%s/lisp/TAGS" emacs-version)))
+  ;; (unless (memq window-system '(mac ns))
+  ;;   (setq find-function-C-source-directory "/run/current-system/sw/share/emacs/source/src")
+  ;;   (visit-tags-table (format "/run/current-system/sw/share/emacs/%s/lisp/TAGS" emacs-version)))
 
   (display-time-mode)
   ;; (global-visual-wrap-prefix-mode) ;; Some incompatibility with org-mode
@@ -2299,10 +2299,11 @@ The default format is specified by `emms-source-playlist-default-format'."
                           (insert response))))))))
 
   ;; Define backends
-  (let ((chatgpt gptel--openai)
+  (let ((chatgpt (gptel-make-openai "ChatGPT"
+                   :key gptel-api-key))
         (deepseek (gptel-make-deepseek "DeepSeek"
                     :stream t
-                    :key #'gptel-api-key)))
+                    :key gptel-api-key)))
     (setopt gptel-backend deepseek
             gptel-model 'deepseek-chat)))
 
