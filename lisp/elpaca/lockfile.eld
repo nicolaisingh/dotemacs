@@ -473,6 +473,19 @@
 		:depth treeless :ref
 		"c8d54d649872bfe7b2b9f49ae5c2addbf12d3b99" :id eat
 		:type git))
+ (eca :source "elpaca-menu-lock-file" :recipe
+      (:package "eca" :fetcher github :repo
+		"editor-code-assistant/eca-emacs" :files
+		("*.el" "*.el.in" "dir" "*.info" "*.texi" "*.texinfo"
+		 "doc/dir" "doc/*.info" "doc/*.texi" "doc/*.texinfo"
+		 "lisp/*.el" "docs/dir" "docs/*.info" "docs/*.texi"
+		 "docs/*.texinfo"
+		 (:exclude ".dir-locals.el" "test.el" "tests.el"
+			   "*-test.el" "*-tests.el" "LICENSE"
+			   "README*" "*-pkg.el"))
+		:source "MELPA" :id eca :type git :protocol https
+		:inherit t :depth treeless :ref
+		"bb407e95cb909041b619a6ad45f338c3735d41e2"))
  (edit-indirect :source "elpaca-menu-lock-file" :recipe
 		(:package "edit-indirect" :fetcher github :repo
 			  "Fanael/edit-indirect" :files

@@ -363,6 +363,49 @@ portion if the mark is inactive."
             (completion-metadata "" minibuffer-completion-table minibuffer-completion-predicate)
             'category)))
 
+(defun desktop-notify (title message &optional urgency icon timeout)
+  "Send a desktop notification with TITLE and MESSAGE.
+Optional arguments:
+URGENCY: 'low, 'normal, or 'high (default: 'normal)
+ICON: Path to icon file or icon name
+TIMEOUT: Timeout in milliseconds (default: 5000)
+
+Returns t if notification was sent successfully, nil otherwise."
+  (let* ((urgency (or urgency 'normal))
+         (timeout (or timeout 5000))
+         (urgency-str (pcase urgency
+                        ('low "low")
+                        ('critical "critical")
+                        ('high "critical")
+                        (_ "normal")))
+         (icon-arg (when icon (list "-i" icon)))
+         (timeout-arg (list "-t" (number-to-string timeout)))
+         (command nil)
+         (success nil))
+
+    (cond
+     ((eq system-type 'darwin)
+      (setq command (list "osascript" "-e"
+                          (format "display notification \"%s\" with title \"%s\""
+                                  (replace-regexp-in-string "\"" "\\\\\"" message)
+                                  (replace-regexp-in-string "\"" "\\\\\"" title)))))
+     ((executable-find "notify-send")
+      (setq command (append '("notify-send")
+                            (when icon-arg icon-arg)
+                            (list "-u" urgency-str)
+                            timeout-arg
+                            (list title message))))
+     (t
+      (message "No notification system available")
+      (setq command nil)))
+
+    (when command
+      (condition-case err
+          (progn
+            (apply #'call-process (car command) nil 0 nil (cdr command)))
+        (error
+         (message "Failed to send notification: %s" (error-message-string err)))))))
+
 
 ;;;; Minor modes
 
@@ -442,10 +485,9 @@ From https://www.emacswiki.org/emacs/XModMapMode")
          :map my-ctl-c-d-map
          ("l" . dictionary-search)
          :map my-ctl-c-e-map
-         ("c" . calendar)
-         ("C" . year-calendar)
          ("s" . set-variable)
          :map my-ctl-c-f-map
+         ("#" . sudo-find-alternate-file)
          ("." . ffap)
          ("i" . find-init-file)
          ("s" . find-scratch-buffer)
@@ -461,7 +503,6 @@ From https://www.emacswiki.org/emacs/XModMapMode")
          ("v" . visible-mode)
          :map my-ctl-c-v-map
          ("f" . visual-line-fill-column-mode)
-         ("#" . sudo-find-alternate-file)
          :map my-ctl-c-w-map
          ("'" . insert-pair)
          ("<" . insert-pair)
@@ -1386,6 +1427,72 @@ be file B."
          (eshell-load-hook . eat-eshell-visual-command-mode)))
 
 
+;;; eca
+
+(use-package eca
+  :bind (("C-z C-e" . eca-chat-toggle-window)
+         :map
+         my-ctl-c-e-map
+         ("c" . eca)
+         ("q" . eca-stop)
+         ("w" . eca-rewrite)
+         :map
+         eca-chat-mode-map
+         ("C-c C-q" . eca-chat-stop-prompt)
+         ("C-x C-s" . eca-chat-save-to-file)
+         ("M-N" . eca-chat-go-to-next-user-message)
+         ("M-P" . eca-chat-go-to-prev-user-message)
+         ("M-n" . eca-chat-go-to-next-expandable-block)
+         ("M-p" . eca-chat-go-to-prev-expandable-block))
+  :hook ((eca-chat-finished-hook . my-eca-notify-done))
+  :custom
+  (eca-chat-auto-add-cursor nil)
+  (eca-chat-custom-model nil)
+  (eca-chat-diff-tool 'ediff)
+  (eca-chat-use-side-window nil)
+  (eca-chat-window-height 0.5)
+  (eca-chat-window-side 'bottom)
+  ;; (eca-chat-custom-model "openai/gpt-5-nano")
+  :config
+
+  (defun my-eca-notify-done ()
+    (desktop-notify "Emacs ECA" "Waiting for next task"))
+
+  (require 'json)
+  (defun my-eca-config (&rest _)
+    "Return my ECA config as a json string."
+    (let* ((prompts-dir (concat user-emacs-directory "llm-prompts"))
+           (deepseek-variants '((chat (temperature . 1.0))
+                                (coding (temperature . 0.3))
+                                (creative (temperature . 1.5))))
+           (config
+            `((agent (code
+                      (variant . "low"))
+
+                     (test-agent-translator
+                      (defaultModel . "deepseek/deepseek-chat")
+                      (prompts (chat . ,(format "${file:%s}"
+                                                (expand-file-name "localize-en-fil.txt" prompts-dir))))
+                      (variant . "chat")))
+
+              (providers
+               (deepseek (api . "openai-chat")
+                         (url . "https://api.deepseek.com")
+                         (key . ,(auth-source-pick-first-password :host "api.deepseek.com"))
+                         (models
+                          (deepseek-chat
+                           (variants . ,deepseek-variants))
+                          (deepseek-reasoner
+                           (variants . ,deepseek-variants))))
+
+               (openai (key . ,(auth-source-pick-first-password :host "api.openai.com"))))))
+           (json-config (json-encode config)))
+      (setenv "ECA_CONFIG" json-config)))
+
+  ;; Load ECA config before starting
+  (advice-add 'eca :before #'my-eca-config))
+
+
 ;;; ediff
 
 (use-package ediff
@@ -1933,7 +2040,6 @@ The default format is specified by `emms-source-playlist-default-format'."
 
 (use-package expand-region
   :bind (:map my-ctl-c-e-map
-              ("r" . er/expand-region)
               ("[" . er/mark-inside-pairs)
               ("{" . er/mark-outside-pairs)
               ("'" . er/mark-inside-quotes)

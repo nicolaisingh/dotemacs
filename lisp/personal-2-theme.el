@@ -92,7 +92,7 @@ numbered variants the same as the base color."
      ("color-pale-gray" "#dddddd"))
   (let* ((fg-inactive color-gray-4)
          ;; (font "Intel One Mono-10")
-         (default-font "Atkinson Hyperlegible Mono")
+         (default-font "Atkinson Hyperlegible Mono-14")
          (variable-font "Atkinson Hyperlegible Next")
          (fixed-serif-font "Cutive Mono")
          (flat-box `(:line-width 3 :style flat-button))
@@ -290,6 +290,9 @@ numbered variants the same as the base color."
      `(tab-bar-tab-inactive ((t (:inherit tab-bar :background ,color-pale-gray :box ,flat-box :foreground ,fg-inactive))))
      `(tab-bar-tab-group-current ((t (:inherit tab-bar-tab :weight normal :box ,flat-box :background ,color-pale-blue))))
      `(tab-bar-tab-group-inactive ((t (:inherit tab-bar-tab :weight normal :box ,released :background ,color-pale-gray))))
+
+     ;; tab-line
+     `(tab-line ((t (:background ,color-pale-gray :height 1.0))))
 
      ;; yas
      `(yas-field-highlight-face ((t (:inherit minibuffer-prompt)))))))
