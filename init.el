@@ -902,6 +902,20 @@ From https://www.emacswiki.org/emacs/XModMapMode")
       (chronos-initialize))))
 
 
+;;; claude-code-ide
+
+(use-package claude-code-ide
+  :ensure (:host github :repo "manzaltu/claude-code-ide.el")
+  :demand t
+  :bind (:map
+         my-ctl-c-l-map
+         ("c" . claude-code-ide-menu))
+  :custom
+  (claude-code-ide-terminal-backend 'vterm)
+  :config
+  (claude-code-ide-emacs-tools-setup))
+
+
 ;;; clojure-mode
 
 (use-package clojure-mode)
@@ -1365,6 +1379,7 @@ be file B."
 ;;; eat
 
 (use-package eat
+  :disabled
   :diminish eat-eshell-mode
   :hook ((eshell-load-hook . eat-eshell-mode)
          (eshell-load-hook . eat-eshell-visual-command-mode)))
@@ -1915,11 +1930,7 @@ The default format is specified by `emms-source-playlist-default-format'."
   :bind (:map
          my-ctl-c-e-map
          ("e" . eshell)
-         ("E" . eshell-other)
-         :map
-         eshell-mode-map
-         ("C-c ?" . chatgpt-shell-eshell-whats-wrong-with-last-command)
-         ("C-c !" . chatgpt-shell-eshell-summarize-last-command-output))
+         ("E" . eshell-other))
   :custom
   (eshell-hist-ignoredups t)
   (eshell-history-size 10000)
@@ -3441,7 +3452,8 @@ Useful for completion style 'partial-completion."
                             :args ("org-mcp")
                             :env (:ORG_DIR ,(expand-file-name howm-directory))))
      ("mcp-nixos" . (:command "uvx"
-                              :args ("mcp-nixos"))))))
+                              :args ("mcp-nixos")))
+     ("simplemem" . (:url "http://localhost:8000/mcp/sse")))))
 
 
 ;;; mermaid-mode
@@ -3517,7 +3529,7 @@ Useful for completion style 'partial-completion."
               ("T" . multi-term)
               ("t" . multi-term-next))
   :custom
-  (multi-term-program "/run/current-system/sw/bin/bash")
+  (multi-term-program "/usr/bin/bash")
   (term-bind-key-alist '(("C-c C-c" . term-interrupt-subjob)
                          ("C-c C-j" . term-line-mode)
                          ("C-p" . previous-line)
@@ -5010,6 +5022,11 @@ of the new org-mode file."
   :config
   (defun turn-off-visual-line-fill-column-mode ()
     (visual-line-fill-column-mode -1)))
+
+
+;;; vterm
+
+(use-package vterm)
 
 
 ;;; vundo
