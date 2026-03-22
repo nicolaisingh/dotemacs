@@ -138,19 +138,6 @@
 				 treeless :ref
 				 "67ef719e685407dbc455c7430765e4e685fd95a9"
 				 :id centered-cursor-mode :type git))
- (chatgpt-shell :source "elpaca-menu-lock-file" :recipe
-		(:package "chatgpt-shell" :fetcher github :repo
-			  "xenodium/chatgpt-shell" :files
-			  ("*.el"
-			   (:exclude "test_chatgpt-shell.el"
-				     "shell-maker.el"
-				     "ob-chatgpt-shell.el"
-				     "dall-e-shell.el"
-				     "ob-dall-e-shell.el"))
-			  :source "elpaca-menu-lock-file" :protocol
-			  https :inherit t :depth treeless :ref
-			  "d5a6c91d80de7bbf9958fc6782bcdd0a852d8963"
-			  :id chatgpt-shell :type git))
  (chess :source "elpaca-menu-lock-file" :recipe
 	(:package "chess" :repo
 		  ("https://github.com/emacsmirror/gnu_elpa" . "chess")
@@ -483,8 +470,8 @@
 		 (:exclude ".dir-locals.el" "test.el" "tests.el"
 			   "*-test.el" "*-tests.el" "LICENSE"
 			   "README*" "*-pkg.el"))
-		:source "MELPA" :id eca :type git :protocol https
-		:inherit t :depth treeless :ref
+		:source "elpaca-menu-lock-file" :id eca :type git
+		:protocol https :inherit t :depth treeless :ref
 		"bb407e95cb909041b619a6ad45f338c3735d41e2"))
  (edit-indirect :source "elpaca-menu-lock-file" :recipe
 		(:package "edit-indirect" :fetcher github :repo
@@ -744,10 +731,6 @@
 			     "README*" "*-pkg.el"))
 		  :source "elpaca-menu-lock-file" :protocol https
 		  :inherit t :depth treeless :ref
- (gptel-quick :source "elpaca-menu-lock-file" :recipe
-	      (:source nil :host github :repo "karthink/gptel-quick"
-		       :inherit nil :package "gptel-quick" :ref
-		       "018ff2be8f860a1e8fe3966eec418ad635620c38"))
 		  "05f3f4d93bbf4003433177e4064c611156246af1" :id gptel
 		  :type git))
  (graphviz-dot-mode :source "elpaca-menu-lock-file" :recipe
@@ -1165,22 +1148,6 @@
 		:inherit t :depth treeless :ref
 		"b37d9380752e541db3f4b947c219ca54d50ca273" :id nov
 		:type git))
- (ob-chatgpt-shell :source "elpaca-menu-lock-file" :recipe
-		   (:package "ob-chatgpt-shell" :fetcher github :repo
-			     "xenodium/ob-chatgpt-shell" :files
-			     ("*.el" "*.el.in" "dir" "*.info" "*.texi"
-			      "*.texinfo" "doc/dir" "doc/*.info"
-			      "doc/*.texi" "doc/*.texinfo" "lisp/*.el"
-			      "docs/dir" "docs/*.info" "docs/*.texi"
-			      "docs/*.texinfo"
-			      (:exclude ".dir-locals.el" "test.el"
-					"tests.el" "*-test.el"
-					"*-tests.el" "LICENSE"
-					"README*" "*-pkg.el"))
-			     :source "elpaca-menu-lock-file" :protocol
-			     https :inherit t :depth treeless :ref
-			     "754ddf54a99bd98427c91a6c7374757026f8bd45"
-			     :id ob-chatgpt-shell :type git))
  (ob-mermaid :source "elpaca-menu-lock-file" :recipe
 	     (:package "ob-mermaid" :repo "arnm/ob-mermaid" :fetcher
 		       github :files
@@ -1681,21 +1648,6 @@
 		     :inherit t :depth treeless :ref
 		     "1ca6e12f456caa1dc97c3d68597598662eb5de9a" :id
 		     selected :type git))
- (shell-maker :source "elpaca-menu-lock-file" :recipe
-	      (:package "shell-maker" :fetcher github :repo
-			"xenodium/shell-maker" :files
-			("*.el" "*.el.in" "dir" "*.info" "*.texi"
-			 "*.texinfo" "doc/dir" "doc/*.info"
-			 "doc/*.texi" "doc/*.texinfo" "lisp/*.el"
-			 "docs/dir" "docs/*.info" "docs/*.texi"
-			 "docs/*.texinfo"
-			 (:exclude ".dir-locals.el" "test.el"
-				   "tests.el" "*-test.el" "*-tests.el"
-				   "LICENSE" "README*" "*-pkg.el"))
-			:source "elpaca-menu-lock-file" :protocol
-			https :inherit t :depth treeless :ref
-			"e2f05eed5bc7d10af0fc90891138d9581456914d" :id
-			shell-maker :type git))
  (slime :source "elpaca-menu-lock-file" :recipe
 	(:package "slime" :fetcher github :repo "slime/slime" :files
 		  ("*.el" ("lib" "lib/hyperspec.el") "swank" "*.lisp"

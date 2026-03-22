@@ -858,63 +858,6 @@ From https://www.emacswiki.org/emacs/XModMapMode")
 (use-package centered-cursor-mode)
 
 
-;;; chatgpt-shell
-
-(use-package chatgpt-shell
-  :disabled
-  :bind (:map
-         my-ctl-c-l-map
-         ("P" . (lambda () (interactive) (message "%s" (chatgpt-shell-system-prompt))))
-         ("SPC" . chatgpt-shell-send-region)
-         ("c" . chatgpt-shell-prompt-compose)
-         ("f" . chatgpt-shell-fix-error-at-point)
-         ("i" . chatgpt-shell-quick-insert)
-         ("l" . chatgpt-shell)
-         ("p" . chatgpt-shell-proofread-region)
-         ("r" . chatgpt-shell-refactor-code)
-         ("t" . chatgpt-shell-generate-unit-test)
-         ("x i" . chatgpt-shell-describe-image)
-         ("x x" . chatgpt-shell-describe-code)
-         :map
-         chatgpt-shell-mode-map
-         ("C-c <backspace>" . chatgpt-shell-delete-interaction-at-point)
-         ("C-c C-<backspace>" . chatgpt-shell-clear-buffer)
-         ("C-c C-S-p" . chatgpt-shell-load-awesome-prompts)
-         ("C-c C-o" . nil) ;; unbind comint-delete-output
-         :map
-         chatgpt-shell-prompt-compose-mode-map
-         ("C-c C-<backspace>" . chatgpt-shell-prompt-compose-clear-history))
-  :custom
-  (chatgpt-shell-always-create-new nil)
-  (chatgpt-shell-models (append (chatgpt-shell-deepseek-models)
-                                (chatgpt-shell-openai-models)))
-  (chatgpt-shell-model-temperature 0)
-  (chatgpt-shell-model-version "deepseek-chat")
-  (chatgpt-shell-prompt-query-response-style 'other-buffer)
-  (chatgpt-shell-system-prompt (seq-position (map-keys chatgpt-shell-system-prompts) "Programming"))
-  (chatgpt-shell-welcome-function nil)
-  (chatgpt-shell-openai-key (lambda ()
-                              (auth-source-pick-first-password :host "api.openai.com")))
-  (chatgpt-shell-deepseek-key (lambda ()
-                                (auth-source-pick-first-password :host "api.deepseek.com")))
-  :config
-  (add-to-list
-   'chatgpt-shell-system-prompts
-   `("Family Travel Planning" .
-     ,(string-join
-       '("The user is planning for a vacation with family and kid/s."
-         "Suggest an itinerary that considers planned activities by the user."
-         "Also include in the itinerary flight schedules, commuting, walking, and rest times."
-         "Mention places that are known to be worth visiting and seeing."
-         "Don't suggest activities and destinations that are not family-friendly."
-         "Give me up to a max of 10 links to blogs or information that I can review."
-         "The itinerary destinations preferrably should be sequenced such that it is travel-friendly."
-         "If you will suggest a destination that is quite far from the others, mention it explicitly."
-         "When you make the itinerary, include the travel times and an estimate of how long to stay on that area before going to the next one.")
-       "  "))
-   t))
-
-
 ;;; chess
 
 (use-package chess)
@@ -1449,12 +1392,11 @@ be file B."
   (eca-chat-auto-add-cursor nil)
   (eca-chat-custom-model nil)
   (eca-chat-diff-tool 'ediff)
+  (eca-chat-tab-line nil)
   (eca-chat-use-side-window nil)
   (eca-chat-window-height 0.5)
   (eca-chat-window-side 'bottom)
-  ;; (eca-chat-custom-model "openai/gpt-5-nano")
   :config
-
   (defun my-eca-notify-done ()
     (desktop-notify "Emacs ECA" "Waiting for next task"))
 
@@ -1476,6 +1418,13 @@ be file B."
                       (variant . "chat")))
 
               (providers
+               (anthropic (key . ,(auth-source-pick-first-password :host "api.anthropic.com"))
+                          (models
+                           (claude-opus-4-6 . ,(make-hash-table))
+                           (claude-sonnet-4-6 . ,(make-hash-table))
+                           (claude-haiku-4-5-20251001 . ,(make-hash-table))
+                           (claude-3-haiku-20240307 . ,(make-hash-table))))
+
                (deepseek (api . "openai-chat")
                          (url . "https://api.deepseek.com")
                          (key . ,(auth-source-pick-first-password :host "api.deepseek.com"))
@@ -2390,48 +2339,58 @@ The default format is specified by `emms-source-playlist-default-format'."
                           (goto-char (plist-get info :position))
                           (insert response))))))))
 
-  (defun my-gptel-git-commit-message ()
-    "Ask gptel to assist in writing a good git commit message."
-    (interactive)
-    (let ((staged-diff (magit-git-output "diff" "--cached")))
-      (gptel-with-preset 'git-commit
-        (gptel-request staged-diff
-          :in-place t
-          :stream t
-          :context nil
-          :callback (lambda (response info)
-                      (when (stringp response)
-                        (with-current-buffer (plist-get info :buffer)
-                          (insert response))))))))
-
   ;; Define backends
   (let ((chatgpt (gptel-make-openai "ChatGPT"
                    :key gptel-api-key))
+        (claude (gptel-make-anthropic "Claude"
+                  :key gptel-api-key
+                  :models
+                  '(claude-opus-4-6
+                    claude-sonnet-4-6
+                    claude-haiku-4-5-20251001
+                    claude-3-haiku-20240307)))
+        (claude-thinking (gptel-make-anthropic "Thinking-Claude"
+                           :key gptel-api-key
+                           :models
+                           '(claude-opus-4-6
+                             claude-sonnet-4-6
+                             claude-haiku-4-5-20251001)
+                           :request-params
+                           '(:thinking (:type "enabled" :budget_tokens 1024)
+                                       :max_tokens 2048)))
         (deepseek (gptel-make-deepseek "DeepSeek"
-                    :stream t
-                    :key gptel-api-key)))
-    (setopt gptel-backend deepseek
-            gptel-model 'deepseek-chat)))
+                    :key gptel-api-key
+                    :models '(deepseek-chat
+                              deepseek-reasoner))))
+    (setopt gptel-backend claude
+            gptel-model 'claude-sonnet-4-6)))
+
+
+;;; gptel-commit-message
+
+(use-package gptel-commit-message
+  :ensure nil
+  :after (gptel magit)
+  :bind (:map my-meta-=-map
+              ("M" . gptel-commit-message))
+  :custom
+  (gptel-commit-message-exclude-files '("*.eld" "package-lock.json")))
+
+
+;;; gptel-integrations
 
 (use-package gptel-integrations
   :after (gptel)
   :demand t
   :ensure nil)
 
+
+;;; gptel-my-presets
+
 (use-package gptel-my-presets
   :after (gptel)
   :demand t
   :ensure nil)
-
-
-;;; gptel-quick
-
-(use-package gptel-quick
-  :disabled
-  :ensure (:host github :repo "karthink/gptel-quick" :inherit nil)
-  :bind (:map
-         my-meta-=-map
-         ("M-q" . gptel-quick)))
 
 
 ;;; graphviz-dot-mode
@@ -3651,13 +3610,6 @@ Useful for completion style 'partial-completion."
   :ensure nil
   :custom
   (nxml-outline-child-indent 4))
-
-
-;;; ob-chatgpt-shell
-
-(use-package ob-chatgpt-shell
-  :config
-  (ob-chatgpt-shell-setup))
 
 
 ;;; ob-mermaid
