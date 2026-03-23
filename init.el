@@ -1407,10 +1407,10 @@ be file B."
   (eca-chat-auto-add-cursor nil)
   (eca-chat-custom-model nil)
   (eca-chat-diff-tool 'ediff)
-  (eca-chat-tab-line nil)
-  (eca-chat-use-side-window nil)
+  (eca-chat-tab-line t)
+  (eca-chat-use-side-window t)
   (eca-chat-window-height 0.5)
-  (eca-chat-window-side 'bottom)
+  (eca-chat-window-side 'right)
   :config
   (defun my-eca-notify-done ()
     (desktop-notify "Emacs ECA" "Waiting for next task"))
@@ -1432,7 +1432,18 @@ be file B."
                                                 (expand-file-name "localize-en-fil.txt" prompts-dir))))
                       (variant . "chat")))
 
+              (mcpServers ("beads"
+                           (command . "beads-mcp"))
+                          ("memory"
+                           (command . "npx")
+                           (args . ("-y" "@modelcontextprotocol/server-memory")))
+                          ("sequential-thinking"
+                           (command . "npx")
+                           (args . ("-y" "@modelcontextprotocol/server-sequential-thinking"))))
+
               (providers
+               ;; (github-copilot (key . ,(auth-source-pick-first-password :host "api.githubcopilot.com"))
+               ;;                 (url . "https://api.githubcopilot.com"))
                (anthropic (key . ,(auth-source-pick-first-password :host "api.anthropic.com"))
                           (models
                            (claude-opus-4-6 . ,(make-hash-table))
@@ -1449,7 +1460,15 @@ be file B."
                           (deepseek-reasoner
                            (variants . ,deepseek-variants))))
 
-               (openai (key . ,(auth-source-pick-first-password :host "api.openai.com"))))))
+               (openai (key . ,(auth-source-pick-first-password :host "api.openai.com"))))
+
+              (rules ((path . ,(expand-file-name "memory.txt" prompts-dir))))
+
+              (toolCall (approval (allow ("beads__list")
+                                         ("beads__get_tool_info")
+                                         ("beads__ready")
+                                         ("beads__context")
+                                         ("memory__read_graph"))))))
            (json-config (json-encode config)))
       (setenv "ECA_CONFIG" json-config)))
 
@@ -3451,6 +3470,8 @@ Useful for completion style 'partial-completion."
      ("org-mcp" . (:command "uvx"
                             :args ("org-mcp")
                             :env (:ORG_DIR ,(expand-file-name howm-directory))))
+     ;; ("beads" . (:command "uvx" :args ("beads-mcp")))
+     ("beads" . (:command "beads-mcp"))
      ("mcp-nixos" . (:command "uvx"
                               :args ("mcp-nixos")))
      ("simplemem" . (:url "http://localhost:8000/mcp/sse")))))
