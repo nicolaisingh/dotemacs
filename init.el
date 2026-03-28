@@ -1388,7 +1388,7 @@ be file B."
 ;;; eca
 
 (use-package eca
-  :bind (("C-z C-e" . eca-chat-toggle-window)
+  :bind (("C-z C-e" . my-eca-chat-toggle-window)
          :map
          my-ctl-c-e-map
          ("c" . eca)
@@ -1412,6 +1412,11 @@ be file B."
   (eca-chat-window-height 0.5)
   (eca-chat-window-side 'right)
   :config
+  (defun my-eca-chat-toggle-window ()
+    (interactive)
+    (unless (eca-session) (eca))
+    (eca-chat-toggle-window))
+
   (defun my-eca-notify-done ()
     (desktop-notify "Emacs ECA" "Waiting for next task"))
 
@@ -1434,9 +1439,23 @@ be file B."
 
               (mcpServers ("beads"
                            (command . "beads-mcp"))
+                          ("mcp-atlassian"
+                           (disabled . t)
+                           (command . "uvx")
+                           (args . ("mcp-atlassian"))
+                           (env
+                            ("JIRA_URL" . "https://abc.atlassian.net")
+                            ("JIRA_USERNAME" . "someperson@email.com")
+                            ("JIRA_API_TOKEN" . ,(auth-source-pick-first-password :host "abc.atlassian.net"))
+                            ("CONFLUENCE_URL" . "https://abc.atlassian.net/wiki")
+                            ("CONFLUENCE_USERNAME" . "someperson@email.com")
+                            ("CONFLUENCE_API_TOKEN" . ,(auth-source-pick-first-password :host "abc.atlassian.net"))))
                           ("memory"
                            (command . "npx")
                            (args . ("-y" "@modelcontextprotocol/server-memory")))
+                          ("context7"
+                           (url . "https://mcp.context7.com/mcp")
+                           (headers ("CONTEXT7_API_KEY" . ,(auth-source-pick-first-password :host "context7"))))
                           ("sequential-thinking"
                            (command . "npx")
                            (args . ("-y" "@modelcontextprotocol/server-sequential-thinking"))))
@@ -1464,11 +1483,18 @@ be file B."
 
               (rules ((path . ,(expand-file-name "memory.txt" prompts-dir))))
 
-              (toolCall (approval (allow ("beads__list")
-                                         ("beads__get_tool_info")
-                                         ("beads__ready")
-                                         ("beads__context")
-                                         ("memory__read_graph"))))))
+              (toolCall (approval (allow
+                                   ("beads__claim")
+                                   ("beads__context")
+                                   ("beads__create")
+                                   ("beads__discover_tools")
+                                   ("beads__get_tool_info")
+                                   ("beads__list")
+                                   ("beads__ready")
+                                   ("beads__show")
+                                   ("beads__stats")
+                                   ("memory")
+                                   ("sequential-thinking"))))))
            (json-config (json-encode config)))
       (setenv "ECA_CONFIG" json-config)))
 
@@ -2955,9 +2981,9 @@ The default format is specified by `emms-source-playlist-default-format'."
   (howm-remember-insertion-format "%s")
   (howm-user-font-lock-keywords '(("^keywords:" . (0 'howm-mode-ref-face))))
   (howm-view-contents-name "*howm-contents*")
-  (howm-view-contents-persistent t)
+  (howm-view-contents-persistent nil)
   (howm-view-summary-name "*howm-summary*")
-  (howm-view-summary-persistent t)
+  (howm-view-summary-persistent nil)
 
   ;; Use rg/ripgrep for searching
   (howm-view-use-grep t)
@@ -4127,6 +4153,16 @@ of the new org-mode file."
   (org-crypt-disable-auto-save t))
 
 
+;;; org-db-v3
+
+(use-package org-db-v3
+  :disabled
+  :demand t
+  :ensure (:host github :repo "jkitchin/org-db-v3" :files (:defaults "elisp/*.el"))
+  :custom
+  (org-db-v3-server-directory (expand-file-name "org-db-v3/python" elpaca-sources-directory)))
+
+
 ;;; org-modern
 
 (use-package org-modern
@@ -4514,6 +4550,11 @@ of the new org-mode file."
   (plantuml-default-exec-mode 'executable)
   (plantuml-jar-path "~/.nix-profile/bin/plantuml")
   (plantuml-output-type "png"))
+
+
+;;; plz
+
+(use-package plz)
 
 
 ;;; prettier-js

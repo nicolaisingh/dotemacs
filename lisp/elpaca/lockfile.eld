@@ -162,11 +162,11 @@
 		    "5ea0bf7c3881ea905e280446342539b242401979" :id
 		    chronos :type git))
  (claude-code-ide :source "elpaca-menu-lock-file" :recipe
-		  (:source nil :package "claude-code-ide" :id
-			   claude-code-ide :host github :repo
-			   "manzaltu/claude-code-ide.el" :type git
-			   :protocol https :inherit t :depth treeless
-			   :ref
+		  (:source "elpaca-menu-lock-file" :package
+			   "claude-code-ide" :id claude-code-ide :host
+			   github :repo "manzaltu/claude-code-ide.el"
+			   :type git :protocol https :inherit t :depth
+			   treeless :ref
 			   "5f12e60c6d2d1802c8c1b7944bbdf935d5db1364"))
  (clojure-mode :source "elpaca-menu-lock-file" :recipe
 	       (:package "clojure-mode" :repo
@@ -1851,8 +1851,8 @@
 		  ("CMakeLists.txt" "elisp.c" "elisp.h"
 		   "emacs-module.h" "etc" "utf8.c" "utf8.h" "vterm.el"
 		   "vterm-module.c" "vterm-module.h")
-		  :source "MELPA" :id vterm :type git :protocol https
-		  :inherit t :depth treeless :ref
+		  :source "elpaca-menu-lock-file" :id vterm :type git
+		  :protocol https :inherit t :depth treeless :ref
 		  "a01a2894a1c1e81a39527835a9169e35b7ec5dec"))
  (vundo :source "elpaca-menu-lock-file" :recipe
 	(:package "vundo" :repo
@@ -1873,8 +1873,9 @@
 			(:exclude ".dir-locals.el" "test.el"
 				  "tests.el" "*-test.el" "*-tests.el"
 				  "LICENSE" "README*" "*-pkg.el"))
-		       :source "MELPA" :id web-server :type git
-		       :protocol https :inherit t :depth treeless :ref
+		       :source "elpaca-menu-lock-file" :id web-server
+		       :type git :protocol https :inherit t :depth
+		       treeless :ref
 		       "6357a1c2d1718778503f7ee0909585094117525b"))
  (websocket :source "elpaca-menu-lock-file" :recipe
 	    (:package "websocket" :repo "ahyatt/emacs-websocket"
@@ -1886,8 +1887,9 @@
 		       (:exclude ".dir-locals.el" "test.el" "tests.el"
 				 "*-test.el" "*-tests.el" "LICENSE"
 				 "README*" "*-pkg.el"))
-		      :source "MELPA" :id websocket :type git
-		      :protocol https :inherit t :depth treeless :ref
+		      :source "elpaca-menu-lock-file" :id websocket
+		      :type git :protocol https :inherit t :depth
+		      treeless :ref
 		      "2195e1247ecb04c30321702aa5f5618a51c329c5"))
  (with-editor :source "elpaca-menu-lock-file"
    :recipe

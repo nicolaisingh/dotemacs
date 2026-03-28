@@ -60,7 +60,7 @@
 
 (gptel-make-preset 'temp-coding
   :description "Temperature for coding"
-  :temperature 0.0)
+  :temperature 0.2)
 
 (gptel-make-preset 'temp-data
   :description "Temperature for data cleaning/analysis"

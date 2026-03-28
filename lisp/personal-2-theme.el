@@ -95,7 +95,8 @@ numbered variants the same as the base color."
          (default-font "Atkinson Hyperlegible Mono-14")
          (variable-font "Atkinson Hyperlegible Next")
          (fixed-serif-font "Cutive Mono")
-         (flat-box `(:line-width 3 :style flat-button))
+         (flat-box `(:line-width 2 :style flat-button))
+         (flat-box-outline `(:line-width 2 :color ,color-gray :style released-button))
          (released `(:line-width 1 :style released-button))
          (pressed `(:line-width 1 :style pressed-button)))
     (custom-theme-set-faces
@@ -111,7 +112,7 @@ numbered variants the same as the base color."
      `(highlight ((t (:background ,color-pale-yellow))))
      `(hl-line ((t (:underline ,color-gray))))
      `(minibuffer-prompt ((t (:foreground ,color-red :weight bold))))
-     `(mode-line ((t (:background ,color-pale-blue :box ,flat-box))))
+     `(mode-line ((nil (:background ,color-pale-blue :box ,flat-box-outline))))
      `(mode-line-buffer-id ((t (:weight bold))))
      `(mode-line-inactive ((t (:background ,color-pale-gray :box ,flat-box :foreground ,fg-inactive))))
      `(region ((t (:background ,color-pale-yellow))))
