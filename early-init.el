@@ -6,22 +6,18 @@
 
 ;;; Code:
 
-(setq blink-cursor-blinks 0)
-(setq blink-cursor-interval 0.2)
-(setq blink-cursor-delay 0.2)
-(setq cursor-type t)
-(setq inhibit-startup-screen t)
-(setq ring-bell-function 'ignore)
-(setq visible-bell t)
-(blink-cursor-mode)
+(setq blink-cursor-blinks 0
+      blink-cursor-interval 0.2
+      blink-cursor-delay 0.2
+      cursor-type t
+      inhibit-startup-screen t
+      ring-bell-function 'ignore
+      visible-bell t)
+(blink-cursor-mode 1)
 (column-number-mode 1)
 (menu-bar-mode -1)
 (scroll-bar-mode -1)
 (tool-bar-mode -1)
-
-;; Make the fringe slightly thicker
-;; (add-to-list 'fringe-styles '("padded" 12))
-;; (fringe-mode 12)
 
 ;; (add-to-list 'default-frame-alist '(fullscreen . maximized))
 (add-to-list 'default-frame-alist '(width . 240))

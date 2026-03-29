@@ -1402,7 +1402,6 @@ be file B."
          ("M-P" . eca-chat-go-to-prev-user-message)
          ("M-n" . eca-chat-go-to-next-expandable-block)
          ("M-p" . eca-chat-go-to-prev-expandable-block))
-  :hook ((eca-chat-finished-hook . my-eca-notify-done))
   :custom
   (eca-chat-auto-add-cursor nil)
   (eca-chat-custom-model nil)
@@ -1417,25 +1416,20 @@ be file B."
     (unless (eca-session) (eca))
     (eca-chat-toggle-window))
 
-  (defun my-eca-notify-done ()
-    (desktop-notify "Emacs ECA" "Waiting for next task"))
-
   (require 'json)
   (defun my-eca-config (&rest _)
     "Return my ECA config as a json string."
     (let* ((prompts-dir (concat user-emacs-directory "llm-prompts"))
-           (deepseek-variants '((chat (temperature . 1.0))
-                                (coding (temperature . 0.3))
-                                (creative (temperature . 1.5))))
+           (deepseek-variants '(("chat" (temperature . 1.0))
+                                ("coding" (temperature . 0.3))
+                                ("creative" (temperature . 1.5))))
            (config
-            `((agent (code
-                      (variant . "low"))
-
-                     (test-agent-translator
-                      (defaultModel . "deepseek/deepseek-chat")
-                      (prompts (chat . ,(format "${file:%s}"
-                                                (expand-file-name "localize-en-fil.txt" prompts-dir))))
-                      (variant . "chat")))
+            `(;; (agent
+              ;;  (test-agent-translator
+              ;;   (defaultModel . "deepseek/deepseek-chat")
+              ;;   (prompts (chat . ,(format "${file:%s}"
+              ;;                             (expand-file-name "localize-en-fil.txt" prompts-dir))))
+              ;;   (variant . "chat")))
 
               (mcpServers ("beads"
                            (command . "beads-mcp"))
@@ -1463,12 +1457,7 @@ be file B."
               (providers
                ;; (github-copilot (key . ,(auth-source-pick-first-password :host "api.githubcopilot.com"))
                ;;                 (url . "https://api.githubcopilot.com"))
-               (anthropic (key . ,(auth-source-pick-first-password :host "api.anthropic.com"))
-                          (models
-                           (claude-opus-4-6 . ,(make-hash-table))
-                           (claude-sonnet-4-6 . ,(make-hash-table))
-                           (claude-haiku-4-5-20251001 . ,(make-hash-table))
-                           (claude-3-haiku-20240307 . ,(make-hash-table))))
+               (anthropic (key . ,(auth-source-pick-first-password :host "api.anthropic.com")))
 
                (deepseek (api . "openai-chat")
                          (url . "https://api.deepseek.com")
@@ -1480,6 +1469,18 @@ be file B."
                            (variants . ,deepseek-variants))))
 
                (openai (key . ,(auth-source-pick-first-password :host "api.openai.com"))))
+
+              (hooks
+               ("notify-done"
+                (type . "postRequest")
+                (visible . ,json-false)
+                (actions ((type . "shell")
+                          (shell . "emacsclient -e '(desktop-notify \"Emacs ECA\" \"Waiting for next task\")'"))))
+               ("notify-toolcall"
+                (type . "preToolCall")
+                (visible . ,json-false)
+                (actions ((type . "shell")
+                          (shell . "jq -e '.approval == \"ask\"' > /dev/null && emacsclient -e '(desktop-notify \"Emacs ECA\" \"Pending tool call\")'")))))
 
               (rules ((path . ,(expand-file-name "memory.txt" prompts-dir))))
 
