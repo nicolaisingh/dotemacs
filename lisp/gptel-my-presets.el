@@ -31,17 +31,17 @@
 
 ;;;; Models
 
-(gptel-make-preset 'model-deepseek-chat
+(gptel-make-preset 'deepseek-chat
   :description "Use DeepSeek chat (general conversation, basic tasks)"
   :backend "DeepSeek"
   :model 'deepseek-chat)
 
-(gptel-make-preset 'model-deepseek-reasoner
+(gptel-make-preset 'deepseek-reasoner
   :description "Use DeepSeek reasoner (thinking, coding, reasoning, math)"
   :backend "DeepSeek"
   :model 'deepseek-reasoner)
 
-(gptel-make-preset 'model-gpt-4.1
+(gptel-make-preset 'gpt-4.1
   :description "Use ChatGPT gpt-4.1 (complex tasks)"
   :backend "ChatGPT"
   :model 'gpt-4.1)
@@ -51,15 +51,59 @@
   :backend "ChatGPT"
   :model 'gpt-5)
 
-(gptel-make-preset 'o4-mini
-  :description "Use ChatGPT o4-mini (fast, reasoning, coding, visual)"
+(gptel-make-preset 'gpt-5.4
+  :description "OpenAI GPT-5.4: Agentic, coding, professional workflows"
   :backend "ChatGPT"
-  :model 'o4-mini)
+  :model 'gpt-5.4)
+
+(gptel-make-preset 'gpt-5.4-mini
+  :description "OpenAI GPT-5.4 mini: For coding, computer use, and subagents"
+  :backend "ChatGPT"
+  :model 'gpt-5.4-mini)
+
+(gptel-make-preset 'gpt-5.4-nano
+  :description "OpenAI GPT-5.4 mini: For simple high volume tasks"
+  :backend "ChatGPT"
+  :model 'gpt-5.4-nano)
+
+;; Ollama local models
 
 (gptel-make-preset 'qwen3-coder
-  :description " Alibaba's performant long context models for agentic and coding tasks."
+  :description "Alibaba's performant long context models for agentic and coding tasks."
   :backend "Ollama"
   :model 'qwen3-coder:latest)
+
+(gptel-make-preset 'deepseek-coder-v2-16b
+  :description "DeepSeek Coder V2 16B (MoE)"
+  :backend "Ollama"
+  :model 'deepseek-coder-v2:16b)
+
+(gptel-make-preset 'gemma4-26b
+  :description "Google Gemma 4 26B"
+  :backend "Ollama"
+  :model 'gemma4:26b)
+
+(gptel-make-preset 'lfm2
+  :description "Liquid LFM2 24B"
+  :backend "Ollama"
+  :model 'lfm2:latest)
+
+(gptel-make-preset 'glm-4.7-flash
+  :description "GLM 4.7 Flash"
+  :backend "Ollama"
+  :model 'glm-4.7-flash:latest)
+
+;; Ollama cloud models
+
+(gptel-make-preset 'kimi-k2.5-cloud
+  :description "Moonshot AI Kimi-K2.5"
+  :backend "Ollama"
+  :model 'kimi-k2.5:cloud)
+
+(gptel-make-preset 'glm-5-cloud
+  :description "Z.ai GLM 5"
+  :backend "Ollama"
+  :model 'glm-5:cloud)
 
 ;;;; Temperatures
 
@@ -112,13 +156,23 @@
   :description "Proofread text"
   :system 'proofread
   :include-reasoning nil
-  :use-context nil)
+  :use-context nil
+  :backend "Ollama"
+  :parents '(lfm2 temp-conversation))
+
+(gptel-make-preset 'rewrite
+  :description "Rewrite text"
+  :system 'rewrite
+  :include-reasoning nil
+  :use-context nil
+  :backend "Ollama"
+  :parents '(lfm2 temp-conversation))
 
 (gptel-make-preset 'summarize
   :description "Summarize text"
   :system 'summarizer
-  :backend "ChatGPT"
-  :model 'gpt-4.1-mini)
+  :backend "Ollama"
+  :parents '(lfm2 temp-conversation))
 
 (gptel-make-preset 'git-commit-o4-mini
   :description "Git commit assistant"
@@ -133,8 +187,8 @@
 (gptel-make-preset 'cli-assistant
   :description "CLI command assistant"
   :system 'cli-assistant
-  :backend "ChatGPT"
-  :model 'gpt-4.1-mini)
+  :backend "Ollama"
+  :model '(glm-5-cloud))
 
 (provide ' gptel-my-presets)
 ;;; gptel-my-presets.el ends here

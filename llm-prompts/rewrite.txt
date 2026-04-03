@@ -1,0 +1,1 @@
+Rewrite the user's text according to the given instruction, nothing else.  Output only the rewritten version without explanations.

@@ -2393,10 +2393,14 @@ The default format is specified by `emms-source-playlist-default-format'."
         (alist-get 'org-mode gptel-response-prefix-alist) "*Assistant*:\n")
   (setq gptel-expert-commands t)
 
-  (defun my-gptel-proofread (beg end)
-    "Ask gptel to proofread the region."
-    (interactive "r")
-    (let ((prompt (buffer-substring-no-properties beg end)))
+  (defun my-gptel-proofread ()
+    "Ask gptel to proofread the region or buffer.
+If region is active, proofread the region. Otherwise work on the entire buffer."
+    (interactive)
+    (let* ((use-region (use-region-p))
+           (beg (if use-region (region-beginning) (point-min)))
+           (end (if use-region (region-end) (point-max)))
+           (prompt (buffer-substring-no-properties beg end)))
       (gptel-with-preset 'proofread
         (gptel-request prompt
           :in-place t
@@ -2406,6 +2410,34 @@ The default format is specified by `emms-source-playlist-default-format'."
                           (delete-region beg end)
                           (goto-char (plist-get info :position))
                           (insert response))))))))
+
+  (defun my-gptel-summarize ()
+    "Ask gptel to summarize the region or buffer.
+If region is active, summarize the region. Otherwise work on the entire buffer."
+    (interactive)
+    (let* ((use-region (use-region-p))
+           (beg (if use-region (region-beginning) (point-min)))
+           (end (if use-region (region-end) (point-max)))
+           (prompt (buffer-substring-no-properties beg end)))
+      (gptel-with-preset 'summarize
+        (gptel-request prompt
+          :in-place nil
+          :callback (lambda (response info)
+                      (when (stringp response)
+                        (with-current-buffer (plist-get info :buffer)
+                          (goto-char (plist-get info :position))
+                          (insert response))))))))
+
+  (defun my-gptel-rewrite ()
+    "Ask gptel to rewrite the region or buffer.
+If region is active, rewrite the region. Otherwise rewrite the entire buffer."
+    (interactive)
+    (let* ((use-region (use-region-p))
+           (beg (if use-region (region-beginning) (point-min)))
+           (end (if use-region (region-end) (point-max)))
+           (prompt (buffer-substring-no-properties beg end)))
+      (gptel-with-preset 'rewrite
+        (gptel-rewrite))))
 
   ;; Define backends
   (let ((chatgpt (gptel-make-openai "ChatGPT"
@@ -4821,6 +4853,8 @@ of the new org-mode file."
   :diminish selected-minor-mode
   :bind (:map selected-keymap
               ("= p" . my-gptel-proofread)
+              ("= s" . my-gptel-summarize)
+              ("= w" . my-gptel-rewrite)
               ("C" . capitalize-region)
               ("D" . delete-duplicate-lines)
               ("E" . flush-empty-lines)
@@ -4836,7 +4870,6 @@ of the new org-mode file."
               ("r" . reverse-region)
               ("s" . my-sort-lines)
               ("u" . unfill-region)
-              ("w" . gptel-rewrite)
               ("C-c C-a" . mc/edit-beginnings-of-lines)
               ("C-c C-e" . mc/edit-ends-of-lines)
               ("C-c C-SPC" . mc/mark-all-in-region)
