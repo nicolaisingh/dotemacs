@@ -56,6 +56,11 @@
   :backend "ChatGPT"
   :model 'o4-mini)
 
+(gptel-make-preset 'qwen3-coder
+  :description " Alibaba's performant long context models for agentic and coding tasks."
+  :backend "Ollama"
+  :model 'qwen3-coder:latest)
+
 ;;;; Temperatures
 
 (gptel-make-preset 'temp-coding
@@ -115,10 +120,15 @@
   :backend "ChatGPT"
   :model 'gpt-4.1-mini)
 
-(gptel-make-preset 'git-commit
+(gptel-make-preset 'git-commit-o4-mini
   :description "Git commit assistant"
   :system 'git-commit
   :parents '(coder-o4-mini))
+
+(gptel-make-preset 'git-commit
+  :description "Git commit assistant"
+  :system 'git-commit
+  :parents '(qwen3-coder))
 
 (gptel-make-preset 'cli-assistant
   :description "CLI command assistant"

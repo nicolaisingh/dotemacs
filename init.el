@@ -406,6 +406,14 @@ Returns t if notification was sent successfully, nil otherwise."
         (error
          (message "Failed to send notification: %s" (error-message-string err)))))))
 
+(defun adonaios-url (include-protocol &optional port)
+  (let ((host (if (string-equal system-name "adonaios")
+                  "localhost"
+                "192.168.70.1")))
+    (concat (if include-protocol "http://" "")
+            host
+            (when port (format ":%d" port)))))
+
 
 ;;;; Minor modes
 
@@ -590,6 +598,7 @@ From https://www.emacswiki.org/emacs/XModMapMode")
     (load custom-file))
 
   (keymap-global-set "C-x C-m" (key-binding (kbd "M-x"))) ; Does not work in :bind
+  (keymap-global-set "<f9>" #'restart-emacs)
 
   (setq auto-hscroll-mode 'current-line
         auto-save-interval 50
@@ -1379,7 +1388,6 @@ be file B."
 ;;; eat
 
 (use-package eat
-  :disabled
   :diminish eat-eshell-mode
   :hook ((eshell-load-hook . eat-eshell-mode)
          (eshell-load-hook . eat-eshell-visual-command-mode)))
@@ -1468,7 +1476,10 @@ be file B."
                           (deepseek-reasoner
                            (variants . ,deepseek-variants))))
 
-               (openai (key . ,(auth-source-pick-first-password :host "api.openai.com"))))
+               (openai (key . ,(auth-source-pick-first-password :host "api.openai.com")))
+
+               (ollama (api . "openai-chat")
+                       (url . ,(adonaios-url t 11434))))
 
               (hooks
                ("notify-done"
@@ -2406,21 +2417,23 @@ The default format is specified by `emms-source-playlist-default-format'."
                     claude-sonnet-4-6
                     claude-haiku-4-5-20251001
                     claude-3-haiku-20240307)))
-        (claude-thinking (gptel-make-anthropic "Thinking-Claude"
-                           :key gptel-api-key
-                           :models
-                           '(claude-opus-4-6
-                             claude-sonnet-4-6
-                             claude-haiku-4-5-20251001)
-                           :request-params
-                           '(:thinking (:type "enabled" :budget_tokens 1024)
-                                       :max_tokens 2048)))
         (deepseek (gptel-make-deepseek "DeepSeek"
                     :key gptel-api-key
                     :models '(deepseek-chat
-                              deepseek-reasoner))))
-    (setopt gptel-backend claude
-            gptel-model 'claude-sonnet-4-6)))
+                              deepseek-reasoner)))
+        (ollama (gptel-make-ollama "Ollama"
+                  :host (adonaios-url nil 11434)
+                  :models
+                  '(deepseek-coder-v2:16b
+                    kimi-k2.5:cloud
+                    gemma4:26b
+                    glm-4.7-flash:latest
+                    glm-5:cloud
+                    lfm2:latest
+                    qwen3-coder:latest
+                    translategemma:12b))))
+    (setopt gptel-backend ollama
+            gptel-model 'gemma4:26b)))
 
 
 ;;; gptel-commit-message
@@ -2933,8 +2946,8 @@ The default format is specified by `emms-source-playlist-default-format'."
   (howm-view-close-frame/tab-on-exit t)
   (howm-view-search-recenter 5)
   (howm-view-keep-one-window t)
-  (howm-view-split-horizontally nil)
-  (howm-view-summary-window-size 30)
+  (howm-view-split-horizontally t)
+  (howm-view-summary-window-size nil)
   (howm-view-window-location nil))
 
 ;;; howm-shift
@@ -3582,6 +3595,7 @@ Useful for completion style 'partial-completion."
 ;;; multi-term
 
 (use-package multi-term
+  :disabled
   :bind (:map my-ctl-c-t-map
               ("T" . multi-term)
               ("t" . multi-term-next))

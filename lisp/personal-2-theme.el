@@ -91,10 +91,6 @@ numbered variants the same as the base color."
      ("color-pale-red" "#ffcccc")
      ("color-pale-gray" "#dddddd"))
   (let* ((fg-inactive color-gray-4)
-         ;; (font "Intel One Mono-10")
-         (default-font "Atkinson Hyperlegible Mono-14")
-         (variable-font "Atkinson Hyperlegible Next")
-         (fixed-serif-font "Cutive Mono")
          (flat-box `(:line-width 2 :style flat-button))
          (flat-box-outline `(:line-width 2 :color ,color-gray :style released-button))
          (released `(:line-width 1 :style released-button))
@@ -104,10 +100,10 @@ numbered variants the same as the base color."
 
      ;; faces
      `(cursor ((t (:background ,color-red-3))))
-     `(default ((t (:font ,default-font :foreground ,color-black :background ,color-white))))
+     `(default ((t (:foreground ,color-black :background ,color-white))))
      `(display-time-date-and-time ((t (:foreground ,color-blue-2))))
-     `(fixed-pitch ((t (:font ,default-font :height 1.0))))
-     `(fixed-pitch-serif ((t (:font ,fixed-serif-font :height 1.0))))
+     `(fixed-pitch ((t (:height 1.0))))
+     `(fixed-pitch-serif ((t (:height 1.0))))
      `(fringe ((t (:background "gray95"))))
      `(highlight ((t (:background ,color-pale-yellow))))
      `(hl-line ((t (:underline ,color-gray))))
@@ -119,7 +115,7 @@ numbered variants the same as the base color."
      `(secondary-selection ((t (:background ,color-pale-gray))))
      `(show-paren-match ((t (:background ,color-light-blue :distant-foreground ,color-white))))
      `(show-paren-mismatch ((t (:background ,color-red-2 :foreground ,color-white))))
-     `(variable-pitch ((t (:family ,variable-font :height 1.0))))
+     `(variable-pitch ((t (:height 1.0))))
      `(window-divider ((t (:foreground ,color-black))))
      `(window-divider-first-pixel ((t (:distant-foreground "white" :foreground "white"))))
      `(window-divider-last-pixel ((t (:distant-foreground "white" :foreground "white"))))
@@ -211,7 +207,7 @@ numbered variants the same as the base color."
      `(gnus-group-news-2-empty ((t (:foreground ,color-green))))
      `(gnus-group-news-3-empty ((t (:foreground ,color-blue))))
      `(gnus-group-news-low-empty ((t (:foreground ,color-blue))))
-     `(gnus-header ((t (:family ,variable-font :height 1.1))))
+     `(gnus-header ((t (:height 1.1))))
      `(gnus-header-content ((t (:inherit gnus-header :foreground ,color-green))))
      `(gnus-header-from ((t (:inherit gnus-header :foreground ,color-red))))
      `(gnus-header-name ((t (:inherit gnus-header :foreground ,color-purple))))
@@ -299,4 +295,9 @@ numbered variants the same as the base color."
      `(yas-field-highlight-face ((t (:inherit minibuffer-prompt)))))))
 
 (provide-theme 'personal-2)
+
+;; Local Variables:
+;; eval: (use-local-map (copy-keymap (current-local-map)))
+;; eval: (keymap-local-set "<f5>" (lambda () (interactive) (eval-buffer) (enable-theme 'personal-2)))
+;; End:
 ;;; personal-2-theme.el ends here
