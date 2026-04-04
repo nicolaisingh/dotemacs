@@ -1,0 +1,74 @@
+{
+  "$schema": "https://opencode.ai/config.json",
+  "instructions": [
+    "rules/beads.md"
+  ],
+  "model": "ollama/minimax-m2.7:cloud",
+  "permission": {
+    "bash": {
+      "*": "ask",
+      "bd add": "allow",
+      "bd list": "allow",
+      "bd ready": "allow"
+    },
+    "doom_loop": "ask",
+    "glob": "allow",
+    "grep": "allow",
+    "webfetch": "ask",
+    "websearch": "ask"
+  },
+  "provider": {
+    "ollama": {
+      "models": {
+        "deepseek-coder-v2:16b": {
+          "name": "deepseek-coder-v2:16b"
+        },
+        "gemma4:26b": {
+          "name": "gemma4:26b"
+        },
+        "glm-4.7-flash:latest": {
+          "limit": {
+            "context": 200000,
+            "output": 131702
+          },
+          "name": "glm-4.7-flash:latest"
+        },
+        "glm-5:cloud": {
+          "limit": {
+            "context": 204800,
+            "output": 131702
+          },
+          "name": "glm-5:cloud"
+        },
+        "kimi-k2.5:cloud": {
+          "limit": {
+            "context": 262144,
+            "output": 262144
+          },
+          "name": "kimi-k2.5:cloud"
+        },
+        "lfm2:latest": {
+          "name": "lfm2:latest"
+        },
+        "minimax-m2.7:cloud": {
+          "limit": {
+            "context": 204800,
+            "output": 131702
+          },
+          "name": "minimax-m2.7:cloud"
+        },
+        "qwen3-coder:latest": {
+          "name": "qwen3-coder:latest"
+        },
+        "translategemma:12b": {
+          "name": "translategemma:12b"
+        }
+      },
+      "name": "Ollama",
+      "npm": "@ai-sdk/openai-compatible",
+      "options": {
+        "baseURL": "http://localhost:11434/v1"
+      }
+    }
+  }
+}

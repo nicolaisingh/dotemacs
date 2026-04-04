@@ -85,6 +85,7 @@ collection.  Use revert-gc-cons-percentage to restore the value."
 (define-prefix-command 'my-ctl-c-D-map)
 (define-prefix-command 'my-ctl-c-M-map)
 (define-prefix-command 'my-ctl-c-P-map)
+(define-prefix-command 'my-ctl-c-a-map)
 (define-prefix-command 'my-ctl-c-b-map)
 (define-prefix-command 'my-ctl-c-c-map)
 (define-prefix-command 'my-ctl-c-d-map)
@@ -109,6 +110,7 @@ collection.  Use revert-gc-cons-percentage to restore the value."
 (keymap-global-set "C-c D" 'my-ctl-c-D-map)
 (keymap-global-set "C-c M" 'my-ctl-c-M-map)
 (keymap-global-set "C-c P" 'my-ctl-c-P-map)
+(keymap-global-set "C-c a" 'my-ctl-c-a-map)
 (keymap-global-set "C-c b" 'my-ctl-c-b-map)
 (keymap-global-set "C-c c" 'my-ctl-c-c-map)
 (keymap-global-set "C-c d" 'my-ctl-c-d-map)
@@ -656,6 +658,72 @@ From https://www.emacswiki.org/emacs/XModMapMode")
     (exec-path-from-shell-initialize)))
 
 
+;;; acp
+
+(use-package acp)
+
+
+;;; agent-shell
+
+(use-package agent-shell
+  :commands (agent-shell-opencode-start-agent)
+  :bind (:map
+         my-ctl-c-a-map
+         ("a" . agent-shell)
+         ("s" . agent-shell-send-dwim)
+         :map
+         agent-shell-mode-map
+         ("C-c C-!" . agent-shell-insert-shell-command-output)
+         ("C-c C-k" . agent-shell-interrupt)
+         ("C-c C-l" . agent-shell-clear-buffer)
+         ("C-c C-m" . agent-shell-cycle-session-mode))
+  :init
+  (setenv "OPENCODE_CONFIG" (expand-file-name "opencode/opencode.json" user-emacs-directory))
+  (setenv "OPENCODE_CONFIG_DIR" (expand-file-name "opencode" user-emacs-directory))
+  (setenv "OPENCODE_EXPERIMENTAL_LSP_TOOL" "true")
+  (setenv "OPENCODE_DISABLE_LSP_DOWNLOAD" "true")
+  :custom
+  (agent-shell-preferred-agent-config (agent-shell-opencode-make-agent-config))
+  (agent-shell-mcp-servers `(;; ((name . "beads")
+                             ;;  (command . "beads-mcp")
+                             ;;  (args . ())
+                             ;;  (env . ()))
+                             ((name . "context7")
+                              (type . "http")
+                              (url . "https://mcp.context7.com/mcp")
+                              (headers . (((name . "CONTEXT7_API_KEY")
+                                           (value . ,(auth-source-pick-first-password :host "context7"))))))
+                             ((name . "sequential-thinking")
+                              (command . "npx")
+                              (args . ("-y" "@modelcontextprotocol/server-sequential-thinking"))
+                              (env . ()))))
+  (agent-shell-dot-subdir-function #'my-agent-shell-dot-subdir)
+  (agent-shell-show-welcome-message nil)
+  (agent-shell-header-style 'graphical)
+  (agent-shell-prefer-session-resume nil)
+  (agent-shell-confirm-interrupt nil)
+  (agent-shell-session-strategy 'prompt)
+  :config
+  (defun my-agent-shell-dot-subdir (subdir)
+    "Where to store agent-shell files (used by `agent-shell-dot-subdir-function').
+This will return ~/.emacs.d/agent-shell/<dir>."
+    (let* ((cwd (string-remove-suffix "/" (agent-shell-cwd)))
+           (sanitized (replace-regexp-in-string "/" "-" (string-remove-prefix "/" cwd))))
+      (expand-file-name subdir (locate-user-emacs-file (concat "agent-shell/" sanitized))))))
+
+
+;;; agent-shell-sidebar
+
+(use-package agent-shell-sidebar
+  :ensure (:host github :repo "cmacrae/agent-shell-sidebar")
+  :bind (("C-z C-a" . agent-shell-sidebar-toggle)
+         :map agent-shell-mode-map
+         ("C-c C-c" . agent-shell-sidebar-change-provider))
+  :custom
+  (agent-shell-sidebar-width "40%")
+  (agent-shell-sidebar-default-config (agent-shell-opencode-make-agent-config)))
+
+
 ;;; aggressive-indent
 
 (use-package aggressive-indent
@@ -674,6 +742,7 @@ From https://www.emacswiki.org/emacs/XModMapMode")
 ;;; aider
 
 (use-package aider
+  :disabled
   :bind (("C-c a" . aider-transient-menu))
   :custom
   (aider-todo-keyword-pair '("AI!" . "comment line ending with string: AI!"))
@@ -2462,6 +2531,7 @@ If region is active, rewrite the region. Otherwise rewrite the entire buffer."
                     glm-4.7-flash:latest
                     glm-5:cloud
                     lfm2:latest
+                    minimax-m2.7:cloud
                     qwen3-coder:latest
                     translategemma:12b))))
     (setopt gptel-backend ollama
@@ -4931,6 +5001,11 @@ of the new org-mode file."
   :custom
   (send-mail-function #'sendmail-send-it)
   (sendmail-program "msmtp"))
+
+
+;;; shell-maker
+
+(use-package shell-maker)
 
 
 ;;; slime
