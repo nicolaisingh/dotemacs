@@ -7,8 +7,8 @@
 		 (:exclude ".dir-locals.el" "test.el" "tests.el"
 			   "*-test.el" "*-tests.el" "LICENSE"
 			   "README*" "*-pkg.el"))
-		:source "MELPA" :id acp :type git :protocol https
-		:inherit t :depth treeless :ref
+		:source "elpaca-menu-lock-file" :id acp :type git
+		:protocol https :inherit t :depth treeless :ref
 		"c32fbf8df34ed0095853a8cf55dc783e68b67d90"))
  (agent-shell :source "elpaca-menu-lock-file" :recipe
 	      (:package "agent-shell" :fetcher github :repo
@@ -21,12 +21,13 @@
 			 (:exclude ".dir-locals.el" "test.el"
 				   "tests.el" "*-test.el" "*-tests.el"
 				   "LICENSE" "README*" "*-pkg.el"))
-			:source "MELPA" :id agent-shell :type git
-			:protocol https :inherit t :depth treeless
-			:ref
+			:source "elpaca-menu-lock-file" :id
+			agent-shell :type git :protocol https :inherit
+			t :depth treeless :ref
 			"1e5d17598d191386ee02998199b77d0f70866820"))
  (agent-shell-sidebar :source "elpaca-menu-lock-file" :recipe
-		      (:source nil :package "agent-shell-sidebar" :id
+		      (:source "elpaca-menu-lock-file" :package
+			       "agent-shell-sidebar" :id
 			       agent-shell-sidebar :host github :repo
 			       "cmacrae/agent-shell-sidebar" :type git
 			       :protocol https :inherit t :depth
@@ -461,8 +462,8 @@
       (:package "eat" :repo
 		("https://codeberg.org/akib/emacs-eat" . "eat") :tar
 		"0.9.4" :host nongnu :files ("*" (:exclude ".git"))
-		:source "NonGNU ELPA" :id eat :type git :protocol
-		https :inherit t :depth treeless :ref
+		:source "elpaca-menu-lock-file" :id eat :type git
+		:protocol https :inherit t :depth treeless :ref
 		"c8d54d649872bfe7b2b9f49ae5c2addbf12d3b99"))
  (eca :source "elpaca-menu-lock-file" :recipe
       (:package "eca" :fetcher github :repo
@@ -1533,9 +1534,9 @@
 			 (:exclude ".dir-locals.el" "test.el"
 				   "tests.el" "*-test.el" "*-tests.el"
 				   "LICENSE" "README*" "*-pkg.el"))
-			:source "MELPA" :id shell-maker :type git
-			:protocol https :inherit t :depth treeless
-			:ref
+			:source "elpaca-menu-lock-file" :id
+			shell-maker :type git :protocol https :inherit
+			t :depth treeless :ref
 			"6377cbdb49248d670170f1c8dbe045648063583e"))
  (slime :source "elpaca-menu-lock-file" :recipe
 	(:package "slime" :fetcher github :repo "slime/slime" :files
