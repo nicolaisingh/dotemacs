@@ -527,6 +527,7 @@ From https://www.emacswiki.org/emacs/XModMapMode")
          (emacs-lisp-mode-hook . set-indent-tab-width-2)
          ;; simple.el
          (before-save-hook . delete-trailing-whitespace)
+         (before-save-hook . executable-make-buffer-file-executable-if-script-p)
          (emacs-lisp-mode-hook . no-indent-tabs-mode))
 
   :custom
