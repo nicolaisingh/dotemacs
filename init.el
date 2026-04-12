@@ -409,7 +409,7 @@ Returns t if notification was sent successfully, nil otherwise."
          (message "Failed to send notification: %s" (error-message-string err)))))))
 
 (defun adonaios-url (include-protocol &optional port)
-  (let ((host (if (string-equal system-name "adonaios")
+  (let ((host (if (assoc-string system-name '("toolbx" "adonaios"))
                   "localhost"
                 "192.168.70.1")))
     (concat (if include-protocol "http://" "")
@@ -3708,6 +3708,14 @@ Useful for completion style 'partial-completion."
                          ("M-." . comint-dynamic-complete))))
 
 
+;;; multi-vterm
+
+(use-package multi-vterm
+  :bind (:map my-ctl-c-t-map
+              ("T" . multi-vterm)
+              ("t" . multi-vterm-next)))
+
+
 ;;; multiple-cursors
 
 (use-package multiple-cursors
@@ -5204,7 +5212,12 @@ of the new org-mode file."
 
 ;;; vterm
 
-(use-package vterm)
+(use-package vterm
+  :custom
+  (vterm-kill-buffer-on-exit t)
+  (vterm-max-scrollback 10000)
+  :config
+  (setq vterm-timer-delay 0.01))
 
 
 ;;; vundo
