@@ -1659,6 +1659,26 @@ be file B."
   :diminish eldoc-mode)
 
 
+;;; elpaca-manager
+
+(use-package elpaca-manager
+  :ensure nil
+  :bind (:map
+         elpaca-manager-mode-map
+         ("w" . my-elpaca-copy-url))
+  :config
+  (defun my-elpaca-copy-url (id)
+    "Copy ID's :url."
+    (interactive (list (let* ((recipe (elpaca-recipe (elpaca-ui-current-package))))
+                         (intern (plist-get recipe :package)))))
+    (if-let* ((found (or (elpaca-get id)
+                         (alist-get id (cl-loop for menu in elpaca-menu-functions append (funcall menu 'index)))))
+              (url (plist-get found :url)))
+        (progn (kill-new url)
+               (message url))
+      (user-error "No URL associated with id %S" id))))
+
+
 ;;; emms
 
 (use-package emms
@@ -3536,6 +3556,7 @@ Useful for completion style 'partial-completion."
   :custom
   (magit-define-global-key-bindings nil)
   (magit-diff-refine-hunk t)
+  (magit-save-repository-buffers nil)
   (magit-status-goto-file-position t)
   (magit-status-show-hashes-in-headers t)
   :config
@@ -3712,6 +3733,7 @@ Useful for completion style 'partial-completion."
 
 (use-package multi-vterm
   :bind (:map my-ctl-c-t-map
+              ("R" . multi-vterm-rename-buffer)
               ("T" . multi-vterm)
               ("t" . multi-vterm-next)))
 
@@ -5213,6 +5235,10 @@ of the new org-mode file."
 ;;; vterm
 
 (use-package vterm
+  :bind (:map
+         vterm-mode-map
+         ("M-{" . (lambda () (interactive) (vterm-send-key "<prior>")))
+         ("M-}" . (lambda () (interactive) (vterm-send-key "<next>"))))
   :custom
   (vterm-kill-buffer-on-exit t)
   (vterm-max-scrollback 10000)
