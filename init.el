@@ -456,6 +456,8 @@ From https://www.emacswiki.org/emacs/XModMapMode")
   :demand t
   :ensure nil ; built-in package
   :bind (([remap eval-last-sexp] . pp-eval-last-sexp)
+         ("C-S-t" . tab-new)
+         ("C-S-w" . tab-close)
          ("C-`" . my-select-tab-or-other-window)
          ("C-c j" . (lambda (jira-issue)
                       (interactive
@@ -4763,7 +4765,10 @@ of the new org-mode file."
   (add-to-list 'project-switch-commands '(magit-project-status "Magit") t)
   ;; Add deadgrep as G
   (keymap-set project-prefix-map "G" #'deadgrep)
-  (add-to-list 'project-switch-commands '(deadgrep "Deadgrep") t))
+  (add-to-list 'project-switch-commands '(deadgrep "Deadgrep") t)
+  ;; Add vterm as t
+  (keymap-set project-prefix-map "t" #'multi-vterm-project)
+  (add-to-list 'project-switch-commands '(multi-vterm-project "VTerm") t))
 
 
 ;;; pytest
