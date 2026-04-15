@@ -2822,6 +2822,7 @@ If region is active, rewrite the region. Otherwise rewrite the entire buffer."
          ("C-z C" . howm-create-here)
          ("C-z C-," . my-howm-insert-keyword-header)
          ("C-z C-." . my-howm-insert-ref-header)
+         ("C-z C-x C-v" . my-howm-toggle-inline-images)
          ("C-z D" . howm-dup)
          ("C-z K" . howm-keyword-to-kill-ring)
          ("C-z a" . howm-list-all)
@@ -2836,7 +2837,8 @@ If region is active, rewrite the region. Otherwise rewrite the entire buffer."
   :hook
   ;; Make sure this runs late to make `delete-trailing-whitespace' not remove the trailing header spaces
   ((howm-mode-hook . (lambda ()
-                       (add-hook 'before-save-hook #'my-howm-before-save 90 t))))
+                       (add-hook 'before-save-hook #'my-howm-before-save 90 t)))
+   (howm-mode-hook . my-howm-show-inline-images))
   :preface
   (setq howm-default-key-table nil
         howm-template #'my-howm-template
@@ -3026,7 +3028,46 @@ If region is active, rewrite the region. Otherwise rewrite the entire buffer."
            (regexp (howm-completing-read-keyword
                     (lambda (a) (string-match tag-regexp (car a))))))
       (howm-write-history regexp)
-      (howm-search regexp t))))
+      (howm-search regexp t)))
+
+  (defun my-howm-show-inline-images ()
+    "Show inline images for file references (e.g. >>> path/to/image.png)."
+    (interactive)
+    (when (bound-and-true-p howm-mode)
+      (save-excursion
+        (remove-overlays (point-min) (point-max) 'howm-attach-image t)
+        (goto-char (point-min))
+        (while (re-search-forward (concat (regexp-quote howm-ref-header) " *")
+                                  nil t)
+          (let ((match-files (regexp-opt '(".jpg" ".jpeg" ".png" ".gif")))
+                (end (line-end-position)))
+            (when (re-search-forward "\\([^\n]+\\)" end t)
+              (let ((file (match-string 1)))
+                (when (and (string-match match-files ;; "\\.\\(jpg\\|jpeg\\|png\\|gif\\)\\'"
+                                         file)
+                           (file-exists-p file))
+                  (let ((ov (make-overlay (point) (point)))
+                        (img (create-image file nil nil :margin 10 :max-width 640 :max-height 480)))
+                    (when img
+                      (overlay-put ov 'howm-attach-image t)
+                      (overlay-put ov 'after-string
+                                   (concat "\n" (propertize " " 'display img)))
+                      (overlay-put ov 'modification-hooks
+                                   '(lambda (ov &rest _) (delete-overlay ov)))
+                      (setq howm-inline-images-shown t)))))))))))
+
+  (defun my-howm-hide-inline-images ()
+    "Hide inline images displayed."
+    (interactive)
+    (remove-overlays (point-min) (point-max) 'howm-attach-image t)
+    (setq howm-inline-images-shown nil))
+
+  (defun my-howm-toggle-inline-images ()
+    "Toggle inline images."
+    (interactive)
+    (if howm-inline-images-shown
+        (my-howm-hide-inline-images)
+      (my-howm-show-inline-images))))
 
 ;;; howm-org
 
