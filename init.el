@@ -2842,6 +2842,7 @@ If region is active, rewrite the region. Otherwise rewrite the entire buffer."
    (howm-mode-hook . iimage-mode))
   :preface
   (setq howm-default-key-table nil
+        howm-inline-images-shown nil
         howm-template #'my-howm-template
         howm-wiki-regexp nil)
   :config
@@ -3044,8 +3045,7 @@ If region is active, rewrite the region. Otherwise rewrite the entire buffer."
                 (end (line-end-position)))
             (when (re-search-forward "\\([^\n]+\\)" end t)
               (let ((file (match-string 1)))
-                (when (and (string-match match-files ;; "\\.\\(jpg\\|jpeg\\|png\\|gif\\)\\'"
-                                         file)
+                (when (and (string-match match-files file)
                            (file-exists-p file))
                   (let ((ov (make-overlay (point) (point)))
                         (img (create-image file nil nil :margin 10 :max-width 640 :max-height 480)))
