@@ -180,6 +180,11 @@ collection.  Use revert-gc-cons-percentage to restore the value."
   (interactive)
   (find-file (expand-file-name "init.el" user-emacs-directory)))
 
+(defun find-project-dotenv-file ()
+  "Find project's .env file."
+  (interactive)
+  (find-file (expand-file-name ".env" (project-root (project-current)))))
+
 (defun find-scratch-buffer ()
   "Find the *scratch* buffer."
   (interactive)
@@ -501,6 +506,7 @@ From https://www.emacswiki.org/emacs/XModMapMode")
          :map my-ctl-c-f-map
          ("#" . sudo-find-alternate-file)
          ("." . ffap)
+         ("e" . find-project-dotenv-file)
          ("i" . find-init-file)
          ("s" . find-scratch-buffer)
          :map my-ctl-c-h-map
