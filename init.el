@@ -2822,7 +2822,7 @@ If region is active, rewrite the region. Otherwise rewrite the entire buffer."
          ("C-z C" . howm-create-here)
          ("C-z C-," . my-howm-insert-keyword-header)
          ("C-z C-." . my-howm-insert-ref-header)
-         ("C-z C-x C-v" . my-howm-toggle-inline-images)
+         ;; ("C-z C-x C-v" . my-howm-toggle-inline-images)
          ("C-z D" . howm-dup)
          ("C-z K" . howm-keyword-to-kill-ring)
          ("C-z a" . howm-list-all)
@@ -2838,7 +2838,8 @@ If region is active, rewrite the region. Otherwise rewrite the entire buffer."
   ;; Make sure this runs late to make `delete-trailing-whitespace' not remove the trailing header spaces
   ((howm-mode-hook . (lambda ()
                        (add-hook 'before-save-hook #'my-howm-before-save 90 t)))
-   (howm-mode-hook . my-howm-show-inline-images))
+   ;; (howm-mode-hook . my-howm-show-inline-images)
+   (howm-mode-hook . iimage-mode))
   :preface
   (setq howm-default-key-table nil
         howm-template #'my-howm-template
@@ -3425,6 +3426,52 @@ Useful for completion style 'partial-completion."
     ;; Emacs 28 introduces `fido-vertical-mode'
     (fido-vertical-mode t)
     (add-hook 'icomplete-minibuffer-setup-hook #'my-icomplete-config))))
+
+
+;;; iimage
+
+(use-package iimage
+  :ensure nil
+  :bind (:map my-ctl-c-i-map
+              ("i" . iimage-mode))
+  :config
+  (with-eval-after-load 'howm-mode
+    (add-to-list 'iimage-mode-image-regex-alist
+                 (cons
+                  (rx bol
+                      (optional
+                       (group
+                        ;; (eval howm-ref-header)
+                        ">>>"
+                        (* " ")))
+                      (group
+                       (optional "~/")
+                       (regex
+                        ;; `iimage-mode-image-filename-regex' with spaces allowed
+                        (concat "[-+./ _0-9a-zA-Z]+\\."
+                                (regexp-opt (nconc (mapcar #'upcase
+                                                           image-file-name-extensions)
+                                                   image-file-name-extensions)
+                                            t))))
+                      eol)
+                  2))))
+
+(rx-to-string `(seq bol
+                    (optional
+                     (group
+                      (eval howm-ref-header)
+                      ;; ">>>"
+                      (* " ")))
+                    (group
+                     (optional "~/")
+                     (regex
+                      ;; `iimage-mode-image-filename-regex' with spaces allowed
+                      ,(concat "[-+./ _0-9a-zA-Z]+\\."
+                               (regexp-opt (nconc (mapcar #'upcase
+                                                          image-file-name-extensions)
+                                                  image-file-name-extensions)
+                                           t))))
+                    eol))
 
 
 ;;; image-dired
@@ -4818,6 +4865,11 @@ of the new org-mode file."
   (add-to-list 'project-switch-commands '(multi-vterm-project "VTerm") t))
 
 
+;;; protobuf
+
+(use-package protobuf-mode)
+
+
 ;;; pytest
 
 (use-package pytest
@@ -5221,7 +5273,7 @@ of the new org-mode file."
           (yaml       "https://github.com/tree-sitter-grammars/tree-sitter-yaml")))
   (when nil
     (mapc #'treesit-install-language-grammar
-	        (mapcar #'car treesit-language-source-alist))))
+          (mapcar #'car treesit-language-source-alist))))
 
 
 ;;; treesit-fold
