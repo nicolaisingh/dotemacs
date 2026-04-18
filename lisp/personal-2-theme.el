@@ -91,8 +91,8 @@ numbered variants the same as the base color."
      ("color-pale-red" "#ffcccc")
      ("color-pale-gray" "#dddddd"))
   (let* ((fg-inactive color-gray-4)
-         (flat-box `(:line-width 2 :style flat-button))
-         (flat-box-outline `(:line-width 2 :color ,color-gray :style released-button))
+         (flat-box `(:line-width 3 :style flat-button))
+         (flat-box-outline `(:line-width 3 :style flat-button))
          (released `(:line-width 1 :style released-button))
          (pressed `(:line-width 1 :style pressed-button)))
     (custom-theme-set-faces
@@ -104,11 +104,11 @@ numbered variants the same as the base color."
      `(display-time-date-and-time ((t (:foreground ,color-blue-2))))
      `(fixed-pitch ((t (:height 1.0))))
      `(fixed-pitch-serif ((t (:height 1.0))))
-     `(fringe ((t (:background "gray95"))))
+     `(fringe ((t (:background "gray98"))))
      `(highlight ((t (:background ,color-pale-yellow))))
      `(hl-line ((t (:underline ,color-gray))))
      `(minibuffer-prompt ((t (:foreground ,color-red :weight bold))))
-     `(mode-line ((nil (:background ,color-pale-blue :box ,flat-box-outline))))
+     `(mode-line-active ((t (:background ,color-pale-blue :box ,flat-box-outline))))
      `(mode-line-buffer-id ((t (:weight bold))))
      `(mode-line-inactive ((t (:background ,color-pale-gray :box ,flat-box :foreground ,fg-inactive))))
      `(region ((t (:background ,color-pale-yellow))))
@@ -282,14 +282,14 @@ numbered variants the same as the base color."
      `(outline-8 ((t (:foreground ,color-blue))))
 
      ;; tab-bar
-     `(tab-bar ((t (:inherit default :background ,color-pale-gray))))
+     `(tab-bar ((t (:inherit default :background ,color-white-2))))
      `(tab-bar-tab ((t (:inherit tab-bar :weight bold :background ,color-white :box ,flat-box))))
      `(tab-bar-tab-inactive ((t (:inherit tab-bar :background ,color-pale-gray :box ,flat-box :foreground ,fg-inactive))))
      `(tab-bar-tab-group-current ((t (:inherit tab-bar-tab :weight normal :box ,flat-box :background ,color-pale-blue))))
      `(tab-bar-tab-group-inactive ((t (:inherit tab-bar-tab :weight normal :box ,released :background ,color-pale-gray))))
 
      ;; tab-line
-     `(tab-line ((t (:background ,color-pale-gray :height 1.0))))
+     `(tab-line ((t (:background ,color-white-2 :height 1.0))))
 
      ;; yas
      `(yas-field-highlight-face ((t (:inherit minibuffer-prompt)))))))

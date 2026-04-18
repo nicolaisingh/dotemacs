@@ -455,7 +455,16 @@ From https://www.emacswiki.org/emacs/XModMapMode")
 ;;;; Package loads
 
 
-;;; 00 emacs
+;;; 00 personal-theme
+
+(use-package personal-2-theme
+  :demand t
+  :ensure nil
+  :config
+  (enable-theme 'personal-2))
+
+
+;;; 01 emacs
 
 (use-package emacs
   :demand t
@@ -539,6 +548,21 @@ From https://www.emacswiki.org/emacs/XModMapMode")
          (emacs-lisp-mode-hook . no-indent-tabs-mode))
 
   :custom
+  ;; C
+  (auto-hscroll-mode 'current-line)
+  (auto-save-interval 50)
+  (auto-save-no-message t)
+  (auto-save-timeout 3)
+  (delete-by-moving-to-trash t)
+  (enable-recursive-minibuffers t)
+  (history-delete-duplicates t)
+  (message-log-max 10000)
+  (load-prefer-newer t)
+  (scroll-margin 0)
+  (tab-width 4)
+  (truncate-lines t)
+  (user-full-name "Nicolai Singh")
+  (x-stretch-cursor t)
   ;; abbrev.el
   (abbrev-file-name (expand-file-name "abbrev-defs.el" user-emacs-directory))
   ;; auth-source.el
@@ -556,14 +580,16 @@ From https://www.emacswiki.org/emacs/XModMapMode")
   (revert-without-query '("^.*\\.pdf$"))
   (save-abbrevs 'silently)
   ;; frame.el
-  (window-divider-default-right-width 3)
-  (window-divider-mode t)
+  (window-divider-default-bottom-width 1)
+  (window-divider-default-right-width 1)
   ;; help.el
   (help-window-select t)
   ;; indent.el
   (tab-always-indent 'complete)
   ;; minibuffer.el
   (completions-format 'one-column)
+  ;; novice.el
+  (disabled-command-function nil)
   ;; paren.el
   (show-paren-delay 0)
   (show-paren-style 'parenthesis)
@@ -608,37 +634,24 @@ From https://www.emacswiki.org/emacs/XModMapMode")
   (when (file-exists-p custom-file)
     (load custom-file))
 
+  :config
   (keymap-global-set "C-x C-m" (key-binding (kbd "M-x"))) ; Does not work in :bind
   (keymap-global-set "<f9>" #'restart-emacs)
-
-  (setq auto-hscroll-mode 'current-line
-        auto-save-interval 50
-        auto-save-no-message t
-        auto-save-timeout 3
-        disabled-command-function nil
-        history-delete-duplicates t
-        scroll-margin 0
-        tab-width 4
-        truncate-lines t
-        user-full-name "Nicolai Singh"
-        x-stretch-cursor t)
 
   ;; (if (boundp 'use-short-answers)
   ;;     (setq use-short-answers t)
   ;;   (fset 'yes-or-no-p 'y-or-n-p))
-
-  ;; Recursive minibuffers
-  (setq enable-recursive-minibuffers t)
-  (minibuffer-depth-indicate-mode)
 
   ;; Set emacs source code location
   ;; (unless (memq window-system '(mac ns))
   ;;   (setq find-function-C-source-directory "/run/current-system/sw/share/emacs/source/src")
   ;;   (visit-tags-table (format "/run/current-system/sw/share/emacs/%s/lisp/TAGS" emacs-version)))
 
+  (minibuffer-depth-indicate-mode)
   (display-time-mode)
   ;; (global-visual-wrap-prefix-mode) ;; Some incompatibility with org-mode
   (savehist-mode)
+  (window-divider-mode)
   (winner-mode))
 
 
@@ -647,15 +660,6 @@ From https://www.emacswiki.org/emacs/XModMapMode")
 (use-package diminish
   :ensure (:wait t) ; wait to finish before proceeding to the next
   :demand t)
-
-
-;;; 10 personal-theme
-
-(use-package personal-2-theme
-  :demand t
-  :ensure nil
-  :config
-  (enable-theme 'personal-2))
 
 
 ;;; 99 exec-path-from-shell
@@ -818,8 +822,12 @@ This will return ~/.emacs.d/agent-shell/<dir>."
 ;;; avy
 
 (use-package avy
-  :bind (:map my-ctl-z-map
-              ("C-v" . avy-goto-char-timer))
+  :bind (:map
+         my-ctl-z-map
+         ("C-v" . avy-goto-char-timer)
+         :map
+         isearch-mode-map
+         ("C-1" . avy-isearch))
   :custom
   (avy-timeout-seconds 0.4)
   (avy-keys '(?a ?o ?e ?u ?i ?d ?h ?t ?n ?s)))
@@ -1345,6 +1353,16 @@ be file B."
         (ediff-files dired-ediff-file-a dired-ediff-file-b)))))
 
 
+;;; dired-collapse (from dired-hacks)
+
+(use-package dired-collapse
+  :disabled
+  :after (dired)
+  :demand t
+  :config
+  (global-dired-collapse-mode))
+
+
 ;;; dired-marked
 
 (use-package dired-marked
@@ -1364,6 +1382,33 @@ be file B."
               ("/ r" . dired-narrow-regexp))
   :config
   (setq dired-narrow-map nil))
+
+
+;;; dired-rainbow (from dired-hacks)
+
+(use-package dired-rainbow
+  :after (dired)
+  :config
+  (dired-rainbow-define compiled "#4dc0b5" ("asm" "cl" "lisp" "el" "c" "h" "c++" "h++" "hpp" "hxx" "m" "cc" "cs" "cp" "cpp" "go" "f" "for" "ftn" "f90" "f95" "f03" "f08" "s" "rs" "hi" "hs" "pyc" ".java"))
+  (dired-rainbow-define compressed "#51d88a" ("7z" "zip" "bz2" "tgz" "txz" "gz" "xz" "z" "Z" "jar" "war" "ear" "rar" "sar" "xpi" "apk" "xz" "tar"))
+  (dired-rainbow-define database "#6574cd" ("xlsx" "xls" "csv" "accdb" "db" "mdb" "sqlite" "nc"))
+  (dired-rainbow-define document "#9561e2" ("docm" "doc" "docx" "odb" "odt" "pdb" "pdf" "ps" "rtf" "djvu" "epub" "odp" "ppt" "pptx"))
+  (dired-rainbow-define encrypted "#ffed4a" ("gpg" "pgp" "asc" "bfe" "enc" "signature" "sig" "p12" "pem"))
+  (dired-rainbow-define executable "#8cc4ff" ("exe" "msi"))
+  (dired-rainbow-define fonts "#6cb2eb" ("afm" "fon" "fnt" "pfb" "pfm" "ttf" "otf"))
+  (dired-rainbow-define html "#eb5286" ("css" "less" "sass" "scss" "htm" "html" "jhtm" "mht" "eml" "mustache" "xhtml"))
+  (dired-rainbow-define image "#f66d9b" ("tiff" "tif" "cdr" "gif" "ico" "jpeg" "jpg" "png" "psd" "eps" "svg"))
+  (dired-rainbow-define interpreted "#38c172" ("py" "ipynb" "rb" "pl" "t" "msql" "mysql" "pgsql" "sql" "r" "clj" "cljs" "scala" "js"))
+  (dired-rainbow-define log "#c17d11" ("log"))
+  (dired-rainbow-define markdown "#ffed4a" ("org" "etx" "info" "markdown" "md" "mkd" "nfo" "pod" "rst" "tex" "textfile" "txt"))
+  (dired-rainbow-define media "#de751f" ("mp3" "mp4" "MP3" "MP4" "avi" "mpeg" "mpg" "flv" "ogg" "mov" "mid" "midi" "wav" "aiff" "flac"))
+  (dired-rainbow-define packaged "#faad63" ("deb" "rpm" "apk" "jad" "jar" "cab" "pak" "pk3" "vdf" "vpk" "bsp"))
+  (dired-rainbow-define partition "#e3342f" ("dmg" "iso" "bin" "nrg" "qcow" "toast" "vcd" "vmdk" "bak"))
+  (dired-rainbow-define shell "#f6993f" ("awk" "bash" "bat" "sed" "sh" "zsh" "vim"))
+  (dired-rainbow-define vc "#0074d9" ("git" "gitignore" "gitattributes" "gitmodules"))
+  (dired-rainbow-define xml "#f2d024" ("xml" "xsd" "xsl" "xslt" "wsdl" "bib" "json" "msg" "pgn" "rss" "yaml" "yml" "rdata"))
+  (dired-rainbow-define-chmod directory "#6cb2eb" "d.*")
+  (dired-rainbow-define-chmod executable-unix "#38c172" "-.*x.*"))
 
 
 ;;; dired-sidebar
@@ -2202,6 +2247,11 @@ The default format is specified by `emms-source-playlist-default-format'."
   :diminish form-feed-mode
   :hook ((emacs-lisp-mode-hook . form-feed-mode)
          (howm-view-contents-mode-hook . form-feed-mode)))
+
+
+;;; free-keys
+
+(use-package free-keys)
 
 
 ;;; git-timemachine
@@ -3456,23 +3506,6 @@ Useful for completion style 'partial-completion."
                       eol)
                   2))))
 
-(rx-to-string `(seq bol
-                    (optional
-                     (group
-                      (eval howm-ref-header)
-                      ;; ">>>"
-                      (* " ")))
-                    (group
-                     (optional "~/")
-                     (regex
-                      ;; `iimage-mode-image-filename-regex' with spaces allowed
-                      ,(concat "[-+./ _0-9a-zA-Z]+\\."
-                               (regexp-opt (nconc (mapcar #'upcase
-                                                          image-file-name-extensions)
-                                                  image-file-name-extensions)
-                                           t))))
-                    eol))
-
 
 ;;; image-dired
 
@@ -3729,6 +3762,11 @@ Useful for completion style 'partial-completion."
      ("simplemem" . (:url "http://localhost:8000/mcp/sse")))))
 
 
+;;; memory-usage
+
+(use-package memory-usage)
+
+
 ;;; mermaid-mode
 
 (use-package mermaid-mode
@@ -3914,6 +3952,11 @@ Useful for completion style 'partial-completion."
   :demand t
   :config
   (add-to-list 'org-babel-load-languages '(mermaid . t)))
+
+
+;;; operate-on-number
+
+(use-package operate-on-number)
 
 
 ;;; orderless
@@ -5058,6 +5101,7 @@ of the new org-mode file."
               ("r" . reverse-region)
               ("s" . my-sort-lines)
               ("u" . unfill-region)
+              ("w" . delete-region)
               ("C-c C-a" . mc/edit-beginnings-of-lines)
               ("C-c C-e" . mc/edit-ends-of-lines)
               ("C-c C-SPC" . mc/mark-all-in-region)
@@ -5187,6 +5231,22 @@ of the new org-mode file."
   (smtpmail-smtp-server "127.0.0.1")
   (smtpmail-smtp-service 1025)
   (smtpmail-stream-type 'starttls))
+
+
+;;; spacious-padding
+
+(use-package spacious-padding
+  :custom
+  (spacious-padding-subtle-mode-line t)
+  (spacious-padding-widths (list
+                            :internal-border-width 15
+                            :header-line-width 4
+                            :mode-line-width 6
+                            :custom-button-width 3
+                            :tab-width 4
+                            :right-divider-width 30
+                            :scroll-bar-width 8
+                            :fringe-width 8)))
 
 
 ;;; subword

@@ -19,6 +19,9 @@
 (scroll-bar-mode -1)
 (tool-bar-mode -1)
 
+;; Make the fringe slightly thicker
+(fringe-mode 12)
+
 ;; (add-to-list 'default-frame-alist '(fullscreen . maximized))
 (add-to-list 'default-frame-alist '(width . 240))
 (add-to-list 'default-frame-alist '(height . 70))
