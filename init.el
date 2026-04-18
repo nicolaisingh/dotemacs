@@ -3485,6 +3485,17 @@ Useful for completion style 'partial-completion."
   :bind (:map my-ctl-c-i-map
               ("i" . iimage-mode))
   :config
+  ;; Prevent underline from cutting through images (blue line in middle).
+  ;; By default create-image uses :ascent 'center (50%), placing the image
+  ;; baseline in the middle. With text-decorating faces (like links with
+  ;; underline), this causes a horizontal line through the image.
+  ;; Setting :ascent 100 places baseline at bottom of image.
+  (advice-add 'create-image :filter-args
+              (lambda (args)
+                (let ((file (pop args))
+                      (props (plist-put (copy-sequence args) :ascent 100)))
+                  (cons file props))))
+
   (with-eval-after-load 'howm-mode
     (add-to-list 'iimage-mode-image-regex-alist
                  (cons
