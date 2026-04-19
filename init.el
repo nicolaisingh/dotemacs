@@ -605,6 +605,7 @@ From https://www.emacswiki.org/emacs/XModMapMode")
   (save-interprogram-paste-before-kill nil)
   (set-mark-command-repeat-pop t)
   ;; startup.el
+  (inhibit-startup-screen t)
   (initial-major-mode 'fundamental-mode)
   (initial-scratch-message "")
   (user-mail-address "nicolaisingh@pm.me")
@@ -1387,28 +1388,48 @@ be file B."
 ;;; dired-rainbow (from dired-hacks)
 
 (use-package dired-rainbow
-  :after (dired)
+  :after (dired personal-2-theme)
+  :demand t
   :config
-  (dired-rainbow-define compiled "#4dc0b5" ("asm" "cl" "lisp" "el" "c" "h" "c++" "h++" "hpp" "hxx" "m" "cc" "cs" "cp" "cpp" "go" "f" "for" "ftn" "f90" "f95" "f03" "f08" "s" "rs" "hi" "hs" "pyc" ".java"))
-  (dired-rainbow-define compressed "#51d88a" ("7z" "zip" "bz2" "tgz" "txz" "gz" "xz" "z" "Z" "jar" "war" "ear" "rar" "sar" "xpi" "apk" "xz" "tar"))
-  (dired-rainbow-define database "#6574cd" ("xlsx" "xls" "csv" "accdb" "db" "mdb" "sqlite" "nc"))
-  (dired-rainbow-define document "#9561e2" ("docm" "doc" "docx" "odb" "odt" "pdb" "pdf" "ps" "rtf" "djvu" "epub" "odp" "ppt" "pptx"))
-  (dired-rainbow-define encrypted "#ffed4a" ("gpg" "pgp" "asc" "bfe" "enc" "signature" "sig" "p12" "pem"))
-  (dired-rainbow-define executable "#8cc4ff" ("exe" "msi"))
-  (dired-rainbow-define fonts "#6cb2eb" ("afm" "fon" "fnt" "pfb" "pfm" "ttf" "otf"))
-  (dired-rainbow-define html "#eb5286" ("css" "less" "sass" "scss" "htm" "html" "jhtm" "mht" "eml" "mustache" "xhtml"))
-  (dired-rainbow-define image "#f66d9b" ("tiff" "tif" "cdr" "gif" "ico" "jpeg" "jpg" "png" "psd" "eps" "svg"))
-  (dired-rainbow-define interpreted "#38c172" ("py" "ipynb" "rb" "pl" "t" "msql" "mysql" "pgsql" "sql" "r" "clj" "cljs" "scala" "js"))
-  (dired-rainbow-define log "#c17d11" ("log"))
-  (dired-rainbow-define markdown "#ffed4a" ("org" "etx" "info" "markdown" "md" "mkd" "nfo" "pod" "rst" "tex" "textfile" "txt"))
-  (dired-rainbow-define media "#de751f" ("mp3" "mp4" "MP3" "MP4" "avi" "mpeg" "mpg" "flv" "ogg" "mov" "mid" "midi" "wav" "aiff" "flac"))
-  (dired-rainbow-define packaged "#faad63" ("deb" "rpm" "apk" "jad" "jar" "cab" "pak" "pk3" "vdf" "vpk" "bsp"))
-  (dired-rainbow-define partition "#e3342f" ("dmg" "iso" "bin" "nrg" "qcow" "toast" "vcd" "vmdk" "bak"))
-  (dired-rainbow-define shell "#f6993f" ("awk" "bash" "bat" "sed" "sh" "zsh" "vim"))
-  (dired-rainbow-define vc "#0074d9" ("git" "gitignore" "gitattributes" "gitmodules"))
-  (dired-rainbow-define xml "#f2d024" ("xml" "xsd" "xsl" "xslt" "wsdl" "bib" "json" "msg" "pgn" "rss" "yaml" "yml" "rdata"))
-  (dired-rainbow-define-chmod directory "#6cb2eb" "d.*")
-  (dired-rainbow-define-chmod executable-unix "#38c172" "-.*x.*"))
+  (defface my-dired-compiled-face `((t (:foreground ,(personal-theme-get-color "color-black")))) "dired-rainbow compiled files")
+  (defface my-dired-compressed-face `((t (:foreground ,(personal-theme-get-color "color-olive" 2)))) "dired-rainbow compressed files")
+  (defface my-dired-database-face `((t (:foreground ,(personal-theme-get-color "color-light-blue" 2)))) "dired-rainbow database files")
+  (defface my-dired-directory-face `((t (:foreground ,(personal-theme-get-color "color-blue" 2)))) "dired-rainbow xml files")
+  (defface my-dired-document-face `((t (:foreground ,(personal-theme-get-color "color-purple" 2)))) "dired-rainbow document files")
+  (defface my-dired-encrypted-face `((t (:foreground ,(personal-theme-get-color "color-yellow" 2)))) "dired-rainbow encrypted files")
+  (defface my-dired-executable-face `((t (:foreground ,(personal-theme-get-color "color-green" 2)))) "dired-rainbow executable files")
+  (defface my-dired-fonts-face `((t (:foreground ,(personal-theme-get-color "color-pink")))) "dired-rainbow font files")
+  (defface my-dired-html-face `((t (:foreground ,(personal-theme-get-color "color-red" 2)))) "dired-rainbow html files")
+  (defface my-dired-image-face `((t (:foreground ,(personal-theme-get-color "color-pink" 2)))) "dired-rainbow image files")
+  (defface my-dired-interpreted-face `((t (:foreground ,(personal-theme-get-color "color-green" 2)))) "dired-rainbow interpreted files")
+  (defface my-dired-log-face `((t (:foreground ,(personal-theme-get-color "color-pear" 2)))) "dired-rainbow log files")
+  (defface my-dired-markdown-face `((t (:foreground ,(personal-theme-get-color "color-olive" 2)))) "dired-rainbow markdown files")
+  (defface my-dired-media-face `((t (:foreground ,(personal-theme-get-color "color-orange" 2)))) "dired-rainbow media files")
+  (defface my-dired-packaged-face `((t (:foreground ,(personal-theme-get-color "color-pear" 2)))) "dired-rainbow packaged files")
+  (defface my-dired-partition-face `((t (:foreground ,(personal-theme-get-color "color-red" 2)))) "dired-rainbow partition files")
+  (defface my-dired-shell-face `((t (:foreground ,(personal-theme-get-color "color-orange" 2)))) "dired-rainbow shell files")
+  (defface my-dired-vc-face `((t (:foreground ,(personal-theme-get-color "color-blue" 2)))) "dired-rainbow vc files")
+  (defface my-dired-xml-face `((t (:foreground ,(personal-theme-get-color "color-orange" 2)))) "dired-rainbow xml files")
+  (dired-rainbow-define compiled my-dired-compiled-face ("asm" "cl" "lisp" "el" "c" "h" "c++" "h++" "hpp" "hxx" "m" "cc" "cs" "cp" "cpp" "go" "f" "for" "ftn" "f90" "f95" "f03" "f08" "s" "rs" "hi" "hs" "pyc" ".java"))
+  (dired-rainbow-define compressed my-dired-compressed-face ("7z" "zip" "bz2" "tgz" "txz" "gz" "xz" "z" "Z" "jar" "war" "ear" "rar" "sar" "xpi" "apk" "xz" "tar"))
+  (dired-rainbow-define database my-dired-database-face ("xlsx" "xls" "csv" "accdb" "db" "mdb" "sqlite" "nc" "prisma"))
+  (dired-rainbow-define document my-dired-document-face ("docm" "doc" "docx" "odb" "odt" "pdb" "pdf" "ps" "rtf" "djvu" "epub" "odp" "ppt" "pptx"))
+  (dired-rainbow-define encrypted my-dired-encrypted-face ("gpg" "pgp" "asc" "bfe" "enc" "signature" "sig" "p12" "pem"))
+  (dired-rainbow-define executable my-dired-executable-face ("exe" "msi"))
+  (dired-rainbow-define fonts my-dired-fonts-face ("afm" "fon" "fnt" "pfb" "pfm" "ttf" "otf"))
+  (dired-rainbow-define html my-dired-html-face ("css" "less" "sass" "scss" "htm" "html" "jhtm" "mht" "eml" "mustache" "xhtml"))
+  (dired-rainbow-define image my-dired-image-face ("tiff" "tif" "cdr" "gif" "ico" "jpeg" "jpg" "png" "psd" "eps" "svg"))
+  (dired-rainbow-define interpreted my-dired-interpreted-face ("py" "ipynb" "rb" "pl" "t" "msql" "mysql" "pgsql" "sql" "r" "clj" "cljs" "scala" "js" "ts"))
+  (dired-rainbow-define log my-dired-log-face ("log"))
+  (dired-rainbow-define markdown my-dired-markdown-face ("org" "etx" "info" "markdown" "md" "mkd" "nfo" "pod" "rst" "tex" "textfile" "txt"))
+  (dired-rainbow-define media my-dired-media-face ("mp3" "mp4" "MP3" "MP4" "avi" "mpeg" "mpg" "flv" "ogg" "mov" "mid" "midi" "wav" "aiff" "flac"))
+  (dired-rainbow-define packaged my-dired-packaged-face ("deb" "rpm" "apk" "jad" "jar" "cab" "pak" "pk3" "vdf" "vpk" "bsp"))
+  (dired-rainbow-define partition my-dired-partition-face ("dmg" "iso" "bin" "nrg" "qcow" "toast" "vcd" "vmdk" "bak"))
+  (dired-rainbow-define shell my-dired-shell-face ("awk" "bash" "bat" "sed" "sh" "zsh" "vim"))
+  (dired-rainbow-define vc my-dired-vc-face ("git" "gitignore" "gitattributes" "gitmodules"))
+  (dired-rainbow-define xml my-dired-xml-face ("xml" "xsd" "xsl" "xslt" "wsdl" "bib" "json" "msg" "pgn" "rss" "yaml" "yml" "rdata"))
+  (dired-rainbow-define-chmod directory my-dired-directory-face "d.*")
+  (dired-rainbow-define-chmod executable-unix my-dired-executable-face "-.*x.*"))
 
 
 ;;; dired-sidebar
@@ -3482,6 +3503,7 @@ Useful for completion style 'partial-completion."
 
 (use-package iimage
   :ensure nil
+  :diminish
   :bind (:map my-ctl-c-i-map
               ("i" . iimage-mode))
   :config
@@ -5412,6 +5434,7 @@ of the new org-mode file."
 (use-package vterm
   :bind (:map
          vterm-mode-map
+         ("C-q" . vterm-send-next-key)
          ("M-{" . (lambda () (interactive) (vterm-send-key "<prior>")))
          ("M-}" . (lambda () (interactive) (vterm-send-key "<next>"))))
   :custom

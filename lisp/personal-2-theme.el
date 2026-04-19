@@ -33,6 +33,63 @@
     (apply #'color-rgb-to-hex
            (append (apply #'color-hsl-to-rgb hsl-adjusted) (list 2)))))
 
+(defconst personal-theme--color-alist
+  '(("color-white" "#ffffff")
+    ("color-black" "#000000")
+    ;; bright (foregrounds)
+    ("color-blue" "#4477aa")
+    ("color-red" "#ee6677")
+    ("color-green" "#228833")
+    ("color-yellow" "#ccbb44")
+    ("color-cyan" "#66ccee")
+    ("color-purple" "#aa3377")
+    ("color-gray" "#bbbbbb")
+    ;; light (foregrounds)
+    ("color-light-blue" "#77aadd")
+    ("color-light-cyan" "#99ddff")
+    ("color-mint" "#44bb99")
+    ("color-pear" "#bbcc33")
+    ("color-olive" "#aaaa00")
+    ("color-light-yellow" "#eedd88")
+    ("color-orange" "#ee8866")
+    ("color-pink" "#ffaabb")
+    ;; pale (backgrounds)
+    ("color-pale-blue" "#bbccee")
+    ("color-pale-cyan" "#cceeff")
+    ("color-pale-green" "#ccddaa")
+    ("color-pale-yellow" "#eeeebb")
+    ("color-pale-red" "#ffcccc")
+    ("color-pale-gray" "#dddddd"))
+  "Alist of (COLORNAME HEXVALUE) pairs defining the theme palette.")
+
+(defvar personal-theme--color-table (make-hash-table :test 'equal)
+  "Hash table mapping color names with variant numbers to hex values.
+Keys are strings like \"color-blue-1\" or \"color-blue-2\".
+Populated from `personal-theme--color-alist' at load time.")
+
+(dolist (colorpair personal-theme--color-alist)
+  (let* ((name (car colorpair))
+         (hex-base (cadr colorpair))
+         (adjustments '((0 . 1) (-10 . 2) (-30 . 3) (-50 . 4))))
+    (puthash (format "%s" name) hex-base personal-theme--color-table)
+    (dolist (adj adjustments)
+      (puthash (format "%s-%d" name (cdr adj))
+               (personal-theme--compute-hex-color hex-base (car adj))
+               personal-theme--color-table))))
+
+(defun personal-theme-get-color (name &optional variant)
+  "Return hex color string for NAME with VARIANT number (1-4).
+NAME is a string like \"color-blue\".  VARIANT is an integer
+1 through 4, where 1 is the base color and 4 is the darkest.
+If VARIANT is nil or 0, return the base color.
+
+\(fn NAME &optional VARIANT)"
+  (let ((key (if (and variant (> variant 0))
+                 (format "%s-%d" name variant)
+               name)))
+    (or (gethash key personal-theme--color-table)
+        (error "Unknown color: %s" key))))
+
 (defmacro personal-theme--colors-let (colorlist &rest body)
   "Bind colors from variables in COLORLIST then evaluate BODY.
 Similar to a LET form, COLORLIST is expected to be a list of color
@@ -60,36 +117,10 @@ numbered variants the same as the base color."
                   (,color-variant-2 ,(personal-theme--compute-hex-color hex-base -10))
                   (,color-variant-3 ,(personal-theme--compute-hex-color hex-base -30))
                   (,color-variant-4 ,(personal-theme--compute-hex-color hex-base -50)))))
-            colorlist))
+            (eval colorlist)))
      ,@body))
 
-(personal-theme--colors-let
-    (("color-white" "#ffffff")
-     ("color-black" "#000000")
-     ;; bright (foregrounds)
-     ("color-blue" "#4477aa")
-     ("color-red" "#ee6677")
-     ("color-green" "#228833")
-     ("color-yellow" "#ccbb44")
-     ("color-cyan" "#66ccee")
-     ("color-purple" "#aa3377")
-     ("color-gray" "#bbbbbb")
-     ;; light (foregrounds)
-     ("color-light-blue" "#77aadd")
-     ("color-light-cyan" "#99ddff")
-     ("color-mint" "#44bb99")
-     ("color-pear" "#bbcc33")
-     ("color-olive" "#aaaa00")
-     ("color-light-yellow" "#eedd88")
-     ("color-orange" "#ee8866")
-     ("color-pink" "#ffaabb")
-     ;; pale (backgrounds)
-     ("color-pale-blue" "#bbccee")
-     ("color-pale-cyan" "#cceeff")
-     ("color-pale-green" "#ccddaa")
-     ("color-pale-yellow" "#eeeebb")
-     ("color-pale-red" "#ffcccc")
-     ("color-pale-gray" "#dddddd"))
+(personal-theme--colors-let personal-theme--color-alist
   (let* ((fg-inactive color-gray-4)
          (flat-box `(:line-width 3 :style flat-button))
          (flat-box-outline `(:line-width 3 :style flat-button))

@@ -6,13 +6,19 @@
 
 ;;; Code:
 
-(setq blink-cursor-blinks 0
-      blink-cursor-interval 0.2
-      blink-cursor-delay 0.2
-      cursor-type t
-      inhibit-startup-screen t
-      ring-bell-function 'ignore
-      visible-bell t)
+(setq
+ ;; Cursor settings
+ blink-cursor-blinks 0
+ blink-cursor-interval 0.2
+ blink-cursor-delay 0.2
+ cursor-type t
+
+ ;; Use elpaca
+ package-enable-at-startup nil
+
+ ring-bell-function 'ignore
+ visible-bell t)
+
 (blink-cursor-mode 1)
 (column-number-mode 1)
 (menu-bar-mode -1)

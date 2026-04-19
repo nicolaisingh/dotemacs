@@ -31,47 +31,36 @@
 
 ;;;; Models
 
+;; DeepSeek
+
 (gptel-make-preset 'deepseek-chat
-  :description "Use DeepSeek chat (general conversation, basic tasks)"
+  :description "Use DeepSeek chat"
   :backend "DeepSeek"
   :model 'deepseek-chat)
 
 (gptel-make-preset 'deepseek-reasoner
-  :description "Use DeepSeek reasoner (thinking, coding, reasoning, math)"
+  :description "Use DeepSeek reasoner"
   :backend "DeepSeek"
   :model 'deepseek-reasoner)
 
-(gptel-make-preset 'gpt-4.1
-  :description "Use ChatGPT gpt-4.1 (complex tasks)"
-  :backend "ChatGPT"
-  :model 'gpt-4.1)
-
-(gptel-make-preset 'gpt-5
-  :description "Use ChatGPT gpt-5 (coding, reasoning, agentic)"
-  :backend "ChatGPT"
-  :model 'gpt-5)
+;; OpenAI
 
 (gptel-make-preset 'gpt-5.4
-  :description "OpenAI GPT-5.4: Agentic, coding, professional workflows"
+  :description "OpenAI gpt-5.4"
   :backend "ChatGPT"
   :model 'gpt-5.4)
 
 (gptel-make-preset 'gpt-5.4-mini
-  :description "OpenAI GPT-5.4 mini: For coding, computer use, and subagents"
+  :description "OpenAI gpt-5.4 mini"
   :backend "ChatGPT"
   :model 'gpt-5.4-mini)
 
 (gptel-make-preset 'gpt-5.4-nano
-  :description "OpenAI GPT-5.4 mini: For simple high volume tasks"
+  :description "OpenAI gpt-5.4 mini"
   :backend "ChatGPT"
   :model 'gpt-5.4-nano)
 
-;; Ollama local models
-
-(gptel-make-preset 'qwen3-coder
-  :description "Alibaba's performant long context models for agentic and coding tasks."
-  :backend "Ollama"
-  :model 'qwen3-coder:latest)
+;; Ollama (Local)
 
 (gptel-make-preset 'deepseek-coder-v2-16b
   :description "DeepSeek Coder V2 16B (MoE)"
@@ -83,27 +72,37 @@
   :backend "Ollama"
   :model 'gemma4:26b)
 
-(gptel-make-preset 'lfm2
-  :description "Liquid LFM2 24B"
-  :backend "Ollama"
-  :model 'lfm2:latest)
-
 (gptel-make-preset 'glm-4.7-flash
   :description "GLM 4.7 Flash"
   :backend "Ollama"
   :model 'glm-4.7-flash:latest)
 
-;; Ollama cloud models
+(gptel-make-preset 'lfm2
+  :description "Liquid LFM2 24B"
+  :backend "Ollama"
+  :model 'lfm2:latest)
+
+(gptel-make-preset 'qwen3-coder
+  :description "Alibaba Qwen 3 coder"
+  :backend "Ollama"
+  :model 'qwen3-coder:latest)
+
+(gptel-make-preset 'translategemma-12b
+  :description "Gemma 3-based translation model 12B"
+  :backend "Ollama"
+  :model 'translategemma:12b)
+
+;; Ollama (Cloud)
 
 (gptel-make-preset 'kimi-k2.5-cloud
   :description "Moonshot AI Kimi-K2.5"
   :backend "Ollama"
   :model 'kimi-k2.5:cloud)
 
-(gptel-make-preset 'glm-5-cloud
-  :description "Z.ai GLM 5"
+(gptel-make-preset 'glm-5.1-cloud
+  :description "Z.ai GLM 5.1"
   :backend "Ollama"
-  :model 'glm-5:cloud)
+  :model 'glm-5.1:cloud)
 
 ;;;; Temperatures
 
@@ -126,53 +125,45 @@
 ;;;; System prompts
 
 (gptel-make-preset 'coder-deepseek
-  :description "Generate/Intepret code (deepseek-reasoner)"
+  :description "Generate/Intepret code (deepseek-coder-v2-16b)"
   :system 'programming
-  :backend "DeepSeek"
-  :model 'deepseek-reasoner
-  :temperature 0.0)
+  :parents '(deepseek-coder-v2-16b temp-coding))
 
-(gptel-make-preset 'coder-o4-mini
-  :description "Generate/Intepret code (o4-mini)"
+(gptel-make-preset 'coder-qwen3-coder
+  :description "Generate/Intepret code (qwen3-coder)"
   :system 'programming
-  :backend "ChatGPT"
-  :model 'o4-mini
-  :temperature 0.0)
+  :parents '(qwen3-coder temp-coding))
 
 (gptel-make-preset 'localize-en-fil
   :description "English-Filipino app localization"
   :system 'localize-en-fil
   :include-reasoning nil
-  :use-context nil)
+  :use-context nil
+  :parents '(translategemma-12b temp-conversation))
 
 (gptel-make-preset 'prompt-maker
   :description "Write AI prompts"
   :system 'prompter
-  :backend "DeepSeek"
-  :model 'deepseek-chat
-  :temperature 1.5)
+  :parents '(glm-5.1-cloud temp-conversation))
 
 (gptel-make-preset 'proofread
   :description "Proofread text"
   :system 'proofread
   :include-reasoning nil
   :use-context nil
-  :backend "Ollama"
-  :parents '(lfm2 temp-conversation))
+  :parents '(gemma4-26b temp-conversation))
 
 (gptel-make-preset 'rewrite
   :description "Rewrite text"
   :system 'rewrite
   :include-reasoning nil
   :use-context nil
-  :backend "Ollama"
-  :parents '(lfm2 temp-conversation))
+  :parents '(gemma4-26b temp-conversation))
 
 (gptel-make-preset 'summarize
   :description "Summarize text"
   :system 'summarizer
-  :backend "Ollama"
-  :parents '(lfm2 temp-conversation))
+  :parents '(gemma4-26b temp-conversation))
 
 (gptel-make-preset 'git-commit-o4-mini
   :description "Git commit assistant"
@@ -182,13 +173,13 @@
 (gptel-make-preset 'git-commit
   :description "Git commit assistant"
   :system 'git-commit
-  :parents '(qwen3-coder))
+  :parents '(kimi-k2.5-cloud))
 
 (gptel-make-preset 'cli-assistant
   :description "CLI command assistant"
   :system 'cli-assistant
   :backend "Ollama"
-  :model '(glm-5-cloud))
+  :model '(qwen3-coder))
 
 (provide ' gptel-my-presets)
 ;;; gptel-my-presets.el ends here
