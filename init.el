@@ -5540,5 +5540,26 @@ of the new org-mode file."
 (use-package ztree)
 
 
+;;; whisper
+
+(use-package whisper
+  :ensure (:host github :repo "natrys/whisper.el")
+  :bind (("C-c W" . whisper-run))
+  :custom
+  (whisper-install-whispercpp t)
+  (whisper-language "en")
+  (whisper-model "base")
+  (whisper-quantize nil)
+  (whisper-recording-timeout 300)
+  (whisper-return-cursor 'start)
+  (whisper-server-baseurl "http://localhost:8642")
+  (whisper-server-mode 'local)
+  (whisper-translate nil)
+  (whisper-use-threads (num-processors))
+  :config
+  (setq whisper--mode-line-recording-indicator (propertize "[Recording] " 'face 'font-lock-warning-face)
+        whisper--mode-line-transcribing-indicator (propertize "[Transcribing] " 'face 'font-lock-warning-face)))
+
+
 (provide 'init)
 ;;; init.el ends here
