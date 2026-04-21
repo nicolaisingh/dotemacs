@@ -83,6 +83,7 @@ collection.  Use revert-gc-cons-percentage to restore the value."
 
 ;; Keybinding prefixes
 (define-prefix-command 'my-ctl-c-D-map)
+(define-prefix-command 'my-ctl-c-G-map)
 (define-prefix-command 'my-ctl-c-M-map)
 (define-prefix-command 'my-ctl-c-P-map)
 (define-prefix-command 'my-ctl-c-a-map)
@@ -108,6 +109,7 @@ collection.  Use revert-gc-cons-percentage to restore the value."
 (define-prefix-command 'my-meta-=-map)
 (define-prefix-command 'my-meta-o-map)
 (keymap-global-set "C-c D" 'my-ctl-c-D-map)
+(keymap-global-set "C-c G" 'my-ctl-c-G-map)
 (keymap-global-set "C-c M" 'my-ctl-c-M-map)
 (keymap-global-set "C-c P" 'my-ctl-c-P-map)
 (keymap-global-set "C-c a" 'my-ctl-c-a-map)
@@ -1418,12 +1420,12 @@ be file B."
   (dired-rainbow-define executable my-dired-executable-face ("exe" "msi"))
   (dired-rainbow-define fonts my-dired-fonts-face ("afm" "fon" "fnt" "pfb" "pfm" "ttf" "otf"))
   (dired-rainbow-define html my-dired-html-face ("css" "less" "sass" "scss" "htm" "html" "jhtm" "mht" "eml" "mustache" "xhtml"))
-  (dired-rainbow-define image my-dired-image-face ("tiff" "tif" "cdr" "gif" "ico" "jpeg" "jpg" "png" "psd" "eps" "svg"))
+  (dired-rainbow-define image my-dired-image-face ("tiff" "tif" "cdr" "gif" "ico" "jpeg" "jpg" "png" "psd" "eps" "svg" "webp"))
   (dired-rainbow-define interpreted my-dired-interpreted-face ("py" "ipynb" "rb" "pl" "t" "msql" "mysql" "pgsql" "sql" "r" "clj" "cljs" "scala" "js" "ts"))
   (dired-rainbow-define log my-dired-log-face ("log"))
-  (dired-rainbow-define markdown my-dired-markdown-face ("org" "etx" "info" "markdown" "md" "mkd" "nfo" "pod" "rst" "tex" "textfile" "txt"))
+  (dired-rainbow-define markdown my-dired-markdown-face ("org" "etx" "info" "markdown" "md" "mmd" "mkd" "nfo" "pod" "rst" "tex" "textfile" "txt"))
   (dired-rainbow-define media my-dired-media-face ("mp3" "mp4" "MP3" "MP4" "avi" "mpeg" "mpg" "flv" "ogg" "mov" "mid" "midi" "wav" "aiff" "flac"))
-  (dired-rainbow-define packaged my-dired-packaged-face ("deb" "rpm" "apk" "jad" "jar" "cab" "pak" "pk3" "vdf" "vpk" "bsp"))
+  (dired-rainbow-define packaged my-dired-packaged-face ("deb" "rpm" "apk" "jad" "jar" "cab" "pak" "pk3" "pkg" "vdf" "vpk" "bsp"))
   (dired-rainbow-define partition my-dired-partition-face ("dmg" "iso" "bin" "nrg" "qcow" "toast" "vcd" "vmdk" "bak"))
   (dired-rainbow-define shell my-dired-shell-face ("awk" "bash" "bat" "sed" "sh" "zsh" "vim"))
   (dired-rainbow-define vc my-dired-vc-face ("git" "gitignore" "gitattributes" "gitmodules"))
@@ -3713,7 +3715,9 @@ Useful for completion style 'partial-completion."
 
 (use-package magit
   :bind (("C-c g" . magit-dispatch)
-         ("C-x g" . magit-status))
+         ("C-x g" . magit-status)
+         :map my-ctl-c-G-map
+         ("F" . magit-pull-from-upstream))
   ;; :hook ((magit-status-sections-hook . magit-insert-modules))
   :custom
   (magit-define-global-key-bindings nil)
@@ -3864,6 +3868,24 @@ Useful for completion style 'partial-completion."
 (use-package mode-local
   :demand t
   :ensure nil)
+
+
+;;; move-text
+
+(use-package move-text
+  :demand t
+  :bind (("M-S-<up>" . move-text-up)
+         ("M-S-<down>" . move-text-down))
+  :preface
+  (defun indent-region-advice (&rest ignored)
+    (let ((deactivate deactivate-mark))
+      (if (region-active-p)
+          (indent-region (region-beginning) (region-end))
+        (indent-region (line-beginning-position) (line-end-position)))
+      (setq deactivate-mark deactivate)))
+  :config
+  (advice-add 'move-text-up :after 'indent-region-advice)
+  (advice-add 'move-text-down :after 'indent-region-advice))
 
 
 ;;; multi-term
@@ -5450,6 +5472,27 @@ of the new org-mode file."
   :bind (("C-c u" . vundo)))
 
 
+;;; whisper
+
+(use-package whisper
+  :ensure (:host github :repo "natrys/whisper.el")
+  :bind (("C-c W" . whisper-run))
+  :custom
+  (whisper-install-whispercpp t)
+  (whisper-language "en")
+  (whisper-model "base")
+  (whisper-quantize nil)
+  (whisper-recording-timeout 300)
+  (whisper-return-cursor 'start)
+  (whisper-server-baseurl "http://localhost:8642")
+  (whisper-server-mode 'local)
+  (whisper-translate nil)
+  (whisper-use-threads (num-processors))
+  :config
+  (setq whisper--mode-line-recording-indicator (propertize "[Recording] " 'face 'font-lock-warning-face)
+        whisper--mode-line-transcribing-indicator (propertize "[Transcribing] " 'face 'font-lock-warning-face)))
+
+
 ;;; winfast
 
 (use-package winfast
@@ -5538,27 +5581,6 @@ of the new org-mode file."
 ;;; ztree
 
 (use-package ztree)
-
-
-;;; whisper
-
-(use-package whisper
-  :ensure (:host github :repo "natrys/whisper.el")
-  :bind (("C-c W" . whisper-run))
-  :custom
-  (whisper-install-whispercpp t)
-  (whisper-language "en")
-  (whisper-model "base")
-  (whisper-quantize nil)
-  (whisper-recording-timeout 300)
-  (whisper-return-cursor 'start)
-  (whisper-server-baseurl "http://localhost:8642")
-  (whisper-server-mode 'local)
-  (whisper-translate nil)
-  (whisper-use-threads (num-processors))
-  :config
-  (setq whisper--mode-line-recording-indicator (propertize "[Recording] " 'face 'font-lock-warning-face)
-        whisper--mode-line-transcribing-indicator (propertize "[Transcribing] " 'face 'font-lock-warning-face)))
 
 
 (provide 'init)
