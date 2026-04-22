@@ -987,13 +987,19 @@ This will return ~/.emacs.d/agent-shell/<dir>."
 
 (use-package claude-code-ide
   :ensure (:host github :repo "manzaltu/claude-code-ide.el")
-  :demand t
   :bind (:map
          my-ctl-c-l-map
          ("c" . claude-code-ide-menu))
   :custom
+  (claude-code-ide-no-flicker nil)
   (claude-code-ide-terminal-backend 'vterm)
   :config
+  ;; Kimi configuration
+  (setenv "ANTHROPIC_BASE_URL" "https://api.kimi.com/coding/")
+  (setenv "ANTHROPIC_API_KEY" (auth-source-pick-first-password :host "api.kimi.com"))
+  (setenv "ANTHROPIC_MODEL" "kimi-for-coding")
+  (setenv "CLAUDE_CODE_DISABLE_NONESSENTIAL_TRAFFIC" "1")
+  (setenv "ENABLE_TOOL_SEARCH" "true")
   (claude-code-ide-emacs-tools-setup))
 
 
@@ -1017,7 +1023,7 @@ This will return ~/.emacs.d/agent-shell/<dir>."
   ;; ignoring `command-log-mode-window-font-size'.
   (defun clm/open-command-log-buffer (&optional arg)
     "Open (and create, if non-existant) a buffer used for logging keyboard commands.
-If ARG is Non-nil, the existing command log buffer is cleared."
+    If ARG is Non-nil, the existing command log buffer is cleared."
     (interactive "P")
     (with-current-buffer
         (setq clm/command-log-buffer
@@ -2102,7 +2108,8 @@ The default format is specified by `emms-source-playlist-default-format'."
 
 ;;; emojify
 
-(use-package emojify)
+(use-package emojify
+  :hook ((vterm-mode . emojify-mode)))
 
 
 ;;; epa
@@ -5457,6 +5464,7 @@ of the new org-mode file."
   :bind (:map
          vterm-mode-map
          ("C-q" . vterm-send-next-key)
+         ("C-x C-x" . (lambda () (interactive) (vterm-send-key (kbd "C-x"))))
          ("M-{" . (lambda () (interactive) (vterm-send-key "<prior>")))
          ("M-}" . (lambda () (interactive) (vterm-send-key "<next>"))))
   :custom

@@ -24,7 +24,7 @@
 						:source "elpaca-menu-lock-file" :id
 						agent-shell :type git :protocol https :inherit
 						t :depth treeless :ref
-						"eb5a379c1db4e395a04acd1f16a6dfb92e803d60"))
+						"424ecd38c574f9db5f60e803db99403884c66dcf"))
  (agent-shell-sidebar :source "elpaca-menu-lock-file" :recipe
 					  (:source "elpaca-menu-lock-file" :package
 							   "agent-shell-sidebar" :id
@@ -1085,6 +1085,20 @@
 						 https :inherit t :depth treeless :ref
 						 "e74d4da7612c7a88e07f9dd3369e3b9fd36f396c"
 						 :id mermaid-mode :type git))
+ (move-text :source "elpaca-menu-lock-file" :recipe
+			(:package "move-text" :fetcher github :repo
+					  "emacsfodder/move-text" :files
+					  ("*.el" "*.el.in" "dir" "*.info" "*.texi"
+					   "*.texinfo" "doc/dir" "doc/*.info" "doc/*.texi"
+					   "doc/*.texinfo" "lisp/*.el" "docs/dir"
+					   "docs/*.info" "docs/*.texi" "docs/*.texinfo"
+					   (:exclude ".dir-locals.el" "test.el" "tests.el"
+								 "*-test.el" "*-tests.el" "LICENSE"
+								 "README*" "*-pkg.el"))
+					  :source "elpaca-menu-lock-file" :id move-text
+					  :type git :protocol https :inherit t :depth
+					  treeless :ref
+					  "2a8ebefeb0b363681e9562847eca3fd66e090d70"))
  (multi-vterm :source "elpaca-menu-lock-file" :recipe
 			  (:package "multi-vterm" :fetcher github :repo
 						"suonlight/multi-vterm" :files
@@ -1846,6 +1860,20 @@
 					  :type git :protocol https :inherit t :depth
 					  treeless :ref
 					  "2195e1247ecb04c30321702aa5f5618a51c329c5"))
+ (whisper :source "elpaca-menu-lock-file" :recipe
+		  (:package "whisper" :fetcher github :repo
+					"natrys/whisper.el" :files
+					("*.el" "*.el.in" "dir" "*.info" "*.texi"
+					 "*.texinfo" "doc/dir" "doc/*.info" "doc/*.texi"
+					 "doc/*.texinfo" "lisp/*.el" "docs/dir"
+					 "docs/*.info" "docs/*.texi" "docs/*.texinfo"
+					 (:exclude ".dir-locals.el" "test.el" "tests.el"
+							   "*-test.el" "*-tests.el" "LICENSE"
+							   "README*" "*-pkg.el"))
+					:source "elpaca-menu-lock-file" :id whisper :host
+					github :type git :protocol https :inherit t :depth
+					treeless :ref
+					"fd9bf5787a99dd31a4bdf54d2bd9821aacf84e93"))
  (with-editor :source "elpaca-menu-lock-file"
    :recipe
    (:package "with-editor" :fetcher github :repo "magit/with-editor"
