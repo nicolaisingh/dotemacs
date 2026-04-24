@@ -695,7 +695,7 @@ From https://www.emacswiki.org/emacs/XModMapMode")
          ("C-c C-l" . agent-shell-clear-buffer)
          ("C-c C-m" . agent-shell-cycle-session-mode))
   :custom
-  (agent-shell-preferred-agent-config (agent-shell-opencode-make-agent-config))
+  (agent-shell-preferred-agent-config (agent-shell-kimi-make-config))
   (agent-shell-dot-subdir-function #'my-agent-shell-dot-subdir)
   (agent-shell-show-welcome-message nil)
   (agent-shell-header-style 'text)
@@ -721,7 +721,7 @@ This will return ~/.emacs.d/agent-shell/<dir>."
          ("C-c C-f" . agent-shell-sidebar-change-provider))
   :custom
   (agent-shell-sidebar-width "40%")
-  (agent-shell-sidebar-default-config (agent-shell-opencode-make-agent-config)))
+  (agent-shell-sidebar-default-config (agent-shell-kimi-make-config)))
 
 
 ;;; aggressive-indent
@@ -5342,8 +5342,8 @@ of the new org-mode file."
 
 (use-package symbol-overlay
   :bind (:map
-          my-ctl-c-s-map
-          ("o" . symbol-overlay-mode)))
+         my-ctl-c-s-map
+         ("o" . symbol-overlay-mode)))
 
 
 ;;; tempel
