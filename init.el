@@ -475,6 +475,7 @@ From https://www.emacswiki.org/emacs/XModMapMode")
          ("C-S-t" . tab-new)
          ("C-S-w" . tab-close)
          ("C-`" . my-select-tab-or-other-window)
+         ("C-M-`" . transpose-frame)
          ("C-c j" . (lambda (jira-issue)
                       (interactive
                        (list (let ((initial-input (symbol-name (or (symbol-at-point)
@@ -4027,6 +4028,14 @@ Useful for completion style 'partial-completion."
   (add-to-list 'org-babel-load-languages '(mermaid . t)))
 
 
+;;; occult
+
+(use-package occult
+  :bind (:map
+         my-ctl-c-f-map
+         ("r" . occult-toggle)))
+
+
 ;;; operate-on-number
 
 (use-package operate-on-number)
@@ -5452,6 +5461,13 @@ of the new org-mode file."
 ;;; unfill
 
 (use-package unfill)
+
+
+;;; unicode-fonts
+
+(use-package unicode-fonts
+  :config
+  (unicode-fonts-setup))
 
 
 ;;; uniline
