@@ -843,6 +843,11 @@ This will return ~/.emacs.d/agent-shell/<dir>."
   :hook (python-mode-hook))
 
 
+;;; breadcrumb
+
+(use-package breadcrumb)
+
+
 ;;; browse-kill-ring
 
 (use-package browse-kill-ring
@@ -1036,6 +1041,12 @@ This will return ~/.emacs.d/agent-shell/<dir>."
                     (- 0 command-log-mode-window-size))))
       (set-window-buffer new-win clm/command-log-buffer)
       (set-window-dedicated-p new-win t))))
+
+
+;;; comment-dwim-2
+
+(use-package comment-dwim-2
+  :bind (([remap comment-dwim] . comment-dwim-2)))
 
 
 ;;; completion-preview
@@ -5316,6 +5327,14 @@ of the new org-mode file."
 (use-package subword
   :ensure nil
   :diminish subword-mode)
+
+
+;;; symbol-overlay
+
+(use-package symbol-overlay
+  :bind (:map
+          my-ctl-c-s-map
+          ("o" . symbol-overlay-mode)))
 
 
 ;;; tempel
