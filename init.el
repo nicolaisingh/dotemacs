@@ -589,6 +589,7 @@ From https://www.emacswiki.org/emacs/XModMapMode")
   (help-window-select t)
   ;; indent.el
   (tab-always-indent 'complete)
+  (tab-first-completion nil)
   ;; minibuffer.el
   (completions-format 'one-column)
   ;; novice.el
@@ -5132,6 +5133,92 @@ of the new org-mode file."
   (restclient-response-size-threshold nil))
 
 
+;;; rst
+
+(use-package rst
+  :ensure nil
+  :bind (:map
+         rst-mode-map
+         ;; Remove deprecated bindings
+         ("C-c 1" . nil)
+         ("C-c 2" . nil)
+         ("C-c 3" . nil)
+         ("C-c 4" . nil)
+         ("C-c 5" . nil)
+         ("C-c C-b" . nil)
+         ("C-c C-d" . nil)
+         ("C-c C-e" . nil)
+         ("C-c C-f" . nil)
+         ("C-c C-n" . nil)
+         ("C-c C-p" . nil)
+         ("C-c C-s" . nil)
+         ("C-c C-u" . nil)
+         ("C-c C-v" . nil)
+         ("C-c C-w" . nil)
+         ("C-c RET" . nil)
+         ("C-c TAB" . nil)
+         ;; Other bindings
+         ("C-c C--" . my-rst-bullet-line-toggle)
+         ("C-c C-8" . my-rst-bullet-line-toggle)
+         ("M-RET" . my-rst-bullet-line-next))
+  :custom
+  (rst-pdf-program "mupdf")
+  :config
+  (defun my-rst-bullet-line-toggle ()
+    "Toggle bullets on the current line."
+    (interactive)
+    (unless rst-preferred-bullets
+      (error "No preferred bullets defined"))
+    (save-excursion
+      (let* ((bul (format "%c " (car rst-preferred-bullets)))
+             (indent (make-string (length bul) ? ))
+             (beg (pos-bol))
+             (end (pos-eol)))
+        (goto-char beg)
+        (if (re-search-forward (format "^[ \t]*\\([%s] +\\)" (apply #'string rst-preferred-bullets)) end t)
+            (replace-match "" nil nil nil 1)
+          (rst-apply-indented-blocks
+           beg end (rst-find-leftmost-column beg end)
+           (lambda (count in-first in-sub in-super in-empty _relind)
+             (cond
+              (in-empty)
+              (in-super)
+              ((zerop count))
+              (in-sub
+               (insert indent))
+              ((or in-first all)
+               (insert bul))
+              (t
+               (insert indent)))
+             nil))))))
+
+  (defun my-rst-bullet-line-next ()
+    "Add next bullet item after current line."
+    (interactive)
+    (unless rst-preferred-bullets
+      (error "No preferred bullets defined"))
+    (let* ((indent)
+           (bullet-char (save-excursion
+                          (goto-char (pos-bol))
+                          (if (looking-at (format "^\\([ \t]*\\)\\(%s\\) +" (regexp-opt (mapcar #'string rst-preferred-bullets))))
+                              (progn
+                                (setq indent (length (match-string-no-properties 1)))
+                                (string-to-char (match-string-no-properties 2)))
+                            (car rst-preferred-bullets))))
+           (bul (format "%c " bullet-char))
+           (beg (pos-bol))
+           (end (pos-eol))
+           (blank-above (save-excursion
+                          (goto-char beg)
+                          (when (= (forward-line -1) 0)
+                            (looking-at "^[ \t]*$")))))
+      (goto-char end)
+      (when blank-above (insert "\n"))
+      (insert "\n")
+      (insert (make-string indent ? ))
+      (insert bul))))
+
+
 ;;; saveplace
 
 (use-package saveplace
@@ -5466,6 +5553,7 @@ of the new org-mode file."
 ;;; unicode-fonts
 
 (use-package unicode-fonts
+  :disabled
   :config
   (unicode-fonts-setup))
 
