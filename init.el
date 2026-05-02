@@ -588,7 +588,7 @@ From https://www.emacswiki.org/emacs/XModMapMode")
   ;; help.el
   (help-window-select t)
   ;; indent.el
-  (tab-always-indent 'complete)
+  (tab-always-indent t)
   (tab-first-completion nil)
   ;; minibuffer.el
   (completions-format 'one-column)
@@ -631,7 +631,8 @@ From https://www.emacswiki.org/emacs/XModMapMode")
   (vc-follow-symlinks t)
   ;; window.el
   (same-window-regexps '("^magit: .*$"
-                         "^magit-status: .*$"))
+                         "^magit-status: .*$"
+                         "\\*compilation\\*"))
 
   :init
   ;; Load custom.el
@@ -679,6 +680,291 @@ From https://www.emacswiki.org/emacs/XModMapMode")
 ;;; acp
 
 (use-package acp)
+
+
+;;; adoc-mode
+
+(use-package adoc-mode
+  :after (tempo)
+  :hook ((adoc-mode-hook . no-indent-tabs-mode))
+  :bind (:map adoc-mode-map
+              ("C-c C-c" . my-adoc-compile-to-pdf)
+              ("C-c C-v" . my-adoc-view-output)
+              ("M-<left>" . my-adoc-promote)
+              ("M-<right>" . my-adoc-demote)
+              ("C-c C-f C-b" . tempo-template-adoc-bold)
+              ("C-c C-f C-i" . tempo-template-adoc-emphasis)
+              ("C-c C-f C-u" . tempo-template-adoc-underline)
+              ("C-c C-f C-s" . tempo-template-adoc-line-through)
+              ("C-c C-f ~" . tempo-template-adoc-subscript)
+              ("C-c C-f ^" . tempo-template-adoc-superscript)
+              ("C-c C-=" . my-adoc-line-to-title)
+              ("M-<return>" . my-adoc-insert-list-item)
+              ("M-<up>" . my-adoc-move-item-up)
+              ("M-<down>" . my-adoc-move-item-down))
+  :custom
+  (adoc-default-title-type 1)
+  (adoc-default-title-sub-type 1)
+  (adoc-display-images t)
+  :config
+  (defun my-adoc-compile-to-pdf ()
+    "Compile the current AsciiDoc buffer to PDF using asciidoctor-pdf."
+    (interactive)
+    (let ((file (buffer-file-name)))
+      (unless file
+        (user-error "Buffer is not visiting a file"))
+      (compile (concat "asciidoctor-pdf " (shell-quote-argument file)))))
+
+  (defun my-adoc-view-output ()
+    "Open the output file (PDF or HTML) for the current AsciiDoc buffer."
+    (interactive)
+    (let* ((file (buffer-file-name))
+           (base (and file (file-name-sans-extension file)))
+           (pdf (concat base ".pdf"))
+           (html (concat base ".html"))
+           (htm (concat base ".htm")))
+      (unless file
+        (user-error "Buffer is not visiting a file"))
+      (cond ((file-exists-p pdf) (find-file pdf))
+            ((file-exists-p html) (find-file html))
+            ((file-exists-p htm) (find-file htm))
+            (t (user-error "No PDF or HTML output found for %s" file)))))
+
+  (defun my-adoc--promote-demote-lines (fn)
+    "Apply FN to each relevant line in the active region or current line."
+    (let ((beg (if (use-region-p) (region-beginning) (line-beginning-position)))
+          (end (if (use-region-p) (region-end) (line-end-position))))
+      (save-excursion
+        (goto-char beg)
+        (beginning-of-line)
+        (while (and (<= (point) end) (not (eobp)))
+          (funcall fn)
+          (forward-line 1)))))
+
+  (defun my-adoc-promote ()
+    "Promote AsciiDoc title or list item at point.
+If the region is active, promote all items in the region."
+    (interactive)
+    (my-adoc--promote-demote-lines
+     (lambda ()
+       (cond
+        ((looking-at "\\(=+\\) ")
+         (when (> (length (match-string 1)) 1)
+           (goto-char (match-beginning 1))
+           (delete-char 1)))
+        ((looking-at "\\(\\*+\\) ")
+         (when (> (length (match-string 1)) 1)
+           (goto-char (match-beginning 1))
+           (delete-char 1)))
+        ((looking-at "\\(\\.+\\) ")
+         (when (> (length (match-string 1)) 1)
+           (goto-char (match-beginning 1))
+           (delete-char 1)))))))
+
+  (defun my-adoc-demote ()
+    "Demote AsciiDoc title or list item at point.
+If the region is active, demote all items in the region."
+    (interactive)
+    (my-adoc--promote-demote-lines
+     (lambda ()
+       (cond
+        ((looking-at "=+ ")
+         (insert "="))
+        ((looking-at "\\(\\*+\\) ")
+         (goto-char (match-beginning 1))
+         (insert (char-after (match-beginning 1))))
+        ((looking-at "\\.+ ")
+         (insert "."))))))
+
+  (defun my-adoc-line-to-title (level)
+    "Toggle and convert the current line to an AsciiDoc section title.
+
+With a numeric prefix arg LEVEL, use that title level:
+  C-0 -> =, C-1 -> ==, C-2 -> ===, etc.
+Without a prefix arg, default to the level of the preceding section title.
+If no preceding section is found, default to level 0 (=)."
+    (interactive "P")
+    (save-excursion
+      (beginning-of-line)
+      ;; Remove any existing leading = signs and whitespace
+      (if (looking-at "=+[ \t]*")
+          (replace-match "")
+        (progn
+          ;; Trim trailing whitespace
+          (end-of-line)
+          (delete-horizontal-space)
+          (beginning-of-line)
+          ;; Determine level
+          (let* ((level (if level
+                            (prefix-numeric-value level)
+                          (or (save-excursion
+                                (beginning-of-line)
+                                (unless (bobp)
+                                  (backward-char))
+                                (when (re-search-backward "^\\(=+\\)[ \t]" nil t)
+                                  (1- (length (match-string 1)))))
+                              0)))
+                 (prefix (make-string (1+ level) ?=)))
+            (insert prefix " "))))))
+
+  (defun my-adoc--list-item-prefix ()
+    "Return the list marker prefix of the current line, or nil.
+The return value is a cons cell (MARKER . LEVEL) where MARKER is
+the matched string and LEVEL is its length."
+    (save-excursion
+      (beginning-of-line)
+      (cond
+       ((looking-at "^\\(\\*+\\) ")
+        (cons (match-string-no-properties 1) (length (match-string 1))))
+       ((looking-at "^\\(\\.+\\) ")
+        (cons (match-string-no-properties 1) (length (match-string 1))))
+       ((looking-at "^\\(-\\) ")
+        (cons (match-string-no-properties 1) 1))
+       (t nil))))
+
+  (defun my-adoc-insert-list-item ()
+    "Insert a new list item at the same level as the current one.
+If point is on a list item, insert a new line below with the same
+marker.  If point is in the middle of the item text, split the
+text at point."
+    (interactive)
+    (let ((prefix (my-adoc--list-item-prefix)))
+      (if prefix
+          (let* ((marker (car prefix))
+                 (marker-end-pos (+ (line-beginning-position)
+                                    (current-indentation)
+                                    (length marker)
+                                    1)))
+            (when (< (point) marker-end-pos)
+              (end-of-line))
+            (newline)
+            (insert marker " "))
+        (newline))))
+
+  (defun my-adoc--list-item-bounds ()
+    "Return (START . END) of the list item at point, including its subtree."
+    (save-excursion
+      (beginning-of-line)
+      (when (not (my-adoc--list-item-prefix))
+        (while (and (not (bobp))
+                    (progn (forward-line -1)
+                           (and (not (looking-at "^[ \t]*$"))
+                                (not (my-adoc--list-item-prefix))))))))
+    (let* ((prefix (my-adoc--list-item-prefix)))
+      (unless prefix
+        (user-error "Not on a list item"))
+      (let* ((level (cdr prefix))
+             (start (line-beginning-position))
+             (end (save-excursion
+                    (forward-line 1)
+                    (let ((stop nil))
+                      (while (and (not (eobp)) (not stop))
+                        (let ((next-prefix (my-adoc--list-item-prefix)))
+                          (cond
+                           ;; Next sibling or parent marker -> stop
+                           ((and next-prefix (<= (cdr next-prefix) level))
+                            (setq stop (point)))
+                           ;; Blank line not followed by nested item -> stop
+                           ((and (not next-prefix)
+                                 (looking-at "^[ \t]*$"))
+                            (let ((blank-line (line-beginning-position)))
+                              (forward-line 1)
+                              (while (and (not (eobp)) (looking-at "^[ \t]*$"))
+                                (forward-line 1))
+                              (if (and (not (eobp))
+                                       (my-adoc--list-item-prefix)
+                                       (> (cdr (my-adoc--list-item-prefix)) level))
+                                  ;; Nested item follows; continue
+                                  (forward-line 1)
+                                (setq stop blank-line))))
+                           ;; Anything else -> part of current item, keep going
+                           (t (forward-line 1)))))
+                      (if stop stop (point))))))
+        (cons start end))))
+
+  (defun my-adoc-move-item-up ()
+    "Move the current list item (and its subtree) up."
+    (interactive)
+    (let* ((current-bounds (my-adoc--list-item-bounds))
+           (current-start (car current-bounds))
+           (current-end (cdr current-bounds))
+           (current-level (save-excursion
+                            (goto-char current-start)
+                            (cdr (my-adoc--list-item-prefix))))
+           (current-text (buffer-substring-no-properties current-start current-end)))
+      (save-excursion
+        (goto-char current-start)
+        (forward-line -1)
+        (let ((prefix (my-adoc--list-item-prefix)))
+          (while (and (not (bobp))
+                      (or (not prefix)
+                          (> (cdr prefix) current-level)))
+            (forward-line -1)
+            (setq prefix (my-adoc--list-item-prefix)))
+          (unless (and prefix (= (cdr prefix) current-level))
+            (user-error "No previous list item at this level"))
+          (let* ((prev-bounds (my-adoc--list-item-bounds))
+                 (prev-start (car prev-bounds))
+                 (prev-end (cdr prev-bounds))
+                 (prev-text (buffer-substring-no-properties prev-start prev-end)))
+            ;; Don't cross blank lines or non-list text between lists
+            (save-excursion
+              (goto-char prev-end)
+              (while (< (point) current-start)
+                (unless (my-adoc--list-item-prefix)
+                  (user-error "No previous list item at this level"))
+                (forward-line 1)))
+            (delete-region current-start current-end)
+            (goto-char current-start)
+            (insert prev-text)
+            (delete-region prev-start prev-end)
+            (goto-char prev-start)
+            (insert current-text)
+            (goto-char prev-start))))))
+
+  (defun my-adoc-move-item-down ()
+    "Move the current list item (and its subtree) down."
+    (interactive)
+    (let* ((current-bounds (my-adoc--list-item-bounds))
+           (current-start (car current-bounds))
+           (current-end (cdr current-bounds))
+           (current-level (save-excursion
+                            (goto-char current-start)
+                            (cdr (my-adoc--list-item-prefix))))
+           (current-text (buffer-substring-no-properties current-start current-end)))
+      (let ((final-pos nil))
+        (save-excursion
+          (goto-char current-end)
+          (when (= (point) (point-max))
+            (user-error "No next list item at this level"))
+          (let ((prefix (my-adoc--list-item-prefix)))
+            (while (and (not (eobp))
+                        (or (not prefix)
+                            (> (cdr prefix) current-level)))
+              (forward-line 1)
+              (setq prefix (my-adoc--list-item-prefix)))
+            (unless (and prefix (= (cdr prefix) current-level))
+              (user-error "No next list item at this level"))
+            (let* ((next-bounds (my-adoc--list-item-bounds))
+                   (next-start (car next-bounds))
+                   (next-end (cdr next-bounds))
+                   (next-text (buffer-substring-no-properties next-start next-end)))
+              ;; Don't cross blank lines or non-list text between lists
+              (save-excursion
+                (goto-char current-end)
+                (while (< (point) next-start)
+                  (unless (my-adoc--list-item-prefix)
+                    (user-error "No next list item at this level"))
+                  (forward-line 1)))
+              (delete-region next-start next-end)
+              (goto-char next-start)
+              (insert current-text)
+              (delete-region current-start current-end)
+              (goto-char current-start)
+              (insert next-text)
+              (setq final-pos (+ next-start (- (length next-text) (length current-text)))))))
+        (when final-pos
+          (goto-char final-pos))))))
 
 
 ;;; agent-shell
@@ -5160,7 +5446,8 @@ of the new org-mode file."
          ;; Other bindings
          ("C-c C--" . my-rst-bullet-line-toggle)
          ("C-c C-8" . my-rst-bullet-line-toggle)
-         ("M-RET" . my-rst-bullet-line-next))
+         ("M-RET" . my-rst-insert-list))
+  :hook ((rst-mode-hook . no-indent-tabs-mode))
   :custom
   (rst-pdf-program "mupdf")
   :config
@@ -5192,31 +5479,20 @@ of the new org-mode file."
                (insert indent)))
              nil))))))
 
-  (defun my-rst-bullet-line-next ()
-    "Add next bullet item after current line."
-    (interactive)
-    (unless rst-preferred-bullets
-      (error "No preferred bullets defined"))
-    (let* ((indent)
-           (bullet-char (save-excursion
-                          (goto-char (pos-bol))
-                          (if (looking-at (format "^\\([ \t]*\\)\\(%s\\) +" (regexp-opt (mapcar #'string rst-preferred-bullets))))
-                              (progn
-                                (setq indent (length (match-string-no-properties 1)))
-                                (string-to-char (match-string-no-properties 2)))
-                            (car rst-preferred-bullets))))
-           (bul (format "%c " bullet-char))
-           (beg (pos-bol))
-           (end (pos-eol))
-           (blank-above (save-excursion
-                          (goto-char beg)
-                          (when (= (forward-line -1) 0)
-                            (looking-at "^[ \t]*$")))))
-      (goto-char end)
-      (when blank-above (insert "\n"))
-      (insert "\n")
-      (insert (make-string indent ? ))
-      (insert bul))))
+  (defun my-rst-insert-list (&optional prefer-roman)
+    "Insert or continue a list."
+    (interactive "P")
+    (save-match-data
+      (1value
+       (rst-forward-line-strict 1))
+      (if (looking-at (rst-re 'itmany-beg-1))
+          (rst-insert-list-continue
+           (buffer-substring-no-properties
+            (match-beginning 0) (match-beginning 1))
+           (match-string 1)
+           (buffer-substring-no-properties (match-end 1) (match-end 0))
+           prefer-roman)
+        (rst-insert-list-new-tag "*")))))
 
 
 ;;; saveplace
@@ -5442,6 +5718,12 @@ of the new org-mode file."
          my-ctl-c-t-map
          ("c" . tempel-complete)
          ("i" . tempel-insert)))
+
+
+;;; tempo
+
+(use-package tempo
+  :ensure nil)
 
 
 ;;; terraform-mode
