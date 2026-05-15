@@ -692,6 +692,8 @@ From https://www.emacswiki.org/emacs/XModMapMode")
               ("C-c C-v" . my-adoc-view-output)
               ("M-<left>" . my-adoc-promote)
               ("M-<right>" . my-adoc-demote)
+              ("M-S-<left>" . my-adoc-promote-item-and-children)
+              ("M-S-<right>" . my-adoc-demote-item-and-children)
               ("C-c C-f C-b" . tempo-template-adoc-bold)
               ("C-c C-f C-i" . tempo-template-adoc-emphasis)
               ("C-c C-f C-u" . tempo-template-adoc-underline)
@@ -730,15 +732,18 @@ From https://www.emacswiki.org/emacs/XModMapMode")
             ((file-exists-p htm) (find-file htm))
             (t (user-error "No PDF or HTML output found for %s" file)))))
 
-  (defun my-adoc--promote-demote-lines (fn)
-    "Apply FN to each relevant line in the active region or current line."
-    (let ((beg (if (use-region-p) (region-beginning) (line-beginning-position)))
-          (end (if (use-region-p) (region-end) (line-end-position))))
+  (defun my-adoc--promote-demote-lines (fn &optional beg end)
+    "Apply FN to each relevant line from BEG to END.
+If BEG and END are nil, use the active region or current line."
+    (let ((beg (or beg (if (use-region-p) (region-beginning) (line-beginning-position))))
+          (end (or end (if (use-region-p) (region-end) (line-end-position)))))
       (save-excursion
         (goto-char beg)
         (beginning-of-line)
-        (while (and (<= (point) end) (not (eobp)))
-          (funcall fn)
+        (while (and (< (point) end) (not (eobp)))
+          (let ((size-before (buffer-size)))
+            (funcall fn)
+            (setq end (+ end (- (buffer-size) size-before))))
           (forward-line 1)))))
 
   (defun my-adoc-promote ()
@@ -775,6 +780,101 @@ If the region is active, demote all items in the region."
          (insert (char-after (match-beginning 1))))
         ((looking-at "\\.+ ")
          (insert "."))))))
+
+  (defun my-adoc-promote-item-and-children ()
+    "Promote the current list item or section and all its children."
+    (interactive)
+    (let* ((list-bounds (condition-case nil
+                            (my-adoc--list-item-bounds)
+                          (error nil)))
+           (section-bounds (unless list-bounds
+                             (condition-case nil
+                                 (my-adoc--section-bounds)
+                               (error nil))))
+           (bounds (or list-bounds section-bounds)))
+      (unless bounds
+        (user-error "Not on a list item or section title"))
+      (if list-bounds
+          (progn
+            ;; Guard: don't promote children if the current item can't be promoted
+            (let ((prefix (save-excursion
+                            (goto-char (car list-bounds))
+                            (my-adoc--list-item-prefix))))
+              (unless (and prefix (> (cdr prefix) 1))
+                (user-error "Cannot promote item further")))
+            ;; List items: promote titles, bullets, and numbered items
+            (my-adoc--promote-demote-lines
+             (lambda ()
+               (cond
+                ((looking-at "\\(=+\\) ")
+                 (when (> (length (match-string 1)) 1)
+                   (goto-char (match-beginning 1))
+                   (delete-char 1)))
+                ((looking-at "\\(\\*+\\) ")
+                 (when (> (length (match-string 1)) 1)
+                   (goto-char (match-beginning 1))
+                   (delete-char 1)))
+                ((looking-at "\\(\\.+\\) ")
+                 (when (> (length (match-string 1)) 1)
+                   (goto-char (match-beginning 1))
+                   (delete-char 1)))))
+             (car bounds) (cdr bounds)))
+        ;; Sections: only promote titles
+        (save-excursion
+          (goto-char (car bounds))
+          (beginning-of-line)
+          ;; Guard: don't promote children if the current title can't be promoted
+          (let ((prefix (my-adoc--title-prefix)))
+            (unless (and prefix (> (cdr prefix) 1))
+              (user-error "Cannot promote section further")))
+          (let ((end (cdr bounds)))
+            (while (and (< (point) end) (not (eobp)))
+              (beginning-of-line)
+              (when (looking-at "^\\(=+\\) ")
+                (let ((size-before (buffer-size)))
+                  (when (> (length (match-string 1)) 1)
+                    (goto-char (match-beginning 1))
+                    (delete-char 1))
+                  (setq end (+ end (- (buffer-size) size-before)))))
+              (forward-line 1)))))))
+
+  (defun my-adoc-demote-item-and-children ()
+    "Demote the current list item or section and all its children."
+    (interactive)
+    (let* ((list-bounds (condition-case nil
+                            (my-adoc--list-item-bounds)
+                          (error nil)))
+           (section-bounds (unless list-bounds
+                             (condition-case nil
+                                 (my-adoc--section-bounds)
+                               (error nil))))
+           (bounds (or list-bounds section-bounds)))
+      (unless bounds
+        (user-error "Not on a list item or section title"))
+      (if list-bounds
+          ;; List items: demote titles, bullets, and numbered items
+          (my-adoc--promote-demote-lines
+           (lambda ()
+             (cond
+              ((looking-at "=+ ")
+               (insert "="))
+              ((looking-at "\\(\\*+\\) ")
+               (goto-char (match-beginning 1))
+               (insert (char-after (match-beginning 1))))
+              ((looking-at "\\.+ ")
+               (insert "."))))
+           (car bounds) (cdr bounds))
+        ;; Sections: only demote titles
+        (save-excursion
+          (goto-char (car bounds))
+          (let ((end (cdr bounds)))
+            (while (and (< (point) end) (not (eobp)))
+              (beginning-of-line)
+              (when (looking-at "^\\(=+\\) ")
+                (let ((size-before (buffer-size)))
+                  (insert "=")
+                  (setq end (+ end (- (buffer-size) size-before)))))
+              (forward-line 1)))))))
 
   (defun my-adoc-line-to-title (level)
     "Toggle and convert the current line to an AsciiDoc section title.
@@ -821,6 +921,15 @@ the matched string and LEVEL is its length."
        ((looking-at "^\\(-\\) ")
         (cons (match-string-no-properties 1) 1))
        (t nil))))
+
+  (defun my-adoc--title-prefix ()
+    "Return the title marker prefix of the current line, or nil.
+The return value is a cons cell (MARKER . LEVEL) where MARKER is
+the matched string and LEVEL is its length."
+    (save-excursion
+      (beginning-of-line)
+      (when (looking-at "^\\(=+\\) ")
+        (cons (match-string-no-properties 1) (length (match-string 1))))))
 
   (defun my-adoc-insert-list-item ()
     "Insert a new list item at the same level as the current one.
@@ -882,89 +991,170 @@ text at point."
                       (if stop stop (point))))))
         (cons start end))))
 
-  (defun my-adoc-move-item-up ()
-    "Move the current list item (and its subtree) up."
-    (interactive)
-    (let* ((current-bounds (my-adoc--list-item-bounds))
-           (current-start (car current-bounds))
-           (current-end (cdr current-bounds))
-           (current-level (save-excursion
-                            (goto-char current-start)
-                            (cdr (my-adoc--list-item-prefix))))
-           (current-text (buffer-substring-no-properties current-start current-end)))
-      (save-excursion
-        (goto-char current-start)
-        (forward-line -1)
-        (let ((prefix (my-adoc--list-item-prefix)))
-          (while (and (not (bobp))
-                      (or (not prefix)
-                          (> (cdr prefix) current-level)))
-            (forward-line -1)
-            (setq prefix (my-adoc--list-item-prefix)))
-          (unless (and prefix (= (cdr prefix) current-level))
-            (user-error "No previous list item at this level"))
-          (let* ((prev-bounds (my-adoc--list-item-bounds))
-                 (prev-start (car prev-bounds))
-                 (prev-end (cdr prev-bounds))
-                 (prev-text (buffer-substring-no-properties prev-start prev-end)))
-            ;; Don't cross blank lines or non-list text between lists
-            (save-excursion
-              (goto-char prev-end)
-              (while (< (point) current-start)
-                (unless (my-adoc--list-item-prefix)
-                  (user-error "No previous list item at this level"))
-                (forward-line 1)))
-            (delete-region current-start current-end)
-            (goto-char current-start)
-            (insert prev-text)
-            (delete-region prev-start prev-end)
-            (goto-char prev-start)
-            (insert current-text)
-            (goto-char prev-start))))))
+  (defun my-adoc--section-bounds ()
+    "Return (START . END) of the section at point, including its subtree."
+    (save-excursion
+      (beginning-of-line)
+      (when (not (my-adoc--title-prefix))
+        (while (and (not (bobp))
+                    (progn (forward-line -1)
+                           (and (not (looking-at "^[ \t]*$"))
+                                (not (my-adoc--title-prefix))))))))
+    (let* ((prefix (my-adoc--title-prefix)))
+      (unless prefix
+        (user-error "Not on a section title"))
+      (let* ((level (cdr prefix))
+             (start (line-beginning-position))
+             (end (save-excursion
+                    (forward-line 1)
+                    (if (re-search-forward (format "^=\\{1,%d\\} " level) nil t)
+                        (line-beginning-position)
+                      (point-max)))))
+        (cons start end))))
 
-  (defun my-adoc-move-item-down ()
-    "Move the current list item (and its subtree) down."
+  (defun my-adoc-move-item-up ()
+    "Move the current list item or section (and its subtree) up."
     (interactive)
-    (let* ((current-bounds (my-adoc--list-item-bounds))
+    (let* ((is-section (save-excursion (beginning-of-line) (my-adoc--title-prefix)))
+           (current-bounds (if is-section
+                               (my-adoc--section-bounds)
+                             (my-adoc--list-item-bounds)))
            (current-start (car current-bounds))
            (current-end (cdr current-bounds))
-           (current-level (save-excursion
-                            (goto-char current-start)
-                            (cdr (my-adoc--list-item-prefix))))
+           (current-level (if is-section
+                              (save-excursion
+                                (goto-char current-start)
+                                (cdr (my-adoc--title-prefix)))
+                            (save-excursion
+                              (goto-char current-start)
+                              (cdr (my-adoc--list-item-prefix)))))
            (current-text (buffer-substring-no-properties current-start current-end)))
-      (let ((final-pos nil))
-        (save-excursion
-          (goto-char current-end)
-          (when (= (point) (point-max))
-            (user-error "No next list item at this level"))
-          (let ((prefix (my-adoc--list-item-prefix)))
-            (while (and (not (eobp))
-                        (or (not prefix)
-                            (> (cdr prefix) current-level)))
-              (forward-line 1)
-              (setq prefix (my-adoc--list-item-prefix)))
-            (unless (and prefix (= (cdr prefix) current-level))
-              (user-error "No next list item at this level"))
-            (let* ((next-bounds (my-adoc--list-item-bounds))
-                   (next-start (car next-bounds))
-                   (next-end (cdr next-bounds))
-                   (next-text (buffer-substring-no-properties next-start next-end)))
-              ;; Don't cross blank lines or non-list text between lists
-              (save-excursion
-                (goto-char current-end)
-                (while (< (point) next-start)
-                  (unless (my-adoc--list-item-prefix)
-                    (user-error "No next list item at this level"))
-                  (forward-line 1)))
-              (delete-region next-start next-end)
-              (goto-char next-start)
-              (insert current-text)
+      (if is-section
+          (let ((prev-start (save-excursion
+                              (goto-char current-start)
+                              (forward-line -1)
+                              (when (re-search-backward (format "^=\\{%d\\} " current-level) nil t)
+                                (line-beginning-position)))))
+            (unless prev-start
+              (user-error "No previous section at this level"))
+            (let* ((prev-bounds (save-excursion
+                                  (goto-char prev-start)
+                                  (my-adoc--section-bounds)))
+                   (prev-start (car prev-bounds))
+                   (prev-end (cdr prev-bounds))
+                   (prev-text (buffer-substring-no-properties prev-start prev-end)))
               (delete-region current-start current-end)
               (goto-char current-start)
-              (insert next-text)
-              (setq final-pos (+ next-start (- (length next-text) (length current-text)))))))
-        (when final-pos
-          (goto-char final-pos))))))
+              (insert prev-text)
+              (delete-region prev-start prev-end)
+              (goto-char prev-start)
+              (insert current-text)
+              (goto-char prev-start)))
+        (save-excursion
+          (goto-char current-start)
+          (forward-line -1)
+          (let ((prefix (my-adoc--list-item-prefix)))
+            (while (and (not (bobp))
+                        (or (not prefix)
+                            (> (cdr prefix) current-level)))
+              (forward-line -1)
+              (setq prefix (my-adoc--list-item-prefix)))
+            (unless (and prefix (= (cdr prefix) current-level))
+              (user-error "No previous list item at this level"))
+            (let* ((prev-bounds (my-adoc--list-item-bounds))
+                   (prev-start (car prev-bounds))
+                   (prev-end (cdr prev-bounds))
+                   (prev-text (buffer-substring-no-properties prev-start prev-end)))
+              ;; Don't cross blank lines or non-list text between lists
+              (save-excursion
+                (goto-char prev-end)
+                (while (< (point) current-start)
+                  (unless (my-adoc--list-item-prefix)
+                    (user-error "No previous list item at this level"))
+                  (forward-line 1)))
+              (delete-region current-start current-end)
+              (goto-char current-start)
+              (insert prev-text)
+              (delete-region prev-start prev-end)
+              (goto-char prev-start)
+              (insert current-text)
+              (goto-char prev-start)))))))
+
+  (defun my-adoc-move-item-down ()
+    "Move the current list item or section (and its subtree) down."
+    (interactive)
+    (let* ((is-section (save-excursion (beginning-of-line) (my-adoc--title-prefix)))
+           (current-bounds (if is-section
+                               (my-adoc--section-bounds)
+                             (my-adoc--list-item-bounds)))
+           (current-start (car current-bounds))
+           (current-end (cdr current-bounds))
+           (current-level (if is-section
+                              (save-excursion
+                                (goto-char current-start)
+                                (cdr (my-adoc--title-prefix)))
+                            (save-excursion
+                              (goto-char current-start)
+                              (cdr (my-adoc--list-item-prefix)))))
+           (current-text (buffer-substring-no-properties current-start current-end)))
+      (if is-section
+          (let ((final-pos nil))
+            (save-excursion
+              (goto-char current-end)
+              (when (= (point) (point-max))
+                (user-error "No next section at this level"))
+              (let ((next-start (when (re-search-forward (format "^=\\{%d\\} " current-level) nil t)
+                                  (line-beginning-position))))
+                (unless next-start
+                  (user-error "No next section at this level"))
+                (let* ((next-bounds (save-excursion
+                                      (goto-char next-start)
+                                      (my-adoc--section-bounds)))
+                       (next-start (car next-bounds))
+                       (next-end (cdr next-bounds))
+                       (next-text (buffer-substring-no-properties next-start next-end)))
+                  (delete-region next-start next-end)
+                  (goto-char next-start)
+                  (insert current-text)
+                  (delete-region current-start current-end)
+                  (goto-char current-start)
+                  (insert next-text)
+                  (setq final-pos (+ next-start (- (length next-text) (length current-text)))))))
+            (when final-pos
+              (goto-char final-pos)))
+        (let ((final-pos nil))
+          (save-excursion
+            (goto-char current-end)
+            (when (= (point) (point-max))
+              (user-error "No next list item at this level"))
+            (let ((prefix (my-adoc--list-item-prefix)))
+              (while (and (not (eobp))
+                          (or (not prefix)
+                              (> (cdr prefix) current-level)))
+                (forward-line 1)
+                (setq prefix (my-adoc--list-item-prefix)))
+              (unless (and prefix (= (cdr prefix) current-level))
+                (user-error "No next list item at this level"))
+              (let* ((next-bounds (my-adoc--list-item-bounds))
+                     (next-start (car next-bounds))
+                     (next-end (cdr next-bounds))
+                     (next-text (buffer-substring-no-properties next-start next-end)))
+                ;; Don't cross blank lines or non-list text between lists
+                (save-excursion
+                  (goto-char current-end)
+                  (while (< (point) next-start)
+                    (unless (my-adoc--list-item-prefix)
+                      (user-error "No next list item at this level"))
+                    (forward-line 1)))
+                (delete-region next-start next-end)
+                (goto-char next-start)
+                (insert current-text)
+                (delete-region current-start current-end)
+                (goto-char current-start)
+                (insert next-text)
+                (setq final-pos (+ next-start (- (length next-text) (length current-text)))))))
+          (when final-pos
+            (goto-char final-pos)))))))
 
 
 ;;; agent-shell
