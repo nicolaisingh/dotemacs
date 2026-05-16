@@ -3250,7 +3250,7 @@ If region is active, rewrite the region. Otherwise rewrite the entire buffer."
          ("p" . action-lock-goto-previous-link))
   :hook ((action-lock-mode-hook . my-action-lock-mode-config))
   :config
-  (defvar my-action-lock-checkbox '("[ ]" "[X]" "[-]" "[*]"))
+  (defvar my-action-lock-checkbox '("[ ]" "[x]"))
   (defvar my-action-lock-datebox '("[@]" "[%Y-%m-%d %H:%M]"))
   (defvar my-action-lock-jira-issue-regexp "\\(\\(?:JIRA\\|ABCD\\)-[0-9]+\\)")
 
@@ -3333,7 +3333,7 @@ If region is active, rewrite the region. Otherwise rewrite the entire buffer."
          ("n" . next-line)
          ("p" . previous-line))
   :init
-  (setq howm-menu-file-extension ".org"))
+  (setq howm-menu-file-extension ".adoc"))
 
 ;;; howm-misc
 
@@ -3365,7 +3365,8 @@ If region is active, rewrite the region. Otherwise rewrite the entire buffer."
          ("L" . howm-last-memo))
   :hook ((howm-create-hook . howm-narrow-to-memo)
          (howm-view-open-hook . howm-narrow-to-memo)
-         (org-mode-hook . howm-set-mode)))
+         ;; (org-mode-hook . howm-set-mode)
+         ))
 
 ;;; howm-mode
 
@@ -3696,7 +3697,7 @@ If region is active, rewrite the region. Otherwise rewrite the entire buffer."
   (howm-action-lock-forward-save-buffer t)
   (howm-check-word-break "^[[:alnum:]]+$")
   (howm-content-from-region t)
-  (howm-directory "~/howm/")
+  (howm-directory "~/howm-adoc/")
   (howm-history-file (expand-file-name ".howm-history" howm-directory))
   (howm-history-limit nil)
   (howm-iigrep-preview-items 50)
@@ -3704,7 +3705,7 @@ If region is active, rewrite the region. Otherwise rewrite the entire buffer."
   (howm-keyword-case-fold-search t)
   (howm-keyword-file (expand-file-name ".howm-keys" howm-directory))
   (howm-list-recent-days 14)
-  (howm-list-title-regexp "^(\\*$|(\\*|#\\+title:) +)") ; passed to grep/rg
+  ;; (howm-list-title-regexp "^(\\*$|(\\*|#\\+title:) +)") ; passed to grep/rg
   (howm-menu-file (expand-file-name "howm-menu.org" user-emacs-directory))
   (howm-menu-footer "")
   (howm-menu-name-format "*howm-menu:%s*")
@@ -3737,7 +3738,7 @@ If region is active, rewrite the region. Otherwise rewrite the entire buffer."
   (setq howm-excluded-dirs '("data" "RCS" "CVS" ".svn" ".git" "_darcs")
         howm-prefix nil)
   :config
-  (setopt howm-file-name-format "%Y/%m/%Y-%m-%d.org")
+  (setopt howm-file-name-format "%Y/%m/%Y-%m-%d-%H%M%S.adoc")
   (add-to-list 'howm-list-title 'my-howm-list-grep-tag)
   (add-to-list 'howm-view-open-by-myself "image/.*"))
 
@@ -3771,13 +3772,13 @@ If region is active, rewrite the region. Otherwise rewrite the entire buffer."
          ("TAB" . nil))
   :hook ((howm-view-contents-mode-hook . hl-line-mode)
          (howm-view-contents-mode-hook . howm-mode)
-         (howm-view-contents-mode-hook . howm-org-font-lock-minor-mode)
+         ;; (howm-view-contents-mode-hook . howm-org-font-lock-minor-mode)
          (howm-view-contents-mode-hook . outline-minor-mode)
          (howm-view-contents-mode-hook . my-howm-other-modes-keys)
          (howm-view-summary-mode-hook . hl-line-mode)
          (howm-view-summary-mode-hook . my-howm-other-modes-keys))
   :preface
-  (setq howm-view-title-header "*")
+  (setq howm-view-title-header "=")
   :init
   (setq *howm-show-item-filename* nil ; don't show filenames in the echo area when browsing notes
         howm-view-summary-format (let* ((path (format-time-string howm-file-name-format))
@@ -6043,7 +6044,8 @@ of the new org-mode file."
 ;;; visual-fill-column
 
 (use-package visual-fill-column
-  :hook ((image-mode-hook . turn-off-visual-line-fill-column-mode)
+  :hook ((adoc-mode-hook . visual-line-fill-column-mode)
+         (image-mode-hook . turn-off-visual-line-fill-column-mode)
          (minibuffer-setup-hook . (lambda ()
                                     (when (minibufferp)
                                       (turn-off-visual-line-fill-column-mode))))
