@@ -694,8 +694,10 @@ From https://www.emacswiki.org/emacs/XModMapMode")
 
 (use-package adoc-mode
   :after (tempo)
-  :hook ((adoc-mode-hook . no-indent-tabs-mode))
+  :hook ((adoc-mode-hook . no-indent-tabs-mode)
+         (adoc-mode-hook . visual-line-fill-column-mode))
   :bind (:map adoc-mode-map
+              ("C-c C-." . my-adoc-insert-dispatch)
               ("C-c C-c" . adoc-addons-compile-to-pdf)
               ("C-c C-v" . adoc-addons-view-output)
               ("M-<left>" . adoc-addons-promote)
@@ -715,7 +717,38 @@ From https://www.emacswiki.org/emacs/XModMapMode")
   :custom
   (adoc-default-title-type 1)
   (adoc-default-title-sub-type 1)
-  (adoc-display-images t))
+  (adoc-display-images t)
+  :config
+  (require 'transient)
+  (transient-define-prefix my-adoc-insert-admonition ()
+    [["Insert admonition"
+      ("c" "Caution" tempo-template-adoc-paragraph-caution)
+      ("i" "Important" tempo-template-adoc-paragraph-important)
+      ("n" "Note" tempo-template-adoc-paragraph-note)
+      ("t" "Tip" tempo-template-adoc-paragraph-tip)
+      ("w" "Warning" tempo-template-adoc-paragraph-warning)]])
+
+  (transient-define-prefix my-adoc-insert-block ()
+    [["Insert block"
+      ("+" "Passthrough" tempo-template-adoc-delimited-block-passthrough)
+      ("b" "Listing" tempo-template-adoc-delimited-block-listing)
+      ("c" "Comment" tempo-template-adoc-delimited-block-comment)
+      ("e" "Example" tempo-template-adoc-delimited-block-example)
+      ("l" "Literal" tempo-template-adoc-delimited-block-literal)
+      ("o" "Open" tempo-template-adoc-delimited-block-open-block)
+      ("q" "Quote" tempo-template-adoc-delimited-block-quote)
+      ("s" "Sidebar" tempo-template-adoc-delimited-block-sidebar)]])
+
+  (transient-define-prefix my-adoc-insert-dispatch ()
+    [[("a" "Admonitions..." my-adoc-insert-admonition)
+      ("b" "Blocks..." my-adoc-insert-block)]
+     ["Admonition"
+      ("N" "NOTE" tempo-template-adoc-paragraph-note)
+      ("W" "WARNING" tempo-template-adoc-paragraph-warning)]
+     ["Block"
+      ("e" "Example block" tempo-template-adoc-delimited-block-example)
+      ("l" "Listing block" tempo-template-adoc-delimited-block-listing)]]))
+
 
 
 ;;; agent-shell
