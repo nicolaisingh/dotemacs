@@ -134,21 +134,22 @@ only section titles, or nil to match either."
                          (and (not (looking-at "^[ \t]*$"))
                               (if type
                                   (not (adoc-addons--prefix type))
-                                (not (adoc-addons--prefix)))))))))
-  (let* ((prefix (adoc-addons--prefix type))
-         (actual-type
-          (cond
-           ((and (memq type '(nil title))
-                 (looking-at "^=+ "))
-            'title)
-           ((and (memq type '(nil list))
-                 (looking-at "^\\(\\*+\\|\\.+\\|-\\) "))
-            'list))))
-    (unless prefix
-      (user-error "Not on a list item or section title"))
-    (let* ((level (cdr prefix))
-           (start (line-beginning-position))
-           (end (if (eq actual-type 'list)
+                                (not (adoc-addons--prefix))))))))
+    (let* ((prefix (adoc-addons--prefix type))
+           (actual-type
+            (cond
+             ((and (memq type '(nil title))
+                   (looking-at "^=+ "))
+              'title)
+             ((and (memq type '(nil list))
+                   (looking-at "^\\(\\*+\\|\\.+\\|-\\) "))
+              'list))))
+      (unless prefix
+        (user-error "Not on a list item or section title"))
+      (let* ((level (cdr prefix))
+             (start (line-beginning-position))
+             (end (cond
+                   ((eq actual-type 'list)
                     (save-excursion
                       (forward-line 1)
                       (let ((stop nil))
@@ -173,13 +174,14 @@ only section titles, or nil to match either."
                                   (setq stop blank-line))))
                              ;; Anything else -> part of current item, keep going
                              (t (forward-line 1)))))
-                        (if stop stop (point))))
-                  (save-excursion
-                    (forward-line 1)
-                    (if (re-search-forward (format "^=\\{1,%d\\} " level) nil t)
-                        (line-beginning-position)
-                      (point-max))))))
-      (cons start end))))
+                        (if stop stop (point)))))
+                   ((eq actual-type 'title)
+                    (save-excursion
+                      (forward-line 1)
+                      (if (re-search-forward (format "^=\\{1,%d\\} " level) nil t)
+                          (line-beginning-position)
+                        (point-max)))))))
+        (cons start end)))))
 
 ;;;###autoload
 (defun adoc-addons-insert-list-item ()
@@ -456,6 +458,30 @@ If the region is active, demote all items in the region."
           (adoc-addons--promote-demote-lines
            #'adoc-addons--demote-title
            (point) (cdr bounds)))))))
+
+;;;###autoload
+(defun adoc-addons-toggle-checkbox ()
+  "Toggle the checkbox on the current list item between [ ] and [x].
+Return non-nil if a checkbox was toggled."
+  (interactive)
+  (save-excursion
+    (beginning-of-line)
+    (when (looking-at "^\\([*.-]+\\|[0-9]+\\.\\) ")
+      (cond ((re-search-forward "\\[ \\]" (line-end-position) t)
+             (replace-match "[x]" t t)
+             t)
+            ((re-search-forward "\\[x\\]" (line-end-position) t)
+             (replace-match "[ ]" t t)
+             t)
+            (t nil)))))
+
+;;;###autoload
+(defun adoc-addons-dwim ()
+  "Do What I Mean in adoc-mode.
+If point is on a checklist item, toggle its checkbox.
+Otherwise, do nothing."
+  (interactive)
+  (adoc-addons-toggle-checkbox))
 
 (provide 'adoc-addons)
 ;;; adoc-addons.el ends here
