@@ -131,10 +131,10 @@ only section titles, or nil to match either."
             (not (adoc-addons--prefix)))
       (while (and (not (bobp))
                   (progn (forward-line -1)
-                         (and (not (looking-at "^[ \t]*$"))
-                              (if type
-                                  (not (adoc-addons--prefix type))
-                                (not (adoc-addons--prefix))))))))
+                         (or (looking-at "^[ \t]*$")
+                             (if type
+                                 (not (adoc-addons--prefix type))
+                               (not (adoc-addons--prefix))))))))
     (let* ((prefix (adoc-addons--prefix type))
            (actual-type
             (cond
@@ -202,6 +202,36 @@ text at point."
           (newline)
           (insert marker " "))
       (newline))))
+
+;;;###autoload
+(defun adoc-addons-insert-section-after ()
+  "Insert a new section title at the same level after the current section.
+The new section is inserted after the current section and all its
+children, but before any following sibling sections."
+  (interactive)
+  (let* ((bounds (adoc-addons--bounds 'title))
+         (end (cdr bounds))
+         (has-next-sibling (< end (point-max)))
+         (level (save-excursion
+                  (goto-char (car bounds))
+                  (cdr (adoc-addons--prefix 'title))))
+         (prefix (make-string level ?=)))
+    (goto-char end)
+    (unless (bolp)
+      (insert "\n"))
+    (insert prefix " \n")
+    (forward-line -1)
+    (beginning-of-line)
+    (unless (save-excursion
+              (forward-line -1)
+              (looking-at "^[ \t]*$"))
+      (insert "\n"))
+    (end-of-line)
+    (when has-next-sibling
+      (save-excursion
+        (forward-line 1)
+        (unless (looking-at "^[ \t]*$")
+          (insert "\n"))))))
 
 ;;;###autoload
 (defun adoc-addons-move-item-up ()
