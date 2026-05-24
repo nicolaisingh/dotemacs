@@ -695,26 +695,32 @@ From https://www.emacswiki.org/emacs/XModMapMode")
 (use-package adoc-mode
   :after (tempo)
   :hook ((adoc-mode-hook . no-indent-tabs-mode)
+         (adoc-mode-hook . outline-minor-mode)
          (adoc-mode-hook . visual-line-fill-column-mode))
   :bind (:map adoc-mode-map
               ("C-c C-." . my-adoc-insert-dispatch)
+              ("C-c C-=" . adoc-addons-line-to-title)
+              ("C-c C-b" . outline-backward-same-level)
               ("C-c C-c" . adoc-addons-dwim)
               ("C-c C-e" . adoc-addons-compile-to-pdf)
+              ("C-c C-f" . outline-forward-same-level)
+              ("C-c C-n" . outline-next-heading)
+              ("C-c C-p" . outline-previous-heading)
+              ("C-c C-u" . outline-up-heading)
               ("C-c C-v" . adoc-addons-view-output)
+              ("C-c C-x ^" . tempo-template-adoc-superscript)
+              ("C-c C-x b" . tempo-template-adoc-bold)
+              ("C-c C-x i" . tempo-template-adoc-emphasis)
+              ("C-c C-x s" . tempo-template-adoc-line-through)
+              ("C-c C-x u" . tempo-template-adoc-underline)
+              ("C-c C-x ~" . tempo-template-adoc-subscript)
+              ("M-<down>" . adoc-addons-move-item-down)
               ("M-<left>" . adoc-addons-promote)
-              ("M-<right>" . adoc-addons-demote)
-              ("M-S-<left>" . adoc-addons-promote-item-and-children)
-              ("M-S-<right>" . adoc-addons-demote-item-and-children)
-              ("C-c C-f C-b" . tempo-template-adoc-bold)
-              ("C-c C-f C-i" . tempo-template-adoc-emphasis)
-              ("C-c C-f C-u" . tempo-template-adoc-underline)
-              ("C-c C-f C-s" . tempo-template-adoc-line-through)
-              ("C-c C-f ~" . tempo-template-adoc-subscript)
-              ("C-c C-f ^" . tempo-template-adoc-superscript)
-              ("C-c C-=" . adoc-addons-line-to-title)
               ("M-<return>" . adoc-addons-insert-list-item)
+              ("M-<right>" . adoc-addons-demote)
               ("M-<up>" . adoc-addons-move-item-up)
-              ("M-<down>" . adoc-addons-move-item-down))
+              ("M-S-<left>" . adoc-addons-promote-item-and-children)
+              ("M-S-<right>" . adoc-addons-demote-item-and-children))
   :custom
   (adoc-default-title-type 1)
   (adoc-default-title-sub-type 1)
@@ -749,7 +755,6 @@ From https://www.emacswiki.org/emacs/XModMapMode")
      ["Block"
       ("e" "Example block" tempo-template-adoc-delimited-block-example)
       ("l" "Listing block" tempo-template-adoc-delimited-block-listing)]]))
-
 
 
 ;;; agent-shell
@@ -1181,7 +1186,9 @@ This will return ~/.emacs.d/agent-shell/<dir>."
          :map isearch-mode-map
          ("M-o L" . consult-line-multi)
          ("M-o h" . consult-isearch-history)
-         ("M-o l" . consult-line))
+         ("M-o l" . consult-line)
+         :map dired-mode-map
+         ("M-s f" . consult-fd))
 
   :custom
   (consult-async-min-input 2)
