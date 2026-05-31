@@ -513,5 +513,301 @@ Otherwise, do nothing."
   (interactive)
   (adoc-addons-toggle-checkbox))
 
+;; -------------------------------------------------------------------
+;; Tables
+;; -------------------------------------------------------------------
+
+(defvar adoc-addons--table-block-delimiter
+  "^\\s-*[|,]====*\\s-*$"
+  "Starting and ending delimiters for a table block.")
+
+(defun adoc-addons--table-next-cell (sep-char start end)
+  "Move to the next cell using SEP-CHAR.
+START and END are the table boundaries."
+  (let ((line-end (line-end-position))
+        (sep-str (char-to-string sep-char)))
+    (cond
+     ;; Already on a delimiter — skip into the cell after it
+     ((eq (char-after) sep-char)
+      (forward-char 1)
+      (skip-syntax-forward " "))
+
+     ;; Delimiter exists later on this line
+     ((search-forward sep-str line-end t)
+      (skip-syntax-forward " "))
+
+     ;; No more delimiters — next row, or new row at end of table
+     (t
+      (let ((next-line (save-excursion (forward-line 1) (point))))
+        (if (>= next-line end)
+            (adoc-addons--table-insert-row start end sep-char)
+          (forward-line 1)
+          (beginning-of-line)
+          (skip-syntax-forward " ")
+          ;; Skip blank/header-separator lines
+          (while (and (< (point) end)
+                      (or (looking-at-p "^\\s-*$")
+                          (looking-at-p (concat "^\\s-*" sep-str "===\\s-*$"))))
+            (forward-line 1)
+            (beginning-of-line)
+            (skip-syntax-forward " "))
+          (when (and (< (point) end)
+                     (eq (char-after) sep-char))
+            (forward-char 1)
+            (skip-syntax-forward " "))))))))
+
+(defun adoc-addons--table-prev-cell (sep-char start)
+  "Move to the previous cell using SEP-CHAR.
+START is the table start position."
+  (let ((line-start (line-beginning-position))
+        (sep-str (char-to-string sep-char))
+        (orig (point)))
+    (cond
+     ;; Sitting on a delimiter — step backward into the cell before it
+     ((eq (char-after) sep-char)
+      (backward-char 1)
+      (skip-syntax-backward " ")
+      (if (search-backward sep-str line-start t)
+          (progn
+            (forward-char 1)
+            (skip-syntax-forward " "))
+        ;; No earlier delimiter — check for a first cell without leading delimiter
+        (let ((first-cell-start
+               (save-excursion
+                 (goto-char line-start)
+                 (skip-syntax-forward " ")
+                 (and (not (eq (char-after) sep-char))
+                      (point)))))
+          (if first-cell-start
+              (goto-char first-cell-start)
+            (goto-char orig)
+            (adoc-addons--table-prev-row-last-cell sep-char start)))))
+
+     ;; Inside a cell — find its leading delimiter, then the one before it
+     ((progn
+        (skip-syntax-backward " ")
+        (search-backward sep-str line-start t))
+      ;; Point is now at the delimiter that begins the current cell.
+      (let ((delim-pos (point)))
+        (skip-syntax-backward " ")
+        (if (search-backward sep-str line-start t)
+            ;; Found the delimiter before the previous cell
+            (progn
+              (forward-char 1)
+              (skip-syntax-forward " "))
+          ;; No earlier delimiter — check for a first cell without leading delimiter
+          (let ((first-cell-start
+                 (save-excursion
+                   (goto-char line-start)
+                   (skip-syntax-forward " ")
+                   (and (< (point) delim-pos)
+                        (not (eq (char-after) sep-char))
+                        (point)))))
+            (if first-cell-start
+                (goto-char first-cell-start)
+              ;; We're in the first cell — previous row
+              (goto-char orig)
+              (adoc-addons--table-prev-row-last-cell sep-char start))))))
+
+     ;; No delimiter on this line
+     (t
+      (goto-char orig)
+      (adoc-addons--table-prev-row-last-cell sep-char start)))))
+
+(defun adoc-addons--table-prev-row-last-cell (sep-char start)
+  "Move point to the last cell of the row above.
+If already in the first row, do nothing."
+  (let ((sep-str (char-to-string sep-char))
+        (orig (point)))
+    (forward-line -1)
+    (end-of-line)
+    ;; Skip blank lines and delimiter lines
+    (while (and (not (bobp))
+                (>= (point) start)
+                (save-excursion
+                  (beginning-of-line)
+                  (or (looking-at-p "^\\s-*$")
+                      (looking-at-p (concat "^\\s-*" sep-str "===\\s-*$")))))
+      (forward-line -1)
+      (end-of-line))
+    ;; If we ended up on or before the opening delimiter, restore point
+    (if (< (point) start)
+        (goto-char orig)
+      ;; Find the last separator on this line
+      (let ((last-sep nil))
+        (save-excursion
+          (beginning-of-line)
+          (while (search-forward sep-str (line-end-position) t)
+            (setq last-sep (point))))
+        (if last-sep
+            (progn
+              (goto-char last-sep)
+              (skip-syntax-forward " "))
+          ;; No separator — first cell without leading delimiter
+          (beginning-of-line)
+          (skip-syntax-forward " "))))))
+
+(defun adoc-addons--table-insert-row (start end sep-char)
+  "Insert a blank row at the end of the table."
+  (goto-char end)
+  (beginning-of-line)
+  (let* ((indent (adoc-addons--table-indent start))
+         (sep-str (char-to-string sep-char))
+         (col-count (adoc-addons--table-column-count
+                     start end (regexp-quote sep-str))))
+    (insert "\n" indent)
+    (if (string= sep-str "|")
+        ;; Pipe style:  |  |  |
+        (progn
+          (insert sep-str " ")
+          (dotimes (_ (1- col-count))
+            (insert " " sep-str " ")))
+      ;; Comma style:  ,  ,
+      (progn
+        (dotimes (_ (1- col-count))
+          (insert sep-str " "))
+        (insert " ")))))
+
+(defun adoc-addons--table-bounds ()
+  "Return (START . END) of the AsciiDoc table at point."
+  ;; TODO: Handle csv style tables properly
+  (let (start end start-pos)
+    ;; Move one line up first.  If we are still in a table, then start
+    ;; from here since point initially might be at the closing
+    ;; delimiter.  Otherwise, if there is no table content, then we
+    ;; might have moved out of it.
+    (save-excursion
+      (beginning-of-line)
+      (forward-line -1)
+      (while (and (not (bobp))
+                  (looking-at-p "^$"))
+        (forward-line -1))
+      (when (or (looking-at-p adoc-addons--table-block-delimiter)
+                (looking-at-p "^|"))
+        (setq start-pos (point))))
+    ;; Look for the start delimiter
+    (save-excursion
+      (when start-pos
+        (goto-char start-pos))
+      (beginning-of-line)
+      (unless (looking-at-p adoc-addons--table-block-delimiter)
+        (while (and (not (bobp))
+                    (not (looking-at-p adoc-addons--table-block-delimiter))
+                    (or (looking-at-p "^$")
+                        (looking-at-p "^\\|")))
+          (forward-line -1))
+        (unless (looking-at-p adoc-addons--table-block-delimiter)
+          (error "Not inside an AsciiDoc table")))
+      (setq start (point)))
+    ;; Look for the end delimiter
+    (save-excursion
+      (beginning-of-line)
+      (unless start-pos
+        ;; Only move one line forward if point is not in the ending
+        ;; delimiter
+        (forward-line 1))
+      (while (and (not (eobp))
+                  (not (looking-at-p adoc-addons--table-block-delimiter))
+                  (or (looking-at-p "^$")
+                      (looking-at-p "^\\|"))
+                  (forward-line 1)))
+      (unless (looking-at adoc-addons--table-block-delimiter)
+        (error "Unclosed AsciiDoc table"))
+      (goto-char (1- (match-end 0)))
+      (setq end (point)))
+    (cons start end)))
+
+(defun adoc-addons--table-separator (pos)
+  "Return | or , for the table at POS."
+  (save-excursion
+    (goto-char pos)
+    (beginning-of-line)
+    (skip-syntax-forward " ")
+    (char-to-string (char-after))))
+
+(defun adoc-addons--table-indent (pos)
+  "Return leading whitespace of the line at POS."
+  (save-excursion
+    (goto-char pos)
+    (beginning-of-line)
+    (buffer-substring-no-properties
+     (line-beginning-position)
+     (progn (skip-syntax-forward " ")
+            (point)))))
+
+(defun adoc-addons--table-column-count (start end sep-re)
+  "Count columns from the first data row."
+  (save-excursion
+    (goto-char start)
+    (forward-line 1)
+    (while (and (< (point) end)
+                (or (looking-at-p adoc-addons--table-block-delimiter)
+                    (looking-at-p "^\\s-*$")))
+      (forward-line 1))
+    (if (>= (point) end)
+        1
+      (length (split-string
+               (buffer-substring-no-properties
+                (line-beginning-position)
+                (line-end-position))
+               (concat "\\s-*" sep-re "\\s-*")
+               t)))))
+
+;;;###autoload
+(defun adoc-addons-table-tab ()
+  "Move to the next cell in an AsciiDoc table.
+If already in the last cell of the last row, insert a new blank
+row and move to its first cell.  Falls back to
+`indent-for-tab-command' when point is outside a table."
+  (interactive)
+  (let ((bounds (ignore-errors (adoc-addons--table-bounds))))
+    (if (not bounds)
+        (indent-for-tab-command)
+      (let* ((start (car bounds))
+             (end   (cdr bounds))
+             (sep   (adoc-addons--table-separator start))
+             (sep-char (string-to-char sep)))
+        ;; If we're on a delimiter or blank separator line, step off it
+        (when (save-excursion
+                (beginning-of-line)
+                (or (looking-at-p adoc-addons--table-block-delimiter)
+                    (looking-at-p "^\\s-*$")))
+          (forward-line 1)
+          (beginning-of-line))
+        ;; Normalise point when sitting in whitespace after a delimiter
+        (when (and (not (eolp))
+                   (not (eq (char-after) sep-char))
+                   (save-excursion
+                     (skip-syntax-backward " ")
+                     (eq (char-before) sep-char)))
+          (skip-syntax-forward " "))
+        (adoc-addons--table-next-cell sep-char start end)))))
+
+;;;###autoload
+(defun adoc-addons-table-shift-tab ()
+  "Move to the previous cell in an AsciiDoc table.
+Falls back to `backward-char' when outside a table."
+  (interactive)
+  (let ((bounds (ignore-errors (adoc-addons--table-bounds))))
+    (if (not bounds)
+        (backward-char)
+      (let* ((start (car bounds))
+             (sep   (adoc-addons--table-separator start))
+             (sep-char (string-to-char sep)))
+        (when (save-excursion
+                (beginning-of-line)
+                (or (looking-at-p adoc-addons--table-block-delimiter)
+                    (looking-at-p "^\\s-*$")))
+          (forward-line -1)
+          (end-of-line))
+        ;; Normalise point when sitting in whitespace before a delimiter
+        (when (and (not (bolp))
+                   (not (eq (char-before) sep-char))
+                   (save-excursion
+                     (skip-syntax-forward " ")
+                     (eq (char-after) sep-char)))
+          (skip-syntax-backward " "))
+        (adoc-addons--table-prev-cell sep-char start)))))
+
 (provide 'adoc-addons)
 ;;; adoc-addons.el ends here
