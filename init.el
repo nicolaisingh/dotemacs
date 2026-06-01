@@ -776,6 +776,9 @@ From https://www.emacswiki.org/emacs/XModMapMode")
          ("C-c C-m" . agent-shell-cycle-session-mode))
   :custom
   (agent-shell-preferred-agent-config (agent-shell-kimi-make-config))
+  (agent-shell-mcp-servers '(((name . "atlassian-rovo-mcp")
+                              (type . "http")
+                              (url . "https://mcp.atlassian.com/v1/mcp/authv2"))))
   (agent-shell-dot-subdir-function #'my-agent-shell-dot-subdir)
   (agent-shell-show-welcome-message nil)
   (agent-shell-header-style 'text)
@@ -2301,6 +2304,11 @@ The default format is specified by `emms-source-playlist-default-format'."
 (use-package eshell-z
   :after (eshell)
   :demand t)
+
+
+;;; eterm-256color
+
+(use-package eterm-256color)
 
 
 ;;; expand-region
@@ -5672,6 +5680,8 @@ of the new org-mode file."
   :custom
   (vterm-kill-buffer-on-exit t)
   (vterm-max-scrollback 10000)
+  (vterm-term-environment-variable "eterm-color")
+  (vterm-environment '("TERM_THEME=light"))
   :config
   (setq vterm-timer-delay 0.01))
 
