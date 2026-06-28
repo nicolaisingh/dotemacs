@@ -2964,21 +2964,72 @@ If region is active, rewrite the region. Otherwise rewrite the entire buffer."
          ("C-z I" . howm-create-interactively)
          ("C-z L" . howm-last-memo)
          ("C-z M" . howm-open-named-file)
-         ("C-z N" . howm-next-memo)
-         ("C-z P" . howm-previous-memo)
+         ("C-z N" . my-howm-next-memo)
+         ("C-z P" . my-howm-previous-memo)
          ("C-z Q" . howm-kill-all)
          ("C-z SPC" . howm-toggle-buffer)
          ("C-z e" . howm-remember)
          ("C-z w" . howm-toggle-narrow)
          :repeat-map
          howm-mode-repeat-map
-         ("N" . howm-next-memo)
-         ("P" . howm-previous-memo)
+         ("N" . my-howm-next-memo)
+         ("P" . my-howm-previous-memo)
          ("F" . howm-first-memo)
          ("L" . howm-last-memo))
   :hook ((howm-create-hook . howm-narrow-to-memo)
          (howm-view-open-hook . howm-narrow-to-memo)
-         (org-mode-hook . howm-set-mode)))
+         (org-mode-hook . howm-set-mode))
+  :config
+  (defun my-howm--buffer-date ()
+    "Return the date encoded in the current buffer's name, e.g. 2024-01-15.org."
+    (parse-time-string (string-replace ".org" "" (buffer-name))))
+
+  (defun my-howm--memo-path (date)
+    "Return the howm memo file path for DATE (decoded time)."
+    (let* ((encoded (encode-time date))
+           (date-string (format-time-string "%Y-%m-%d" encoded))
+           (parts (mapcar #'string-to-number (split-string date-string "-"))))
+      (format "%s%s/%s/%s%s"
+              howm-directory
+              (nth 0 parts)
+              (nth 1 parts)
+              date-string
+              ".org")))
+
+  (defun my-howm--find-memo-file (start-date direction max-days)
+    "Open the first existing memo within MAX-DAYS from START-DATE.
+DIRECTION is +1 for future dates or -1 for past dates.
+Returns the file path if found, nil otherwise."
+    (catch 'found
+      (dotimes (offset max-days)
+        (let* ((date (decoded-time-add
+                      start-date
+                      (make-decoded-time :day (* direction (1+ offset)))))
+               (path (my-howm--memo-path date)))
+          (when (file-exists-p path)
+            (find-file path)
+            (cond
+             ((= direction +1) (howm-first-memo))
+             ((= direction -1) (howm-last-memo)))
+            (howm-narrow-to-memo)
+            (throw 'found path))))
+      nil))
+
+  (defun my-howm-previous-memo (n)
+    (interactive "p")
+    (condition-case nil
+        (howm-previous-memo n)
+      (search-failed
+       (unless (my-howm--find-memo-file (my-howm--buffer-date) -1 30)
+         (user-error "No memo found in the previous 30 days")))))
+
+  (defun my-howm-next-memo (n)
+    (interactive "p")
+    (condition-case nil
+        (howm-next-memo n)
+      (search-failed
+       (unless (my-howm--find-memo-file (my-howm--buffer-date) +1 30)
+         (user-error "No memo found in the next 30 days"))))))
 
 ;;; howm-mode
 
