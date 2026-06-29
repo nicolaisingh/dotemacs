@@ -2988,7 +2988,7 @@ If region is active, rewrite the region. Otherwise rewrite the entire buffer."
     "Return the howm memo file path for DATE (decoded time)."
     (let* ((encoded (encode-time date))
            (date-string (format-time-string "%Y-%m-%d" encoded))
-           (parts (mapcar #'string-to-number (split-string date-string "-"))))
+           (parts (split-string date-string "-")))
       (format "%s%s/%s/%s%s"
               howm-directory
               (nth 0 parts)
