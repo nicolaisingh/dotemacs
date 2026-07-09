@@ -275,7 +275,7 @@ numbered variants the same as the base color."
      `(org-block-end-line ((t (:inherit (fixed-pitch) :foreground ,color-blue :extend t :background "gray95" :underline t))))
      `(org-checkbox ((t (:inherit default))))
      `(org-code ((t (:inherit (fixed-pitch shadow)))))
-     `(org-date ((t (:height 1.0 :underline nil))))
+     `(org-date ((t (:height 0.8 :underline nil))))
      `(org-done ((t (:weight normal))))
      `(org-drawer ((t (:height 0.85 :foreground ,color-gray))))
      `(org-level-1 ((t (:inherit outline-1 :height 1.1 :weight bold :overline "black"))))

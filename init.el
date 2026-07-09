@@ -2913,22 +2913,24 @@ If region is active, rewrite the region. Otherwise rewrite the entire buffer."
   :ensure nil
   :bind (("C-z S" . howm-search-past)
          ("C-z d" . howm-insert-date)
-         ("C-z t" . howm-insert-dtime)
+         ("C-z t" . my-howm-insert-dtime)
          :map howm-mode-map
          ("C-z S" . howm-search-past)
          ("C-z d" . howm-insert-date)
-         ("C-z t" . howm-insert-dtime)
+         ("C-z t" . my-howm-insert-dtime)
          ("C-z +" . my-howm-insert-reminder))
   :config
+  (defun my-howm-insert-dtime (&optional arg)
+    (interactive "P")
+    (if arg
+        (insert (format-time-string howm-dtime-format))
+      (let ((date-format (concat "[%Y" howm-date-separator "%m" howm-date-separator "%d]")))
+        (insert (format-time-string date-format)))))
+
   (defun my-howm-insert-reminder ()
     (interactive)
-    (let ((reminder-type (read-char-choice
-                          (format "Reminder type (%s): " howm-reminder-marks)
-                          (mapcar #'identity "-+~!@."))))
-      (insert reminder-type))
-    (backward-char 1)
-    (howm-insert-date)
-    (forward-char 1)))
+    (my-howm-insert-dtime t)
+    (insert "+ ")))
 
 ;;; howm-menu
 
@@ -3127,7 +3129,7 @@ Returns the file path if found, nil otherwise."
   (defun my-howm-template (which-template previous-buffer)
     "Howm template chooser."
     (let ((templates `(("default"
-                        ,(concat howm-view-title-header " %notitle\n%date %file\n\n%cursor\n\n"))
+                        ,(concat howm-view-title-header " %notitle %date %file\n\n\n%cursor\n\n"))
 
                        ("Meeting"
                         ,(concat howm-view-title-header " Meeting: %title%cursor\n"
@@ -3149,7 +3151,7 @@ Returns the file path if found, nil otherwise."
                                        nil t nil t)))
           (cadr (assoc choice templates))))
        (t
-        (concat howm-view-title-header " %notitle\n%date %file\n\n%cursor\n\n")))))
+        (concat howm-view-title-header " %notitle %date %file\n\n\n%cursor\n\n")))))
 
   (defun my-howm-insert-keywords-line ()
     "Insert keywords line or append if on one."
@@ -3475,6 +3477,23 @@ Returns the file path if found, nil otherwise."
   ;; Cannot put in :custom due to howm-if-ver1dot3 check in howm code
   (setopt howm-view-title-skip-regexp
           (rx (or
+               ;; * Notes [...] >>> ...
+               (group
+                bol
+                (opt
+                 (eval howm-view-title-header)
+                 (or " Notes" ""))
+                (opt
+                 (* " ")
+                 " [" (+ (any "-" ":" " " digit)) "]")
+                (opt
+                 (* " ")
+                 (eval ">>>")
+                 (* anything))
+
+                (* " ")
+                eol)
+
                ;; Default/empty header line
                (group
                 bol
