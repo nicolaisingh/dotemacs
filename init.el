@@ -664,7 +664,7 @@ From https://www.emacswiki.org/emacs/XModMapMode")
 ;;; 10 diminish
 
 (use-package diminish
-  :ensure (:wait t) ; wait to finish before proceeding to the next
+  :ensure (:wait t :branch "master") ; wait to finish before proceeding to the next
   :demand t)
 
 
@@ -679,7 +679,8 @@ From https://www.emacswiki.org/emacs/XModMapMode")
 
 ;;; acp
 
-(use-package acp)
+(use-package acp
+  :ensure (:branch "main"))
 
 
 ;;; adoc-addons
@@ -693,6 +694,7 @@ From https://www.emacswiki.org/emacs/XModMapMode")
 ;;; adoc-mode
 
 (use-package adoc-mode
+  :ensure (:branch "master")
   :after (tempo)
   :hook ((adoc-mode-hook . no-indent-tabs-mode)
          (adoc-mode-hook . outline-minor-mode)
@@ -763,6 +765,7 @@ From https://www.emacswiki.org/emacs/XModMapMode")
 ;;; agent-shell
 
 (use-package agent-shell
+  :ensure (:branch "main")
   :commands (agent-shell-opencode-start-agent)
   :bind (:map
          my-ctl-c-a-map
@@ -798,7 +801,7 @@ This will return ~/.emacs.d/agent-shell/<dir>."
 ;;; agent-shell-sidebar
 
 (use-package agent-shell-sidebar
-  :ensure (:host github :repo "cmacrae/agent-shell-sidebar")
+  :ensure (:host github :repo "cmacrae/agent-shell-sidebar" :branch "main")
   :bind (("C-z C-a" . agent-shell-sidebar-toggle)
          :map agent-shell-mode-map
          ("C-c C-f" . agent-shell-sidebar-change-provider))
@@ -810,6 +813,7 @@ This will return ~/.emacs.d/agent-shell/<dir>."
 ;;; aggressive-indent
 
 (use-package aggressive-indent
+  :ensure (:branch "master")
   :diminish aggressive-indent-mode
   :bind (:map my-ctl-c-i-map
               ("A" . aggressive-indent-mode))
@@ -825,6 +829,7 @@ This will return ~/.emacs.d/agent-shell/<dir>."
 ;;; aider
 
 (use-package aider
+  :ensure (:branch "main")
   :disabled
   :bind (("C-c a" . aider-transient-menu))
   :custom
@@ -862,6 +867,7 @@ This will return ~/.emacs.d/agent-shell/<dir>."
 ;;; alert
 
 (use-package alert
+  :ensure (:branch "master")
   :custom
   (alert-fade-time 10)
   :config
@@ -909,6 +915,7 @@ This will return ~/.emacs.d/agent-shell/<dir>."
 ;;; avy
 
 (use-package avy
+  :ensure (:branch "master")
   :bind (:map
          my-ctl-z-map
          ("C-v" . avy-goto-char-timer)
@@ -923,18 +930,21 @@ This will return ~/.emacs.d/agent-shell/<dir>."
 ;;; blacken
 
 (use-package blacken
+  :ensure (:branch "master")
   :diminish blacken-mode
   :hook (python-mode-hook))
 
 
 ;;; breadcrumb
 
-(use-package breadcrumb)
+(use-package breadcrumb
+  :ensure (:branch "master"))
 
 
 ;;; browse-kill-ring
 
 (use-package browse-kill-ring
+  :ensure (:branch "master")
   :bind (:map my-ctl-c-b-map ("k" . browse-kill-ring)))
 
 
@@ -989,6 +999,7 @@ This will return ~/.emacs.d/agent-shell/<dir>."
 ;;; calibre
 
 (use-package calibre
+  :ensure (:branch "master")
   :bind (("C-c L" . calibre-library))
   :custom (calibre-libraries '(("library" . "~/calibre"))))
 
@@ -996,6 +1007,7 @@ This will return ~/.emacs.d/agent-shell/<dir>."
 ;;; cape
 
 (use-package cape
+  :ensure (:branch "main")
   :bind (:map my-ctl-c-p-map
               ("TAB" . completion-at-point)
               ;; ("M-TAB" . completion-at-point)
@@ -1025,17 +1037,20 @@ This will return ~/.emacs.d/agent-shell/<dir>."
 
 ;;; centered-cursor-mode
 
-(use-package centered-cursor-mode)
+(use-package centered-cursor-mode
+  :ensure (:branch "master"))
 
 
 ;;; chess
 
-(use-package chess)
+(use-package chess
+  :ensure (:branch "externals/chess"))
 
 
 ;;; chronos
 
 (use-package chronos
+  :ensure (:branch "master")
   :bind (("C-c T" . chronos-load))
   :custom
   (chronos-standard-timers '("0:0:30/30-second finished"
@@ -1075,7 +1090,7 @@ This will return ~/.emacs.d/agent-shell/<dir>."
 ;;; claude-code-ide
 
 (use-package claude-code-ide
-  :ensure (:host github :repo "manzaltu/claude-code-ide.el")
+  :ensure (:host github :repo "manzaltu/claude-code-ide.el" :branch "main")
   :bind (:map
          my-ctl-c-l-map
          ("c" . claude-code-ide-menu))
@@ -1094,12 +1109,14 @@ This will return ~/.emacs.d/agent-shell/<dir>."
 
 ;;; clojure-mode
 
-(use-package clojure-mode)
+(use-package clojure-mode
+  :ensure (:branch "master"))
 
 
 ;;; command-log-mode
 
 (use-package command-log-mode
+  :ensure (:branch "master")
   :bind (("C-c c l" . clm/toggle-command-log-buffer))
   :custom
   (command-log-mode-is-global t)
@@ -1130,6 +1147,7 @@ This will return ~/.emacs.d/agent-shell/<dir>."
 ;;; comment-dwim-2
 
 (use-package comment-dwim-2
+  :ensure (:branch "master")
   :bind (([remap comment-dwim] . comment-dwim-2)))
 
 
@@ -1159,6 +1177,7 @@ This will return ~/.emacs.d/agent-shell/<dir>."
 ;;; consult
 
 (use-package consult
+  :ensure (:branch "main")
   :demand t
   :bind (([remap repeat-complex-command] . consult-complex-command)
          ([remap switch-to-buffer-other-frame] . consult-buffer-other-frame)
@@ -1210,6 +1229,7 @@ This will return ~/.emacs.d/agent-shell/<dir>."
 ;;; consult-dir
 
 (use-package consult-dir
+  :ensure (:branch "master")
   :demand t
   :bind (:map goto-map
               ("d" . consult-dir)
@@ -1262,6 +1282,7 @@ This will return ~/.emacs.d/agent-shell/<dir>."
 ;;; corfu
 
 (use-package corfu
+  :ensure (:branch "main")
   :demand t
   :bind (:map corfu-map
               ("C-s" . corfu-next)
@@ -1288,6 +1309,7 @@ This will return ~/.emacs.d/agent-shell/<dir>."
 ;;; cov
 
 (use-package cov
+  :ensure (:branch "master")
   :after (python)
   :bind (:map python-mode-map
               ("C-c C C" . my-python-run-coverage))
@@ -1307,17 +1329,20 @@ This will return ~/.emacs.d/agent-shell/<dir>."
 
 ;;; csv-mode
 
-(use-package csv-mode)
+(use-package csv-mode
+  :ensure (:branch "externals/csv-mode"))
 
 
 ;;; currency-convert
 
-(use-package currency-convert)
+(use-package currency-convert
+  :ensure (:branch "master"))
 
 
 ;;; deadgrep
 
 (use-package deadgrep
+  :ensure (:branch "master")
   :bind (:map deadgrep-mode-map
               ("C-o" . my-deadgrep-open-result-other-window))
   :config
@@ -1334,6 +1359,7 @@ This will return ~/.emacs.d/agent-shell/<dir>."
 ;;; devdocs
 
 (use-package devdocs
+  :ensure (:branch "main")
   :bind (("C-h D I" . devdocs-install)
          ("C-h D D" . devdocs-lookup)))
 
@@ -1349,6 +1375,7 @@ This will return ~/.emacs.d/agent-shell/<dir>."
 ;;; diff-hl
 
 (use-package diff-hl
+  :ensure (:branch "master")
   :demand t
   :bind (:map my-ctl-c-d-map
               ("h h" . global-diff-hl-mode)
@@ -1462,6 +1489,7 @@ be file B."
 ;;; dired-collapse (from dired-hacks)
 
 (use-package dired-collapse
+  :ensure (:branch "master")
   :disabled
   :after (dired)
   :demand t
@@ -1482,6 +1510,7 @@ be file B."
 ;;; dired-narrow (from dired-hacks)
 
 (use-package dired-narrow
+  :ensure (:branch "master")
   :after (dired)
   :bind (:map dired-mode-map
               ("/ /" . dired-narrow)
@@ -1493,6 +1522,7 @@ be file B."
 ;;; dired-rainbow (from dired-hacks)
 
 (use-package dired-rainbow
+  :ensure (:branch "master")
   :after (dired personal-2-theme)
   :demand t
   :config
@@ -1540,6 +1570,7 @@ be file B."
 ;;; dired-sidebar
 
 (use-package dired-sidebar
+  :ensure (:branch "master")
   :bind (:map my-ctl-c-d-map
               ("s" . dired-sidebar-toggle-sidebar)
               ("S" . dired-sidebar-jump-to-sidebar)
@@ -1559,6 +1590,7 @@ be file B."
 ;;; dired-subtree
 
 (use-package dired-subtree
+  :ensure (:branch "master")
   :after (dired)
   :bind (:map dired-mode-map
               ("<backtab>" . dired-subtree-cycle)
@@ -1576,12 +1608,14 @@ be file B."
 
 ;;; dockerfile-mode
 
-(use-package dockerfile-mode)
+(use-package dockerfile-mode
+  :ensure (:branch "master"))
 
 
 ;;; easy-kill
 
 (use-package easy-kill
+  :ensure (:branch "master")
   :demand t
   :bind (([remap kill-ring-save] . easy-kill)
          :map easy-kill-base-map
@@ -1596,6 +1630,7 @@ be file B."
 ;;; easy-kill-extras
 
 (use-package easy-kill-extras
+  :ensure (:branch "master")
   :demand t
   :after (easy-kill))
 
@@ -1620,6 +1655,7 @@ be file B."
 ;;; eat
 
 (use-package eat
+  :ensure (:branch "master")
   :diminish eat-eshell-mode
   :hook ((eshell-load-hook . eat-eshell-mode)
          (eshell-load-hook . eat-eshell-visual-command-mode)))
@@ -1628,6 +1664,7 @@ be file B."
 ;;; eca
 
 (use-package eca
+  :ensure (:branch "master")
   :bind (("C-z C-e" . my-eca-chat-toggle-window)
          :map
          my-ctl-c-e-map
@@ -1797,6 +1834,7 @@ be file B."
 ;;; edit-indirect
 
 (use-package edit-indirect
+  :ensure (:branch "master")
   :bind (("C-c '" . edit-indirect-region)))
 
 
@@ -1861,7 +1899,7 @@ be file B."
 ;;; emms
 
 (use-package emms
-  :ensure (:source "GNU ELPA")
+  :ensure (:source "GNU ELPA" :branch "master")
   :bind (([remap emms-playlist-save] . my-emms-playlist-save)
          :map my-ctl-c-M-map
          ("%" . my-emms-toggle-random-playlist)
@@ -2206,6 +2244,7 @@ The default format is specified by `emms-source-playlist-default-format'."
 ;;; emojify
 
 (use-package emojify
+  :ensure (:branch "master")
   :hook ((vterm-mode . emojify-mode)))
 
 
@@ -2266,6 +2305,7 @@ The default format is specified by `emms-source-playlist-default-format'."
 ;;; eshell-toggle
 
 (use-package eshell-toggle
+  :ensure (:branch "master")
   :bind (:map my-ctl-z-map
               ("C-s" . my-eshell-toggle))
   :custom
@@ -2295,6 +2335,7 @@ The default format is specified by `emms-source-playlist-default-format'."
 ;;; eshell-up
 
 (use-package eshell-up
+  :ensure (:branch "master")
   :after (eshell)
   :demand t)
 
@@ -2302,18 +2343,21 @@ The default format is specified by `emms-source-playlist-default-format'."
 ;;; eshell-z
 
 (use-package eshell-z
+  :ensure (:branch "master")
   :after (eshell)
   :demand t)
 
 
 ;;; eterm-256color
 
-(use-package eterm-256color)
+(use-package eterm-256color
+  :ensure (:branch "main"))
 
 
 ;;; expand-region
 
 (use-package expand-region
+  :ensure (:branch "master")
   :bind (:map my-ctl-c-e-map
               ("[" . er/mark-inside-pairs)
               ("{" . er/mark-outside-pairs)
@@ -2364,18 +2408,21 @@ The default format is specified by `emms-source-playlist-default-format'."
 
 ;;; focus
 
-(use-package focus)
+(use-package focus
+  :ensure (:branch "master"))
 
 
 ;;; forge
 
 (use-package forge
+  :ensure (:branch "main")
   :after (magit))
 
 
 ;;; form-feed
 
 (use-package form-feed
+  :ensure (:branch "master")
   :diminish form-feed-mode
   :hook ((emacs-lisp-mode-hook . form-feed-mode)
          (howm-view-contents-mode-hook . form-feed-mode)))
@@ -2383,12 +2430,14 @@ The default format is specified by `emms-source-playlist-default-format'."
 
 ;;; free-keys
 
-(use-package free-keys)
+(use-package free-keys
+  :ensure (:branch "master"))
 
 
 ;;; git-timemachine
 
-(use-package git-timemachine)
+(use-package git-timemachine
+  :ensure (:branch "master"))
 
 
 ;;; gnus
@@ -2577,12 +2626,14 @@ The default format is specified by `emms-source-playlist-default-format'."
 
 ;;; go-mode
 
-(use-package go-mode)
+(use-package go-mode
+  :ensure (:branch "master"))
 
 
 ;;; goggles
 
 (use-package goggles
+  :ensure (:branch "main")
   :demand t
   :diminish
   :hook ((prog-mode-hook . goggles-mode)
@@ -2592,6 +2643,7 @@ The default format is specified by `emms-source-playlist-default-format'."
 ;;; gptel
 
 (use-package gptel
+  :ensure (:branch "master")
   :demand t
   :bind (:map
          my-meta-=-map
@@ -2761,7 +2813,8 @@ If region is active, rewrite the region. Otherwise rewrite the entire buffer."
 
 ;;; graphviz-dot-mode
 
-(use-package graphviz-dot-mode)
+(use-package graphviz-dot-mode
+  :ensure (:branch "master"))
 
 
 ;;; grep
@@ -2799,6 +2852,7 @@ If region is active, rewrite the region. Otherwise rewrite the entire buffer."
 ;;; highlight-indent-guides
 
 (use-package highlight-indent-guides
+  :ensure (:branch "master")
   :bind (:map my-ctl-c-h-map
               ("i" . highlight-indent-guides-mode))
   :custom
@@ -2814,6 +2868,7 @@ If region is active, rewrite the region. Otherwise rewrite the entire buffer."
 ;;; highlight-numbers
 
 (use-package highlight-numbers
+  :ensure (:branch "master")
   :bind (:map my-ctl-c-h-map
               ("n" . highlight-numbers-mode)))
 
@@ -2842,7 +2897,7 @@ If region is active, rewrite the region. Otherwise rewrite the entire buffer."
 (use-package howm
   :after (org)
   :demand t
-  :ensure (:protocol ssh :remotes (("fork" :repo "nicolaisingh/howm"))))
+  :ensure (:protocol ssh :remotes (("fork" :repo "nicolaisingh/howm")) :branch "master"))
 
 ;;; howm-action-lock (action-lock)
 
@@ -3518,7 +3573,8 @@ Returns the file path if found, nil otherwise."
 
 ;;; htmlize
 
-(use-package htmlize)
+(use-package htmlize
+  :ensure (:branch "master"))
 
 
 ;;; ibuffer
@@ -3817,6 +3873,7 @@ Useful for completion style 'partial-completion."
 ;;; json-navigator
 
 (use-package json-navigator
+  :ensure (:branch "master")
   :bind (:map json-navigator-mode-map
               ("*" . tree-mode-expand-level)
               ("SPC" . tree-mode-toggle-expand)
@@ -3860,7 +3917,8 @@ Useful for completion style 'partial-completion."
 
 ;;; know-your-http-well
 
-(use-package know-your-http-well)
+(use-package know-your-http-well
+  :ensure (:branch "master"))
 
 
 ;;; llm-tool-collection
@@ -3868,7 +3926,7 @@ Useful for completion style 'partial-completion."
 (use-package llm-tool-collection
   :after (gptel)
   :demand t
-  :ensure (:repo "~/.emacs.d/packages/llm-tool-collection")
+  :ensure (:repo "~/.emacs.d/packages/llm-tool-collection" :branch "main")
   :config
   (mapcar (apply-partially #'apply #'gptel-make-tool)
           (llm-tool-collection-get-category "filesystem"))
@@ -3887,12 +3945,14 @@ Useful for completion style 'partial-completion."
 
 ;;; lorem-ipsum
 
-(use-package lorem-ipsum)
+(use-package lorem-ipsum
+  :ensure (:branch "master"))
 
 
 ;;; magit
 
 (use-package magit
+  :ensure (:branch "main")
   :bind (("C-c g" . magit-dispatch)
          ("C-x g" . magit-status)
          :map my-ctl-c-G-map
@@ -3915,6 +3975,7 @@ Useful for completion style 'partial-completion."
 ;;; magit-todos
 
 (use-package magit-todos
+  :ensure (:branch "master")
   :after (magit)
   :demand t
   :custom
@@ -3927,6 +3988,7 @@ Useful for completion style 'partial-completion."
 ;;; marginalia
 
 (use-package marginalia
+  :ensure (:branch "main")
   :demand t
   :bind (:map minibuffer-local-map
               ("M-M" . marginalia-cycle))
@@ -3937,6 +3999,7 @@ Useful for completion style 'partial-completion."
 ;;; markdown-mode
 
 (use-package markdown-mode
+  :ensure (:branch "master")
   :hook ((markdown-mode-hook . my-markdown-mode-config))
   :bind (:map
          markdown-mode-map
@@ -3957,6 +4020,7 @@ Useful for completion style 'partial-completion."
 ;;; mcp
 
 (use-package mcp
+  :ensure (:branch "master")
   :after (gptel)
   :bind (:map
          my-meta-=-map
@@ -3980,12 +4044,14 @@ Useful for completion style 'partial-completion."
 
 ;;; memory-usage
 
-(use-package memory-usage)
+(use-package memory-usage
+  :ensure (:branch "externals/memory-usage"))
 
 
 ;;; mermaid-mode
 
 (use-package mermaid-mode
+  :ensure (:branch "master")
   :bind (:map
          mermaid-mode-map
          ("C-c C-b" . mermaid-compile-buffer)
@@ -4052,6 +4118,7 @@ Useful for completion style 'partial-completion."
 ;;; move-text
 
 (use-package move-text
+  :ensure (:branch "master")
   :demand t
   :bind (("M-S-<up>" . move-text-up)
          ("M-S-<down>" . move-text-down))
@@ -4070,6 +4137,7 @@ Useful for completion style 'partial-completion."
 ;;; multi-term
 
 (use-package multi-term
+  :ensure (:branch "master")
   :disabled
   :bind (:map my-ctl-c-t-map
               ("T" . multi-term)
@@ -4100,6 +4168,7 @@ Useful for completion style 'partial-completion."
 ;;; multi-vterm
 
 (use-package multi-vterm
+  :ensure (:branch "master")
   :bind (:map my-ctl-c-t-map
               ("R" . multi-vterm-rename-buffer)
               ("T" . multi-vterm)
@@ -4109,6 +4178,7 @@ Useful for completion style 'partial-completion."
 ;;; multiple-cursors
 
 (use-package multiple-cursors
+  :ensure (:branch "master")
   :bind (:map my-ctl-c-m-map
               ("c ." . mc/mark-all-like-this-dwim)
               ("c C-M-SPC" . mc/mark-all-in-region-regexp)
@@ -4131,6 +4201,7 @@ Useful for completion style 'partial-completion."
 ;;; nix-ts-mode
 
 (use-package nix-ts-mode
+  :ensure (:branch "trunk")
   :mode "\\.nix\\'"
   :hook ((nix-ts-mode-hook . no-indent-tabs-mode)
          (nix-ts-mode-hook . (lambda ()
@@ -4149,6 +4220,7 @@ Useful for completion style 'partial-completion."
 ;;; nov
 
 (use-package nov
+  :ensure (:branch "master")
   :bind (:map nov-mode-map
               ("w" . my-nov-update-text-width))
   :mode ("\\.epub\\'" . nov-mode)
@@ -4182,6 +4254,7 @@ Useful for completion style 'partial-completion."
 ;;; ob-mermaid
 
 (use-package ob-mermaid
+  :ensure (:branch "master")
   :after (org ob)
   :demand t
   :config
@@ -4191,6 +4264,7 @@ Useful for completion style 'partial-completion."
 ;;; occult
 
 (use-package occult
+  :ensure (:branch "main")
   :bind (:map
          my-ctl-c-f-map
          ("r" . occult-toggle)))
@@ -4198,12 +4272,14 @@ Useful for completion style 'partial-completion."
 
 ;;; operate-on-number
 
-(use-package operate-on-number)
+(use-package operate-on-number
+  :ensure (:branch "master"))
 
 
 ;;; orderless
 
 (use-package orderless
+  :ensure (:branch "master")
   :demand t
   :custom
   (completion-styles '(orderless basic)))
@@ -4651,6 +4727,7 @@ of the new org-mode file."
 ;;; org-bookmark-heading
 
 (use-package org-bookmark-heading
+  :ensure (:branch "master")
   :after (org)
   :demand t)
 
@@ -4679,7 +4756,7 @@ of the new org-mode file."
 (use-package org-db-v3
   :disabled
   :demand t
-  :ensure (:host github :repo "jkitchin/org-db-v3" :files (:defaults "elisp/*.el"))
+  :ensure (:host github :repo "jkitchin/org-db-v3" :files (:defaults "elisp/*.el") :branch "main")
   :custom
   (org-db-v3-server-directory (expand-file-name "org-db-v3/python" elpaca-sources-directory)))
 
@@ -4726,6 +4803,7 @@ of the new org-mode file."
 ;;; org-present
 
 (use-package org-present
+  :ensure (:branch "master")
   :after (org)
   :hook ((org-present-mode-hook . (lambda ()
                                     (org-present-big)
@@ -4921,6 +4999,7 @@ of the new org-mode file."
 ;;; org-sticky-header
 
 (use-package org-sticky-header
+  :ensure (:branch "master")
   :after (org)
   :custom
   (org-sticky-header-at-point t)
@@ -4931,6 +5010,7 @@ of the new org-mode file."
 ;;; org-web-tools
 
 (use-package org-web-tools
+  :ensure (:branch "master")
   :after (org)
   :bind (:map
          org-mode-map
@@ -4943,6 +5023,7 @@ of the new org-mode file."
 ;;; orgalist
 
 (use-package orgalist
+  :ensure (:branch "externals/orgalist")
   :bind (:map
          orgalist-mode-map
          ("C-c C--" . orgalist-cycle-bullet)
@@ -4973,6 +5054,7 @@ of the new org-mode file."
 ;;; osm
 
 (use-package osm
+  :ensure (:branch "main")
   :custom
   (osm-home '(12.49 122.48 6)))
 
@@ -4998,18 +5080,21 @@ of the new org-mode file."
 ;;; ox-asciidoc
 
 (use-package ox-asciidoc
+  :ensure (:branch "master")
   :after (ox))
 
 
 ;;; ox-gfm
 
 (use-package ox-gfm
+  :ensure (:branch "master")
   :after (ox))
 
 
 ;;; ox-jira
 
 (use-package ox-jira
+  :ensure (:branch "trunk")
   :after (ox)
   :demand t)
 
@@ -5031,12 +5116,14 @@ of the new org-mode file."
 
 ;;; package-lint
 
-(use-package package-lint)
+(use-package package-lint
+  :ensure (:branch "main"))
 
 
 ;;; pass
 
 (use-package pass
+  :ensure (:branch "master")
   :custom
   (pass-suppress-confirmations nil)
   :bind (:map
@@ -5046,18 +5133,20 @@ of the new org-mode file."
 
 ;;; password-store
 
-(use-package password-store)
+(use-package password-store
+  :ensure (:branch "master"))
 
 
 ;;; password-store-otp
 
 (use-package password-store-otp
-  :ensure (:protocol ssh :remotes (("fork" :repo "nicolaisingh/password-store-otp.el"))))
+  :ensure (:protocol ssh :remotes (("fork" :repo "nicolaisingh/password-store-otp.el")) :branch "master"))
 
 
 ;;; pdf-tools
 
 (use-package pdf-tools
+  :ensure (:branch "master")
   :magic ("%PDF" . pdf-view-mode)
   :config
   (pdf-tools-install t))
@@ -5066,6 +5155,7 @@ of the new org-mode file."
 ;;; plantuml-mode
 
 (use-package plantuml-mode
+  :ensure (:branch "develop")
   :mode ("\\.plantuml\\'" . plantuml-mode)
   :custom
   (plantuml-default-exec-mode 'executable)
@@ -5075,12 +5165,14 @@ of the new org-mode file."
 
 ;;; plz
 
-(use-package plz)
+(use-package plz
+  :ensure (:branch "master"))
 
 
 ;;; prettier-js
 
 (use-package prettier-js
+  :ensure (:branch "main")
   :diminish
   :hook ((js2-mode-hook . prettier-js-mode)
          (typescript-ts-mode-hook . prettier-js-mode)))
@@ -5089,6 +5181,7 @@ of the new org-mode file."
 ;;; prism
 
 (use-package prism
+  :ensure (:branch "master")
   :after (personal-2-theme)
   :bind (:map my-ctl-c-h-map
               ("b" . prism-mode)
@@ -5108,6 +5201,7 @@ of the new org-mode file."
 ;;; prodigy
 
 (use-package prodigy
+  :ensure (:branch "master")
   :bind (:map my-ctl-c-P-map ("p" . prodigy))
   :config
   (prodigy-define-service
@@ -5152,12 +5246,14 @@ of the new org-mode file."
 
 ;;; protobuf
 
-(use-package protobuf-mode)
+(use-package protobuf-mode
+  :ensure (:branch "main"))
 
 
 ;;; pytest
 
 (use-package pytest
+  :ensure (:branch "master")
   :after (python)
   :bind (:map
          python-mode-map
@@ -5229,17 +5325,20 @@ of the new org-mode file."
 
 ;;; pyvenv
 
-(use-package pyvenv)
+(use-package pyvenv
+  :ensure (:branch "master"))
 
 
 ;;; qrencode
 
-(use-package qrencode)
+(use-package qrencode
+  :ensure (:branch "main"))
 
 
 ;;; rainbow-mode
 
-(use-package rainbow-mode)
+(use-package rainbow-mode
+  :ensure (:branch "externals/rainbow-mode"))
 
 
 ;;; recentf
@@ -5282,6 +5381,7 @@ of the new org-mode file."
 ;;; restclient
 
 (use-package restclient
+  :ensure (:branch "master")
   :mode (("\\.restclient\\'" . restclient-mode)
          ("\\.http\\'" . restclient-mode))
   :hook ((restclient-mode-hook . no-indent-tabs-mode)
@@ -5382,7 +5482,7 @@ of the new org-mode file."
 (use-package saveplace-pdf-view
   :after (:any doc-view pdf-tools)
   :demand t
-  :ensure (:protocol ssh))
+  :ensure (:protocol ssh :branch "master"))
 
 
 ;;; scheme
@@ -5398,6 +5498,7 @@ of the new org-mode file."
 ;;; selected
 
 (use-package selected
+  :ensure (:branch "master")
   :demand t
   :diminish selected-minor-mode
   :bind (:map selected-keymap
@@ -5485,12 +5586,14 @@ of the new org-mode file."
 
 ;;; shell-maker
 
-(use-package shell-maker)
+(use-package shell-maker
+  :ensure (:branch "main"))
 
 
 ;;; slime
 
 (use-package slime
+  :ensure (:branch "master")
   :config
   (setq inferior-lisp-program "sbcl"))
 
@@ -5498,6 +5601,7 @@ of the new org-mode file."
 ;;; smartparens
 
 (use-package smartparens
+  :ensure (:branch "master")
   :demand t
   :diminish smartparens-mode
   :bind (:map
@@ -5554,6 +5658,7 @@ of the new org-mode file."
 ;;; spacious-padding
 
 (use-package spacious-padding
+  :ensure (:branch "main")
   :custom
   (spacious-padding-subtle-mode-line t)
   (spacious-padding-widths (list
@@ -5577,6 +5682,7 @@ of the new org-mode file."
 ;;; symbol-overlay
 
 (use-package symbol-overlay
+  :ensure (:branch "master")
   :bind (:map
          my-ctl-c-s-map
          ("o" . symbol-overlay-mode)))
@@ -5601,7 +5707,8 @@ of the new org-mode file."
 
 ;;; terraform-mode
 
-(use-package terraform-mode)
+(use-package terraform-mode
+  :ensure (:branch "master"))
 
 
 ;;; tex-mode
@@ -5627,7 +5734,8 @@ of the new org-mode file."
 
 ;;; transient
 
-(use-package transient)
+(use-package transient
+  :ensure (:branch "main"))
 
 
 ;;; transpose-frame
@@ -5640,7 +5748,8 @@ of the new org-mode file."
 
 ;;; tree-mode
 
-(use-package tree-mode)
+(use-package tree-mode
+  :ensure (:branch "master"))
 
 
 ;;; treesit
@@ -5671,6 +5780,7 @@ of the new org-mode file."
 ;;; treesit-fold
 
 (use-package treesit-fold
+  :ensure (:branch "master")
   :diminish
   :bind (:map
          my-ctl-c-f-map
@@ -5702,12 +5812,14 @@ of the new org-mode file."
 
 ;;; unfill
 
-(use-package unfill)
+(use-package unfill
+  :ensure (:branch "main"))
 
 
 ;;; unicode-fonts
 
 (use-package unicode-fonts
+  :ensure (:branch "master")
   :disabled
   :config
   (unicode-fonts-setup))
@@ -5715,17 +5827,20 @@ of the new org-mode file."
 
 ;;; uniline
 
-(use-package uniline)
+(use-package uniline
+  :ensure (:branch "main"))
 
 
 ;;; uuidgen
 
-(use-package uuidgen)
+(use-package uuidgen
+  :ensure (:branch "master"))
 
 
 ;;; visual-fill-column
 
 (use-package visual-fill-column
+  :ensure (:branch "main")
   :hook ((adoc-mode-hook . visual-line-fill-column-mode)
          (howm-view-contents-mode-hook . visual-fill-column-mode)
          (image-mode-hook . turn-off-visual-line-fill-column-mode)
@@ -5741,6 +5856,7 @@ of the new org-mode file."
 ;;; vterm
 
 (use-package vterm
+  :ensure (:branch "master")
   :bind (:map
          vterm-mode-map
          ("C-q" . vterm-send-next-key)
@@ -5759,13 +5875,14 @@ of the new org-mode file."
 ;;; vundo
 
 (use-package vundo
+  :ensure (:branch "master")
   :bind (("C-c u" . vundo)))
 
 
 ;;; whisper
 
 (use-package whisper
-  :ensure (:host github :repo "natrys/whisper.el")
+  :ensure (:host github :repo "natrys/whisper.el" :branch "master")
   :bind (("C-c W" . whisper-run))
   :custom
   (whisper-install-whispercpp t)
@@ -5794,6 +5911,7 @@ of the new org-mode file."
 ;;; writeroom-mode
 
 (use-package writeroom-mode
+  :ensure (:branch "master")
   :custom
   (writeroom-extra-line-spacing 0.2)
   (writeroom-fringes-outside-margins t)
@@ -5819,6 +5937,7 @@ of the new org-mode file."
 ;;; yaml-pro
 
 (use-package yaml-pro
+  :ensure (:branch "master")
   :bind (:map
          yaml-pro-ts-mode-map
          ("C-c C-x C-j" . yaml-pro-jump)
@@ -5841,6 +5960,7 @@ of the new org-mode file."
 ;;; yasnippet
 
 (use-package yasnippet
+  :ensure (:branch "master")
   :demand t
   :diminish yas-minor-mode
   :bind (:map
@@ -5870,7 +5990,8 @@ of the new org-mode file."
 
 ;;; ztree
 
-(use-package ztree)
+(use-package ztree
+  :ensure (:branch "master"))
 
 
 (provide 'init)
