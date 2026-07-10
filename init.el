@@ -661,6 +661,11 @@ From https://www.emacswiki.org/emacs/XModMapMode")
   (winner-mode))
 
 
+;;; 02 compat
+
+(use-package compat :ensure (:wait t))
+
+
 ;;; 10 diminish
 
 (use-package diminish
