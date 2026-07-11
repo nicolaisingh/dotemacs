@@ -175,6 +175,10 @@ This is useful when the Elpaca lockfile leaves a repo's HEAD detached."
 
 ;;;; Functions
 
+(defun yes-or-no-only-p (PROMPT)
+  (let ((use-short-answers nil))
+    (apply #'yes-or-no-p (list PROMPT))))
+
 (defun my-sort-init-file ()
   "Sort the init file."
   (interactive)
@@ -601,6 +605,7 @@ From https://www.emacswiki.org/emacs/XModMapMode")
   (scroll-margin 0)
   (tab-width 4)
   (truncate-lines t)
+  (use-short-answers t)
   (user-full-name "Nicolai Singh")
   (x-stretch-cursor t)
   ;; abbrev.el
@@ -614,7 +619,7 @@ From https://www.emacswiki.org/emacs/XModMapMode")
   ;; files.el
   (auto-save-file-name-transforms `((".*" ,(concat user-emacs-directory "auto-save-files/") t)))
   (backup-directory-alist `(("." . ,(concat user-emacs-directory "backups/"))))
-  (confirm-kill-emacs #'yes-or-no-p)
+  (confirm-kill-emacs #'yes-or-no-only-p)
   (large-file-warning-threshold nil)
   (require-final-newline t)
   (revert-without-query '("^.*\\.pdf$"))
@@ -682,10 +687,6 @@ From https://www.emacswiki.org/emacs/XModMapMode")
   :config
   (keymap-global-set "C-x C-m" (key-binding (kbd "M-x"))) ; Does not work in :bind
   (keymap-global-set "<f9>" #'restart-emacs)
-
-  ;; (if (boundp 'use-short-answers)
-  ;;     (setq use-short-answers t)
-  ;;   (fset 'yes-or-no-p 'y-or-n-p))
 
   ;; Set emacs source code location
   ;; (unless (memq window-system '(mac ns))
