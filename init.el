@@ -73,6 +73,43 @@ collection.  Use revert-gc-cons-percentage to restore the value."
 (setopt elpaca-lock-file
         (expand-file-name "lisp/elpaca/lockfile.eld" user-emacs-directory))
 
+(defun my-elpaca-assign-git-branches ()
+  "Checkout each queued Elpaca package's configured branch if possible.
+Only switches when HEAD is detached, the target branch already exists
+locally, and the current HEAD is at the same commit as that branch.
+This is useful when the Elpaca lockfile leaves a repo's HEAD detached."
+  (interactive)
+  (dolist (e (elpaca--queued))
+    (let* ((package-name (elpaca<-package e))
+           (ep (elpaca-get package-name))
+           (branch (plist-get (elpaca<-recipe ep) :branch))
+           (repo (elpaca-source-dir ep))
+           branch-rev head-rev detached-p)
+      (when (and branch (file-directory-p repo))
+        (with-temp-buffer
+          (let ((default-directory repo))
+            (setq detached-p (not (zerop (call-process "git" nil t nil
+                                                       "symbolic-ref" "--short" "HEAD"))))))
+        (with-temp-buffer
+          (let ((default-directory repo))
+            (when (zerop (call-process "git" nil t nil "rev-parse" "--verify"
+                                       (format "refs/heads/%s" branch)))
+              (setq branch-rev (string-trim (buffer-string))))))
+        (with-temp-buffer
+          (let ((default-directory repo))
+            (when (zerop (call-process "git" nil t nil "rev-parse" "HEAD"))
+              (setq head-rev (string-trim (buffer-string))))))
+        (if (and detached-p branch-rev head-rev (string= branch-rev head-rev))
+            (progn
+              (message "Checking out %s to %s" package-name branch)
+              (let ((default-directory repo))
+                (call-process "git" nil nil nil "checkout" branch)))
+          (when detached-p
+            (message "Skipping %s (%s)"
+                     package-name
+                     (cond ((or (null branch-rev) (null head-rev)) "missing ref")
+                           (t "HEAD mismatch")))))))))
+
 (defun my-elpaca-write-lock-file ()
   "Write the elpaca lock file to my preferred location."
   (interactive)
@@ -629,6 +666,8 @@ From https://www.emacswiki.org/emacs/XModMapMode")
   (display-time-default-load-average 0)
   ;; vc.el
   (vc-follow-symlinks t)
+  ;; warnings.el
+  (warning-suppress-types '((native-compiler)))
   ;; window.el
   (same-window-regexps '("^magit: .*$"
                          "^magit-status: .*$"
@@ -663,7 +702,8 @@ From https://www.emacswiki.org/emacs/XModMapMode")
 
 ;;; 02 compat
 
-(use-package compat :ensure (:wait t))
+(use-package compat
+ :ensure (:wait t))
 
 
 ;;; 10 diminish
