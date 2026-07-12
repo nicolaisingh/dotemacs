@@ -2093,14 +2093,21 @@ Use a negative argument to stop the loop."
   :ensure nil
   :after (emms)
   :demand t
-  :hook ((emms-browser-mode-hook . hl-line-mode))
   ;; :custom
   ;; (emms-browser-covers #'emms-browser-cache-thumbnail-async)
+  :hook ((emms-browser-mode-hook . hl-line-mode)))
+
+;;; emms-filter
+
+(use-package emms-filters
+  :ensure nil
+  :after (emms-browser)
+  :demand t
   :config
-  (emms-browser-make-filter "all" 'ignore)
-  (emms-browser-make-filter "flac" (emms-browser-filter-only-dir my-music-flac-directory))
-  (emms-browser-make-filter "library" (emms-browser-filter-only-dir my-music-library-directory))
-  (emms-browser-set-filter (assoc "library" emms-browser-filters)))
+  (emms-filters-make-filter "Directory" "flac" (list my-music-flac-directory))
+  (emms-filters-make-filter "Directory" "library" (list my-music-library-directory))
+  (emms-filters-make-filter-ring (list "library" "flac"))
+  (emms-filters-set-ring-filter "library"))
 
 ;;; emms-playlist-mode
 
