@@ -6,6 +6,18 @@
 
 ;;; Code:
 
+;; Handling for custom flag --profile
+;; Read the flag eagerly from `command-line-args' so that the value is
+;; available while init.el loads; the `command-switch-alist' handler below
+;; runs only afterwards and merely consumes the switch's argument.
+(defvar my-emacs-profile
+  (cadr (member "--profile" command-line-args))
+  "Startup profile passed via the `--profile' command-line flag.")
+
+(push '("--profile" . (lambda (_arg)
+                        (message "Emacs Profile: %s" (pop command-line-args-left))))
+      command-switch-alist)
+
 (setq
  ;; Cursor settings
  blink-cursor-blinks 0

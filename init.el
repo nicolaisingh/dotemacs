@@ -6047,5 +6047,35 @@ of the new org-mode file."
   :ensure (:branch "master"))
 
 
+;;; anvil
+
+;;(when (equal my-emacs-profile "anvil"))
+(use-package anvil
+  :ensure (:host github :repo "zawatton/anvil.el" :files (:defaults "*.sh") :ref "v1.3.0")
+  :config
+  ;; Enable optional modules
+  (add-to-list 'anvil-optional-modules 'browser)
+  (add-to-list 'anvil-optional-modules 'context)
+  (add-to-list 'anvil-optional-modules 'cron)
+  (add-to-list 'anvil-optional-modules 'elisp)
+  (add-to-list 'anvil-optional-modules 'ide)
+  (add-to-list 'anvil-optional-modules 'js)
+  (add-to-list 'anvil-optional-modules 'pdf)
+  (add-to-list 'anvil-optional-modules 'py)
+  (add-to-list 'anvil-optional-modules 'sexp)
+  (add-to-list 'anvil-optional-modules 'shell-filter)
+  (add-to-list 'anvil-optional-modules 'state)
+  (add-to-list 'anvil-optional-modules 'treesit)
+  (add-to-list 'anvil-optional-modules 'ts)
+  (add-to-list 'anvil-optional-modules 'xlsx)
+
+  ;; Start anvil
+  (anvil-enable)
+  (anvil-server-start))
+
+(use-package anvil-ide
+  :ensure (:host github :repo "zawatton/anvil-ide.el" :branch "main"))
+
+
 (provide 'init)
 ;;; init.el ends here
