@@ -2697,7 +2697,6 @@ The default format is specified by `emms-source-playlist-default-format'."
 
 (use-package gptel
   :ensure (:branch "master")
-  :demand t
   :bind (:map
          my-meta-=-map
          ("=" . gptel-send)
@@ -2712,6 +2711,7 @@ The default format is specified by `emms-source-playlist-default-format'."
          gptel-mode-repeat-map
          ("M-n" . gptel-end-of-response)
          ("M-p" . gptel-beginning-of-response))
+  :commands (my-gptel-proofread my-gptel-rewrite my-gptel-summarize)
   :hook ((gptel-mode-hook . my-gptel-mode-config)
          (gptel-post-response-functions . my-gptel-post-response-config))
   :custom
@@ -2722,14 +2722,17 @@ The default format is specified by `emms-source-playlist-default-format'."
   (gptel-org-branching-context t)
   (gptel-rewrite-default-action 'dispatch)
   (gptel-stream nil)
+  (gptel-response-separator "\n\n")
   (gptel-track-media t)
   :init
   (defun my-gptel-mode-config ()
-    (setq-local gptel-stream t)
+    (setq-local gptel-stream t
+                face-remapping-alist
+                '((org-level-1 (:background unspecified))))
     (font-lock-add-keywords nil `((,(regexp-quote (alist-get 'org-mode gptel-prompt-prefix-alist)) 0
-                                   '(:inherit font-lock-builtin-face))
+                                   '(:inherit font-lock-comment-face :weight bold))
                                   (,(regexp-quote (alist-get 'org-mode gptel-response-prefix-alist)) 0
-                                   '(:inherit font-lock-variable-name-face)))))
+                                   '(:inherit font-lock-comment-face :weight bold)))))
 
   (defun my-gptel-post-response-config (beg end)
     (gptel-end-of-response)
@@ -2757,8 +2760,8 @@ The default format is specified by `emms-source-playlist-default-format'."
     (interactive)
     (setopt gptel-directives (my-gptel-load-prompts)))
   :config
-  (setf (alist-get 'org-mode gptel-prompt-prefix-alist) "*User*: "
-        (alist-get 'org-mode gptel-response-prefix-alist) "*Assistant*:\n")
+  (setf (alist-get 'org-mode gptel-prompt-prefix-alist) "* "
+        (alist-get 'org-mode gptel-response-prefix-alist) "Assistant:\n")
   (setq gptel-expert-commands t)
 
   (defun my-gptel-proofread ()
@@ -2807,34 +2810,59 @@ If region is active, rewrite the region. Otherwise rewrite the entire buffer."
       (gptel-with-preset 'rewrite
         (gptel-rewrite))))
 
-  ;; Define backends
-  (let ((chatgpt (gptel-make-openai "ChatGPT"
-                   :key gptel-api-key))
-        (claude (gptel-make-anthropic "Claude"
-                  :key gptel-api-key
-                  :models
-                  '(claude-opus-4-6
-                    claude-sonnet-4-6
-                    claude-haiku-4-5-20251001
-                    claude-3-haiku-20240307)))
-        (deepseek (gptel-make-deepseek "DeepSeek"
-                    :key gptel-api-key
-                    :models '(deepseek-chat
-                              deepseek-reasoner)))
-        (ollama (gptel-make-ollama "Ollama"
-                  :host (adonaios-url nil 11434)
-                  :models
-                  '(deepseek-coder-v2:16b
-                    kimi-k2.5:cloud
-                    gemma4:26b
-                    glm-4.7-flash:latest
-                    glm-5:cloud
-                    lfm2:latest
-                    minimax-m2.7:cloud
-                    qwen3-coder:latest
-                    translategemma:12b))))
-    (setopt gptel-backend ollama
-            gptel-model 'gemma4:26b)))
+  (defun my-gptel-backend (name)
+    "Which backend and default model to use."
+    (pcase name
+      ;; Anthropic (Claude)
+      ('anthropic (list (gptel-make-anthropic "Claude"
+                          :key gptel-api-key
+                          :models
+                          '(claude-opus-4-6
+                            claude-sonnet-4-6
+                            claude-haiku-4-5-20251001
+                            claude-3-haiku-20240307))
+                        'claude-sonnet-4-6))
+
+      ;; ChatGPT
+      ('chatgpt (list (gptel-make-openai "ChatGPT"
+                        :key gptel-api-key)
+                      'gpt-5.6-luna))
+
+      ;; DeepSeek
+      ('deepseek (list (gptel-make-deepseek "DeepSeek"
+                         :key gptel-api-key
+                         :models '(deepseek-chat
+                                   deepseek-reasoner))
+                       'deepseek-chat))
+
+      ;; Moonshot AI
+      ('moonshot-ai (list (gptel-make-openai "Moonshot AI"
+                            :key (gptel-api-key-from-auth-source "api.kimi.com")
+                            :host "api.kimi.com/coding"
+                            :models
+                            '(k3
+                              kimi-for-coding
+                              kimi-for-coding-highspeed))
+                          'kimi-for-coding))
+
+      ;; Ollama
+      ('ollama (list (gptel-make-ollama "Ollama"
+                       :host (adonaios-url nil 11434)
+                       :models
+                       '(deepseek-coder-v2:16b
+                         kimi-k2.5:cloud
+                         gemma4:26b
+                         glm-4.7-flash:latest
+                         glm-5:cloud
+                         lfm2:latest
+                         minimax-m2.7:cloud
+                         qwen3-coder:latest
+                         translategemma:12b))
+                     'gemma4:26b))))
+
+  (seq-let (backend model) (my-gptel-backend 'moonshot-ai)
+    (setopt gptel-backend backend
+            gptel-model model)))
 
 
 ;;; gptel-commit-message
