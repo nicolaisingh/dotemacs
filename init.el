@@ -5788,6 +5788,16 @@ of the new org-mode file."
                             :fringe-width 8)))
 
 
+;;; stripes
+
+(use-package stripes
+  :hook ((calibre-library-mode-hook . stripes-mode)
+         (elpaca-manager-mode-hook . stripes-mode)
+         (prodigy-mode-hook . stripes-mode))
+  :custom
+  (stripes-unit 1))
+
+
 ;;; subword
 
 (use-package subword
