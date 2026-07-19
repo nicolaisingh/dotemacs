@@ -950,6 +950,38 @@ This will return ~/.emacs.d/agent-shell/<dir>."
                           (alert-legacy-log-notify mes sev len)))))
 
 
+;;; anvil
+
+;;(when (equal my-emacs-profile "anvil"))
+(use-package anvil
+  :ensure (:host github :repo "zawatton/anvil.el" :files (:defaults "*.sh") :ref "v1.3.0")
+  :disabled
+  :config
+  ;; Enable optional modules
+  (add-to-list 'anvil-optional-modules 'browser)
+  (add-to-list 'anvil-optional-modules 'context)
+  (add-to-list 'anvil-optional-modules 'cron)
+  (add-to-list 'anvil-optional-modules 'elisp)
+  (add-to-list 'anvil-optional-modules 'ide)
+  (add-to-list 'anvil-optional-modules 'js)
+  (add-to-list 'anvil-optional-modules 'pdf)
+  (add-to-list 'anvil-optional-modules 'py)
+  (add-to-list 'anvil-optional-modules 'sexp)
+  (add-to-list 'anvil-optional-modules 'shell-filter)
+  (add-to-list 'anvil-optional-modules 'state)
+  (add-to-list 'anvil-optional-modules 'treesit)
+  (add-to-list 'anvil-optional-modules 'ts)
+  (add-to-list 'anvil-optional-modules 'xlsx)
+
+  ;; Start anvil
+  (anvil-enable)
+  (anvil-server-start))
+
+(use-package anvil-ide
+  :disabled
+  :ensure (:host github :repo "zawatton/anvil-ide.el" :branch "main"))
+
+
 ;;; autorevert
 
 (use-package autorevert
@@ -2720,9 +2752,9 @@ The default format is specified by `emms-source-playlist-default-format'."
   (gptel-display-buffer-action '(pop-to-buffer-same-window))
   (gptel-log-level 'info)
   (gptel-org-branching-context t)
+  (gptel-response-separator "\n\n")
   (gptel-rewrite-default-action 'dispatch)
   (gptel-stream nil)
-  (gptel-response-separator "\n\n")
   (gptel-track-media t)
   :init
   (defun my-gptel-mode-config ()
@@ -3520,7 +3552,9 @@ Returns the file path if found, nil otherwise."
   (howm-prepend t)
   (howm-remember-first-line-to-title t)
   (howm-remember-insertion-format "%s")
-  (howm-user-font-lock-keywords '(("^keywords:" . (0 'howm-mode-ref-face))))
+  (howm-user-font-lock-keywords `(("^keywords:" . (0 'howm-mode-ref-face))
+                                  ;; Extend howm keyword lines (`<<< foo`) to end of line.
+                                  (,(concat howm-keyword-regexp ".*$") (0 'howm-mode-keyword-face prepend))))
   (howm-view-contents-name "*howm-contents*")
   (howm-view-contents-persistent nil)
   (howm-view-summary-name "*howm-summary*")
@@ -4394,6 +4428,7 @@ Useful for completion style 'partial-completion."
   (org-agenda-text-search-extra-files '(agenda-archives))
   (org-archive-location "archive/%s::")
   (org-auto-align-tags nil)
+  (org-blank-before-new-entry '((heading . t) (plain-list-item . t)))
   (org-complete-tags-always-offer-all-agenda-tags t)
   (org-default-notes-file "~/org/inbox.org")
   (org-fontify-done-headline nil)
@@ -4706,7 +4741,7 @@ of the new org-mode file."
 (use-package org-indent
   :after (org)
   :ensure nil
-  ;; :hook ((org-mode-hook . org-indent-mode))
+  :hook ((org-mode-hook . org-indent-mode))
   :custom
   (org-indent-mode-turns-on-hiding-stars t))
 
@@ -6073,36 +6108,6 @@ of the new org-mode file."
 
 (use-package ztree
   :ensure (:branch "master"))
-
-
-;;; anvil
-
-;;(when (equal my-emacs-profile "anvil"))
-(use-package anvil
-  :ensure (:host github :repo "zawatton/anvil.el" :files (:defaults "*.sh") :ref "v1.3.0")
-  :config
-  ;; Enable optional modules
-  (add-to-list 'anvil-optional-modules 'browser)
-  (add-to-list 'anvil-optional-modules 'context)
-  (add-to-list 'anvil-optional-modules 'cron)
-  (add-to-list 'anvil-optional-modules 'elisp)
-  (add-to-list 'anvil-optional-modules 'ide)
-  (add-to-list 'anvil-optional-modules 'js)
-  (add-to-list 'anvil-optional-modules 'pdf)
-  (add-to-list 'anvil-optional-modules 'py)
-  (add-to-list 'anvil-optional-modules 'sexp)
-  (add-to-list 'anvil-optional-modules 'shell-filter)
-  (add-to-list 'anvil-optional-modules 'state)
-  (add-to-list 'anvil-optional-modules 'treesit)
-  (add-to-list 'anvil-optional-modules 'ts)
-  (add-to-list 'anvil-optional-modules 'xlsx)
-
-  ;; Start anvil
-  (anvil-enable)
-  (anvil-server-start))
-
-(use-package anvil-ide
-  :ensure (:host github :repo "zawatton/anvil-ide.el" :branch "main"))
 
 
 (provide 'init)
