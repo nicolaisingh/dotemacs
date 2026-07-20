@@ -3583,7 +3583,7 @@ Returns the file path if found, nil otherwise."
   :after (howm howm-vars)
   :ensure nil
   :custom
-  (howm-view-header-format "\n\n\n      [%s]\n\n")
+  (howm-view-header-format "\n\n 📕 %s ⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅\n\n")
   (howm-view-header-regexp nil)
   (howm-entitle-items-style2-format "%-50.50s | %s")
   (howm-entitle-items-style2-max-length 50)
@@ -3605,11 +3605,13 @@ Returns the file path if found, nil otherwise."
          ;; unset both for `outline-minor-mode-cycle'
          ("<tab>" . nil)
          ("TAB" . nil))
-  :hook ((howm-view-contents-mode-hook . hl-line-mode)
+  :hook (;;(howm-view-contents-mode-hook . hl-line-mode)
          (howm-view-contents-mode-hook . howm-mode)
          (howm-view-contents-mode-hook . howm-org-font-lock-minor-mode)
          (howm-view-contents-mode-hook . outline-minor-mode)
          (howm-view-contents-mode-hook . my-howm-other-modes-keys)
+         (howm-view-contents-mode-hook . (lambda ()
+                                           (set-fill-column 100)))
          (howm-view-summary-mode-hook . hl-line-mode)
          (howm-view-summary-mode-hook . my-howm-other-modes-keys))
   :preface
@@ -5968,7 +5970,7 @@ of the new org-mode file."
 (use-package visual-fill-column
   :ensure (:branch "main")
   :hook ((adoc-mode-hook . visual-line-fill-column-mode)
-         (howm-view-contents-mode-hook . visual-fill-column-mode)
+         (howm-view-contents-mode-hook . visual-line-fill-column-mode)
          (image-mode-hook . turn-off-visual-line-fill-column-mode)
          (minibuffer-setup-hook . (lambda ()
                                     (when (minibufferp)
