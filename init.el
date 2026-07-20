@@ -2519,6 +2519,39 @@ The default format is specified by `emms-source-playlist-default-format'."
   :ensure (:branch "master"))
 
 
+;;; ghostel
+
+(use-package ghostel
+  :ensure (:branch "main")
+  :demand t
+  :bind (:map
+         ghostel-semi-char-mode-map
+         ("C-c C-b" . ghostel-list-buffers)
+         ("C-n" . my-ghostel-next-line)
+         ("C-p" . my-ghostel-previous-line)
+         ("C-s"  . consult-line)
+         ("M-n" . (lambda () (interactive) (ghostel-send-key "n" "ctrl")))
+         ("M-p" . (lambda () (interactive) (ghostel-send-key "p" "ctrl")))
+         :map project-prefix-map
+         ("t" . ghostel-project)
+         :map my-ctl-c-t-map
+         ("t" . ghostel))
+  :config
+  (add-to-list 'project-switch-commands '(ghostel-project "Ghostel") t)
+
+  (defun my-ghostel-next-line ()
+    (interactive)
+    (unless (eq ghostel--input-mode 'emacs)
+      (ghostel-emacs-mode))
+    (next-line))
+
+  (defun my-ghostel-previous-line ()
+    (interactive)
+    (unless (eq ghostel--input-mode 'emacs)
+      (ghostel-emacs-mode))
+    (previous-line)))
+
+
 ;;; git-timemachine
 
 (use-package git-timemachine
@@ -4286,6 +4319,7 @@ Useful for completion style 'partial-completion."
 
 (use-package multi-vterm
   :ensure (:branch "master")
+  :disabled
   :bind (:map my-ctl-c-t-map
               ("R" . multi-vterm-rename-buffer)
               ("T" . multi-vterm)
@@ -5356,10 +5390,7 @@ of the new org-mode file."
   (add-to-list 'project-switch-commands '(magit-project-status "Magit") t)
   ;; Add deadgrep as G
   (keymap-set project-prefix-map "G" #'deadgrep)
-  (add-to-list 'project-switch-commands '(deadgrep "Deadgrep") t)
-  ;; Add vterm as t
-  (keymap-set project-prefix-map "t" #'multi-vterm-project)
-  (add-to-list 'project-switch-commands '(multi-vterm-project "VTerm") t))
+  (add-to-list 'project-switch-commands '(deadgrep "Deadgrep") t))
 
 
 ;;; protobuf
@@ -5984,19 +6015,24 @@ of the new org-mode file."
 ;;; vterm
 
 (use-package vterm
+  :disabled
   :ensure (:branch "master")
+  :demand t
   :bind (:map
          vterm-mode-map
          ("C-q" . vterm-send-next-key)
          ("C-x C-x" . (lambda () (interactive) (vterm-send-key (kbd "C-x"))))
          ("M-{" . (lambda () (interactive) (vterm-send-key "<prior>")))
-         ("M-}" . (lambda () (interactive) (vterm-send-key "<next>"))))
+         ("M-}" . (lambda () (interactive) (vterm-send-key "<next>")))
+         :map project-prefix-map
+         ("t" . multi-vterm-project))
   :custom
   (vterm-kill-buffer-on-exit t)
   (vterm-max-scrollback 10000)
   (vterm-term-environment-variable "eterm-color")
   (vterm-environment '("TERM_THEME=light"))
   :config
+  (add-to-list 'project-switch-commands '(multi-vterm-project "VTerm") t)
   (setq vterm-timer-delay 0.01))
 
 

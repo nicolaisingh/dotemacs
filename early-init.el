@@ -44,5 +44,7 @@
 (add-to-list 'default-frame-alist '(width . 240))
 (add-to-list 'default-frame-alist '(height . 70))
 
+(add-to-list 'face-font-rescale-alist '("Apple Color Emoji" . 0.73))
+
 (provide 'early-init)
 ;;; early-init.el ends here
