@@ -1,0 +1,4 @@
+* %notitle %date %file
+
+
+%cursor

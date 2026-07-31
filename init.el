@@ -630,7 +630,7 @@ From https://www.emacswiki.org/emacs/XModMapMode")
   ;; help.el
   (help-window-select t)
   ;; indent.el
-  (tab-always-indent t)
+  (tab-always-indent 'complete)
   (tab-first-completion nil)
   ;; minibuffer.el
   (completions-format 'one-column)
@@ -2527,8 +2527,8 @@ The default format is specified by `emms-source-playlist-default-format'."
   :bind (:map
          ghostel-semi-char-mode-map
          ("C-c C-b" . ghostel-list-buffers)
-         ("C-n" . my-ghostel-next-line)
-         ("C-p" . my-ghostel-previous-line)
+         ;; ("C-n" . my-ghostel-next-line)
+         ;; ("C-p" . my-ghostel-previous-line)
          ("C-s"  . consult-line)
          ("M-n" . (lambda () (interactive) (ghostel-send-key "n" "ctrl")))
          ("M-p" . (lambda () (interactive) (ghostel-send-key "p" "ctrl")))
@@ -3327,32 +3327,41 @@ Returns the file path if found, nil otherwise."
   (defun my-howm-message-title-state (&optional undo)
     (message "Titles: %s" (if howm-list-title-previous "On" "Off")))
 
+  (defun my-howm-template-files ()
+    "Return template files under howm-templates."
+    (let ((templates-directory
+           (expand-file-name "howm-templates/" user-emacs-directory)))
+      (when (file-directory-p templates-directory)
+        (seq-filter
+         #'file-regular-p
+         (directory-files templates-directory t "^[^.]")))))
+
+  (defun my-howm-read-template-file (template-file)
+    "Read TEMPLATE-FILE and return only the template body."
+    (with-temp-buffer
+      (insert-file-contents template-file)
+      (buffer-substring-no-properties (point-min) (point-max))))
+
   (defun my-howm-template (which-template previous-buffer)
-    "Howm template chooser."
-    (let ((templates `(("default"
-                        ,(concat howm-view-title-header " %notitle %date %file\n\n\n%cursor\n\n"))
+    "Choose a howm template."
+    (cond
+     ((= which-template 4)
+      (let* ((templates (my-howm-template-files))
+             (choices (mapcar #'file-name-base templates)))
+        (unless templates
+          (user-error "No templates found in %s"
+                      (expand-file-name "howm-templates/" user-emacs-directory)))
+        (let* ((choice (completing-read "Template: "
+                                        (my-presorted-completion-table choices)
+                                        nil t nil t))
+               (selected-file
+                (seq-find (lambda (template-file)
+                            (string= (file-name-base template-file) choice))
+                          templates)))
+          (my-howm-read-template-file selected-file))))
 
-                       ("Meeting"
-                        ,(concat howm-view-title-header " Meeting: %title%cursor\n"
-                                 "%date %file\n\n"))
-
-                       ("Meeting - Standup/DSM"
-                        ,(concat howm-view-title-header " Meeting: Standup\n"
-                                 "%date\n\n"
-                                 "%cursor\n\n"))
-
-                       ("Task log"
-                        ,(concat howm-view-title-header " Task Log\n"
-                                 "%date %dateonly\n\n"
-                                 "tasklog%cursor\n\n")))))
-      (cond
-       ((= which-template 4)
-        (let ((choice (completing-read "Template: "
-                                       (my-presorted-completion-table (mapcar #'car templates))
-                                       nil t nil t)))
-          (cadr (assoc choice templates))))
-       (t
-        (concat howm-view-title-header " %notitle %date %file\n\n\n%cursor\n\n")))))
+     (t
+      (concat howm-view-title-header " %notitle %date %file\n\n\n%cursor\n\n"))))
 
   (defun my-howm-insert-keywords-line ()
     "Insert keywords line or append if on one."
