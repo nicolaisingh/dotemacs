@@ -1672,7 +1672,7 @@ be file B."
   :after (dired)
   :bind (:map dired-mode-map
               ("<backtab>" . dired-subtree-cycle)
-              ("<tab>" . dired-subtree-toggle))
+              ("<tab>" . my-dired-subtree-toggle))
   :custom
   (dired-subtree-use-backgrounds nil)
   :custom-face
@@ -1681,7 +1681,16 @@ be file B."
   (dired-subtree-depth-3-face ((nil(:background "gray89"))))
   (dired-subtree-depth-4-face ((nil(:background "gray86"))))
   (dired-subtree-depth-5-face ((nil(:background "gray83"))))
-  (dired-subtree-depth-6-face ((nil(:background "gray80")))))
+  (dired-subtree-depth-6-face ((nil(:background "gray80"))))
+  :config
+  (defun my-dired-subtree-toggle ()
+    "Insert subtree at point or remove it if it was not present.
+If the item at point is a file, try to remove the subtree."
+    (interactive)
+    (let ((filename (dired-get-filename nil t)))
+      (if (and filename (file-regular-p filename))
+          (dired-subtree-remove)
+        (dired-subtree-toggle)))))
 
 
 ;;; dockerfile-mode
@@ -5399,7 +5408,12 @@ of the new org-mode file."
   (add-to-list 'project-switch-commands '(magit-project-status "Magit") t)
   ;; Add deadgrep as G
   (keymap-set project-prefix-map "G" #'deadgrep)
-  (add-to-list 'project-switch-commands '(deadgrep "Deadgrep") t))
+  (add-to-list 'project-switch-commands '(deadgrep "Deadgrep") t)
+  ;; Files/directories to ignore
+  (add-to-list 'project-vc-ignores ".cursor/")
+  (add-to-list 'project-vc-ignores "dist/")
+  (add-to-list 'project-vc-ignores "node_modules/")
+  (add-to-list 'project-vc-ignores "openspec/"))
 
 
 ;;; protobuf
