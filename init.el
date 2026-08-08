@@ -527,6 +527,8 @@ From https://www.emacswiki.org/emacs/XModMapMode")
          ("C-h C-f" . find-function)
          ("C-h C-k" . describe-keymap)
          ("C-h C-v" . find-variable)
+         ("C-h H" . view-hello-file) ;; Use C-h h for hyperbole
+         ("C-h RET" . nil)           ;; Use C-h RET for hyperbole's hkey-either
          ("C-h u f" . find-library)
          ("C-x B" . bury-buffer)
          ("C-x C-M-c" . save-buffers-kill-emacs)
@@ -704,7 +706,7 @@ From https://www.emacswiki.org/emacs/XModMapMode")
 ;;; 02 compat
 
 (use-package compat
- :ensure (:wait t))
+  :ensure (:wait t))
 
 
 ;;; 10 diminish
@@ -2847,14 +2849,14 @@ If region is active, proofread the region. Otherwise work on the entire buffer."
            (end (if use-region (region-end) (point-max)))
            (prompt (buffer-substring-no-properties beg end)))
       (gptel-with-preset 'proofread
-        (gptel-request prompt
-          :in-place t
-          :callback (lambda (response info)
-                      (when (stringp response)
-                        (with-current-buffer (plist-get info :buffer)
-                          (delete-region beg end)
-                          (goto-char (plist-get info :position))
-                          (insert response))))))))
+                         (gptel-request prompt
+                                        :in-place t
+                                        :callback (lambda (response info)
+                                                    (when (stringp response)
+                                                      (with-current-buffer (plist-get info :buffer)
+                                                        (delete-region beg end)
+                                                        (goto-char (plist-get info :position))
+                                                        (insert response))))))))
 
   (defun my-gptel-summarize ()
     "Ask gptel to summarize the region or buffer.
@@ -2865,13 +2867,13 @@ If region is active, summarize the region. Otherwise work on the entire buffer."
            (end (if use-region (region-end) (point-max)))
            (prompt (buffer-substring-no-properties beg end)))
       (gptel-with-preset 'summarize
-        (gptel-request prompt
-          :in-place nil
-          :callback (lambda (response info)
-                      (when (stringp response)
-                        (with-current-buffer (plist-get info :buffer)
-                          (goto-char (plist-get info :position))
-                          (insert response))))))))
+                         (gptel-request prompt
+                                        :in-place nil
+                                        :callback (lambda (response info)
+                                                    (when (stringp response)
+                                                      (with-current-buffer (plist-get info :buffer)
+                                                        (goto-char (plist-get info :position))
+                                                        (insert response))))))))
 
   (defun my-gptel-rewrite ()
     "Ask gptel to rewrite the region or buffer.
@@ -2882,7 +2884,7 @@ If region is active, rewrite the region. Otherwise rewrite the entire buffer."
            (end (if use-region (region-end) (point-max)))
            (prompt (buffer-substring-no-properties beg end)))
       (gptel-with-preset 'rewrite
-        (gptel-rewrite))))
+                         (gptel-rewrite))))
 
   (defun my-gptel-backend (name)
     "Which backend and default model to use."
@@ -3743,6 +3745,37 @@ Returns the file path if found, nil otherwise."
 
 (use-package htmlize
   :ensure (:branch "master"))
+
+
+;;; hyperbole
+
+(use-package hyperbole
+  :demand t
+  :diminish hyperbole-mode
+  :bind (("C-h A" . hkey-help)
+         ("C-h h" . hyperbole)
+         :map hyperbole-mode-map
+         ("C-h RET" . hkey-either)
+         :repeat-map hyperbole-mode-repeat-map
+         ("RET" . hkey-either))
+  :custom
+  (hkey-init nil)
+  (action-key-default-function nil)
+  (assist-key-default-function nil)
+  :config
+  (hyperbole-mode 1)
+
+  (defib abc-link ()
+    "Test: howm search ABC-### links."
+    (when (or (looking-at "\\([A-Z]+-[0-9]\\{4\\}\\)")
+              (save-excursion
+                (skip-chars-backward "A-Z0-9-")
+                (looking-at "\\([A-Z]+-[0-9]\\{4\\}\\)")))
+
+      (let* ((label (match-string-no-properties 1))
+             (num   (substring label (1+ (string-match "-" label)))))
+        (ibut:label-set label (match-beginning 1) (match-end 1))
+        (hact #'howm-search num t)))))
 
 
 ;;; ibuffer
