@@ -3755,27 +3755,35 @@ Returns the file path if found, nil otherwise."
   :bind (("C-h A" . hkey-help)
          ("C-h h" . hyperbole)
          :map hyperbole-mode-map
-         ("C-h RET" . hkey-either)
-         :repeat-map hyperbole-mode-repeat-map
-         ("RET" . hkey-either))
+         ("C-h <return>" . hkey-either)
+         ("C-h C-<return>" . hkey-either)
+         :map my-meta-o-map
+         ("M-o" . hkey-operate))
   :custom
-  (hkey-init nil)
   (action-key-default-function nil)
   (assist-key-default-function nil)
+  (hkey-init nil)
+  (hproperty:ibut-face nil)
   :config
   (hyperbole-mode 1)
 
-  (defib abc-link ()
-    "Test: howm search ABC-### links."
-    (when (or (looking-at "\\([A-Z]+-[0-9]\\{4\\}\\)")
-              (save-excursion
-                (skip-chars-backward "A-Z0-9-")
-                (looking-at "\\([A-Z]+-[0-9]\\{4\\}\\)")))
+  (defib jira-link ()
+    "Open Jira issues on the browser."
+    (when (save-excursion
+            (skip-chars-backward "A-Z0-9-")
+            (looking-at "\\([A-Z]+-[0-9]+\\)"))
+      (let ((issue-ticket (match-string-no-properties 1)))
+        (ibut:label-set issue-ticket (match-beginning 1) (match-end 1))
+        (hact #'www-url (format "https://example.atlassian.net/browse/%s" issue-ticket)))))
 
-      (let* ((label (match-string-no-properties 1))
-             (num   (substring label (1+ (string-match "-" label)))))
-        (ibut:label-set label (match-beginning 1) (match-end 1))
-        (hact #'howm-search num t)))))
+  (defib gitlab-container-registry-node ()
+    "Open GitLab registry page for node images."
+    (when (save-excursion
+            (beginning-of-line)
+            (re-search-forward "/some/url/node:\\(\\S-+\\)" (pos-eol) t))
+      (let ((image-version (match-string 1)))
+        (ibut:label-set image-version (pos-bol) (pos-eol))
+        (hact #'www-url (format "https://gitlab.com/some/url/container_registry/894?orderBy=PUBLISHED_AT&sort=desc&search=%s" image-version))))))
 
 
 ;;; ibuffer
