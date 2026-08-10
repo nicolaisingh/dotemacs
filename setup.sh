@@ -19,6 +19,7 @@ ln -sni $initdir/llm-prompts            ~/.emacs.d/llm-prompts
 ln -sni $initdir/llm-config             ~/.emacs.d/llm-config
 ln -sni $initdir/org-templates          ~/.emacs.d/org-templates
 ln -sni $initdir/howm-templates         ~/.emacs.d/howm-templates
+ln -sni $initdir/hyperbole              ~/.emacs.d/hyperbole
 ln -sni $initdir/packages               ~/.emacs.d/packages
 ln -sni $initdir/snippets               ~/.emacs.d/snippets
 ln -sni $initdir/templates              ~/.emacs.d/templates

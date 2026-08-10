@@ -575,7 +575,7 @@ From https://www.emacswiki.org/emacs/XModMapMode")
          :map my-ctl-c-o-map
          ("v" . visible-mode)
          :map my-ctl-c-v-map
-         ("f" . visual-line-fill-column-mode)
+         ("l" . visual-line-mode)
          :map my-ctl-c-w-map
          ("'" . insert-pair)
          ("<" . insert-pair)
@@ -725,6 +725,15 @@ From https://www.emacswiki.org/emacs/XModMapMode")
     (exec-path-from-shell-initialize)))
 
 
+;;; ace-window
+
+(use-package ace-window
+  :disabled
+  :bind (:map
+         my-meta-o-map
+         ("M-o" . ace-window)))
+
+
 ;;; acp
 
 (use-package acp
@@ -745,8 +754,7 @@ From https://www.emacswiki.org/emacs/XModMapMode")
   :ensure (:branch "master")
   :after (tempo)
   :hook ((adoc-mode-hook . no-indent-tabs-mode)
-         (adoc-mode-hook . outline-minor-mode)
-         (adoc-mode-hook . visual-line-fill-column-mode))
+         (adoc-mode-hook . outline-minor-mode))
   :bind (:map adoc-mode-map
               ("C-c C-." . my-adoc-insert-dispatch)
               ("C-c C-=" . adoc-addons-line-to-title)
@@ -3764,8 +3772,13 @@ Returns the file path if found, nil otherwise."
   (assist-key-default-function nil)
   (hkey-init nil)
   (hproperty:ibut-face nil)
+  (hsys-org-enable-smart-keys t)
+  :preface
+  (setq hbmap:dir-user (expand-file-name "hyperbole/" user-emacs-directory))
   :config
   (hyperbole-mode 1)
+  (hmouse-install hmouse-middle-flag)
+  ;; (hkey-ace-window-setup)
 
   (defib jira-link ()
     "Open Jira issues on the browser."
@@ -4221,7 +4234,6 @@ Useful for completion style 'partial-completion."
   :config
   (defun my-markdown-mode-config ()
     (indent-tabs-mode -1)
-    (visual-line-fill-column-mode t)
     (setq fill-column 100
           markdown-unordered-list-item-prefix "  * ")))
 
@@ -4515,8 +4527,7 @@ Useful for completion style 'partial-completion."
          ("C-," . nil))
   :hook ((org-mode-hook . no-indent-tabs-mode)
          (org-mode-hook . (lambda ()
-                            (set-fill-column 100)))
-         (org-mode-hook . visual-line-fill-column-mode))
+                            (set-fill-column 100))))
   :custom
   (org-adapt-indentation nil)
   (org-agenda-files (expand-file-name "org-agenda-files" user-emacs-directory))
@@ -5071,9 +5082,6 @@ of the new org-mode file."
          :map
          org-roam-node-map
          ("C-c n l" . org-roam-buffer-toggle))
-  :hook ((org-roam-mode-hook . (lambda ()
-                                 (visual-line-fill-column-mode)
-                                 (set-fill-column org-roam-content-width))))
   :custom
   (org-roam-completion-everywhere t)
   (org-roam-node-display-template (concat
@@ -6064,16 +6072,19 @@ of the new org-mode file."
 
 (use-package visual-fill-column
   :ensure (:branch "main")
-  :hook ((adoc-mode-hook . visual-line-fill-column-mode)
-         (howm-view-contents-mode-hook . visual-line-fill-column-mode)
-         (image-mode-hook . turn-off-visual-line-fill-column-mode)
+  :hook ((adoc-mode-hook . visual-line-mode)
+         (org-mode-hook . visual-line-mode)
+         (markdown-mode-hook . visual-line-mode)
+         (howm-view-contents-mode-hook . visual-line-mode)
+         (image-mode-hook . turn-off-visual-line-mode)
          (minibuffer-setup-hook . (lambda ()
                                     (when (minibufferp)
-                                      (turn-off-visual-line-fill-column-mode))))
-         (transient-setup-buffer-hook . turn-off-visual-line-fill-column-mode))
+                                      (turn-off-visual-line-mode))))
+         (transient-setup-buffer-hook . turn-off-visual-line-mode)
+         (visual-line-mode-hook . visual-fill-column-for-vline))
   :config
-  (defun turn-off-visual-line-fill-column-mode ()
-    (visual-line-fill-column-mode -1)))
+  (defun turn-off-visual-line-mode ()
+    (visual-line-mode -1)))
 
 
 ;;; vterm
