@@ -2546,9 +2546,9 @@ The default format is specified by `emms-source-playlist-default-format'."
   :bind (:map
          ghostel-semi-char-mode-map
          ("C-c C-b" . ghostel-list-buffers)
-         ;; ("C-n" . my-ghostel-next-line)
-         ;; ("C-p" . my-ghostel-previous-line)
          ("C-s"  . consult-line)
+         ("C-z" . my-ctl-z-map)
+         ("C-z C-z" . my-ghostel-c-z)
          ("M-n" . (lambda () (interactive) (ghostel-send-key "n" "ctrl")))
          ("M-p" . (lambda () (interactive) (ghostel-send-key "p" "ctrl")))
          :map project-prefix-map
@@ -2558,17 +2558,9 @@ The default format is specified by `emms-source-playlist-default-format'."
   :config
   (add-to-list 'project-switch-commands '(ghostel-project "Ghostel") t)
 
-  (defun my-ghostel-next-line ()
+  (defun my-ghostel-c-z ()
     (interactive)
-    (unless (eq ghostel--input-mode 'emacs)
-      (ghostel-emacs-mode))
-    (next-line))
-
-  (defun my-ghostel-previous-line ()
-    (interactive)
-    (unless (eq ghostel--input-mode 'emacs)
-      (ghostel-emacs-mode))
-    (previous-line)))
+    (ghostel-send-key "z" "ctrl")))
 
 
 ;;; git-timemachine
@@ -3380,7 +3372,7 @@ Returns the file path if found, nil otherwise."
           (my-howm-read-template-file selected-file))))
 
      (t
-      (concat howm-view-title-header " %notitle %date %file\n\n\n%cursor\n\n"))))
+      (concat howm-view-title-header " %notitle %date %file\n\n%cursor\n\n\n"))))
 
   (defun my-howm-insert-keywords-line ()
     "Insert keywords line or append if on one."
@@ -3644,7 +3636,7 @@ Returns the file path if found, nil otherwise."
   :after (howm howm-vars)
   :ensure nil
   :custom
-  (howm-view-header-format "\n\n 📕 %s ⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅\n\n")
+  (howm-view-header-format "\n\n\n 📕 %s ⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅\n\n")
   (howm-view-header-regexp nil)
   (howm-entitle-items-style2-format "%-50.50s | %s")
   (howm-entitle-items-style2-max-length 50)
@@ -5282,9 +5274,23 @@ of the new org-mode file."
 
 (use-package outline
   :ensure nil
+  :hook ((howm-view-contents-mode-hook . my-howm-contents-outline-config))
   :custom
+  (outline-blank-line t)
   (outline-default-state nil)
-  (outline-minor-mode-cycle t))
+  (outline-minor-mode-cycle t)
+  :config
+  (defun my-howm-contents-outline-level ()
+    "Return outline level for a howm contents buffer.
+Howm file separator lines (📕 ...) are level 1; `*' headings start at level 2."
+    (let ((heading (match-string 0)))
+      (if (string-match-p "📕" heading)
+          1
+        (1+ (length heading)))))
+
+  (defun my-howm-contents-outline-config ()
+    (setq-local outline-regexp "\\( *📕\\|[*]+\\)")
+    (setq-local outline-level #'my-howm-contents-outline-level)))
 
 
 ;;; ox
