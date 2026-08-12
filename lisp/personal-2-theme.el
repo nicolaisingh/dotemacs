@@ -248,7 +248,7 @@ numbered variants the same as the base color."
      ;; howm
      `(action-lock-face ((t (:underline t))))
      `(howm-menu-key-face ((t (:foreground ,color-black :background ,color-pale-yellow :weight bold))))
-     `(howm-mode-keyword-face ((nil (:foreground ,color-black :background ,color-light-yellow :weight bold))))
+     `(howm-mode-keyword-face ((nil (:foreground ,color-black :background ,color-light-cyan))))
      `(howm-mode-ref-face ((t (:foreground ,color-blue))))
      `(howm-mode-title-face ((t (:inherit outline-1))))
      `(howm-mode-wiki-face ((t (:foreground ,color-blue))))

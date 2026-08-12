@@ -5451,6 +5451,9 @@ of the new org-mode file."
 
 (use-package project
   :ensure nil
+  :custom
+  (project-mode-line t)
+  (project-kill-buffers-display-buffer-list t)
   :config
   ;; Add magit as m
   (keymap-set project-prefix-map "m" #'magit-project-status)
