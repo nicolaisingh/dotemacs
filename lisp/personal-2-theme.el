@@ -219,6 +219,9 @@ numbered variants the same as the base color."
      `(eshell-ls-special ((t (:foreground ,color-purple :weight bold))))
      `(eshell-prompt ((t (:foreground ,color-red :weight bold))))
 
+     ;; form-feed
+     `(form-feed-line ((t (:strike-through ,color-gray))))
+
      ;; font-lock
      `(font-lock-builtin-face ((t (:foreground ,color-blue))))
      `(font-lock-comment-face ((t (:foreground ,color-red-2))))

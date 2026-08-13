@@ -2548,19 +2548,40 @@ The default format is specified by `emms-source-playlist-default-format'."
          ("C-c C-b" . ghostel-list-buffers)
          ("C-s"  . consult-line)
          ("C-z" . my-ctl-z-map)
-         ("C-z C-z" . my-ghostel-c-z)
          ("M-n" . (lambda () (interactive) (ghostel-send-key "n" "ctrl")))
          ("M-p" . (lambda () (interactive) (ghostel-send-key "p" "ctrl")))
          :map project-prefix-map
          ("t" . ghostel-project)
          :map my-ctl-c-t-map
-         ("t" . ghostel))
+         ("t" . ghostel)
+         :map my-ctl-z-map
+         ("C-t" . my-ghostel-side-window-toggle))
   :config
   (add-to-list 'project-switch-commands '(ghostel-project "Ghostel") t)
+  (add-to-list 'display-buffer-alist '((lambda (buffer _action)
+                                         (with-current-buffer buffer
+                                           (and (derived-mode-p 'ghostel-mode)
+                                                (project-current))))
+                                       (display-buffer-in-side-window)
+                                       (side . right)
+                                       (slot . 0)
+                                       (window-width . 0.35)
+                                       (window-parameters . ((no-delete-other-windows . t)))))
 
-  (defun my-ghostel-c-z ()
+  (defun my-ghostel-side-window-toggle ()
+    "Toggle the project's ghostel buffer in a side window."
     (interactive)
-    (ghostel-send-key "z" "ctrl")))
+    (unless (project-current)
+      (error "Not in a project"))
+    (let* ((ghostel-project-buffers (ghostel--project-buffers))
+           (window (seq-find (lambda (w)
+                               (with-current-buffer (window-buffer w)
+                                 (and (derived-mode-p 'ghostel-mode)
+                                      (memq (current-buffer) ghostel-project-buffers))))
+                             (window-list))))
+      (if window
+          (delete-window window)
+        (ghostel-project)))))
 
 
 ;;; git-timemachine
