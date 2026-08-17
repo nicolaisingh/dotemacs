@@ -175,6 +175,10 @@ This is useful when the Elpaca lockfile leaves a repo's HEAD detached."
 
 ;;;; Functions
 
+(defun set-fill-column-silently (arg)
+  (let ((inhibit-message t))
+    (set-fill-column arg)))
+
 (defun yes-or-no-only-p (PROMPT)
   (let ((use-short-answers nil))
     (apply #'yes-or-no-p (list PROMPT))))
@@ -550,6 +554,7 @@ From https://www.emacswiki.org/emacs/XModMapMode")
          ("p p" . profiler-toggle)
          ("p r" . profiler-report)
          ("q" . toggle-debug-on-quit)
+         ("r" . edebug-remove-instrumentation)
          ("t" . debug-on-entry)
          ("v" . debug-on-variable-change)
          :map my-ctl-c-c-map
@@ -584,7 +589,9 @@ From https://www.emacswiki.org/emacs/XModMapMode")
          :map my-ctl-c-y-map
          ("o" . my-yank-to-other-window))
 
-  :hook ((minibuffer-setup-hook . (lambda () (setq truncate-lines t)))
+  :hook ((minibuffer-setup-hook . (lambda () (setq truncate-lines t
+                                                   ;; Prevent bottom candidates from being truncated if default line-spacing > 0
+                                                   line-spacing 0)))
          ;; Tabs handling
          (shell-mode-hook . set-indent-tab-width-8)
          (emacs-lisp-mode-hook . set-indent-tab-width-2)
@@ -599,6 +606,7 @@ From https://www.emacswiki.org/emacs/XModMapMode")
   (auto-save-interval 50)
   (auto-save-no-message t)
   (auto-save-timeout 3)
+  (debug-on-message nil)
   (delete-by-moving-to-trash t)
   (enable-recursive-minibuffers t)
   (history-delete-duplicates t)
@@ -3592,7 +3600,7 @@ Returns the file path if found, nil otherwise."
   (howm-view-close-frame/tab-on-exit t)
   (howm-view-search-recenter 5)
   (howm-view-keep-one-window t)
-  (howm-view-split-horizontally t)
+  (howm-view-split-horizontally nil)
   (howm-view-summary-window-size nil)
   (howm-view-window-location 'tab))
 
@@ -3671,7 +3679,7 @@ Returns the file path if found, nil otherwise."
   :ensure nil
   :custom
   (howm-view-header-format "\n\n\n 📕 %s ⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅\n\n")
-  (howm-view-header-regexp nil)
+  (howm-view-header-regexp "^ 📕 .*$") ;; Describe the line where %s of howm-view-header-format is found
   (howm-entitle-items-style2-format "%-50.50s | %s")
   (howm-entitle-items-style2-max-length 50)
   (howm-entitle-items-style2-title-line nil)
@@ -3698,7 +3706,7 @@ Returns the file path if found, nil otherwise."
          (howm-view-contents-mode-hook . outline-minor-mode)
          (howm-view-contents-mode-hook . my-howm-other-modes-keys)
          (howm-view-contents-mode-hook . (lambda ()
-                                           (set-fill-column 100)))
+                                           (set-fill-column-silently 100)))
          (howm-view-summary-mode-hook . hl-line-mode)
          (howm-view-summary-mode-hook . my-howm-other-modes-keys))
   :preface
@@ -4553,7 +4561,7 @@ Useful for completion style 'partial-completion."
          ("C-," . nil))
   :hook ((org-mode-hook . no-indent-tabs-mode)
          (org-mode-hook . (lambda ()
-                            (set-fill-column 100))))
+                            (set-fill-column-silently 100))))
   :custom
   (org-adapt-indentation nil)
   (org-agenda-files (expand-file-name "org-agenda-files" user-emacs-directory))
