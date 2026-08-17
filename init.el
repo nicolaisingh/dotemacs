@@ -603,6 +603,7 @@ From https://www.emacswiki.org/emacs/XModMapMode")
   (enable-recursive-minibuffers t)
   (history-delete-duplicates t)
   (message-log-max 10000)
+  (line-spacing 0.2)
   (load-prefer-newer t)
   (scroll-margin 0)
   (tab-width 4)
@@ -1180,19 +1181,27 @@ This will return ~/.emacs.d/agent-shell/<dir>."
 (use-package claude-code-ide
   :ensure (:host github :repo "manzaltu/claude-code-ide.el" :branch "main")
   :bind (:map
-         my-ctl-c-l-map
-         ("c" . claude-code-ide-menu))
+         my-ctl-z-map
+         ("C-c" . my-claude-code-ide))
   :custom
-  (claude-code-ide-no-flicker nil)
-  (claude-code-ide-terminal-backend 'vterm)
+  ;; (claude-code-ide-no-flicker nil)
+  (claude-code-ide-terminal-backend 'ghostel)
+  (claude-code-ide-use-ide-diff nil)
+  (claude-code-ide-window-width 90)
   :config
   ;; Kimi configuration
-  (setenv "ANTHROPIC_BASE_URL" "https://api.kimi.com/coding/")
-  (setenv "ANTHROPIC_API_KEY" (auth-source-pick-first-password :host "api.kimi.com"))
-  (setenv "ANTHROPIC_MODEL" "kimi-for-coding")
-  (setenv "CLAUDE_CODE_DISABLE_NONESSENTIAL_TRAFFIC" "1")
-  (setenv "ENABLE_TOOL_SEARCH" "true")
-  (claude-code-ide-emacs-tools-setup))
+  ;; (setenv "ANTHROPIC_BASE_URL" "https://api.kimi.com/coding/")
+  ;; (setenv "ANTHROPIC_API_KEY" (auth-source-pick-first-password :host "api.kimi.com"))
+  ;; (setenv "ANTHROPIC_MODEL" "kimi-for-coding")
+  ;; (setenv "CLAUDE_CODE_DISABLE_NONESSENTIAL_TRAFFIC" "1")
+  ;; (setenv "ENABLE_TOOL_SEARCH" "true")
+  (claude-code-ide-emacs-tools-setup)
+
+  (defun my-claude-code-ide (&optional arg)
+    (interactive "P")
+    (if arg
+        (claude-code-ide-menu)
+      (claude-code-ide))))
 
 
 ;;; clojure-mode
@@ -2529,7 +2538,9 @@ The default format is specified by `emms-source-playlist-default-format'."
   :ensure (:branch "master")
   :diminish form-feed-mode
   :hook ((emacs-lisp-mode-hook . form-feed-mode)
-         (howm-view-contents-mode-hook . form-feed-mode)))
+         (howm-view-contents-mode-hook . form-feed-mode))
+  :custom
+  (form-feed-line-width 100))
 
 
 ;;; free-keys
@@ -2556,6 +2567,8 @@ The default format is specified by `emms-source-playlist-default-format'."
          ("t" . ghostel)
          :map my-ctl-z-map
          ("C-t" . my-ghostel-side-window-toggle))
+  :custom
+  (ghostel-line-spacing line-spacing)
   :config
   (add-to-list 'project-switch-commands '(ghostel-project "Ghostel") t)
   (add-to-list 'display-buffer-alist '((lambda (buffer _action)
@@ -3581,7 +3594,7 @@ Returns the file path if found, nil otherwise."
   (howm-view-keep-one-window t)
   (howm-view-split-horizontally t)
   (howm-view-summary-window-size nil)
-  (howm-view-window-location nil))
+  (howm-view-window-location 'tab))
 
 ;;; howm-shift
 
@@ -4215,7 +4228,7 @@ Useful for completion style 'partial-completion."
   :demand t
   :custom
   (magit-todos-branch-list nil) ;; fixes perf issues on large files added in repo
-  (magit-todos-exclude-globs '(".git/" "node_modules/" "*.json"))
+  (magit-todos-exclude-globs '(".git/" "node_modules/" "dist/" "*.map" "*.json" ".terraform/"))
   :config
   (magit-todos-mode 1))
 
@@ -5490,6 +5503,7 @@ Howm file separator lines (📕 ...) are level 1; `*' headings start at level 2.
   (add-to-list 'project-switch-commands '(deadgrep "Deadgrep") t)
   ;; Files/directories to ignore
   (add-to-list 'project-vc-ignores ".cursor/")
+  (add-to-list 'project-vc-ignores ".terraform/")
   (add-to-list 'project-vc-ignores "dist/")
   (add-to-list 'project-vc-ignores "node_modules/")
   (add-to-list 'project-vc-ignores "openspec/"))

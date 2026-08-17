@@ -121,11 +121,12 @@ numbered variants the same as the base color."
      ,@body))
 
 (personal-theme--colors-let personal-theme--color-alist
-  (let* ((fg-inactive color-gray-4)
-         (flat-box `(:line-width 3 :style flat-button))
-         (flat-box-outline `(:line-width 3 :style flat-button))
-         (released `(:line-width 1 :style released-button))
-         (pressed `(:line-width 1 :style pressed-button)))
+  (let* ((fg-active color-black)
+         (fg-inactive color-gray-2)
+         (flat-box `(:line-width 2 :style flat-button))
+         (flat-box-outline `(:line-width 2 :style flat-button :color ,color-pale-gray-2))
+         (released `(:line-width 2 :style released-button))
+         (pressed `(:line-width 2 :style released-button)))
     (custom-theme-set-faces
      'personal-2
 
@@ -139,9 +140,9 @@ numbered variants the same as the base color."
      `(highlight ((t (:background ,color-pale-yellow))))
      `(hl-line ((t (:underline ,color-gray))))
      `(minibuffer-prompt ((t (:foreground ,color-red :weight bold))))
-     `(mode-line-active ((t (:background ,color-pale-blue :box ,flat-box-outline))))
+     `(mode-line-active ((t (:background ,color-pale-gray-2 :box ,released :foreground ,fg-active))))
      `(mode-line-buffer-id ((t (:weight bold))))
-     `(mode-line-inactive ((t (:background ,color-pale-gray :box ,flat-box :foreground ,fg-inactive))))
+     `(mode-line-inactive ((t (:background ,color-pale-gray :box ,flat-box-outline :foreground ,fg-inactive))))
      `(region ((t (:background ,color-pale-yellow))))
      `(secondary-selection ((t (:background ,color-pale-gray))))
      `(show-paren-match ((t (:background ,color-light-blue :distant-foreground ,color-white))))
