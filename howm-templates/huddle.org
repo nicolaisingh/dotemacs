@@ -1,0 +1,5 @@
+* %cursor %dateonly
+keywords: @meeting
+[@] start    [@] end
+
+

@@ -3117,10 +3117,6 @@ If region is active, rewrite the region. Otherwise rewrite the entire buffer."
          ("p" . action-lock-goto-previous-link))
   :hook ((action-lock-mode-hook . my-action-lock-mode-config))
   :config
-  (defvar my-action-lock-checkbox '("[ ]" "[X]" "[-]" "[*]"))
-  (defvar my-action-lock-datebox '("[@]" "[%Y-%m-%d %H:%M]"))
-  (defvar my-action-lock-jira-issue-regexp "\\(\\(?:JIRA\\|ABCD\\)-[0-9]+\\)")
-
   (defun my-action-lock-jira-browse (issue)
     "action-lock to browse a Jira issue."
     (browse-url (format "https://JIRA.atlassian.net/browse/%s" issue)))
@@ -3132,10 +3128,10 @@ If region is active, rewrite the region. Otherwise rewrite the entire buffer."
   (defun my-action-lock-mode-config ()
     (when action-lock-mode
       (action-lock-add-rules
-       (list (action-lock-switch my-action-lock-checkbox)
-             (action-lock-date (regexp-quote (car my-action-lock-datebox))
-                               (cadr my-action-lock-datebox))
-             (my-action-lock-jira-browse-rule my-action-lock-jira-issue-regexp 0))))))
+       (list (action-lock-switch '("[ ]" "[X]" "[-]" "[*]"))
+             (action-lock-date (regexp-quote "[@]") "[%Y-%m-%d %H:%M]")
+             (action-lock-date (regexp-quote "[.]") "[%Y-%m-%d]")
+             (my-action-lock-jira-browse-rule "\\(\\(?:CMP\\|ESPORT\\|SRE\\|OCISO\\|MDAR\\|PRFC\\|PAYM\\|TAB\\|OC\\)-[0-9]+\\)" 0))))))
 
 ;;; howm-attach
 
@@ -3414,7 +3410,7 @@ Returns the file path if found, nil otherwise."
           (my-howm-read-template-file selected-file))))
 
      (t
-      (concat howm-view-title-header " %notitle %date %file\n\n%cursor\n\n\n"))))
+      (concat howm-view-title-header " %date %file\n\n%cursor\n\n\n"))))
 
   (defun my-howm-insert-keywords-line ()
     "Insert keywords line or append if on one."
@@ -3597,10 +3593,10 @@ Returns the file path if found, nil otherwise."
   :after (howm)
   :ensure nil
   :custom
-  (howm-view-close-frame/tab-on-exit t)
+  (howm-view-close-frame/tab-on-exit 'howm-only)
   (howm-view-search-recenter 5)
   (howm-view-keep-one-window t)
-  (howm-view-split-horizontally nil)
+  (howm-view-split-horizontally t)
   (howm-view-summary-window-size nil)
   (howm-view-window-location 'tab))
 
@@ -3645,7 +3641,7 @@ Returns the file path if found, nil otherwise."
   (howm-message-time nil)
   (howm-normalizer 'howm-sort-items-by-mtime)
   (howm-prepend t)
-  (howm-remember-first-line-to-title t)
+  (howm-remember-first-line-to-title nil)
   (howm-remember-insertion-format "%s")
   (howm-user-font-lock-keywords `(("^keywords:" . (0 'howm-mode-ref-face))
                                   ;; Extend howm keyword lines (`<<< foo`) to end of line.
@@ -3695,15 +3691,14 @@ Returns the file path if found, nil otherwise."
          ("C-c C-f" . outline-forward-same-level)
          ("C-c C-n" . outline-next-heading)
          ("C-c C-p" . outline-previous-heading)
+         ("C-c C-u" . outline-up-heading)
          ("M-n" . riffle-contents-goto-next-item)
          ("M-p" . riffle-contents-goto-previous-item)
          ;; unset both for `outline-minor-mode-cycle'
          ("<tab>" . nil)
          ("TAB" . nil))
-  :hook (;;(howm-view-contents-mode-hook . hl-line-mode)
-         (howm-view-contents-mode-hook . howm-mode)
-         (howm-view-contents-mode-hook . howm-org-font-lock-minor-mode)
-         (howm-view-contents-mode-hook . outline-minor-mode)
+  :hook ((howm-view-contents-mode-hook . howm-mode)
+         (howm-view-contents-mode-hook . my-howm-contents-outline-config)
          (howm-view-contents-mode-hook . my-howm-other-modes-keys)
          (howm-view-contents-mode-hook . (lambda ()
                                            (set-fill-column-silently 100)))
@@ -3780,7 +3775,20 @@ Returns the file path if found, nil otherwise."
                (group
                 bol
                 "keywords:"
-                (1+ (* space) "@" (+ any)))))))
+                (1+ (* space) "@" (+ any))))))
+
+  (defun my-howm-contents-outline-level ()
+    "Return outline level for a howm contents buffer.
+Howm file separator lines (📕 ...) are level 1; `*' headings start at level 2."
+    (let ((heading (match-string 0)))
+      (if (string-match-p "📕" heading)
+          1
+        (1+ (length heading)))))
+
+  (defun my-howm-contents-outline-config ()
+    (setq-local outline-regexp "\\( *📕\\|[*]+\\)")
+    (setq-local outline-level #'my-howm-contents-outline-level)
+    (outline-minor-mode 1)))
 
 
 ;;; htmlize
@@ -5316,23 +5324,12 @@ of the new org-mode file."
 
 (use-package outline
   :ensure nil
-  :hook ((howm-view-contents-mode-hook . my-howm-contents-outline-config))
   :custom
   (outline-blank-line t)
   (outline-default-state nil)
   (outline-minor-mode-cycle t)
-  :config
-  (defun my-howm-contents-outline-level ()
-    "Return outline level for a howm contents buffer.
-Howm file separator lines (📕 ...) are level 1; `*' headings start at level 2."
-    (let ((heading (match-string 0)))
-      (if (string-match-p "📕" heading)
-          1
-        (1+ (length heading)))))
-
-  (defun my-howm-contents-outline-config ()
-    (setq-local outline-regexp "\\( *📕\\|[*]+\\)")
-    (setq-local outline-level #'my-howm-contents-outline-level)))
+  (outline-minor-mode-highlight 'append)
+  (outline-minor-mode-use-buttons nil))
 
 
 ;;; ox
