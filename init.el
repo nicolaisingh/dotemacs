@@ -2586,7 +2586,7 @@ The default format is specified by `emms-source-playlist-default-format'."
                                        (display-buffer-in-side-window)
                                        (side . right)
                                        (slot . 0)
-                                       (window-width . 0.35)
+                                       (window-width . 0.40)
                                        (window-parameters . ((no-delete-other-windows . t)))))
 
   (defun my-ghostel-side-window-toggle ()
@@ -3111,6 +3111,10 @@ If region is active, rewrite the region. Otherwise rewrite the entire buffer."
          :map
          howm-menu-mode-map
          ("<backtab>" . action-lock-goto-previous-link)
+         :map
+         action-lock-mode-map
+         ("C-z C-." . action-lock-magic-return)
+         ("RET" . nil)
          :repeat-map
          howm-mode-repeat-map
          ("n" . action-lock-goto-next-link)
@@ -3305,8 +3309,7 @@ Returns the file path if found, nil otherwise."
          ("C-z >" . my-howm-insert-file-ref)
          ("C-z A" . howm-list-around)
          ("C-z C" . howm-create-here)
-         ("C-z C-," . my-howm-insert-keyword-header)
-         ("C-z C-." . my-howm-insert-ref-header)
+         ("C-z C-," . my-howm-insert-keyword-or-ref-header)
          ;; ("C-z C-x C-v" . my-howm-toggle-inline-images)
          ("C-z D" . howm-dup)
          ("C-z K" . howm-keyword-to-kill-ring)
@@ -3494,14 +3497,9 @@ Returns the file path if found, nil otherwise."
                 (not (equal " " (char-to-string (char-after (point))))))
         (insert " "))))
 
-  (defun my-howm-insert-ref-header ()
-    (interactive)
-    (my-howm-insert-before-symbol howm-ref-header)
-    (howm-insert-keyword))
-
-  (defun my-howm-insert-keyword-header ()
-    (interactive)
-    (my-howm-insert-before-symbol howm-keyword-header)
+  (defun my-howm-insert-keyword-or-ref-header (arg)
+    (interactive "P")
+    (my-howm-insert-before-symbol (if arg howm-ref-header howm-keyword-header))
     (howm-insert-keyword))
 
   (defun my-howm-list-grep-contents ()
@@ -4177,6 +4175,38 @@ Useful for completion style 'partial-completion."
 
 (use-package jsonian
   :disabled)
+
+
+;;; keyfreq
+
+(use-package keyfreq
+  :demand t
+  :hook ((kill-emacs-hook . keyfreq-save-now)
+         (keyfreq-mode-hook . my-keyfreq-toggle-timer))
+  :custom
+  (keyfreq-file (expand-file-name "keyfreq" user-emacs-directory))
+  (keyfreq-file-lock (expand-file-name "keyfreq.lock" user-emacs-directory))
+  :config
+  (setq keyfreq-excluded-commands '(move-beginning-of-line
+                                    move-end-of-line
+                                    ghostel--self-insert
+                                    ghostel--scroll-intercept-up
+                                    ghostel--scroll-intercept-down
+                                    ghostel--send-event
+                                    next-line
+                                    previous-line
+                                    self-insert-command))
+
+  (defvar my-keyfreq-idle-timer nil
+    "keyfreq-mode idle timer")
+
+  (defun my-keyfreq-toggle-timer ()
+    (setq my-keyfreq-idle-timer (if keyfreq-mode
+                                    (run-with-idle-timer 60 t #'keyfreq-save-now)
+                                  (cancel-timer gc-idle-timer))))
+
+  (keyfreq-mode 1)
+  (my-keyfreq-toggle-timer))
 
 
 ;;; know-your-http-well
@@ -5500,6 +5530,16 @@ of the new org-mode file."
   (project-mode-line t)
   (project-kill-buffers-display-buffer-list t)
   :config
+  (defun my-project-insert-file-path ()
+    (interactive)
+    (let* ((pr (project-current t))
+           (project-files-relative-names t)
+           (result (completing-read "Project file: " (project-files pr) nil t )))
+      (kill-new result)
+      (insert (project-root pr) result)))
+
+  ;; Add insert-file-path as i
+  (keymap-set project-prefix-map "i" #'my-project-insert-file-path)
   ;; Add magit as m
   (keymap-set project-prefix-map "m" #'magit-project-status)
   (add-to-list 'project-switch-commands '(magit-project-status "Magit") t)
