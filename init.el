@@ -67,9 +67,6 @@ collection.  Use revert-gc-cons-percentage to restore the value."
 (load (expand-file-name "lisp/elpaca/install.el" user-emacs-directory))
 (elpaca elpaca-use-package
   (elpaca-use-package-mode))
-(keymap-global-set "C-h u m" #'elpaca-manager)
-(keymap-global-set "C-h u l" #'elpaca-log)
-(keymap-global-set "C-h u v" #'elpaca-visit)
 (setopt elpaca-lock-file
         (expand-file-name "lisp/elpaca/lockfile.eld" user-emacs-directory))
 
@@ -142,6 +139,7 @@ This is useful when the Elpaca lockfile leaves a repo's HEAD detached."
 (define-prefix-command 'my-ctl-c-v-map)
 (define-prefix-command 'my-ctl-c-w-map)
 (define-prefix-command 'my-ctl-c-y-map)
+(define-prefix-command 'my-ctl-h-u-map)
 (define-prefix-command 'my-ctl-z-map)
 (define-prefix-command 'my-meta-=-map)
 (define-prefix-command 'my-meta-o-map)
@@ -168,6 +166,7 @@ This is useful when the Elpaca lockfile leaves a repo's HEAD detached."
 (keymap-global-set "C-c v" 'my-ctl-c-v-map)
 (keymap-global-set "C-c w" 'my-ctl-c-w-map)
 (keymap-global-set "C-c y" 'my-ctl-c-y-map)
+(keymap-global-set "C-h u" 'my-ctl-h-u-map)
 (keymap-global-set "C-z" 'my-ctl-z-map)
 (keymap-global-set "M-=" 'my-meta-=-map)
 (keymap-global-set "M-o" 'my-meta-o-map)
@@ -534,6 +533,7 @@ From https://www.emacswiki.org/emacs/XModMapMode")
          ("C-h H" . view-hello-file) ;; Use C-h h for hyperbole
          ("C-h RET" . nil)           ;; Use C-h RET for hyperbole's hkey-either
          ("C-h u f" . find-library)
+         ("C-h u u" . apropos-user-option)
          ("C-x B" . bury-buffer)
          ("C-x C-M-c" . save-buffers-kill-emacs)
          ("C-x D" . (lambda () (interactive) (dired "~/Downloads")))
@@ -611,7 +611,7 @@ From https://www.emacswiki.org/emacs/XModMapMode")
   (enable-recursive-minibuffers t)
   (history-delete-duplicates t)
   (message-log-max 10000)
-  (line-spacing 0.2)
+  (line-spacing '(0.15 . 0.15))
   (load-prefer-newer t)
   (scroll-margin 0)
   (tab-width 4)
@@ -698,6 +698,9 @@ From https://www.emacswiki.org/emacs/XModMapMode")
   :config
   (keymap-global-set "C-x C-m" (key-binding (kbd "M-x"))) ; Does not work in :bind
   (keymap-global-set "<f9>" #'restart-emacs)
+  (keymap-set my-ctl-h-u-map "m" #'elpaca-manager)
+  (keymap-set my-ctl-h-u-map "l" #'elpaca-log)
+  (keymap-set my-ctl-h-u-map "v" #'elpaca-visit)
 
   ;; Set emacs source code location
   ;; (unless (memq window-system '(mac ns))
@@ -1729,7 +1732,6 @@ If the item at point is a file, try to remove the subtree."
 ;;; easy-kill
 
 (use-package easy-kill
-  :ensure (:branch "master")
   :demand t
   :bind (([remap kill-ring-save] . easy-kill)
          :map easy-kill-base-map
@@ -1744,11 +1746,13 @@ If the item at point is a file, try to remove the subtree."
 ;;; easy-kill-extras
 
 (use-package easy-kill-extras
+  :disabled
   :ensure (:branch "master")
   :demand t
   :after (easy-kill))
 
 (use-package extra-things
+  :disabled
   :after (easy-kill-extras)
   :demand t
   :ensure nil
@@ -2543,6 +2547,7 @@ The default format is specified by `emms-source-playlist-default-format'."
 ;;; form-feed
 
 (use-package form-feed
+  :disabled
   :ensure (:branch "master")
   :diminish form-feed-mode
   :hook ((emacs-lisp-mode-hook . form-feed-mode)
@@ -3896,6 +3901,7 @@ Howm file separator lines (📕 ...) are level 1; `*' headings start at level 2.
 ;;; icomplete
 
 (use-package icomplete
+  :disabled
   :demand t
   :ensure nil
   :after (orderless)
@@ -6112,8 +6118,6 @@ of the new org-mode file."
   (global-treesit-fold-mode)
   (add-hook 'emacs-lisp-mode-hook (lambda () (treesit-parser-create 'elisp))))
 
-(treesit-language-available-p 'bash)
-
 
 ;;; typescript-ts-mode
 
@@ -6228,6 +6232,14 @@ of the new org-mode file."
         whisper--mode-line-transcribing-indicator (propertize "[Transcribing] " 'face 'font-lock-warning-face)))
 
 
+;;; whitespace
+
+(use-package whitespace
+  :ensure nil
+  :hook ((emacs-lisp-mode-hook . whitespace-page-delimiters-mode)
+         (howm-view-contents-mode-hook . whitespace-page-delimiters-mode)))
+
+
 ;;; winfast
 
 (use-package winfast
@@ -6241,7 +6253,7 @@ of the new org-mode file."
 (use-package writeroom-mode
   :ensure (:branch "master")
   :custom
-  (writeroom-extra-line-spacing 0.2)
+  (writeroom-extra-line-spacing line-spacing)
   (writeroom-fringes-outside-margins t)
   (writeroom-global-effects '(writeroom-set-alpha
                               writeroom-set-menu-bar-lines

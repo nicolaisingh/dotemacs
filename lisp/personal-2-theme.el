@@ -335,6 +335,9 @@ numbered variants the same as the base color."
      ;; tab-line
      `(tab-line ((t (:background ,color-white-2 :height 1.0))))
 
+     ;; whitespace
+     `(whitespace-page-delimiter ((t (:inherit shadow :height 0.1 :extend t :underline (:color ,color-gray :style double-line)))))
+
      ;; yas
      `(yas-field-highlight-face ((t (:inherit minibuffer-prompt)))))))
 

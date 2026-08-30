@@ -1,4 +1,4 @@
-;; Edited from https://stackoverflow.com/questions/9547912/emacs-calendar-show-more-than-3-months/21409154#21409154
+;; Edited from https://stackoverflow.com/questions/9547912/emacs-calendar-show-more-than-3-months/21409154#21409154  -*- lexical-binding: t; -*-
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;                                                                            ;;;
