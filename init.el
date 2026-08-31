@@ -936,7 +936,6 @@ This will return ~/.emacs.d/agent-shell/<dir>."
 
 (use-package aggressive-indent
   :ensure (:branch "master")
-  :diminish aggressive-indent-mode
   :bind (:map my-ctl-c-i-map
               ("A" . aggressive-indent-mode))
   :hook ((clojure-mode-hook . aggressive-indent-mode)
@@ -1085,7 +1084,6 @@ This will return ~/.emacs.d/agent-shell/<dir>."
 
 (use-package blacken
   :ensure (:branch "master")
-  :diminish blacken-mode
   :hook (python-mode-hook))
 
 
@@ -1318,7 +1316,6 @@ This will return ~/.emacs.d/agent-shell/<dir>."
 (use-package completion-preview
   :ensure nil
   :demand t
-  :diminish
   :custom
   (completion-preview-idle-delay 0.2)
   :config
@@ -1830,7 +1827,6 @@ If the item at point is a file, try to remove the subtree."
 
 (use-package eat
   :ensure (:branch "master")
-  :diminish eat-eshell-mode
   :hook ((eshell-load-hook . eat-eshell-mode)
          (eshell-load-hook . eat-eshell-visual-command-mode)))
 
@@ -2046,8 +2042,7 @@ If the item at point is a file, try to remove the subtree."
 
 (use-package eldoc
   :demand t
-  :ensure nil
-  :diminish eldoc-mode)
+  :ensure nil)
 
 
 ;;; elpaca-manager
@@ -2605,7 +2600,6 @@ The default format is specified by `emms-source-playlist-default-format'."
 (use-package form-feed
   :disabled
   :ensure (:branch "master")
-  :diminish form-feed-mode
   :hook ((emacs-lisp-mode-hook . form-feed-mode)
          (howm-view-contents-mode-hook . form-feed-mode))
   :custom
@@ -2867,7 +2861,6 @@ The default format is specified by `emms-source-playlist-default-format'."
 (use-package goggles
   :ensure (:branch "main")
   :demand t
-  :diminish
   :hook ((prog-mode-hook . goggles-mode)
          (text-mode-hook . goggles-mode)))
 
@@ -3178,7 +3171,6 @@ If region is active, rewrite the region. Otherwise rewrite the entire buffer."
 (use-package action-lock
   :after (howm)
   :ensure nil
-  :diminish action-lock-mode
   :bind (:map
          howm-mode-map
          ("C-z n" . action-lock-goto-next-link)
@@ -3284,7 +3276,6 @@ If region is active, rewrite the region. Otherwise rewrite the entire buffer."
 (use-package howm-misc
   :after (howm howm-vars)
   :ensure nil
-  :diminish howm-org-font-lock-minor-mode
   :bind (("C-z I" . howm-create-interactively)
          ("C-z M" . howm-open-named-file)
          ("C-z SPC" . howm-toggle-buffer)
@@ -3874,7 +3865,6 @@ Howm file separator lines (📕 ...) are level 1; `*' headings start at level 2.
 
 (use-package hyperbole
   :demand t
-  :diminish hyperbole-mode
   :bind (("C-h A" . hkey-help)
          ("C-h h" . hyperbole)
          :map hyperbole-mode-map
@@ -4045,7 +4035,6 @@ Howm file separator lines (📕 ...) are level 1; `*' headings start at level 2.
 
 (use-package iimage
   :ensure nil
-  :diminish
   :bind (:map my-ctl-c-i-map
               ("i" . iimage-mode))
   :config
@@ -5511,7 +5500,6 @@ of the new org-mode file."
 
 (use-package prettier-js
   :ensure (:branch "main")
-  :diminish
   :hook ((js2-mode-hook . prettier-js-mode)
          (typescript-ts-mode-hook . prettier-js-mode)))
 
@@ -5844,7 +5832,6 @@ of the new org-mode file."
 (use-package selected
   :ensure (:branch "master")
   :demand t
-  :diminish selected-minor-mode
   :bind (:map selected-keymap
               ("= p" . my-gptel-proofread)
               ("= s" . my-gptel-summarize)
@@ -5947,7 +5934,6 @@ of the new org-mode file."
 (use-package smartparens
   :ensure (:branch "master")
   :demand t
-  :diminish smartparens-mode
   :bind (:map
          smartparens-mode-map
          ;; movement
@@ -6029,8 +6015,7 @@ of the new org-mode file."
 ;;; subword
 
 (use-package subword
-  :ensure nil
-  :diminish subword-mode)
+  :ensure nil)
 
 
 ;;; symbol-overlay
@@ -6127,7 +6112,6 @@ of the new org-mode file."
 
 (use-package treesit-fold
   :ensure (:branch "master")
-  :diminish
   :bind (:map
          my-ctl-c-f-map
          ("f" . treesit-fold-toggle)
@@ -6316,7 +6300,6 @@ of the new org-mode file."
 (use-package yasnippet
   :ensure (:branch "master")
   :demand t
-  :diminish yas-minor-mode
   :bind (:map
          yas-minor-mode-map
          ("C-c y s d" . yas-describe-tables)
