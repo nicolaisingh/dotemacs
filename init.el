@@ -634,6 +634,7 @@ From https://www.emacswiki.org/emacs/XModMapMode")
   ;; auth-source.el
   (auth-sources '("~/.authinfo.gpg" "~/.authinfo" "~/.netrc"))
   ;; bindings.el
+  (mode-line-collapse-minor-modes t)
   (mode-line-percent-position nil)
   ;; bookmark.el
   (bookmark-save-flag 1)
@@ -650,6 +651,7 @@ From https://www.emacswiki.org/emacs/XModMapMode")
   (window-divider-default-right-width 1)
   ;; help.el
   (help-window-select t)
+  (view-lossage-auto-refresh t)
   ;; indent.el
   (tab-always-indent 'complete)
   (tab-first-completion nil)
@@ -678,6 +680,7 @@ From https://www.emacswiki.org/emacs/XModMapMode")
   (eval-expression-print-length nil) ; don't truncate when evaluating exprs
   ;; (eval-expression-print-level nil)  ; print expressions entirely
   (kill-do-not-save-duplicates t)
+  (kill-region-dwim 'emacs-word)
   (kill-whole-line t)
   (next-line-add-newlines t)
   (save-interprogram-paste-before-kill nil)
@@ -1548,16 +1551,19 @@ This will return ~/.emacs.d/agent-shell/<dir>."
 
 (use-package dired
   :ensure nil
-  :bind (:map dired-mode-map
-              ("C-." . my-dired-toggle-other-files-visibility)
-              ("C-c C-a" . org-attach-dired-to-subtree)
-              ("C-c M A" . emms-play-dired)
-              ("C-c M a" . emms-add-dired)
-              ("C-c d d" . dired-ediff-a-b)
-              ("C-c m !" . dired-apply-to-marked-files)
-              ("C-c m d" . dired-ediff-marked-files)
-              ("C-c m e" . dired-create-empty-file)
-              ("z" . dired-up-directory))
+  :bind (:map
+         dired-mode-map
+         ("C-." . my-dired-toggle-other-files-visibility)
+         ("C-c C-a" . org-attach-dired-to-subtree)
+         ("C-c M A" . emms-play-dired)
+         ("C-c M a" . emms-add-dired)
+         ("C-c d d" . dired-ediff-a-b)
+         ("C-c m !" . dired-apply-to-marked-files)
+         ("C-c m d" . dired-ediff-marked-files)
+         ("C-c m e" . dired-create-empty-file)
+         ("e" . dired-create-empty-file)
+         ("j" . dired)
+         ("z" . dired-up-directory))
   :hook ((dired-mode-hook . dired-hide-details-mode))
   :custom
   (dired-auto-revert-buffer t)
@@ -5694,22 +5700,12 @@ of the new org-mode file."
   (recentf-auto-cleanup 60)
   (recentf-max-saved-items 5000)
   (recentf-max-menu-items 5000)
+  (recentf-show-messages nil)
   :config
   (add-to-list 'recentf-exclude "\\/sudoedit:root")
   (add-to-list 'recentf-exclude "~\\'")
   (add-to-list 'recentf-exclude "\\.el\\.gz\\'")
   (run-at-time nil (* 5 60) 'recentf-save-list) ; Save every 5 minutes
-
-  (defun recentf-cleanup-quietly (orig-fun &rest _)
-    "Don't print log messages while calling ORIG-FUN."
-    (let ((inhibit-message t)) (funcall orig-fun)))
-  (advice-add #'recentf-cleanup :around #'recentf-cleanup-quietly)
-
-  (defun recentf-save-list-quietly (orig-fun &rest _)
-    "Don't print log messages while calling ORIG-FUN."
-    (let ((inhibit-message t)) (funcall orig-fun)))
-  (advice-add #'recentf-save-list :around #'recentf-save-list-quietly)
-
   (recentf-mode))
 
 
