@@ -546,6 +546,16 @@ From https://www.emacswiki.org/emacs/XModMapMode")
          ("M-s h U" . unhighlight-all-regexp)
          ;; Move this to C-c c w
          ;; ("M-=" . nil)
+         :map completion-list-mode-map
+         ("C-<return>" . my-choose-completion-no-exit)
+         ("z" . nil)
+         :map minibuffer-visible-completions-up-down-map
+         ("C-<return>" . my-minibuffer-insert-selected)
+         ("C-n" . minibuffer-next-completion)
+         ("C-p" . minibuffer-previous-completion)
+         ("M-<" . my-minibuffer-first-completion)
+         ("M-<return>" . my-minibuffer-complete-and-exit-no-completion)
+         ("M->" . my-minibuffer-last-completion)
          :map my-ctl-c-D-map
          ("." . benchmark-this)
          ("T" . cancel-debug-on-entry)
@@ -589,9 +599,10 @@ From https://www.emacswiki.org/emacs/XModMapMode")
          :map my-ctl-c-y-map
          ("o" . my-yank-to-other-window))
 
-  :hook ((minibuffer-setup-hook . (lambda () (setq truncate-lines t
-                                                   ;; Prevent bottom candidates from being truncated if default line-spacing > 0
-                                                   line-spacing 0)))
+  :hook ((minibuffer-setup-hook . (lambda ()
+                                    (setq
+                                     ;; line-spacing 0 ;; Prevent bottom candidates from being truncated if default line-spacing > 0
+                                     truncate-lines nil)))
          ;; Tabs handling
          (shell-mode-hook . set-indent-tab-width-8)
          (emacs-lisp-mode-hook . set-indent-tab-width-2)
@@ -644,7 +655,18 @@ From https://www.emacswiki.org/emacs/XModMapMode")
   (tab-always-indent 'complete)
   (tab-first-completion nil)
   ;; minibuffer.el
+  (completion-auto-deselect t)
+  (completion-auto-select t)
+  (completion-eager-display 'auto)
+  (completion-eager-update 'auto)
+  (completion-pcm-complete-word-inserts-delimiters t)
+  ;; (completion-pcm-leading-wildcard t) FIXME
+  (completion-show-help nil)
+  (completion-show-inline-help nil)
   (completions-format 'one-column)
+  (completions-max-height nil)
+  (completions-sort 'historical)
+  (minibuffer-visible-completions 'up-down)
   ;; novice.el
   (disabled-command-function nil)
   ;; paren.el
@@ -683,7 +705,8 @@ From https://www.emacswiki.org/emacs/XModMapMode")
   ;; vc.el
   (vc-follow-symlinks t)
   ;; warnings.el
-  (warning-suppress-types '((native-compiler)))
+  (warning-suppress-types '((native-compiler)
+                            (files missing-lexbind-cookie)))
   ;; window.el
   (same-window-regexps '("^magit: .*$"
                          "^magit-status: .*$"
@@ -701,6 +724,33 @@ From https://www.emacswiki.org/emacs/XModMapMode")
   (keymap-set my-ctl-h-u-map "m" #'elpaca-manager)
   (keymap-set my-ctl-h-u-map "l" #'elpaca-log)
   (keymap-set my-ctl-h-u-map "v" #'elpaca-visit)
+
+  (defun my-choose-completion-no-exit ()
+    "Choose completion but don't exit the minibuffer."
+    (interactive)
+    (let ((completion-no-auto-exit t))
+      (choose-completion)))
+
+  (defun my-minibuffer-first-completion ()
+    "Focus on the completions buffer, then move to the first item."
+    (interactive)
+    (with-minibuffer-completions-window (first-completion)))
+
+  (defun my-minibuffer-last-completion ()
+    "Focus on the completions buffer, then move to the last item."
+    (interactive)
+    (with-minibuffer-completions-window (last-completion)))
+
+  (defun my-minibuffer-complete-and-exit-no-completion ()
+    "Exit minibuffer immediately with current input, no completion."
+    (interactive)
+    (kill-buffer "*Completions*")
+    (minibuffer-complete-and-exit))
+
+  (defun my-minibuffer-insert-selected ()
+    "Insert the selected candidate from the minibuffer."
+    (interactive)
+    (insert (completion--selected-candidate)))
 
   ;; Set emacs source code location
   ;; (unless (memq window-system '(mac ns))
@@ -3901,19 +3951,22 @@ Howm file separator lines (📕 ...) are level 1; `*' headings start at level 2.
 ;;; icomplete
 
 (use-package icomplete
-  :disabled
   :demand t
   :ensure nil
-  :after (orderless)
+  :hook ((icomplete-minibuffer-setup-hook . my-icomplete-config)
+         ;; (after-init-hook . fido-vertical-mode)
+         (after-init-hook . fido-mode))
   :custom
-  (icomplete-prospects-height 1)
-  (icomplete-separator (propertize "  |  " 'face 'font-lock-variable-name-face))
+  (icomplete-prospects-height 2) ;; This only applies to the horizontal list (vertical list is set 25 internally)
+  (icomplete-separator (propertize " | " 'face 'font-lock-variable-name-face))
   (icomplete-compute-delay 0)
+  (icomplete-delay-completions-threshold 400)
+  (icomplete-show-matches-on-no-input t)
+  (icomplete-max-delay-chars 2)
   (completion-auto-help t)
   (completion-cycle-threshold nil)
-  (completion-pcm-complete-word-inserts-delimiters t)
 
-  :init
+  :config
   (defun space-dash-star ()
     "Cycle the previous character between dash, asterisk, and SPC characters."
     (interactive)
@@ -3936,72 +3989,35 @@ Howm file separator lines (📕 ...) are level 1; `*' headings start at level 2.
       (message "Selection copied")))
 
   (defun my-icomplete-config ()
-    (setq-local max-mini-window-height 0.15
-                ;; Setting the completion-styles here is necessary
-                ;; because `icomplete--fido-mode-setup' sets it to
-                ;; flex by force.
-                completion-styles '(orderless basic)
+    (setq-local
+     ;; Affects vertical list height
+     max-mini-window-height 0.2
 
-                ;; Completion falls back to using completion-styles if
-                ;; completion-category-overrides doesn't yield a
-                ;; result
-                completion-category-overrides '((buffer
-                                                 (styles . (basic flex partial-completion)))
-                                                (file
-                                                 (cycle-sort-function . minibuffer-sort-by-history)
-                                                 (styles . (basic flex partial-completion)))
-                                                (project-file
-                                                 (cycle-sort-function . minibuffer-sort-by-history))))
+     ;; Setting the completion-styles here is necessary
+     ;; because `icomplete--fido-mode-setup' sets it to
+     ;; flex by force.
+     completion-styles '(orderless basic)
+
+     ;; Completion falls back to using completion-styles if
+     ;; completion-category-overrides doesn't yield a
+     ;; result
+     completion-category-overrides '((buffer
+                                      (styles . (basic flex partial-completion)))
+                                     (file
+                                      (cycle-sort-function . minibuffer-sort-by-history)
+                                      (styles . (basic flex partial-completion)))
+                                     (project-file
+                                      (cycle-sort-function . minibuffer-sort-by-history))))
     (keymap-set icomplete-minibuffer-map "C-?" #'minibuffer-hide-completions)
-    (keymap-set icomplete-minibuffer-map "C-S-j" #'icomplete-force-complete)
     (keymap-set icomplete-minibuffer-map "C-<return>" #'icomplete-force-complete)
-    (keymap-set icomplete-minibuffer-map "C-^" (lambda ()
-                                                 (interactive)
-                                                 (setq-local max-mini-window-height
-                                                             (or (car (let ((window-sizes '(0.3 0.8)))
-                                                                        (cl-remove-if (lambda (h)
-                                                                                        (>= max-mini-window-height h))
-                                                                                      window-sizes)))
-                                                                 max-mini-window-height))))
     (keymap-set icomplete-minibuffer-map "C-c M-w" #'minibuffer-selection-kill-ring-save)
     (keymap-set icomplete-minibuffer-map "C-n" #'icomplete-forward-completions)
     (keymap-set icomplete-minibuffer-map "C-p" #'icomplete-backward-completions)
     (keymap-set icomplete-minibuffer-map "S-SPC" (lambda ()
                                                    (interactive)
                                                    (self-insert-command 1 ? )))
-    (keymap-set icomplete-minibuffer-map "SPC" #'space-dash-star))
-
-  (cond
-   ((< emacs-major-version 27)
-    (require 'icomplete-emacs-27)
-
-    (defun star-before-word-completion ()
-      "Insert a literal `*' on the first invocation, then runs minibuffer-complete-word if invoked again.
-Useful for completion style 'partial-completion."
-      (interactive)
-      (let ((prev-char (buffer-substring (- (point) 1) (point))))
-        (if (or (equal prev-char "-") (equal prev-char "*"))
-            (minibuffer-complete-word)
-          (insert-char ?*))))
-
-    (setq icomplete-hide-common-prefix nil
-          icomplete-show-matches-on-no-input t
-          completion-ignore-case t
-          read-file-name-completion-ignore-case t
-          read-buffer-completion-ignore-case t)
-    (let ((map icomplete-minibuffer-map))
-      (keymap-set icomplete-minibuffer-map "C-S-j" #'minibuffer-force-complete)
-      (keymap-set icomplete-minibuffer-map "SPC" #'star-before-word-completion))
-    (icomplete-mode t))
-
-   ((= emacs-major-version 27)
-    (fido-mode t)
-    (add-hook 'icomplete-minibuffer-setup-hook #'my-icomplete-config))
-
-   (t
-    ;; Emacs 28 introduces `fido-vertical-mode'
-    (fido-vertical-mode t)
-    (add-hook 'icomplete-minibuffer-setup-hook #'my-icomplete-config))))
+    (keymap-set icomplete-minibuffer-map "SPC" #'space-dash-star)
+    (keymap-set icomplete-minibuffer-map "TAB" #'switch-to-completions)))
 
 
 ;;; iimage
