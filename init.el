@@ -661,9 +661,9 @@ From https://www.emacswiki.org/emacs/XModMapMode")
   (completion-eager-display 'auto)
   (completion-eager-update 'auto)
   (completion-pcm-complete-word-inserts-delimiters t)
-  ;; (completion-pcm-leading-wildcard t) FIXME
   (completion-show-help nil)
   (completion-show-inline-help nil)
+  (completion-styles '(initials flex))
   (completions-format 'one-column)
   (completions-max-height nil)
   (completions-sort 'historical)
@@ -3987,16 +3987,16 @@ Howm file separator lines (📕 ...) are level 1; `*' headings start at level 2.
   (completion-cycle-threshold nil)
 
   :config
-  (defun space-dash-star ()
-    "Cycle the previous character between dash, asterisk, and SPC characters."
+  (defun dash-space-star ()
+    "Cycle the previous character between dash, SPC, and asterisk characters."
     (interactive)
     (let ((prev-char (buffer-substring (- (point) 1) (point)))
           (replace-prev-char (lambda (char) (delete-char -1) (insert char))))
       (cond
-       ((equal prev-char " ") (funcall replace-prev-char "-"))
-       ((equal prev-char "-") (funcall replace-prev-char "*"))
-       ((equal prev-char "*") (funcall replace-prev-char " "))
-       (t (insert " ")))))
+       ((equal prev-char "-") (funcall replace-prev-char " "))
+       ((equal prev-char " ") (funcall replace-prev-char "*"))
+       ((equal prev-char "*") (funcall replace-prev-char "-"))
+       (t (insert "-")))))
 
   (defun minibuffer-selection-kill-ring-save (arg)
     "Save the minibuffer selection to the kill ring, appending if ARG is non-nil."
@@ -4016,7 +4016,8 @@ Howm file separator lines (📕 ...) are level 1; `*' headings start at level 2.
      ;; Setting the completion-styles here is necessary
      ;; because `icomplete--fido-mode-setup' sets it to
      ;; flex by force.
-     completion-styles '(orderless basic)
+     ;; completion-styles '(orderless basic)
+     completion-styles '(initials flex)
 
      ;; Completion falls back to using completion-styles if
      ;; completion-category-overrides doesn't yield a
@@ -4036,7 +4037,7 @@ Howm file separator lines (📕 ...) are level 1; `*' headings start at level 2.
     (keymap-set icomplete-minibuffer-map "S-SPC" (lambda ()
                                                    (interactive)
                                                    (self-insert-command 1 ? )))
-    (keymap-set icomplete-minibuffer-map "SPC" #'space-dash-star)
+    (keymap-set icomplete-minibuffer-map "SPC" #'dash-space-star)
     (keymap-set icomplete-minibuffer-map "TAB" #'switch-to-completions)))
 
 
@@ -4615,6 +4616,7 @@ Howm file separator lines (📕 ...) are level 1; `*' headings start at level 2.
 ;;; orderless
 
 (use-package orderless
+  :disabled
   :ensure (:branch "master")
   :demand t
   :custom
