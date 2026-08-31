@@ -659,11 +659,11 @@ From https://www.emacswiki.org/emacs/XModMapMode")
   (completion-auto-deselect t)
   (completion-auto-select t)
   (completion-eager-display 'auto)
-  (completion-eager-update 'auto)
+  (completion-eager-update t)
   (completion-pcm-complete-word-inserts-delimiters t)
   (completion-show-help nil)
   (completion-show-inline-help nil)
-  (completion-styles '(initials flex))
+  (completion-styles '(flex basic))
   (completions-format 'one-column)
   (completions-max-height nil)
   (completions-sort 'historical)
@@ -4017,7 +4017,7 @@ Howm file separator lines (📕 ...) are level 1; `*' headings start at level 2.
      ;; because `icomplete--fido-mode-setup' sets it to
      ;; flex by force.
      ;; completion-styles '(orderless basic)
-     completion-styles '(initials flex)
+     completion-styles '(flex basic)
 
      ;; Completion falls back to using completion-styles if
      ;; completion-category-overrides doesn't yield a

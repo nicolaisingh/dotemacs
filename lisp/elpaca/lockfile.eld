@@ -526,8 +526,9 @@
 					   (:exclude ".dir-locals.el" "test.el" "tests.el"
 								 "*-test.el" "*-tests.el" "LICENSE"
 								 "README*" "*-pkg.el"))
-					  :source "MELPA" :id easy-kill :type git
-					  :protocol https :inherit t :depth treeless :ref
+					  :source "elpaca-menu-lock-file" :id easy-kill
+					  :type git :protocol https :inherit t :depth
+					  treeless :ref
 					  "98cbae5d8c378ad14d612d7c88a78484c49a80b8"))
  (eat :source "elpaca-menu-lock-file" :recipe
 	  (:package "eat" :repo
@@ -920,10 +921,10 @@
 				  (:exclude ".dir-locals.el" "test.el" "tests.el"
 							"*-test.el" "*-tests.el" "LICENSE"
 							"README*" "*-pkg.el"))
-				 :source "MELPA" :id howm :protocol ssh :remotes
-				 (("fork" :repo "nicolaisingh/howm")) :branch "master"
-				 :type git :inherit t :depth treeless :ref
-				 "5338a56192858e911d3863cf7f7ead16fb6eaf9c"))
+				 :source "elpaca-menu-lock-file" :id howm :protocol
+				 ssh :remotes (("fork" :repo "nicolaisingh/howm"))
+				 :branch "master" :type git :inherit t :depth treeless
+				 :ref "5338a56192858e911d3863cf7f7ead16fb6eaf9c"))
  (ht :source "elpaca-menu-lock-file" :recipe
 	 (:package "ht" :fetcher github :repo "Wilfred/ht.el" :files
 			   ("*.el" "*.el.in" "dir" "*.info" "*.texi" "*.texinfo"
@@ -1008,9 +1009,9 @@
 					 (:exclude ".dir-locals.el" "test.el" "tests.el"
 							   "*-test.el" "*-tests.el" "LICENSE"
 							   "README*" "*-pkg.el"))
-					:source "MELPA" :id keyfreq :type git :protocol
-					https :inherit t :depth treeless :ref
-					"c6955162307f37c2ac631d9daf118781009f8dda"))
+					:source "elpaca-menu-lock-file" :id keyfreq :type
+					git :protocol https :inherit t :depth treeless
+					:ref "c6955162307f37c2ac631d9daf118781009f8dda"))
  (know-your-http-well :source "elpaca-menu-lock-file" :recipe
 					  (:package "know-your-http-well" :fetcher github
 								:repo "for-GET/know-your-http-well"
@@ -1128,10 +1129,10 @@
 						(:exclude ".dir-locals.el" "test.el"
 								  "tests.el" "*-test.el" "*-tests.el"
 								  "LICENSE" "README*" "*-pkg.el"))
-					   :source "elpaca-menu-lock-file" :id marginalia
-					   :branch "main" :type git :protocol https
-					   :inherit t :depth treeless :ref
-					   "7604eb0463994b0528b92aaf6e594f64089b8b95"))
+					   :source "MELPA" :id marginalia :branch "main"
+					   :type git :protocol https :inherit t :depth
+					   treeless :ref
+					   "7ec0b70afb43a756ecd45a958c6ebe797717fc91"))
  (markdown-mode :source "elpaca-menu-lock-file" :recipe
 				(:package "markdown-mode" :fetcher github :repo
 						  "jrblevin/markdown-mode" :files
@@ -1299,20 +1300,6 @@
 							  git :protocol https :inherit t :depth
 							  treeless :ref
 							  "0ddebae1885c1b54eae1d79e66204d6d83c5065b"))
- (orderless :source "elpaca-menu-lock-file" :recipe
-			(:package "orderless" :repo "oantolin/orderless" :fetcher
-					  github :files
-					  ("*.el" "*.el.in" "dir" "*.info" "*.texi"
-					   "*.texinfo" "doc/dir" "doc/*.info" "doc/*.texi"
-					   "doc/*.texinfo" "lisp/*.el" "docs/dir"
-					   "docs/*.info" "docs/*.texi" "docs/*.texinfo"
-					   (:exclude ".dir-locals.el" "test.el" "tests.el"
-								 "*-test.el" "*-tests.el" "LICENSE"
-								 "README*" "*-pkg.el"))
-					  :source "elpaca-menu-lock-file" :id orderless
-					  :branch "master" :type git :protocol https
-					  :inherit t :depth treeless :ref
-					  "0ffd9d6903714c1f6d8fcbb6a20941fb33dd7ae5"))
  (org-bookmark-heading :source "elpaca-menu-lock-file" :recipe
 					   (:package "org-bookmark-heading" :fetcher
 								 github :repo
@@ -1896,20 +1883,6 @@
 						 :branch "master" :type git :protocol https
 						 :inherit t :depth treeless :ref
 						 "cc1003b730a3167b972cc8400dffe19be7988fc7"))
- (unfill :source "elpaca-menu-lock-file" :recipe
-		 (:package "unfill" :fetcher github :repo "purcell/unfill"
-				   :files
-				   ("*.el" "*.el.in" "dir" "*.info" "*.texi"
-					"*.texinfo" "doc/dir" "doc/*.info" "doc/*.texi"
-					"doc/*.texinfo" "lisp/*.el" "docs/dir"
-					"docs/*.info" "docs/*.texi" "docs/*.texinfo"
-					(:exclude ".dir-locals.el" "test.el" "tests.el"
-							  "*-test.el" "*-tests.el" "LICENSE"
-							  "README*" "*-pkg.el"))
-				   :source "elpaca-menu-lock-file" :id unfill :branch
-				   "main" :type git :protocol https :inherit t :depth
-				   treeless :ref
-				   "4a15511876983eeaa75e57fcab8d4d51fe9b3840"))
  (uniline :source "elpaca-menu-lock-file" :recipe
 		  (:package "uniline" :fetcher github :repo "tbanel/uniline"
 					:files
