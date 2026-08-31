@@ -580,7 +580,6 @@ From https://www.emacswiki.org/emacs/XModMapMode")
          ("i" . find-init-file)
          ("s" . find-scratch-buffer)
          :map my-ctl-c-h-map
-         ("l" . hl-line-mode)
          ("s" . toggle-hscroll-mode)
          :map my-ctl-c-i-map
          ("SPC" . indent-using-spaces-and-fixup)
@@ -1559,8 +1558,7 @@ This will return ~/.emacs.d/agent-shell/<dir>."
               ("C-c m d" . dired-ediff-marked-files)
               ("C-c m e" . dired-create-empty-file)
               ("z" . dired-up-directory))
-  :hook ((dired-mode-hook . dired-hide-details-mode)
-         (dired-mode-hook . hl-line-mode))
+  :hook ((dired-mode-hook . dired-hide-details-mode))
   :custom
   (dired-auto-revert-buffer t)
   (dired-dwim-target t)
@@ -3144,6 +3142,20 @@ If region is active, rewrite the region. Otherwise rewrite the entire buffer."
      try-expand-line-all-buffers
      try-complete-file-name-partially
      try-complete-file-name)))
+
+
+;;; hl-line
+
+(use-package hl-line
+  :ensure nil
+  :bind (:map
+         my-ctl-c-h-map
+         ("l" . global-hl-line-mode))
+  :custom
+  (global-hl-line-buffers '(not
+                            (or (lambda (b) (buffer-local-value 'cursor-face-highlight-mode b))
+                                (lambda (b) (string-match-p "\\` " (buffer-name b)))
+                                minibufferp))))
 
 
 ;;; howm
