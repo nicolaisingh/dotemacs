@@ -519,7 +519,7 @@ From https://www.emacswiki.org/emacs/XModMapMode")
          ("C-S-t" . tab-new)
          ("C-S-w" . tab-close)
          ("C-`" . my-select-tab-or-other-window)
-         ("C-M-`" . transpose-frame)
+         ("C-M-`" . window-layout-rotate-clockwise)
          ("C-c j" . (lambda (jira-issue)
                       (interactive
                        (list (let ((initial-input (symbol-name (or (symbol-at-point)
@@ -679,6 +679,7 @@ From https://www.emacswiki.org/emacs/XModMapMode")
   ;; simple.el
   (eval-expression-print-length nil) ; don't truncate when evaluating exprs
   ;; (eval-expression-print-level nil)  ; print expressions entirely
+  (exchange-point-and-mark-highlight-region nil)
   (kill-do-not-save-duplicates t)
   (kill-region-dwim 'emacs-word)
   (kill-whole-line t)
@@ -759,6 +760,7 @@ From https://www.emacswiki.org/emacs/XModMapMode")
   ;;   (setq find-function-C-source-directory "/run/current-system/sw/share/emacs/source/src")
   ;;   (visit-tags-table (format "/run/current-system/sw/share/emacs/%s/lisp/TAGS" emacs-version)))
 
+  (context-menu-mode)
   (minibuffer-depth-indicate-mode)
   (display-time-mode)
   ;; (global-visual-wrap-prefix-mode) ;; Some incompatibility with org-mode
@@ -5859,7 +5861,7 @@ of the new org-mode file."
               ("q" . selected-off)
               ("r" . reverse-region)
               ("s" . my-sort-lines)
-              ("u" . unfill-region)
+              ("u" . unfill-paragraph)
               ("w" . delete-region)
               ("C-c C-a" . mc/edit-beginnings-of-lines)
               ("C-c C-e" . mc/edit-ends-of-lines)
@@ -6088,14 +6090,6 @@ of the new org-mode file."
   :ensure (:branch "main"))
 
 
-;;; transpose-frame
-
-(use-package transpose-frame
-  :ensure nil
-  :bind (:map my-ctl-c-t-map
-              ("f" . transpose-frame)))
-
-
 ;;; tree-mode
 
 (use-package tree-mode
@@ -6156,12 +6150,6 @@ of the new org-mode file."
          (typescript-ts-mode-hook . no-indent-tabs-mode))
   :custom
   (typescript-ts-mode-indent-offset 2))
-
-
-;;; unfill
-
-(use-package unfill
-  :ensure (:branch "main"))
 
 
 ;;; unicode-fonts
