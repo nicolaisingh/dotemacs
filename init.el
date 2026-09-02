@@ -548,6 +548,10 @@ From https://www.emacswiki.org/emacs/XModMapMode")
          ;; ("M-=" . nil)
          :map completion-list-mode-map
          ("C-<return>" . my-choose-completion-no-exit)
+         ("M-<" . first-completion)
+         ("M-<return>" . my-minibuffer-complete-and-exit-no-completion)
+         ("M->" . last-completion)
+         ("M-c" . switch-to-minibuffer)
          ("z" . nil)
          :map minibuffer-visible-completions-up-down-map
          ("C-<return>" . my-minibuffer-insert-selected)
@@ -661,10 +665,14 @@ From https://www.emacswiki.org/emacs/XModMapMode")
   (completion-eager-display 'auto)
   (completion-eager-update t)
   (completion-pcm-complete-word-inserts-delimiters t)
+  (completion-pcm-leading-wildcard t)
   (completion-show-help nil)
   (completion-show-inline-help nil)
   (completion-styles '(flex basic))
+  (completion-styles '(partial-completion flex))
+  (completions-detailed t)
   (completions-format 'one-column)
+  (completions-group t)
   (completions-max-height nil)
   (completions-sort 'historical)
   (minibuffer-visible-completions 'up-down)
@@ -1339,10 +1347,10 @@ This will return ~/.emacs.d/agent-shell/<dir>."
   :ensure (:branch "main")
   :demand t
   :bind (([remap repeat-complex-command] . consult-complex-command)
-         ([remap switch-to-buffer-other-frame] . consult-buffer-other-frame)
-         ([remap switch-to-buffer-other-window] . consult-buffer-other-window)
-         ([remap switch-to-buffer-other-tab] . consult-buffer-other-tab)
-         ([remap switch-to-buffer] . consult-buffer)
+         ;; ([remap switch-to-buffer-other-frame] . consult-buffer-other-frame)
+         ;; ([remap switch-to-buffer-other-window] . consult-buffer-other-window)
+         ;; ([remap switch-to-buffer-other-tab] . consult-buffer-other-tab)
+         ;; ([remap switch-to-buffer] . consult-buffer)
          ([remap yank-pop] . consult-yank-pop)
          ([remap bookmark-jump] . consult-bookmark)
          ([remap project-switch-to-buffer] . consult-project-buffer)
@@ -1357,6 +1365,7 @@ This will return ~/.emacs.d/agent-shell/<dir>."
          :map my-ctl-c-m-map
          ("M-x" . consult-mode-command)
          :map goto-map
+         ("b" . consult-buffer)
          ("e" . consult-compile-error)
          ("f" . consult-flymake)
          ("I" . consult-imenu-multi)
@@ -2019,6 +2028,7 @@ If the item at point is a file, try to remove the subtree."
          (typescript-ts-mode-hook . eglot-ensure))
   :custom
   (eglot-autoshutdown t)
+  (eglot-code-action-indications nil)
   :config
   (setq-mode-local python-mode
                    eglot-ignored-server-capabilities '(:documentHighlightProvider
@@ -3964,17 +3974,18 @@ Howm file separator lines (📕 ...) are level 1; `*' headings start at level 2.
   :demand t
   :ensure nil
   :hook ((icomplete-minibuffer-setup-hook . my-icomplete-config)
-         ;; (after-init-hook . fido-vertical-mode)
-         (after-init-hook . fido-mode))
+         (after-init-hook . icomplete-mode))
   :custom
-  (icomplete-prospects-height 2) ;; This only applies to the horizontal list (vertical list is set 25 internally)
-  (icomplete-separator (propertize " | " 'face 'font-lock-variable-name-face))
-  (icomplete-compute-delay 0)
-  (icomplete-delay-completions-threshold 400)
-  (icomplete-show-matches-on-no-input t)
-  (icomplete-max-delay-chars 2)
   (completion-auto-help t)
   (completion-cycle-threshold nil)
+  (icomplete-compute-delay 0)
+  (icomplete-delay-completions-threshold 400)
+  (icomplete-hide-common-prefix nil)
+  (icomplete-max-delay-chars 2)
+  (icomplete-prospects-height 1) ;; This only applies to the horizontal list (vertical list is set 25 internally)
+  (icomplete-separator (propertize " │ " 'face 'font-lock-variable-name-face))
+  (icomplete-show-matches-on-no-input t)
+  (icomplete-tidy-shadowed-file-names t)
 
   :config
   (defun dash-space-star ()
@@ -4007,27 +4018,29 @@ Howm file separator lines (📕 ...) are level 1; `*' headings start at level 2.
      ;; because `icomplete--fido-mode-setup' sets it to
      ;; flex by force.
      ;; completion-styles '(orderless basic)
-     completion-styles '(flex basic)
+     completion-styles '(partial-completion flex)
 
      ;; Completion falls back to using completion-styles if
      ;; completion-category-overrides doesn't yield a
      ;; result
      completion-category-overrides '((buffer
-                                      (styles . (basic flex partial-completion)))
+                                      (styles . (basic partial-completion flex)))
                                      (file
                                       (cycle-sort-function . minibuffer-sort-by-history)
-                                      (styles . (basic flex partial-completion)))
+                                      (styles . (basic partial-completion flex)))
                                      (project-file
                                       (cycle-sort-function . minibuffer-sort-by-history))))
     (keymap-set icomplete-minibuffer-map "C-?" #'minibuffer-hide-completions)
+    (keymap-set icomplete-minibuffer-map "<return>" #'icomplete-force-complete-and-exit)
     (keymap-set icomplete-minibuffer-map "C-<return>" #'icomplete-force-complete)
+    (keymap-set icomplete-minibuffer-map "M-<return>" #'minibuffer-completion-exit)
     (keymap-set icomplete-minibuffer-map "C-c M-w" #'minibuffer-selection-kill-ring-save)
     (keymap-set icomplete-minibuffer-map "C-n" #'icomplete-forward-completions)
     (keymap-set icomplete-minibuffer-map "C-p" #'icomplete-backward-completions)
     (keymap-set icomplete-minibuffer-map "S-SPC" (lambda ()
                                                    (interactive)
                                                    (self-insert-command 1 ? )))
-    (keymap-set icomplete-minibuffer-map "SPC" #'dash-space-star)
+    ;; (keymap-set icomplete-minibuffer-map "SPC" #'dash-space-star)
     (keymap-set icomplete-minibuffer-map "TAB" #'switch-to-completions)))
 
 

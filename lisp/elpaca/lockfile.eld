@@ -24,29 +24,6 @@
 					  :branch "master" :type git :protocol https
 					  :inherit t :depth treeless :ref
 					  "5c1484b8982845845ccd0be02629e21f1d5bed81"))
- (agent-shell :source "elpaca-menu-lock-file" :recipe
-			  (:package "agent-shell" :fetcher github :repo
-						"xenodium/agent-shell" :files
-						("*.el" "*.el.in" "dir" "*.info" "*.texi"
-						 "*.texinfo" "doc/dir" "doc/*.info"
-						 "doc/*.texi" "doc/*.texinfo" "lisp/*.el"
-						 "docs/dir" "docs/*.info" "docs/*.texi"
-						 "docs/*.texinfo"
-						 (:exclude ".dir-locals.el" "test.el"
-								   "tests.el" "*-test.el" "*-tests.el"
-								   "LICENSE" "README*" "*-pkg.el"))
-						:source "elpaca-menu-lock-file" :id
-						agent-shell :branch "main" :type git :protocol
-						https :inherit t :depth treeless :ref
-						"102ac73a89f13b49b49542e84abfbd1baf3c2573"))
- (agent-shell-sidebar :source "elpaca-menu-lock-file" :recipe
-					  (:source "elpaca-menu-lock-file" :package
-							   "agent-shell-sidebar" :id
-							   agent-shell-sidebar :host github :repo
-							   "cmacrae/agent-shell-sidebar" :branch
-							   "main" :type git :protocol https
-							   :inherit t :depth treeless :ref
-							   "10fee0b1463cdf210b0908c23e940a44c8d4a8e2"))
  (aggressive-indent :source "elpaca-menu-lock-file" :recipe
 					(:package "aggressive-indent" :repo
 							  "Malabarba/aggressive-indent-mode"
