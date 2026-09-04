@@ -548,9 +548,11 @@ From https://www.emacswiki.org/emacs/XModMapMode")
          ;; ("M-=" . nil)
          :map completion-list-mode-map
          ("C-<return>" . my-choose-completion-no-exit)
+         ("<" . first-completion)
          ("M-<" . first-completion)
          ("M-<return>" . my-minibuffer-complete-and-exit-no-completion)
          ("M->" . last-completion)
+         (">" . last-completion)
          ("M-c" . switch-to-minibuffer)
          ("z" . nil)
          :map minibuffer-visible-completions-up-down-map
@@ -668,7 +670,6 @@ From https://www.emacswiki.org/emacs/XModMapMode")
   (completion-pcm-leading-wildcard t)
   (completion-show-help nil)
   (completion-show-inline-help nil)
-  (completion-styles '(flex basic))
   (completion-styles '(partial-completion flex))
   (completions-detailed t)
   (completions-format 'one-column)
@@ -3975,6 +3976,22 @@ Howm file separator lines (📕 ...) are level 1; `*' headings start at level 2.
   :ensure nil
   :hook ((icomplete-minibuffer-setup-hook . my-icomplete-config)
          (after-init-hook . icomplete-mode))
+  :bind (:map
+         icomplete-minibuffer-map
+         ("C-?" . minibuffer-hide-completions)
+         ("<return>" . icomplete-force-complete-and-exit)
+         ("C-<return>" . icomplete-force-complete)
+         ("M-<return>" . minibuffer-completion-exit)
+         ("C-c M-w" . minibuffer-selection-kill-ring-save)
+         ("C-n" . icomplete-forward-completions)
+         ("C-p" . icomplete-backward-completions)
+         ("C-r" . icomplete-backward-completions)
+         ("C-s" . icomplete-forward-completions)
+         ("S-SPC" . (lambda ()
+                      (interactive)
+                      (self-insert-command 1 ? )))
+         ;; ("SPC" . dash-space-star)
+         ("TAB" . switch-to-completions))
   :custom
   (completion-auto-help t)
   (completion-cycle-threshold nil)
@@ -4029,19 +4046,7 @@ Howm file separator lines (📕 ...) are level 1; `*' headings start at level 2.
                                       (cycle-sort-function . minibuffer-sort-by-history)
                                       (styles . (basic partial-completion flex)))
                                      (project-file
-                                      (cycle-sort-function . minibuffer-sort-by-history))))
-    (keymap-set icomplete-minibuffer-map "C-?" #'minibuffer-hide-completions)
-    (keymap-set icomplete-minibuffer-map "<return>" #'icomplete-force-complete-and-exit)
-    (keymap-set icomplete-minibuffer-map "C-<return>" #'icomplete-force-complete)
-    (keymap-set icomplete-minibuffer-map "M-<return>" #'minibuffer-completion-exit)
-    (keymap-set icomplete-minibuffer-map "C-c M-w" #'minibuffer-selection-kill-ring-save)
-    (keymap-set icomplete-minibuffer-map "C-n" #'icomplete-forward-completions)
-    (keymap-set icomplete-minibuffer-map "C-p" #'icomplete-backward-completions)
-    (keymap-set icomplete-minibuffer-map "S-SPC" (lambda ()
-                                                   (interactive)
-                                                   (self-insert-command 1 ? )))
-    ;; (keymap-set icomplete-minibuffer-map "SPC" #'dash-space-star)
-    (keymap-set icomplete-minibuffer-map "TAB" #'switch-to-completions)))
+                                      (cycle-sort-function . minibuffer-sort-by-history))))))
 
 
 ;;; iimage
@@ -5585,6 +5590,10 @@ of the new org-mode file."
 
   ;; Add insert-file-path as i
   (keymap-set project-prefix-map "i" #'my-project-insert-file-path)
+  ;; Add project-dired as RET
+  (keymap-set project-prefix-map "D" #'project-dired)
+  (keymap-set project-prefix-map "RET" #'project-dired)
+  (add-to-list 'project-switch-commands '(project-dired "Project root") t)
   ;; Add magit as m
   (keymap-set project-prefix-map "m" #'magit-project-status)
   (add-to-list 'project-switch-commands '(magit-project-status "Magit") t)
@@ -6288,6 +6297,7 @@ of the new org-mode file."
 ;;; yaml-pro
 
 (use-package yaml-pro
+  :disabled
   :ensure (:branch "master")
   :bind (:map
          yaml-pro-ts-mode-map
