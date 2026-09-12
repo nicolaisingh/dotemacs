@@ -617,11 +617,12 @@ From https://www.emacswiki.org/emacs/XModMapMode")
          (emacs-lisp-mode-hook . no-indent-tabs-mode))
 
   :custom
-  ;; C
+  ;; C source code
   (auto-hscroll-mode 'current-line)
   (auto-save-interval 50)
   (auto-save-no-message t)
   (auto-save-timeout 3)
+  (completion-ignore-case nil)
   (debug-on-message nil)
   (delete-by-moving-to-trash t)
   (enable-recursive-minibuffers t)
@@ -663,14 +664,16 @@ From https://www.emacswiki.org/emacs/XModMapMode")
   (tab-first-completion nil)
   ;; minibuffer.el
   (completion-auto-deselect t)
+  (completion-auto-help t)
   (completion-auto-select t)
+  (completion-cycle-threshold nil)
   (completion-eager-display 'auto)
   (completion-eager-update t)
   (completion-pcm-complete-word-inserts-delimiters t)
   (completion-pcm-leading-wildcard t)
   (completion-show-help nil)
   (completion-show-inline-help nil)
-  (completion-styles '(partial-completion flex))
+  (completion-styles '(partial-completion initials))
   (completions-detailed t)
   (completions-format 'one-column)
   (completions-group t)
@@ -722,6 +725,8 @@ From https://www.emacswiki.org/emacs/XModMapMode")
   ;; window.el
   (same-window-regexps '("^magit: .*$"
                          "^magit-status: .*$"
+                         ;; "^\\*Password-Store\\*$"
+                         "^\\*prodigy\\*$"
                          "\\*compilation\\*"))
 
   :init
@@ -3987,14 +3992,13 @@ Howm file separator lines (📕 ...) are level 1; `*' headings start at level 2.
          ("C-p" . icomplete-backward-completions)
          ("C-r" . icomplete-backward-completions)
          ("C-s" . icomplete-forward-completions)
-         ("S-SPC" . (lambda ()
-                      (interactive)
-                      (self-insert-command 1 ? )))
-         ;; ("SPC" . dash-space-star)
-         ("TAB" . switch-to-completions))
+         ;; ("S-SPC" . (lambda ()
+         ;;              (interactive)
+         ;;              (self-insert-command 1 ? )))
+         ("S-SPC" . space-dash-star)
+         ;; ("TAB" . switch-to-completions)
+         )
   :custom
-  (completion-auto-help t)
-  (completion-cycle-threshold nil)
   (icomplete-compute-delay 0)
   (icomplete-delay-completions-threshold 400)
   (icomplete-hide-common-prefix nil)
@@ -4005,16 +4009,16 @@ Howm file separator lines (📕 ...) are level 1; `*' headings start at level 2.
   (icomplete-tidy-shadowed-file-names t)
 
   :config
-  (defun dash-space-star ()
+  (defun space-dash-star ()
     "Cycle the previous character between dash, SPC, and asterisk characters."
     (interactive)
     (let ((prev-char (buffer-substring (- (point) 1) (point)))
           (replace-prev-char (lambda (char) (delete-char -1) (insert char))))
       (cond
-       ((equal prev-char "-") (funcall replace-prev-char " "))
-       ((equal prev-char " ") (funcall replace-prev-char "*"))
-       ((equal prev-char "*") (funcall replace-prev-char "-"))
-       (t (insert "-")))))
+       ((equal prev-char " ") (funcall replace-prev-char "-"))
+       ((equal prev-char "-") (funcall replace-prev-char "*"))
+       ((equal prev-char "*") (funcall replace-prev-char " "))
+       (t (insert " ")))))
 
   (defun minibuffer-selection-kill-ring-save (arg)
     "Save the minibuffer selection to the kill ring, appending if ARG is non-nil."
@@ -4035,7 +4039,7 @@ Howm file separator lines (📕 ...) are level 1; `*' headings start at level 2.
      ;; because `icomplete--fido-mode-setup' sets it to
      ;; flex by force.
      ;; completion-styles '(orderless basic)
-     completion-styles '(partial-completion flex)
+     completion-styles '(partial-completion initials)
 
      ;; Completion falls back to using completion-styles if
      ;; completion-category-overrides doesn't yield a
@@ -6239,14 +6243,14 @@ of the new org-mode file."
   :custom
   (whisper-install-whispercpp t)
   (whisper-language "en")
-  (whisper-model "medium")
+  (whisper-model "medium.en")
   (whisper-quantize nil)
   (whisper-recording-timeout 300)
   (whisper-return-cursor 'start)
   (whisper-server-baseurl nil)
-  (whisper-server-mode 'nil)
+  (whisper-server-mode nil)
   (whisper-translate nil)
-  (whisper-use-threads (num-processors))
+  (whisper-use-threads (1- (num-processors)))
   :config
   (setq whisper--mode-line-recording-indicator (propertize "[Recording] " 'face 'font-lock-warning-face)
         whisper--mode-line-transcribing-indicator (propertize "[Transcribing] " 'face 'font-lock-warning-face)))
