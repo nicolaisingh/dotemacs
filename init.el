@@ -805,15 +805,6 @@ From https://www.emacswiki.org/emacs/XModMapMode")
     (exec-path-from-shell-initialize)))
 
 
-;;; ace-window
-
-(use-package ace-window
-  :disabled
-  :bind (:map
-         my-meta-o-map
-         ("M-o" . ace-window)))
-
-
 ;;; acp
 
 (use-package acp
@@ -959,44 +950,6 @@ This will return ~/.emacs.d/agent-shell/<dir>."
          (scheme-mode-hook . aggressive-indent-mode)
          ;; Turn off in the edebug eval list buffer
          (edebug-eval-mode-hook . (lambda () (aggressive-indent-mode -1)))))
-
-
-;;; aider
-
-(use-package aider
-  :ensure (:branch "main")
-  :disabled
-  :bind (("C-c a" . aider-transient-menu))
-  :custom
-  (aider-todo-keyword-pair '("AI!" . "comment line ending with string: AI!"))
-  :config
-  (defun my-aider-run-aider (orig-fn edit-args)
-    "Call `aider-run-aider' with needed args and logging disabled."
-    (interactive "P")
-    (setenv "OPENAI_API_KEY" (auth-source-pick-first-password :host "api.openai.com"))
-    (setenv "DEEPSEEK_API_KEY" (auth-source-pick-first-password :host "api.deepseek.com"))
-    (let* (;; Ordering based on Aider LLM leaderboard (https://aider.chat/docs/leaderboards/)
-           (args-openai-o3-pro       '("--model" "openai/o3-pro"))
-           (args-openai-o3-high      '("--model" "openai/o3" "--reasoning-effort" "high"))
-           (args-openai-o3           '("--model" "openai/o3"))
-           (args-openai-o4-mini-high '("--model" "openai/o4-mini" "--reasoning-effort" "high"))
-           (args-deepseek-r1         '("--model" "deepseek/deepseek-reasoner"))
-           (args-openai-o3-mini-high '("--model" "openai/o3-mini" "--reasoning-effort" "high"))
-           (args-deepseek-v3         '("--model" "deepseek/deepseek-chat"))
-
-           ;; Other options
-           (args-other               '("--cache-prompts"
-                                       "--no-analytics"
-                                       ;; "--no-auto-commits"
-                                       "--no-gitignore"
-                                       "--no-stream"
-                                       "--notifications"))
-           (aider-args `(,@args-deepseek-r1
-                         ,@args-other))
-           (message-log-max nil)
-           (inhibit-message t))
-      (funcall orig-fn edit-args)))
-  (advice-add 'aider-run-aider :around #'my-aider-run-aider))
 
 
 ;;; alert
@@ -1414,23 +1367,6 @@ This will return ~/.emacs.d/agent-shell/<dir>."
   (consult-dir-default-command #'consult-dir-dired))
 
 
-;;; consult-org-roam
-
-(use-package consult-org-roam
-  :disabled
-  :after (org-roam)
-  :bind (("C-c n f" . consult-org-roam-file-find)
-         ("C-c n g" . consult-org-roam-search)
-         :map org-mode-map
-         ("C-c n <" . consult-org-roam-backlinks)
-         ("C-c n >" . consult-org-roam-forward-links))
-  :custom
-  (consult-org-roam-grep-func #'consult-ripgrep)
-  (consult-org-roam-buffer-after-buffers nil)
-  :config
-  (consult-org-roam-mode 1))
-
-
 ;;; copilot
 (use-package copilot
   :disabled
@@ -1660,17 +1596,6 @@ be file B."
         (setq dired-ediff-file-b file)
         (add-hook 'ediff-quit-hook #'dired-ediff-a-b-cleanup)
         (ediff-files dired-ediff-file-a dired-ediff-file-b)))))
-
-
-;;; dired-collapse (from dired-hacks)
-
-(use-package dired-collapse
-  :ensure (:branch "master")
-  :disabled
-  :after (dired)
-  :demand t
-  :config
-  (global-dired-collapse-mode))
 
 
 ;;; dired-marked
@@ -2557,39 +2482,6 @@ The default format is specified by `emms-source-playlist-default-format'."
               ("\"" . er/mark-outside-quotes)))
 
 
-;;; find-dired
-
-(use-package find-dired
-  :disabled
-  :ensure nil
-  :bind (:map dired-mode-map
-              ("C-c m f" . find-name-dired-current)
-              ("C-c m g g" . find-grep-dired-current))
-  :config
-  (defun find-name-dired-current (pattern)
-    "Call `find-name-dired' in the current directory to search for files matching PATTERN."
-    (interactive "sFind-name (filename wildcard): ")
-    (let* ((case-fold-search nil)
-           (find-name-arg
-            (if (or current-prefix-arg
-                    (string-match-p "[[:upper:]]" pattern))
-                "-name"
-              "-iname")))
-      (find-name-dired (dired-current-directory) pattern)))
-
-  (defun find-grep-dired-current (regexp)
-    "Call `find-grep-dired' in the current directory to match REGEXP in files."
-    (interactive "sFind-grep (grep regexp): ")
-    (let* ((case-fold-search nil)
-           (grep-ignore-case-flag
-            (if (or current-prefix-arg
-                    (string-match-p "[[:upper:]]" regexp))
-                ""
-              " -i"))
-           (find-grep-options (concat find-grep-options grep-ignore-case-flag)))
-      (find-grep-dired (dired-current-directory) regexp))))
-
-
 ;;; flymake
 
 (use-package flymake
@@ -2609,17 +2501,6 @@ The default format is specified by `emms-source-playlist-default-format'."
 (use-package forge
   :ensure (:branch "main")
   :after (magit))
-
-
-;;; form-feed
-
-(use-package form-feed
-  :disabled
-  :ensure (:branch "master")
-  :hook ((emacs-lisp-mode-hook . form-feed-mode)
-         (howm-view-contents-mode-hook . form-feed-mode))
-  :custom
-  (form-feed-line-width 100))
 
 
 ;;; free-keys
@@ -3140,25 +3021,6 @@ If region is active, rewrite the region. Otherwise rewrite the entire buffer."
   :ensure (:branch "master")
   :bind (:map my-ctl-c-h-map
               ("n" . highlight-numbers-mode)))
-
-
-;;; hippie-exp
-
-(use-package hippie-exp
-  :disabled
-  :ensure nil
-  :bind (("M-/" . hippie-expand))
-  :custom
-  (hippie-expand-try-functions-list
-   '(try-expand-dabbrev
-     try-expand-dabbrev-visible
-     try-expand-dabbrev-all-buffers
-     try-expand-dabbrev-from-kill
-     try-expand-all-abbrevs
-     try-expand-line
-     try-expand-line-all-buffers
-     try-complete-file-name-partially
-     try-complete-file-name)))
 
 
 ;;; hl-line
@@ -4225,12 +4087,6 @@ Howm file separator lines (📕 ...) are level 1; `*' headings start at level 2.
     (message "%s" (json-path-to-position (point)))))
 
 
-;;; jsonian
-
-(use-package jsonian
-  :disabled)
-
-
 ;;; keyfreq
 
 (use-package keyfreq
@@ -4556,13 +4412,6 @@ Howm file separator lines (📕 ...) are level 1; `*' headings start at level 2.
                                (add-hook 'before-save-hook #'eglot-format nil t))))
   :config
   (add-to-list 'major-mode-remap-alist '(nix-mode . nix-ts-mode)))
-
-
-;;; nixfmt
-
-(use-package nixfmt
-  :disabled
-  :hook ((nix-ts-mode-hook . nixfmt-on-save-mode)))
 
 
 ;;; nov
@@ -5100,55 +4949,6 @@ of the new org-mode file."
   (org-crypt-disable-auto-save t))
 
 
-;;; org-db-v3
-
-(use-package org-db-v3
-  :disabled
-  :demand t
-  :ensure (:host github :repo "jkitchin/org-db-v3" :files (:defaults "elisp/*.el") :branch "main")
-  :custom
-  (org-db-v3-server-directory (expand-file-name "org-db-v3/python" elpaca-sources-directory)))
-
-
-;;; org-modern
-
-(use-package org-modern
-  :disabled
-  :after (org)
-  :bind (:map
-         org-mode-map
-         ("C-c o m" . org-modern-mode))
-  :hook ((org-mode-hook . org-modern-mode))
-  :custom
-  (org-modern-block-name nil)
-  (org-modern-block-fringe nil)
-  (org-modern-checkbox nil)
-  (org-modern-fold-stars '(("▶" . "▼") ("▷" . "▽") ("▶" . "▼") ("▷" . "▽") ("▶" . "▼")))
-  (org-modern-hide-stars nil)
-  (org-modern-keyword nil)
-  (org-modern-list nil)
-  (org-modern-priority t)
-  (org-modern-priority-faces '((?A :background "whitesmoke" :foreground "hotpink" :weight bold :box (:style released-button :line-width (0 . -1)))
-                               (?B :background "whitesmoke" :foreground "cadetblue" :weight bold :box (:style released-button :line-width (0 . -1)))
-                               (?C :background "whitesmoke" :foreground "gray" :weight bold :box (:style released-button :line-width (0 . -1)))))
-  (org-modern-progress nil)
-  (org-modern-radio-target '("「" t "」"))
-  (org-modern-replace-stars "■▪■▪■▪")
-  (org-modern-star nil)
-  (org-modern-tag t)
-  (org-modern-tag-faces '((t :background "beige" :foreground "black" :weight normal :box (:style pressed-button :line-width (0 . -1)))))
-  (org-modern-timestamp nil)
-  (org-modern-todo nil)
-  (org-modern-todo-faces '(("CANCELED" :background "gainsboro" :foreground "black" :weight normal :box (:style released-button :line-width (0 . -1)))
-                           ("DEFERRED" :background "azure1" :foreground "black" :weight normal :box (:style released-button :line-width (0 . -1)))
-                           ("DONE" :background "honeydew1" :foreground "black" :weight normal :box (:style released-button :line-width (0 . -1)))
-                           ("INBOX" :background "lightskyblue1" :foreground "black" :weight normal :box (:style released-button :line-width (0 . -1)))
-                           ("TODO" :background "mistyrose1" :foreground "black" :weight normal :box (:style released-button :line-width (0 . -1)))
-                           ("TOPIC" :background "slategray1" :foreground "black" :weight normal :box (:style released-button :line-width (0 . -1)))
-                           ("WAITING" :background "plum1" :foreground "black" :weight normal :box (:style released-button :line-width (0 . -1)))
-                           ("WIP" :background "peachpuff1" :foreground "black" :weight normal :box (:style released-button :line-width (0 . -1))))))
-
-
 ;;; org-present
 
 (use-package org-present
@@ -5164,182 +4964,6 @@ of the new org-mode file."
                                     (org-remove-inline-images)
                                     (org-present-show-cursor)
                                     (read-only-mode -1)))))
-
-
-;;; org-roam
-
-(use-package org-roam
-  :disabled
-  :after (org)
-  :custom
-  (org-roam-directory "~/org")
-  (org-roam-db-location "~/org/org-roam.db"))
-
-;;; org-roam-node
-
-(use-package org-roam-node
-  :ensure nil
-  :after (org-roam)
-  :bind (:map
-         my-ctl-c-n-map
-         ("%" . org-roam-node-random)
-         ("," . org-roam-dailies-goto-previous-note)
-         ("." . org-roam-dailies-goto-next-note)
-         ("C" . org-roam-capture)
-         ("J" . org-roam-dailies-capture-date)
-         ("c" . my-org-roam-capture)
-         ("f" . org-roam-node-find)
-         ("j" . org-roam-dailies-capture-today)
-         ("y" . org-roam-dailies-goto-yesterday)
-         :map
-         org-mode-map
-         ("C-c n A" . org-roam-alias-remove)
-         ("C-c n I" . org-roam-node-insert-immediate-finish)
-         ("C-c n R" . org-roam-ref-remove)
-         ("C-c n T" . org-roam-tag-remove)
-         ("C-c n X" . my-org-roam-extract-subtree-inbox-entry)
-         ("C-c n a" . org-roam-alias-add)
-         ("C-c n b" . org-roam-buffer-toggle)
-         ("C-c n i" . org-roam-node-insert)
-         ("C-c n l" . my-org-roam-add-link-to-region)
-         ("C-c n n" . org-id-get-create)
-         ("C-c n r" . org-roam-ref-add)
-         ("C-c n t" . org-roam-tag-add)
-         ("C-c n x" . org-roam-extract-subtree)
-         :map
-         org-roam-node-map
-         ("C-c n l" . org-roam-buffer-toggle))
-  :custom
-  (org-roam-completion-everywhere t)
-  (org-roam-node-display-template (concat
-                                   "${title:100} "
-                                   (propertize "${tags}" 'foreground 'default)
-                                   "${myarchive-itags}"
-                                   "${mytodo}"))
-  :config
-  (defvar org-roam-content-width 60)
-  (add-to-list 'display-buffer-alist
-               `("\\*org-roam\\*"
-                 (display-buffer-in-direction)
-                 (direction . left)
-                 (window-width . ,(+ 5 org-roam-content-width))
-                 (window-height . fit-window-to-buffer)))
-
-  (cl-defmethod org-roam-node-mytodo ((node org-roam-node))
-    ;; Show the todo keywords when doing `org-roam-node-find'.
-    (let ((todo (org-roam-node-todo node)))
-      (when todo
-        (format " #%s" (cond ((equal todo "DONE") (propertize todo 'face 'bold))
-                             ((equal todo "CANCELED") (propertize todo 'face 'bold))
-                             (t (propertize todo 'face 'bold)))))))
-
-  (cl-defmethod org-roam-node-myarchive-itags ((node org-roam-node))
-    ;; Show some tags for archived entries when doing `org-roam-node-find'.
-    (let* ((archive-tags (cdr (assoc "ARCHIVE_ITAGS" (org-roam-node-properties node))))
-           (dropped-tags '("@inbox" "@archive" "INBOX" "ARCHIVE")))
-      (when archive-tags
-        (let ((tags))
-          (mapcar (lambda (elt)
-                    (unless (member elt dropped-tags) (push (concat "#" elt) tags)))
-                  (string-split archive-tags " "))
-          (format " %s" (propertize (string-join tags " ") 'foreground 'default))))))
-
-  (org-roam-db-autosync-mode)
-
-  (defun my-org-subtree-root-tags ()
-    "Return the tags of the root header of the current subtree."
-    (save-excursion
-      (org-back-to-heading t)
-      (while (org-up-heading-safe))
-      (org-get-tags nil t)))
-
-  (defun my-org-roam-extract-subtree-inbox-entry ()
-    "Use the tag in the root topic node as the destination directory within `org-roam-directory'."
-    (interactive)
-    (let* ((root-tags (my-org-subtree-root-tags))
-           (subdir (string-replace "@" "" (car root-tags)))
-           (subdir-sanitized (if subdir (my-sanitize-string subdir) nil))
-           (relative-path (if subdir-sanitized (concat "/projects/" subdir-sanitized "/") ""))
-           (org-roam-directory (concat org-roam-directory relative-path)))
-      ;; Apply the root's tags to the extracted child
-      (save-excursion
-        (org-back-to-heading)
-        (org-set-tags (append (org-get-tags nil t) root-tags)))
-      (org-roam-extract-subtree)))
-
-  (defun org-roam-node-insert-immediate-finish ()
-    (interactive)
-    (let ((org-roam-capture-templates (mapcar (lambda (elt)
-                                                (append elt '(:immediate-finish t)))
-                                              org-roam-capture-templates)))
-      (call-interactively #'org-roam-node-insert)))
-
-  (defun my-org-roam-add-link-to-region ()
-    "Link the selected region to an org-roam node."
-    (interactive)
-    (add-hook 'minibuffer-setup-hook
-              #'(lambda () (when (minibufferp) (delete-minibuffer-contents))))
-    (org-roam-node-insert)
-    (remove-hook 'minibuffer-setup-hook
-                 #'(lambda () (when (minibufferp) (delete-minibuffer-contents)))))
-
-  (cl-defun my-org-roam-capture (&optional goto keys &key filter-fn templates info)
-    (interactive "P")
-    (org-roam-capture- :goto goto
-                       :info info
-                       :keys keys
-                       :templates templates
-                       :node (org-roam-node-create :title "notitle")
-                       :props '(:immediate-finish nil))))
-
-;;; org-roam-capture
-
-(use-package org-roam-capture
-  :ensure nil
-  :after (org-roam)
-  :custom
-  (org-roam-capture-templates '(("d" "default" plain "%?"
-                                 :target (file+head "%<%Y%m%d%H%M%S>-${slug}.org" "#+title: ${title}\n")
-                                 :empty-lines 1
-                                 :unnarrowed t)
-
-                                ("l" "literature" plain "%?"
-                                 :target (file+head "literature/%<%Y%m%d%H%M%S>-${slug}.org"
-                                                    "#+filetags: :@lit:\n#+title: ${title}")
-                                 :empty-lines 1
-                                 :unnarrowed t)
-
-                                ("x" "index" plain "%?"
-                                 :target (file+head "index/%<%Y%m%d%H%M%S>-${slug}.org"
-                                                    "#+filetags: :@lit:index:\n#+title: ${title}\n#+author: %^{author}")
-                                 :empty-lines 1
-                                 :unnarrowed t)
-
-                                ("r" "reference" plain "%?"
-                                 :target (file+head "refs/%<%Y%m%d%H%M%S>-${slug}.org"
-                                                    "#+filetags: :ref:\n#+title: ${title}")
-                                 :empty-lines 1
-                                 :unnarrowed t)
-
-                                ("I" "ideate" plain "%?"
-                                 :target (file+head "ideate/%<%Y%m%d%H%M%S>-${slug}.org"
-                                                    "#+filetags: :ideate:\n#+title: ${title}")
-                                 :empty-lines 1
-                                 :unnarrowed t))))
-
-;;; org-roam-dailies
-
-(use-package org-roam-dailies
-  :ensure nil
-  :after (org-roam)
-  :bind (:repeat-map
-         org-roam-dailies-repeat-map
-         ("." . org-roam-dailies-goto-next-note)
-         ("," . org-roam-dailies-goto-previous-note))
-  :custom
-  (org-roam-dailies-capture-templates '(("d" "default" entry "* %?"
-                                         :target (file+head "%<%Y-%m-%d>.org" "#+title: Journal - %<%Y-%m-%d>\n")
-                                         :empty-lines 1))))
 
 
 ;;; org-sticky-header
@@ -5380,21 +5004,6 @@ of the new org-mode file."
   (defun orgalist-insert-checkbox ()
     (interactive)
     (orgalist-insert-item t)))
-
-
-;;; origami
-
-(use-package origami
-  :disabled
-  :demand t
-  :bind (:map
-         origami-mode-map
-         ("C-c f f" . origami-toggle-node)
-         ("C-c f O" . origami-open-all-nodes)
-         ("C-c f C" . origami-close-all-nodes))
-
-  :config
-  (global-origami-mode))
 
 
 ;;; osm
@@ -5454,13 +5063,6 @@ of the new org-mode file."
   :after (ox)
   :demand t
   :ensure nil)
-
-
-;;; ox-slack
-
-(use-package ox-slack
-  :disabled
-  :after (ox))
 
 
 ;;; package-lint
@@ -6053,17 +5655,6 @@ of the new org-mode file."
          ("o" . symbol-overlay-mode)))
 
 
-;;; tempel
-
-(use-package tempel
-  :disabled
-  :demand t
-  :bind (:map
-         my-ctl-c-t-map
-         ("c" . tempel-complete)
-         ("i" . tempel-insert)))
-
-
 ;;; tempo
 
 (use-package tempo
@@ -6162,15 +5753,6 @@ of the new org-mode file."
          (typescript-ts-mode-hook . no-indent-tabs-mode))
   :custom
   (typescript-ts-mode-indent-offset 2))
-
-
-;;; unicode-fonts
-
-(use-package unicode-fonts
-  :ensure (:branch "master")
-  :disabled
-  :config
-  (unicode-fonts-setup))
 
 
 ;;; uniline
@@ -6296,22 +5878,6 @@ of the new org-mode file."
               ("b" . outline-backward-same-level)
               ("f" . outline-forward-same-level))
   :hook ((xref--xref-buffer-mode-hook . outline-minor-mode)))
-
-
-;;; yaml-pro
-
-(use-package yaml-pro
-  :disabled
-  :ensure (:branch "master")
-  :bind (:map
-         yaml-pro-ts-mode-map
-         ("C-c C-x C-j" . yaml-pro-jump)
-         ("C-c C-x C-p" . yaml-pro-copy-node-path-at-point)
-         ("M-<down>" . yaml-pro-ts-move-subtree-down)
-         ("M-<left>" . yaml-pro-ts-unindent-subtree)
-         ("M-<right>" . yaml-pro-ts-indent-subtree)
-         ("M-<up>" . yaml-pro-ts-move-subtree-up))
-  :hook ((yaml-ts-mode-hook . yaml-pro-ts-mode)))
 
 
 ;;; yaml-ts-mode

@@ -24,6 +24,29 @@
 					  :branch "master" :type git :protocol https
 					  :inherit t :depth treeless :ref
 					  "5c1484b8982845845ccd0be02629e21f1d5bed81"))
+ (agent-shell :source "elpaca-menu-lock-file" :recipe
+			  (:package "agent-shell" :fetcher github :repo
+						"xenodium/agent-shell" :files
+						("*.el" "*.el.in" "dir" "*.info" "*.texi"
+						 "*.texinfo" "doc/dir" "doc/*.info"
+						 "doc/*.texi" "doc/*.texinfo" "lisp/*.el"
+						 "docs/dir" "docs/*.info" "docs/*.texi"
+						 "docs/*.texinfo"
+						 (:exclude ".dir-locals.el" "test.el"
+								   "tests.el" "*-test.el" "*-tests.el"
+								   "LICENSE" "README*" "*-pkg.el"))
+						:source "elpaca-menu-lock-file" :id
+						agent-shell :branch "main" :type git :protocol
+						https :inherit t :depth treeless :ref
+						"102ac73a89f13b49b49542e84abfbd1baf3c2573"))
+ (agent-shell-sidebar :source "elpaca-menu-lock-file" :recipe
+					  (:source "elpaca-menu-lock-file" :package
+							   "agent-shell-sidebar" :id
+							   agent-shell-sidebar :host github :repo
+							   "cmacrae/agent-shell-sidebar" :branch
+							   "main" :type git :protocol https
+							   :inherit t :depth treeless :ref
+							   "10fee0b1463cdf210b0908c23e940a44c8d4a8e2"))
  (aggressive-indent :source "elpaca-menu-lock-file" :recipe
 					(:package "aggressive-indent" :repo
 							  "Malabarba/aggressive-indent-mode"
@@ -1106,9 +1129,9 @@
 						(:exclude ".dir-locals.el" "test.el"
 								  "tests.el" "*-test.el" "*-tests.el"
 								  "LICENSE" "README*" "*-pkg.el"))
-					   :source "MELPA" :id marginalia :branch "main"
-					   :type git :protocol https :inherit t :depth
-					   treeless :ref
+					   :source "elpaca-menu-lock-file" :id marginalia
+					   :branch "main" :type git :protocol https
+					   :inherit t :depth treeless :ref
 					   "7ec0b70afb43a756ecd45a958c6ebe797717fc91"))
  (markdown-mode :source "elpaca-menu-lock-file" :recipe
 				(:package "markdown-mode" :fetcher github :repo
@@ -1949,7 +1972,7 @@
 				   whisper :host github :repo "natrys/whisper.el"
 				   :branch "master" :type git :protocol https :inherit
 				   t :depth treeless :ref
-				   "fd9bf5787a99dd31a4bdf54d2bd9821aacf84e93"))
+				   "d09b23d999ee120e98adf50fa809f8b8a5c165e6"))
  (with-editor :source "elpaca-menu-lock-file"
    :recipe
    (:package "with-editor" :fetcher github :repo "magit/with-editor"
@@ -2008,20 +2031,6 @@
 				 :source "elpaca-menu-lock-file" :id yaml :type git
 				 :protocol https :inherit t :depth treeless :ref
 				 "5546f36bde24a9a8c1934e0f6ce205cd41d72537"))
- (yaml-pro :source "elpaca-menu-lock-file" :recipe
-		   (:package "yaml-pro" :repo "zkry/yaml-pro" :fetcher github
-					 :files
-					 ("*.el" "*.el.in" "dir" "*.info" "*.texi"
-					  "*.texinfo" "doc/dir" "doc/*.info" "doc/*.texi"
-					  "doc/*.texinfo" "lisp/*.el" "docs/dir"
-					  "docs/*.info" "docs/*.texi" "docs/*.texinfo"
-					  (:exclude ".dir-locals.el" "test.el" "tests.el"
-								"*-test.el" "*-tests.el" "LICENSE"
-								"README*" "*-pkg.el"))
-					 :source "elpaca-menu-lock-file" :id yaml-pro
-					 :branch "master" :type git :protocol https
-					 :inherit t :depth treeless :ref
-					 "9b9509188e5b88bb933e98ab36ab992519b9554b"))
  (yasnippet :source "elpaca-menu-lock-file" :recipe
 			(:package "yasnippet" :fetcher github :repo
 					  "joaotavora/yasnippet" :files
