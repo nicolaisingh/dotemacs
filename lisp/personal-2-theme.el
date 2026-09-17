@@ -252,7 +252,7 @@ numbered variants the same as the base color."
      ;; howm
      `(action-lock-face ((t (:underline t))))
      `(howm-menu-key-face ((t (:foreground ,color-black :background ,color-pale-yellow :weight bold))))
-     `(howm-mode-keyword-face ((nil (:foreground ,color-black :background ,color-light-cyan))))
+     `(howm-mode-keyword-face ((nil (:foreground ,color-black :background ,color-pale-cyan :height 1.0 :weight bold))))
      `(howm-mode-ref-face ((t (:foreground ,color-blue))))
      `(howm-mode-title-face ((t (:inherit outline-1))))
      `(howm-mode-wiki-face ((t (:foreground ,color-blue))))
@@ -291,9 +291,9 @@ numbered variants the same as the base color."
      ;; `(org-level-6 ((t (:inherit outline-6 :height 1.0 :overline ,color-purple))))
      ;; `(org-level-7 ((t (:inherit outline-7 :height 1.0 :overline ,color-green))))
      ;; no overline
-     `(org-level-1 ((t (:inherit outline-1 :height 1.0 :weight bold))))
-     `(org-level-2 ((t (:inherit outline-2 :height 1.0 :weight bold))))
-     `(org-level-3 ((t (:inherit outline-3 :height 1.0 :weight bold))))
+     `(org-level-1 ((t (:inherit outline-1 :height 1.0))))
+     `(org-level-2 ((t (:inherit outline-2 :height 1.0))))
+     `(org-level-3 ((t (:inherit outline-3 :height 1.0))))
      `(org-level-4 ((t (:inherit outline-4 :height 1.0))))
      `(org-level-5 ((t (:inherit outline-5 :height 1.0))))
      `(org-level-6 ((t (:inherit outline-6 :height 1.0))))
@@ -316,14 +316,14 @@ numbered variants the same as the base color."
      `(orderless-match-face-3 ((t (:foreground ,color-blue :weight bold))))
 
      ;; outline
-     `(outline-1 ((t (:weight bold :foreground ,color-black :height 1.0))))
-     `(outline-2 ((t (:weight bold :foreground ,color-red-3))))
-     `(outline-3 ((t (:weight bold :foreground ,color-green-3))))
-     `(outline-4 ((t (:weight bold :foreground ,color-blue))))
-     `(outline-5 ((t (:weight bold :foreground ,color-red))))
-     `(outline-6 ((t (:weight bold :foreground ,color-purple))))
-     `(outline-7 ((t (:weight bold :foreground ,color-green))))
-     `(outline-8 ((t (:weight bold :foreground ,color-blue))))
+     `(outline-1 ((t (:weight normal :foreground ,color-black :height 1.0))))
+     `(outline-2 ((t (:weight normal :foreground ,color-red-3))))
+     `(outline-3 ((t (:weight normal :foreground ,color-green-3))))
+     `(outline-4 ((t (:weight normal :foreground ,color-blue))))
+     `(outline-5 ((t (:weight normal :foreground ,color-red))))
+     `(outline-6 ((t (:weight normal :foreground ,color-purple))))
+     `(outline-7 ((t (:weight normal :foreground ,color-green))))
+     `(outline-8 ((t (:weight normal :foreground ,color-blue))))
 
      ;; tab-bar
      `(tab-bar ((t (:inherit default :background ,color-white-2))))

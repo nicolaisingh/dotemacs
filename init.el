@@ -673,7 +673,7 @@ From https://www.emacswiki.org/emacs/XModMapMode")
   (completion-pcm-leading-wildcard t)
   (completion-show-help nil)
   (completion-show-inline-help nil)
-  (completion-styles '(partial-completion initials))
+  ;; (completion-styles '(partial-completion initials))
   (completions-detailed t)
   (completions-format 'one-column)
   (completions-group t)
@@ -725,7 +725,7 @@ From https://www.emacswiki.org/emacs/XModMapMode")
   ;; window.el
   (same-window-regexps '("^magit: .*$"
                          "^magit-status: .*$"
-                         ;; "^\\*Password-Store\\*$"
+                         "^\\*Password-Store\\*$"
                          "^\\*prodigy\\*$"
                          "\\*compilation\\*"))
 
@@ -1306,10 +1306,10 @@ This will return ~/.emacs.d/agent-shell/<dir>."
   :ensure (:branch "main")
   :demand t
   :bind (([remap repeat-complex-command] . consult-complex-command)
-         ;; ([remap switch-to-buffer-other-frame] . consult-buffer-other-frame)
-         ;; ([remap switch-to-buffer-other-window] . consult-buffer-other-window)
-         ;; ([remap switch-to-buffer-other-tab] . consult-buffer-other-tab)
-         ;; ([remap switch-to-buffer] . consult-buffer)
+         ([remap switch-to-buffer-other-frame] . consult-buffer-other-frame)
+         ([remap switch-to-buffer-other-window] . consult-buffer-other-window)
+         ([remap switch-to-buffer-other-tab] . consult-buffer-other-tab)
+         ([remap switch-to-buffer] . consult-buffer)
          ([remap yank-pop] . consult-yank-pop)
          ([remap bookmark-jump] . consult-bookmark)
          ([remap project-switch-to-buffer] . consult-project-buffer)
@@ -3540,7 +3540,7 @@ Returns the file path if found, nil otherwise."
   (howm-view-keep-one-window t)
   (howm-view-split-horizontally t)
   (howm-view-summary-window-size nil)
-  (howm-view-window-location 'tab))
+  (howm-view-window-location nil))
 
 ;;; howm-shift
 
@@ -3586,6 +3586,7 @@ Returns the file path if found, nil otherwise."
   (howm-remember-first-line-to-title nil)
   (howm-remember-insertion-format "%s")
   (howm-user-font-lock-keywords `(("^keywords:" . (0 'howm-mode-ref-face))
+                                  ("^keywords:.*$" . (0 '(:height 0.8) prepend))
                                   ;; Extend howm keyword lines (`<<< foo`) to end of line.
                                   (,(concat howm-keyword-regexp ".*$") (0 'howm-mode-keyword-face prepend))))
   (howm-view-contents-name "*howm-contents*")
@@ -3616,7 +3617,7 @@ Returns the file path if found, nil otherwise."
   :after (howm howm-vars)
   :ensure nil
   :custom
-  (howm-view-header-format "\n\n\n 📕 %s ⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅\n\n")
+  (howm-view-header-format "\n\n\n 📕 %s \n\n")
   (howm-view-header-regexp "^ 📕 .*$") ;; Describe the line where %s of howm-view-header-format is found
   (howm-entitle-items-style2-format "%-50.50s | %s")
   (howm-entitle-items-style2-max-length 50)
@@ -3900,8 +3901,8 @@ Howm file separator lines (📕 ...) are level 1; `*' headings start at level 2.
      ;; Setting the completion-styles here is necessary
      ;; because `icomplete--fido-mode-setup' sets it to
      ;; flex by force.
-     ;; completion-styles '(orderless basic)
-     completion-styles '(partial-completion initials)
+     completion-styles '(orderless basic)
+     ;; completion-styles '(partial-completion initials)
 
      ;; Completion falls back to using completion-styles if
      ;; completion-category-overrides doesn't yield a
@@ -4476,7 +4477,6 @@ Howm file separator lines (📕 ...) are level 1; `*' headings start at level 2.
 ;;; orderless
 
 (use-package orderless
-  :disabled
   :ensure (:branch "master")
   :demand t
   :custom
