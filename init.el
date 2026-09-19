@@ -3278,6 +3278,7 @@ Returns the file path if found, nil otherwise."
         howm-template #'my-howm-template
         howm-wiki-regexp nil)
   :config
+  (advice-add 'howm-create :around #'my-howm-create-around-template)
   (advice-add 'howm-list-recent :after #'howm-view-sort-by-mtime)
   (advice-add 'howm-list-toggle-title :after #'my-howm-message-title-state)
   ;; Advising instead of hooking since the buffer still needs to be narrowed
@@ -3323,8 +3324,14 @@ Returns the file path if found, nil otherwise."
   (defun my-howm-message-title-state (&optional undo)
     (message "Titles: %s" (if howm-list-title-previous "On" "Off")))
 
-  (defun my-howm-template-files ()
-    "Return template files under howm-templates."
+  (defvar my-howm-templates-pending-template nil
+    "Dynamically bound template body to use for the note being created.")
+
+  (defvar my-howm-templates-creating-from-template-p nil
+    "Non-nil while `my-howm-create-around-template' is running.")
+
+  (defun my-howm-templates-files ()
+    "Return a list of absolute paths of template files under howm-templates/ directory."
     (let ((templates-directory
            (expand-file-name "howm-templates/" user-emacs-directory)))
       (when (file-directory-p templates-directory)
@@ -3332,30 +3339,65 @@ Returns the file path if found, nil otherwise."
          #'file-regular-p
          (directory-files templates-directory t "^[^.]")))))
 
-  (defun my-howm-read-template-file (template-file)
-    "Read TEMPLATE-FILE and return only the template body."
-    (with-temp-buffer
-      (insert-file-contents template-file)
-      (buffer-substring-no-properties (point-min) (point-max))))
+  (defun my-howm-templates-select-template ()
+    "Prompt for a template and return (TARGET-FILE . TEMPLATE-BODY)."
+    (let* ((templates (my-howm-templates-files))
+           (choices (mapcar #'file-name-base templates)))
+      (unless templates
+        (user-error "No templates found in %s"
+                    (expand-file-name "howm-templates/" user-emacs-directory)))
+
+      ;; Ask which template
+      (let* ((choice (completing-read "Template: "
+                                      (my-presorted-completion-table choices)
+                                      nil t nil t))
+             (selected-file
+              (seq-find (lambda (template-file)
+                          (string= (file-name-base template-file) choice))
+                        templates)))
+
+        ;; Load the template
+        (with-temp-buffer
+          (insert-file-contents selected-file)
+          (let (target)
+            (goto-char (point-min))
+            (when (re-search-forward "^#\\+HOWM_NAMED_FILE:[ \t]*\\(.+?\\)[ \t]*$" nil t)
+              (setq target (match-string 1))
+              (delete-region (line-beginning-position)
+                             (min (point-max) (1+ (line-end-position))))
+              ;; Drop a leading blank line left behind by the removed directive
+              (goto-char (point-min))
+              (when (looking-at-p "\n")
+                (delete-char 1)))
+            (cons target (buffer-substring-no-properties (point-min) (point-max))))))))
+
+  (defun my-howm-create-around-template (orig-fun which-template &optional here)
+    "`howm-create' but when prefixed, ask for a template and open the named file, if specified.
+This makes `howm-create' honor \"#+HOWM_NAMED_FILE:\" directives."
+    (if (and (not my-howm-templates-creating-from-template-p)
+             (not here)
+             (= (prefix-numeric-value which-template) 4))
+        (let* ((template (my-howm-templates-select-template))
+               (named-file (car template))
+               (my-howm-templates-pending-template (cdr template)))
+          (if named-file
+              (let ((my-howm-templates-creating-from-template-p t)
+                    (file (expand-file-name named-file howm-directory)))
+                ;; `howm-create-file' expands the result of
+                ;; `howm-file-name' against `howm-directory'
+                (cl-letf (((symbol-function 'howm-file-name) (lambda (&optional _) file)))
+                  (howm-create 4)))
+            (funcall orig-fun which-template here)))
+      (funcall orig-fun which-template here)))
 
   (defun my-howm-template (which-template previous-buffer)
     "Choose a howm template."
     (cond
-     ((= which-template 4)
-      (let* ((templates (my-howm-template-files))
-             (choices (mapcar #'file-name-base templates)))
-        (unless templates
-          (user-error "No templates found in %s"
-                      (expand-file-name "howm-templates/" user-emacs-directory)))
-        (let* ((choice (completing-read "Template: "
-                                        (my-presorted-completion-table choices)
-                                        nil t nil t))
-               (selected-file
-                (seq-find (lambda (template-file)
-                            (string= (file-name-base template-file) choice))
-                          templates)))
-          (my-howm-read-template-file selected-file))))
-
+     ;; Use the pending template from `my-howm-create-around-template'
+     (my-howm-templates-pending-template
+      my-howm-templates-pending-template)
+     ((= (prefix-numeric-value which-template) 4)
+      (cdr (my-howm-templates-select-template)))
      (t
       (concat howm-view-title-header " %date %file\n\n%cursor\n\n\n"))))
 
