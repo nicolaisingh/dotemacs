@@ -3119,16 +3119,16 @@ If region is active, rewrite the region. Otherwise rewrite the entire buffer."
          ("C-z t" . my-howm-insert-dtime)
          ("C-z +" . my-howm-insert-reminder))
   :config
-  (defun my-howm-insert-dtime (&optional arg)
+  (defun my-howm-insert-dtime (&optional timestamp-p)
     (interactive "P")
-    (if arg
+    (if timestamp-p
         (insert (format-time-string howm-dtime-format))
       (let ((date-format (concat "[%Y" howm-date-separator "%m" howm-date-separator "%d]")))
         (insert (format-time-string date-format)))))
 
-  (defun my-howm-insert-reminder ()
-    (interactive)
-    (my-howm-insert-dtime t)
+  (defun my-howm-insert-reminder (&optional timestamp-p)
+    (interactive "P")
+    (my-howm-insert-dtime timestamp-p)
     (insert "+ ")))
 
 ;;; howm-menu

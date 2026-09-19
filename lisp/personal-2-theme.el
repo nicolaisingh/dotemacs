@@ -126,13 +126,22 @@ numbered variants the same as the base color."
          (flat-box `(:line-width 2 :style flat-button))
          (flat-box-outline `(:line-width 2 :style flat-button :color ,color-pale-gray-2))
          (released `(:line-width 2 :style released-button))
-         (pressed `(:line-width 2 :style released-button)))
+         (pressed `(:line-width 2 :style released-button))
+         ;; fonts
+         (intel-one-mono "Intel One Mono")
+         (font-atkinson-mono "Atkinson Hyperlegible Mono")
+         (font-atkinson-next "Atkinson Hyperlegible Next")
+         (font-cutive-mono "Cutive Mono")
+         (custfont-default nil))
     (custom-theme-set-faces
      'personal-2
 
      ;; faces
      `(cursor ((t (:background ,color-red-3))))
-     `(default ((t (:foreground ,color-black :background ,color-white))))
+     `(default ((t (:foreground ,color-black :background ,color-white
+                                ,@(when (and (stringp custfont-default)
+                                             (find-font (font-spec :name custfont-default)))
+                                    (list :font custfont-default))))))
      `(display-time-date-and-time ((t (:foreground ,color-blue-2))))
      `(fixed-pitch ((t (:height 1.0))))
      `(fixed-pitch-serif ((t (:height 1.0))))
