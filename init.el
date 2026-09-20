@@ -3580,8 +3580,8 @@ This makes `howm-create' honor \"#+HOWM_NAMED_FILE:\" directives."
   (howm-view-close-frame/tab-on-exit 'howm-only)
   (howm-view-search-recenter 5)
   (howm-view-keep-one-window t)
-  (howm-view-split-horizontally t)
-  (howm-view-summary-window-size nil)
+  (howm-view-split-horizontally nil)
+  (howm-view-summary-window-size 20)
   (howm-view-window-location nil))
 
 ;;; howm-shift
@@ -3897,12 +3897,10 @@ Howm file separator lines (📕 ...) are level 1; `*' headings start at level 2.
          ("C-p" . icomplete-backward-completions)
          ("C-r" . icomplete-backward-completions)
          ("C-s" . icomplete-forward-completions)
-         ;; ("S-SPC" . (lambda ()
-         ;;              (interactive)
-         ;;              (self-insert-command 1 ? )))
-         ("S-SPC" . space-dash-star)
-         ;; ("TAB" . switch-to-completions)
-         )
+         ("S-SPC" . (lambda ()
+                      (interactive)
+                      (self-insert-command 1 ? )))
+         ("SPC" . space-dash-star))
   :custom
   (icomplete-compute-delay 0)
   (icomplete-delay-completions-threshold 400)
@@ -4863,6 +4861,7 @@ of the new org-mode file."
 ;;; org-indent
 
 (use-package org-indent
+  :disabled
   :after (org)
   :ensure nil
   :hook ((org-mode-hook . org-indent-mode))
