@@ -2,7 +2,7 @@
 
 ;;; Commentary:
 
-;; Personal theme colors.
+;; Personal theme colors, based on Paul Tol's color schemes.
 
 ;;; Code:
 
@@ -18,22 +18,6 @@
   "Convert color component N ranging from number 0 to 65535 to a number 0 to 1.0."
   (/ (fceiling (* 1000 (/ n 65535.0))) 1000))
 
-(defun personal-theme--compute-int-color (r g b &optional adjust)
-  "Get the hex string (#rrggbb) of the given R G B integers.
-The given integers are expected to be between 0-255. Also it is possible
-to lighten or darken the resulting color by ADJUST percent."
-  (let* ((hsl (color-rgb-to-hsl
-               (personal-theme--color-255-to-1 r)
-               (personal-theme--color-255-to-1 g)
-               (personal-theme--color-255-to-1 b)))
-         (hsl-adjusted (color-lighten-hsl
-                        (nth 0 hsl)
-                        (nth 1 hsl)
-                        (nth 2 hsl)
-                        (if adjust adjust 0))))
-    (apply #'color-rgb-to-hex
-           (append (apply #'color-hsl-to-rgb hsl-adjusted) (list 2)))))
-
 (defun personal-theme--compute-hex-color (base-hex &optional adjust)
   "Adjust BASE-HEX string (#rrggbb) by making it ADJUST percent lighter or darker."
   (let* ((rgb (color-values-from-color-spec base-hex))
@@ -48,6 +32,63 @@ to lighten or darken the resulting color by ADJUST percent."
                         (if adjust adjust 0))))
     (apply #'color-rgb-to-hex
            (append (apply #'color-hsl-to-rgb hsl-adjusted) (list 2)))))
+
+(defconst personal-theme--color-alist
+  '(("color-white" "#ffffff")
+    ("color-black" "#000000")
+    ;; bright (foregrounds)
+    ("color-blue" "#4477aa")
+    ("color-red" "#ee6677")
+    ("color-green" "#228833")
+    ("color-yellow" "#ccbb44")
+    ("color-cyan" "#66ccee")
+    ("color-purple" "#aa3377")
+    ("color-gray" "#bbbbbb")
+    ;; light (foregrounds)
+    ("color-light-blue" "#77aadd")
+    ("color-light-cyan" "#99ddff")
+    ("color-mint" "#44bb99")
+    ("color-pear" "#bbcc33")
+    ("color-olive" "#aaaa00")
+    ("color-light-yellow" "#eedd88")
+    ("color-orange" "#ee8866")
+    ("color-pink" "#ffaabb")
+    ;; pale (backgrounds)
+    ("color-pale-blue" "#bbccee")
+    ("color-pale-cyan" "#cceeff")
+    ("color-pale-green" "#ccddaa")
+    ("color-pale-yellow" "#eeeebb")
+    ("color-pale-red" "#ffcccc")
+    ("color-pale-gray" "#dddddd"))
+  "Alist of (COLORNAME HEXVALUE) pairs defining the theme palette.")
+
+(defvar personal-theme--color-table (make-hash-table :test 'equal)
+  "Hash table mapping color names with variant numbers to hex values.
+Keys are strings like \"color-blue-1\" or \"color-blue-2\".
+Populated from `personal-theme--color-alist' at load time.")
+
+(dolist (colorpair personal-theme--color-alist)
+  (let* ((name (car colorpair))
+         (hex-base (cadr colorpair))
+         (adjustments '((0 . 1) (-10 . 2) (-30 . 3) (-50 . 4))))
+    (puthash (format "%s" name) hex-base personal-theme--color-table)
+    (dolist (adj adjustments)
+      (puthash (format "%s-%d" name (cdr adj))
+               (personal-theme--compute-hex-color hex-base (car adj))
+               personal-theme--color-table))))
+
+(defun personal-theme-get-color (name &optional variant)
+  "Return hex color string for NAME with VARIANT number (1-4).
+NAME is a string like \"color-blue\".  VARIANT is an integer
+1 through 4, where 1 is the base color and 4 is the darkest.
+If VARIANT is nil or 0, return the base color.
+
+\(fn NAME &optional VARIANT)"
+  (let ((key (if (and variant (> variant 0))
+                 (format "%s-%d" name variant)
+               name)))
+    (or (gethash key personal-theme--color-table)
+        (error "Unknown color: %s" key))))
 
 (defmacro personal-theme--colors-let (colorlist &rest body)
   "Bind colors from variables in COLORLIST then evaluate BODY.
@@ -69,233 +110,269 @@ numbered variants the same as the base color."
                      (color-variant-1 (intern (format "%s-1" name)))
                      (color-variant-2 (intern (format "%s-2" name)))
                      (color-variant-3 (intern (format "%s-3" name)))
-                     (color-variant-4 (intern (format "%s-4" name)))
-                     (color-light-base (intern (format "%s-light" name)))
-                     (color-light-variant-1 (intern (format "%s-light-1" name)))
-                     (color-light-variant-2 (intern (format "%s-light-2" name)))
-                     (color-light-variant-3 (intern (format "%s-light-3" name)))
-                     (color-light-variant-4 (intern (format "%s-light-4" name))))
+                     (color-variant-4 (intern (format "%s-4" name))))
                 `(;; base variants
                   (,color-base ,hex-base)
                   (,color-variant-1 ,(personal-theme--compute-hex-color hex-base 0)) ; base
                   (,color-variant-2 ,(personal-theme--compute-hex-color hex-base -10))
                   (,color-variant-3 ,(personal-theme--compute-hex-color hex-base -30))
-                  (,color-variant-4 ,(personal-theme--compute-hex-color hex-base -50))
-                  ;; light variants
-                  (,color-light-base ,(personal-theme--compute-hex-color hex-base 40))
-                  (,color-light-variant-1 ,(personal-theme--compute-hex-color hex-base 40)) ; light-base
-                  (,color-light-variant-2 ,(personal-theme--compute-hex-color hex-base 30))
-                  (,color-light-variant-3 ,(personal-theme--compute-hex-color hex-base 20))
-                  (,color-light-variant-4 ,(personal-theme--compute-hex-color hex-base 10)))))
-            colorlist))
+                  (,color-variant-4 ,(personal-theme--compute-hex-color hex-base -50)))))
+            (eval colorlist)))
      ,@body))
 
-(personal-theme--colors-let
-    (;; Use colors the same as `dichromacy'
-     ("color-orange" "#e69f00")         ; orange
-     ("color-cyan" "#56b4e9")           ; sky blue
-     ("color-green" "#009e73")          ; bluish green
-     ("color-yellow" "#f0e442")         ; yellow
-     ("color-blue" "#0072b2")           ; blue
-     ("color-red" "#d55e00")            ; vermillion
-     ("color-magenta" "#cc79a7"))       ; reddish purple
-  (let* (;; frame elements
-         (bg-active color-magenta-light-2)
-         (bg-active-border color-magenta-light-2)
-         (bg-inactive "gray90")
-         (bg-inactive-border "gray90")
-         (bg-active-tab "white")
-         (bg-inactive-tab "gray85")
-         (fg-inactive "gray40")
-         (font "Inconsolata-11")
-         (box-active `(:line-width 2 :color ,bg-active-border :style flat-button))
-         (box-inactive `(:line-width 2 :color ,bg-inactive-border :style flat-button))
-         (box-active-tab `(:line-width 2 :color ,bg-active-tab :style flat-button))
-         (box-inactive-tab `(:line-width 2 :color ,bg-inactive-tab :style flat-button))
-         (color-box-black-text (lambda (bg)
-                                 `(:foreground "black" :background ,bg :box (:color "black"))))
-         (color-box-white-text (lambda (bg)
-                                 `(:foreground "white" :background ,bg :box (:color "black")))))
+(personal-theme--colors-let personal-theme--color-alist
+  (let* ((fg-active color-black)
+         (fg-inactive color-gray-2)
+         (flat-box `(:line-width 2 :style flat-button))
+         (flat-box-outline `(:line-width 2 :style flat-button :color ,color-pale-gray-2))
+         (released `(:line-width 2 :style released-button))
+         (pressed `(:line-width 2 :style released-button))
+         ;; fonts
+         (anonymous-pro "Anonymous Pro")
+         (cutive-mono "Cutive Mono")
+         (font-atkinson-mono "Atkinson Hyperlegible Mono")
+         (font-atkinson-next "Atkinson Hyperlegible Next")
+         (font-cutive-mono "Cutive Mono")
+         (inconsolata "Inconsolata")
+         (intel-one-mono "Intel One Mono")
+         ;; font defs
+         (custfont-default nil)
+         (custfont-fixed-pitch-serif nil)
+         (custfont-variable-pitch nil))
     (custom-theme-set-faces
      'personal
 
+     ;; custom fonts
+     ;;;; default
+     `,(when (and (stringp custfont-default)
+                  (find-font (font-spec :name custfont-default)))
+         `(default ((t :font ,custfont-default))))
+
+     `(default ((t (,@(when (and (stringp custfont-default)
+                                 (find-font (font-spec :name custfont-default)))
+                        (list :font custfont-default))))))
+     ;;;; fixed-pitch-serif
+     `,(when (and (stringp custfont-fixed-pitch-serif)
+                  (find-font (font-spec :name custfont-fixed-pitch-serif)))
+         `(fixed-pitch-serif ((t :font ,custfont-fixed-pitch-serif))))
+     ;;;; variable-pitch
+     `,(when (and (stringp custfont-variable-pitch)
+                  (find-font (font-spec :name custfont-variable-pitch)))
+         `(variable-pitch ((t :font ,custfont-variable-pitch))))
+
      ;; faces
-     `(cursor ((t (:background ,color-red-light-4))))
-     `(default ((t (:font ,font :foreground "black" :background "white"))))
-     `(display-time-date-and-time ((t (:foreground ,color-red-3))))
-     `(fixed-pitch ((t (:font ,font))))
+     `(cursor ((t (:background ,color-red-3))))
+     `(display-time-date-and-time ((t (:foreground ,color-blue-2))))
      `(fringe ((t (:background "gray98"))))
-     `(highlight ((t (:background "gray95"))))
-     `(hl-line ((t (:underline "gray"))))
-     `(minibuffer-prompt ((t (:foreground ,color-blue :weight bold))))
-     `(mode-line ((t (:background ,bg-active :box ,box-active :overline ,color-magenta))))
+     `(highlight ((t (:background ,color-pale-yellow))))
+     `(hl-line ((t (:underline ,color-gray))))
+     `(minibuffer-prompt ((t (:foreground ,color-red :weight bold))))
+     ;; `(mode-line ((t (:inherit variable-pitch))))
+     `(mode-line-active ((t (:background ,color-pale-gray-2 :box ,released :foreground ,fg-active))))
      `(mode-line-buffer-id ((t (:weight bold))))
-     `(mode-line-inactive ((t (:background ,bg-inactive :box ,box-inactive :foreground ,fg-inactive :overline "gray50"))))
-     `(region ((t (:background ,color-yellow))))
-     `(secondary-selection ((t (:background ,color-yellow-light))))
-     `(show-paren-match ((t (:background ,color-cyan-light-3))))
-     `(show-paren-mismatch ((t (:background ,color-magenta-light-3))))
-     `(variable-pitch ((t (:family "Noto Serif" :height 1.1))))
-     `(window-divider ((t (:distant-foreground "gray80" :foreground "white"))))
+     `(mode-line-inactive ((t (:background ,color-pale-gray :box ,flat-box-outline :foreground ,fg-inactive))))
+     `(region ((t (:background ,color-pale-yellow))))
+     `(secondary-selection ((t (:background ,color-pale-gray))))
+     `(show-paren-match ((t (:background ,color-light-blue :distant-foreground ,color-white))))
+     `(show-paren-mismatch ((t (:background ,color-red-2 :foreground ,color-white))))
+
+     `(window-divider ((t (:foreground ,color-black))))
      `(window-divider-first-pixel ((t (:distant-foreground "white" :foreground "white"))))
      `(window-divider-last-pixel ((t (:distant-foreground "white" :foreground "white"))))
      `(error ((t (:weight bold :foreground ,color-red))))
      `(warning ((t (:weight bold :foreground ,color-orange))))
      `(success ((t (:weight bold :foreground ,color-green))))
      `(link ((t (:foreground ,color-blue :underline t))))
-     `(link-visited ((t (:inherit link :foreground ,color-magenta))))
+     `(link-visited ((t (:inherit link :foreground ,color-purple))))
 
      ;; adoc-mode
      `(adoc-meta-face ((t (:inherit default))))
-     `(adoc-meta-hide-face ((t (:inherit adoc-meta-face :foreground "gray30"))))
+     `(adoc-meta-hide-face ((t (:inherit adoc-meta-face :foreground ,color-gray))))
      `(adoc-title-face ((t (:foreground ,color-blue :height 1.0 :weight bold))))
      `(adoc-title-0-face ((t (:inherit adoc-title-face :foreground ,color-blue :height 1.1))))
      `(adoc-title-1-face ((t (:inherit adoc-title-face :foreground ,color-green :height 1.1))))
      `(adoc-title-2-face ((t (:inherit adoc-title-face :foreground ,color-red :height 1.0))))
-     `(adoc-title-3-face ((t (:inherit adoc-title-face :foreground ,color-magenta :height 1.0))))
+     `(adoc-title-3-face ((t (:inherit adoc-title-face :foreground ,color-purple :height 1.0))))
      `(adoc-title-4-face ((t (:inherit adoc-title-face :foreground ,color-orange :height 1.0))))
 
      ;; ansi-color
-     `(ansi-color-black ((t (:background "black" :foreground "black"))))
-     `(ansi-color-red ((t (:background ,color-red :foreground ,color-red-2))))
-     `(ansi-color-green ((t (:background ,color-green :foreground ,color-green-2))))
-     `(ansi-color-yellow ((t (:background ,color-yellow :foreground ,color-yellow-2))))
-     `(ansi-color-blue ((t (:background ,color-blue :foreground ,color-blue-2))))
-     `(ansi-color-magenta ((t (:background ,color-magenta :foreground ,color-magenta-2))))
-     `(ansi-color-cyan ((t (:background ,color-cyan :foreground ,color-cyan-2))))
-     `(ansi-color-white ((t (:background "gray90" :foreground "gray90"))))
-     `(ansi-color-bright-black ((t (:background "gray30" :foreground "gray30"))))
-     `(ansi-color-bright-red ((t (:background ,color-red-light :foreground ,color-red-light-2))))
-     `(ansi-color-bright-green ((t (:background ,color-green-light :foreground ,color-green-light-2))))
-     `(ansi-color-bright-yellow ((t (:background ,color-yellow-light :foreground ,color-yellow-light-2))))
-     `(ansi-color-bright-blue ((t (:background ,color-blue-light :foreground ,color-blue-light-2))))
-     `(ansi-color-bright-magenta ((t (:background ,color-magenta-light :foreground ,color-magenta-light-2))))
-     `(ansi-color-bright-cyan ((t (:background ,color-cyan-light :foreground ,color-cyan-light-2))))
-     `(ansi-color-bright-white ((t (:background "white" :foreground "white"))))
+     `(ansi-color-black ((t (:foreground ,color-black :background "gray30"))))
+     `(ansi-color-blue ((t (:foreground ,color-blue :background ,color-pale-blue))))
+     `(ansi-color-cyan ((t (:foreground ,color-cyan :background ,color-pale-cyan))))
+     `(ansi-color-green ((t (:foreground ,color-green :background ,color-pale-green))))
+     `(ansi-color-purple ((t (:foreground ,color-purple :background ,color-purple))))
+     `(ansi-color-red ((t (:foreground ,color-red :background ,color-pale-red))))
+     `(ansi-color-white ((t (:foreground ,color-white :background "gray90"))))
+     `(ansi-color-yellow ((t (:foreground ,color-yellow :background ,color-pale-yellow))))
+
+     ;; ansi-color (bright)
+     `(ansi-color-bright-black ((t (:foreground ,color-black :background "gray30"))))
+     `(ansi-color-bright-blue ((t (:foreground ,color-blue :background ,color-pale-blue))))
+     `(ansi-color-bright-cyan ((t (:foreground ,color-cyan :background ,color-pale-cyan))))
+     `(ansi-color-bright-green ((t (:foreground ,color-green :background ,color-pale-green))))
+     `(ansi-color-bright-magenta ((t (:foreground ,color-purple :background ,color-purple))))
+     `(ansi-color-bright-red ((t (:foreground ,color-red :background ,color-pale-red))))
+     `(ansi-color-bright-white ((t (:foreground ,color-white :background "gray90"))))
+     `(ansi-color-bright-yellow ((t (:foreground ,color-yellow :background ,color-pale-yellow))))
 
      ;; avy
-     `(avy-lead-face ((t (:background ,color-orange-light :foreground "black"))))
-     `(avy-lead-face-0 ((t (:background ,color-orange-light :foreground "black"))))
-     `(avy-lead-face-1 ((t (:background ,color-orange-light :foreground "black"))))
-     `(avy-lead-face-2 ((t (:background ,color-orange-light :foreground "black"))))
+     `(avy-lead-face ((t (:background ,color-pale-red :foreground ,color-black :weight bold))))
+     `(avy-lead-face-0 ((t (:background ,color-pale-red :foreground ,color-black))))
+     `(avy-lead-face-1 ((t (:background ,color-pale-red :foreground ,color-black))))
+     `(avy-lead-face-2 ((t (:background ,color-pale-red :foreground ,color-black))))
 
      ;; completions, icomplete
-     `(completions-common-part ((t (:foreground ,color-blue-3))))
-     `(completions-highlight ((t (:background ,color-yellow-light))))
-     `(icomplete-selected-match ((t (:background ,color-yellow-light))))
+     `(completions-common-part ((t (:foreground ,color-green-2 :weight bold))))
+     `(completions-highlight ((t (:background ,color-pale-yellow))))
+     `(icomplete-selected-match ((t (:foreground ,color-black :background ,color-pale-yellow :weight bold))))
 
      ;; diff-hl, diff-mode
-     `(diff-hl-change ((t (:background "aliceblue" :foreground ,color-blue))))
-     `(diff-added ((t (:inherit diff-changed :extend t :background "honeydew" :foreground ,color-green))))
-     `(diff-removed ((t (:inherit diff-changed :extend t :background "mistyrose" :foreground ,color-red))))
+     `(diff-hl-change ((t (:background ,color-pale-blue :foreground ,color-blue))))
+     `(diff-added ((t (:inherit diff-changed :extend t :background ,color-pale-green :foreground ,color-green))))
+     `(diff-removed ((t (:inherit diff-changed :extend t :background ,color-pale-red :foreground ,color-red))))
 
      ;; emms
      `(emms-metaplaylist-mode-face ((t (:inherit default :weight normal))))
-     `(emms-metaplaylist-mode-current-face ((t (:background ,color-cyan-light :weight bold))))
+     `(emms-metaplaylist-mode-current-face ((t (:foreground ,color-red :weight bold))))
      `(emms-playlist-track-face ((t (:inherit default))))
-     `(emms-playlist-selected-face ((t (:inherit emms-playlist-track-face :background ,color-cyan-light :weight bold))))
+     `(emms-playlist-selected-face ((t (:inherit emms-playlist-track-face :foreground ,color-red :weight bold))))
 
      ;; eshell
-     `(eshell-ls-archive ((t (:foreground ,color-magenta :weight bold))))
-     `(eshell-ls-backup ((t (:foreground ,color-red-light-4))))
-     `(eshell-ls-clutter ((t (:foreground ,color-red-light-4 :weight bold))))
+     `(eshell-ls-archive ((t (:foreground ,color-purple :weight bold))))
+     `(eshell-ls-backup ((t (:foreground ,color-orange))))
+     `(eshell-ls-clutter ((t (:foreground ,color-orange :weight bold))))
      `(eshell-ls-executable ((t (:foreground ,color-green :weight bold))))
      `(eshell-ls-missing ((t (:foreground ,color-red :weight bold))))
-     `(eshell-ls-product ((t (:foreground ,color-red-light-4))))
-     `(eshell-ls-readonly ((t (:foreground ,color-orange-3))))
-     `(eshell-ls-special ((t (:foreground ,color-magenta :weight bold))))
+     `(eshell-ls-product ((t (:foreground ,color-orange))))
+     `(eshell-ls-readonly ((t (:foreground ,color-pink))))
+     `(eshell-ls-special ((t (:foreground ,color-purple :weight bold))))
      `(eshell-prompt ((t (:foreground ,color-red :weight bold))))
+
+     ;; form-feed
+     `(form-feed-line ((t (:strike-through ,color-gray))))
 
      ;; font-lock
      `(font-lock-builtin-face ((t (:foreground ,color-blue))))
-     `(font-lock-comment-face ((t (:foreground ,color-orange))))
-     `(font-lock-constant-face ((t (:foreground ,color-cyan))))
+     `(font-lock-comment-face ((t (:foreground ,color-red-2))))
+     `(font-lock-constant-face ((t (:foreground ,color-olive))))
      `(font-lock-function-name-face ((t (:foreground ,color-blue))))
-     `(font-lock-keyword-face ((t (:foreground ,color-magenta))))
+     `(font-lock-keyword-face ((t (:foreground ,color-purple))))
      `(font-lock-string-face ((t (:foreground ,color-green))))
-     `(font-lock-type-face ((t (:foreground ,color-blue))))
+     `(font-lock-type-face ((t (:foreground ,color-mint-2))))
      `(font-lock-variable-name-face ((t (:foreground ,color-red))))
 
      ;; gnus
-     `(gnus-group-mail-1-empty ((t (:foreground ,color-red-3))))
+     `(gnus-group-mail-1-empty ((t (:foreground ,color-red))))
      `(gnus-group-mail-2-empty ((t (:foreground ,color-red))))
-     `(gnus-group-mail-3-empty ((t (:foreground ,color-magenta-3))))
-     `(gnus-group-mail-low-empty ((t (:foreground ,color-magenta))))
-     `(gnus-group-news-1-empty ((t (:foreground ,color-green-3))))
+     `(gnus-group-mail-3-empty ((t (:foreground ,color-purple))))
+     `(gnus-group-mail-low-empty ((t (:foreground ,color-purple))))
+     `(gnus-group-news-1-empty ((t (:foreground ,color-green))))
      `(gnus-group-news-2-empty ((t (:foreground ,color-green))))
-     `(gnus-group-news-3-empty ((t (:foreground ,color-blue-3))))
+     `(gnus-group-news-3-empty ((t (:foreground ,color-blue))))
      `(gnus-group-news-low-empty ((t (:foreground ,color-blue))))
-     `(gnus-header ((t (:family "Noto Sans" :height 1.1))))
-     `(gnus-header-content ((t (:inherit gnus-header :foreground ,color-green-2))))
-     `(gnus-header-from ((t (:inherit gnus-header :foreground ,color-red-2))))
-     `(gnus-header-name ((t (:inherit gnus-header :foreground ,color-magenta-2))))
-     `(gnus-header-newsgroups ((t (:foreground ,color-blue-4))))
-     `(gnus-header-subject ((t (:inherit gnus-header :foreground ,color-red-3))))
+     `(gnus-header ((t (:height 1.1))))
+     `(gnus-header-content ((t (:inherit gnus-header :foreground ,color-green))))
+     `(gnus-header-from ((t (:inherit gnus-header :foreground ,color-red))))
+     `(gnus-header-name ((t (:inherit gnus-header :foreground ,color-purple))))
+     `(gnus-header-newsgroups ((t (:foreground ,color-blue))))
+     `(gnus-header-subject ((t (:inherit gnus-header :foreground ,color-red))))
 
      ;; howm
      `(action-lock-face ((t (:underline t))))
-     `(howm-menu-key-face ((t (:foreground ,color-red))))
-     `(howm-mode-keyword-face ((t (:foreground ,color-blue-2 :background ,color-cyan-light))))
+     `(howm-menu-key-face ((t (:foreground ,color-black :background ,color-pale-yellow :weight bold))))
+     `(howm-mode-keyword-face ((nil (:foreground ,color-black :background ,color-pale-cyan :height 1.0 :weight bold))))
      `(howm-mode-ref-face ((t (:foreground ,color-blue))))
      `(howm-mode-title-face ((t (:inherit outline-1))))
      `(howm-mode-wiki-face ((t (:foreground ,color-blue))))
      `(howm-reminder-deadline-face ((t (:foreground ,color-red))))
-     `(howm-reminder-defer-face ((t (:foreground ,color-magenta))))
-     `(howm-reminder-normal-face ((t (:foreground ,color-cyan))))
+     `(howm-reminder-defer-face ((t (:foreground ,color-purple))))
+     `(howm-reminder-normal-face ((t (:foreground ,color-blue))))
      `(howm-reminder-schedule-face ((t (:foreground ,color-green))))
      `(howm-reminder-todo-face ((t (:foreground ,color-orange))))
-     `(howm-reminder-late-deadline-face ((t (:weight bold :foreground ,color-red :inverse-video t))))
-     `(howm-reminder-today-face ((t (:foreground "black" :weight bold :background ,color-yellow))))
-     `(howm-reminder-tomorrow-face ((t (:foreground "black" :background ,color-yellow-light))))
-     `(howm-view-empty-face ((t (:inherit default :background "gray80"))))
-     `(howm-view-hilit-face ((t (:foreground ,color-red :background ,color-yellow-light))))
-     `(howm-view-name-face ((t (:inherit default :background "gray90"))))
+     `(howm-reminder-late-deadline-face ((t (:weight bold :foreground ,color-red-2 :background ,color-pale-red))))
+     `(howm-reminder-today-face ((t (:background ,color-pale-green))))
+     `(howm-reminder-tomorrow-face ((t (:background ,color-pale-gray))))
+     `(howm-view-empty-face ((t (:inherit default :background ,color-pale-gray-2))))
+     `(howm-view-hilit-face ((t (:background ,color-pale-cyan))))
+     `(howm-view-name-face ((t (:inherit default :background ,color-pale-gray))))
 
      ;; isearch
-     `(isearch ((t (:foreground "white" :background ,color-magenta))))
-     `(isearch-fail ((t (:background ,color-red-light))))
-     `(lazy-highlight ((t (:distant-foreground "black" :background ,color-cyan-light))))
+     `(isearch ((t (:background ,color-pale-yellow))))
+     `(isearch-fail ((t (:background ,color-pale-red))))
+     `(lazy-highlight ((t (:distant-foreground ,color-black :background ,color-pale-gray))))
 
      ;; org, org-modern, org-roam
-     `(org-block ((t (:inherit (fixed-pitch shadow) :extend t :background "gray95" :foreground "gray30"))))
-     `(org-block-begin-line ((t (:inherit (fixed-pitch org-meta-line) :extend t :background "gray95" :overline t))))
-     `(org-block-end-line ((t (:inherit (fixed-pitch org-meta-line) :extend t :background "gray95" :underline t))))
+     `(org-block ((t (:inherit (fixed-pitch shadow) :extend t :background "gray95" :foreground ,color-black))))
+     `(org-block-begin-line ((t (:inherit (fixed-pitch) :foreground ,color-blue :extend t :background "gray95" :overline t))))
+     `(org-block-end-line ((t (:inherit (fixed-pitch) :foreground ,color-blue :extend t :background "gray95" :underline t))))
      `(org-checkbox ((t (:inherit default))))
      `(org-code ((t (:inherit (fixed-pitch shadow)))))
-     `(org-date ((t (:height 1.0 :underline nil))))
+     `(org-date ((t (:height 0.8 :underline nil))))
      `(org-done ((t (:weight normal))))
-     `(org-drawer ((t (:height 0.85 :foreground "gray50"))))
-     `(org-level-1 ((t (:inherit outline-1 :height 1.1 :weight bold :overline "gray50" :background "gray95"))))
-     `(org-level-2 ((t (:inherit outline-2 :height 1.0 :weight bold :overline "gray70"))))
-     `(org-level-3 ((t (:inherit outline-3 :height 1.0 :weight bold))))
+     `(org-drawer ((t (:height 0.85 :foreground ,color-gray))))
+     ;; with overline
+     ;; `(org-level-1 ((t (:inherit outline-1 :height 1.0 :weight bold :overline ,color-black))))
+     ;; `(org-level-2 ((t (:inherit outline-2 :height 1.0 :weight bold :overline ,color-red-3))))
+     ;; `(org-level-3 ((t (:inherit outline-3 :height 1.0 :weight bold :overline ,color-green-3))))
+     ;; `(org-level-4 ((t (:inherit outline-4 :height 1.0 :overline ,color-blue))))
+     ;; `(org-level-5 ((t (:inherit outline-5 :height 1.0 :overline ,color-red))))
+     ;; `(org-level-6 ((t (:inherit outline-6 :height 1.0 :overline ,color-purple))))
+     ;; `(org-level-7 ((t (:inherit outline-7 :height 1.0 :overline ,color-green))))
+     ;; no overline
+     `(org-level-1 ((t (:inherit outline-1 :height 1.0))))
+     `(org-level-2 ((t (:inherit outline-2 :height 1.0))))
+     `(org-level-3 ((t (:inherit outline-3 :height 1.0))))
      `(org-level-4 ((t (:inherit outline-4 :height 1.0))))
      `(org-level-5 ((t (:inherit outline-5 :height 1.0))))
      `(org-level-6 ((t (:inherit outline-6 :height 1.0))))
      `(org-level-7 ((t (:inherit outline-7 :height 1.0))))
      `(org-modern-label ((t (:height 0.85))))
-     `(org-property-value ((t (:height 0.85 :foreground "gray50"))))
+     `(org-property-value ((t (:height 0.85 :foreground ,color-black))))
      `(org-roam-dailies-calendar-note ((t (:inherit org-link :weight bold))))
-     `(org-roam-header-line ((t (:background ,color-yellow-light :foreground ,color-yellow-4 :extend t :weight bold))))
-     `(org-roam-title ((t (:weight bold :background ,color-cyan-light))))
-     `(org-special-keyword ((t (:height 0.85 :foreground "gray50"))))
-     `(org-table ((t (:foreground ,color-blue-2 :background "gray97"))))
-     `(org-tag ((t (:height 1.0 :foreground "gray50"))))
+     `(org-roam-header-line ((t (:background ,color-pale-yellow :foreground ,color-yellow :extend t :weight bold))))
+     `(org-roam-title ((t (:weight bold :background ,color-pale-cyan))))
+     `(org-special-keyword ((t (:height 0.85 :foreground ,color-black))))
+     `(org-table ((t (:foreground ,color-black :background ,color-white))))
+     `(org-tag ((t (:height 1.0 :foreground ,color-black))))
      `(org-todo ((t (:weight normal))))
      `(org-verbatim ((t (:inherit (fixed-pitch shadow)))))
 
      ;; orderless
-     `(orderless-match-face-0 ((t (:foreground ,color-red-2 :weight bold))))
-     `(orderless-match-face-1 ((t (:foreground ,color-magenta-2 :weight bold))))
-     `(orderless-match-face-2 ((t (:foreground ,color-green-2 :weight bold))))
-     `(orderless-match-face-3 ((t (:foreground ,color-orange-2 :weight bold))))
+     `(orderless-match-face-0 ((t (:foreground ,color-green :weight bold))))
+     `(orderless-match-face-1 ((t (:foreground ,color-purple :weight bold))))
+     `(orderless-match-face-2 ((t (:foreground ,color-red :weight bold))))
+     `(orderless-match-face-3 ((t (:foreground ,color-blue :weight bold))))
+
+     ;; outline
+     `(outline-1 ((t (:weight normal :foreground ,color-red-2 :height 1.0))))
+     `(outline-2 ((t (:weight normal :foreground ,color-orange-2))))
+     `(outline-3 ((t (:weight normal :foreground ,color-yellow-2))))
+     `(outline-4 ((t (:weight normal :foreground ,color-green-2))))
+     `(outline-5 ((t (:weight normal :foreground ,color-cyan-2))))
+     `(outline-6 ((t (:weight normal :foreground ,color-purple))))
+     `(outline-7 ((t (:weight normal :foreground ,color-pink-2))))
+     `(outline-8 ((t (:weight normal :foreground ,color-olive-2))))
 
      ;; tab-bar
-     `(tab-bar ((t (:inherit default :background "gray90"))))
-     `(tab-bar-tab ((t (:inherit tab-bar :weight bold :background ,bg-active-tab :box ,box-active-tab))))
-     `(tab-bar-tab-inactive ((t (:inherit tab-bar :background ,bg-inactive-tab :box ,box-inactive-tab :foreground ,fg-inactive))))
+     `(tab-bar ((t (:inherit default :background ,color-white-2))))
+     `(tab-bar-tab ((t (:inherit tab-bar :weight bold :background ,color-white :box ,flat-box))))
+     `(tab-bar-tab-inactive ((t (:inherit tab-bar :background ,color-pale-gray :box ,flat-box :foreground ,fg-inactive))))
+     `(tab-bar-tab-group-current ((t (:inherit tab-bar-tab :weight normal :box ,flat-box :background ,color-pale-blue))))
+     `(tab-bar-tab-group-inactive ((t (:inherit tab-bar-tab :weight normal :box ,released :background ,color-pale-gray))))
+
+     ;; tab-line
+     `(tab-line ((t (:background ,color-white-2 :height 1.0))))
+
+     ;; whitespace
+     `(whitespace-page-delimiter ((t (:inherit shadow :height 0.1 :extend t :underline (:color ,color-gray :style double-line)))))
 
      ;; yas
      `(yas-field-highlight-face ((t (:inherit minibuffer-prompt)))))))
 
 (provide-theme 'personal)
+
+;; Local Variables:
+;; eval: (use-local-map (copy-keymap (current-local-map)))
+;; eval: (keymap-local-set "<f5>" (lambda () (interactive) (eval-buffer) (enable-theme 'personal)))
+;; End:
 ;;; personal-theme.el ends here

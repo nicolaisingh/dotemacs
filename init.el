@@ -503,11 +503,11 @@ From https://www.emacswiki.org/emacs/XModMapMode")
 
 ;;; 00 personal-theme
 
-(use-package personal-2-theme
+(use-package personal-theme
   :demand t
   :ensure nil
   :config
-  (enable-theme 'personal-2))
+  (enable-theme 'personal))
 
 
 ;;; 01 emacs
@@ -1624,7 +1624,7 @@ be file B."
 
 (use-package dired-rainbow
   :ensure (:branch "master")
-  :after (dired personal-2-theme)
+  :after (dired personal-theme)
   :demand t
   :config
   (defface my-dired-compiled-face `((t (:foreground ,(personal-theme-get-color "color-black")))) "dired-rainbow compiled files")
@@ -5174,7 +5174,7 @@ of the new org-mode file."
 
 (use-package prism
   :ensure (:branch "master")
-  :after (personal-2-theme)
+  :after (personal-theme)
   :bind (:map my-ctl-c-h-map
               ("b" . prism-mode)
               ("w" . prism-whitespace-mode))
