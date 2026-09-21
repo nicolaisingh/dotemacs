@@ -3408,16 +3408,25 @@ This makes `howm-create' honor \"#+HOWM_NAMED_FILE:\" directives."
            (keywords (completing-read-multiple "Keyword: " completion-table nil nil "@"))
            (method))
       (save-excursion
-        (beginning-of-line)
-        (cond ((looking-at-p "keywords: ")
-               (end-of-line)
-               (insert " "))
-              ((looking-at-p "^$")
-               (insert "keywords: "))
-              (t
-               (end-of-line)
-               (insert "\nkeywords: ")))
-        (insert (string-join keywords " ")))))
+        (while (ignore-errors (outline-up-heading 1 nil)))
+        (let* ((end (save-excursion
+                      (progn (outline-end-of-subtree)
+                             (point))))
+               (match-pos (save-excursion
+                            (when (re-search-forward "^keywords: " end t)
+                              (point)))))
+          (when match-pos
+            (goto-char match-pos))
+          (beginning-of-line)
+          (cond ((looking-at-p "keywords: ")
+                 (end-of-line)
+                 (insert " "))
+                ((looking-at-p "^$")
+                 (insert "keywords: "))
+                (t
+                 (end-of-line)
+                 (insert "\nkeywords: ")))
+          (insert (string-join keywords " "))))))
 
   (defun my-howm-insert-file-ref ()
     "Insert a ref or goto-link to a file."
