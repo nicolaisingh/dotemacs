@@ -80,6 +80,7 @@ to update a package using commands like `elpaca-update'."
          (default-directory (elpaca<-source-dir e))
          (recipe (elpaca<-recipe e))
          (recipe-branch-name (plist-get recipe :branch))
+         (pkg (plist-get recipe :package))
          (ref (plist-get recipe :ref))
          (remote
           (or (car-safe (plist-get recipe :remotes)) elpaca-default-remote-name))
@@ -88,10 +89,14 @@ to update a package using commands like `elpaca-update'."
                         (string-trim (elpaca-process-output
                                       "git" "rev-parse" "--abbrev-ref" "--symbolic-full-name" "HEAD")))))
 
-    (when head-detached-p
-      (elpaca-with-process-call ("git" "checkout" "-b" my-elpaca-branch-name ref))
-      (elpaca-with-process-call ("git" "branch" "-u" (format "%s/%s" remote recipe-branch-name)))
-      (elpaca-continue e))))
+    (if (not recipe-branch-name)
+        (message "%s: Skipping upstream setup, no recipe branch found" pkg)
+      (when head-detached-p
+        (elpaca-with-process-call ("git" "checkout" "-B" my-elpaca-branch-name ref)
+          (if (not success) (message "%s: Failed to create branch - %s" pkg stderr)))
+        (elpaca-with-process-call ("git" "branch" "-u" (format "%s/%s" remote recipe-branch-name))
+          (if (not success) (message "%s: Failed to set upstream - %s" pkg stderr)))))
+    (elpaca-continue e)))
 
 (add-to-list 'elpaca-git-default-build-steps 'my-elpaca-git-setup-upstreams t)
 
@@ -1338,6 +1343,7 @@ This will return ~/.emacs.d/agent-shell/<dir>."
 
 
 ;;; copilot
+
 (use-package copilot
   :disabled
   :hook ((copilot-mode-hook . turn-off-completion-preview-mode)
@@ -1684,6 +1690,7 @@ If the item at point is a file, try to remove the subtree."
 
 (use-package easy-kill
   :demand t
+  :ensure (:branch "master")
   :bind (([remap kill-ring-save] . easy-kill)
          :map easy-kill-base-map
          ("C" . easy-kill-cycle)
@@ -2969,7 +2976,7 @@ If region is active, rewrite the region. Otherwise rewrite the entire buffer."
 ;;; hl-block-mode
 
 (use-package hl-block-mode
-  :ensure (:brach "main")
+  :ensure (:branch "main")
   :custom
   (hl-block-single-level t)
   (hl-block-style 'color-tint)
@@ -4090,6 +4097,7 @@ Howm file separator lines (📕 ...) are level 1; `*' headings start at level 2.
 ;;; keyfreq
 
 (use-package keyfreq
+  :ensure (:branch "main")
   :demand t
   :hook ((kill-emacs-hook . keyfreq-save-now)
          (keyfreq-mode-hook . my-keyfreq-toggle-timer))
@@ -5387,6 +5395,7 @@ of the new org-mode file."
 ;;; rust-mode
 
 (use-package rust-mode
+  :ensure (:branch "main")
   :hook ((rust-mode-hook . no-indent-tabs-mode))
   :custom
   (rust-format-on-save t)
@@ -5592,6 +5601,7 @@ of the new org-mode file."
 ;;; stripes
 
 (use-package stripes
+  :ensure (:branch "master")
   :hook ((calibre-library-mode-hook . stripes-mode)
          (elpaca-manager-mode-hook . stripes-mode)
          (prodigy-mode-hook . stripes-mode))
