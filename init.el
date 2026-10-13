@@ -1955,6 +1955,7 @@ If the item at point is a file, try to remove the subtree."
   :hook ((js-mode-hook . eglot-ensure)
          (nix-ts-mode-hook . eglot-ensure)
          (python-mode-hook . eglot-ensure)
+         (rust-mode-hook . eglot-ensure)
          (tsx-ts-mode-hook . eglot-ensure)
          (typescript-ts-mode-hook . eglot-ensure))
   :custom
@@ -1968,6 +1969,10 @@ If the item at point is a file, try to remove the subtree."
                    eglot-ignored-server-capabilities '(:documentHighlightProvider
                                                        :hoverProvider
                                                        :documentRangeFormattingProvider
+                                                       :inlayHintProvider))
+  (setq-mode-local rust-ts-mode
+                   eglot-ignored-server-capabilities '(:documentHighlightProvider
+                                                       :hoverProvider
                                                        :inlayHintProvider))
   (setq-mode-local typescript-ts-mode
                    eglot-ignored-server-capabilities '(:documentHighlightProvider
@@ -2533,7 +2538,8 @@ The default format is specified by `emms-source-playlist-default-format'."
   (add-to-list 'project-switch-commands '(ghostel-project "Ghostel") t)
   (add-to-list 'display-buffer-alist '((lambda (buffer _action)
                                          (with-current-buffer buffer
-                                           (and (derived-mode-p 'ghostel-mode)
+                                           (and (eq this-command 'my-ghostel-side-window-toggle)
+                                                (derived-mode-p 'ghostel-mode)
                                                 (project-current))))
                                        (display-buffer-in-side-window)
                                        (side . right)
@@ -3021,6 +3027,16 @@ If region is active, rewrite the region. Otherwise rewrite the entire buffer."
   :ensure (:branch "master")
   :bind (:map my-ctl-c-h-map
               ("n" . highlight-numbers-mode)))
+
+
+;;; hl-block-mode
+
+(use-package hl-block-mode
+  :ensure (:brach "main")
+  :custom
+  (hl-block-single-level t)
+  (hl-block-style 'color-tint)
+  (hl-block-color-tint "#080808"))
 
 
 ;;; hl-line
@@ -5476,6 +5492,15 @@ of the new org-mode file."
            (buffer-substring-no-properties (match-end 1) (match-end 0))
            prefer-roman)
         (rst-insert-list-new-tag "*")))))
+
+
+;;; rust-mode
+
+(use-package rust-mode
+  :hook ((rust-mode-hook . no-indent-tabs-mode))
+  :custom
+  (rust-format-on-save t)
+  (rust-mode-treesitter-derive t))
 
 
 ;;; saveplace

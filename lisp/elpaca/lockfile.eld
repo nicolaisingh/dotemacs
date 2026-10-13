@@ -933,6 +933,23 @@
 							  git :protocol https :inherit t :depth
 							  treeless :ref
 							  "8b4744c7f46c72b1d3d599d4fb75ef8183dee307"))
+ (hl-block-mode :source "elpaca-menu-lock-file" :recipe
+				(:package "hl-block-mode" :fetcher codeberg :repo
+						  "ideasman42/emacs-hl-block-mode" :files
+						  ("*.el" "*.el.in" "dir" "*.info" "*.texi"
+						   "*.texinfo" "doc/dir" "doc/*.info"
+						   "doc/*.texi" "doc/*.texinfo" "lisp/*.el"
+						   "docs/dir" "docs/*.info" "docs/*.texi"
+						   "docs/*.texinfo"
+						   (:exclude ".dir-locals.el" "test.el"
+									 "tests.el" "*-test.el"
+									 "*-tests.el" "LICENSE" "README*"
+									 "*-pkg.el"))
+						  :source "elpaca-menu-lock-file" :id
+						  hl-block-mode :brach "main" :type git
+						  :protocol https :inherit t :depth treeless
+						  :ref
+						  "8f66a89196dec2f9b5f9a58b769e64c190493064"))
  (hl-todo :source "elpaca-menu-lock-file" :recipe
 		  (:package "hl-todo" :repo "tarsius/hl-todo" :fetcher github
 					:files
@@ -1725,6 +1742,20 @@
 					   "master" :type git :protocol https :inherit t
 					   :depth treeless :ref
 					   "d280632df39a175dac06037038105e32945624be"))
+ (rust-mode :source "elpaca-menu-lock-file" :recipe
+			(:package "rust-mode" :repo "rust-lang/rust-mode" :fetcher
+					  github :files
+					  ("*.el" "*.el.in" "dir" "*.info" "*.texi"
+					   "*.texinfo" "doc/dir" "doc/*.info" "doc/*.texi"
+					   "doc/*.texinfo" "lisp/*.el" "docs/dir"
+					   "docs/*.info" "docs/*.texi" "docs/*.texinfo"
+					   (:exclude ".dir-locals.el" "test.el" "tests.el"
+								 "*-test.el" "*-tests.el" "LICENSE"
+								 "README*" "*-pkg.el"))
+					  :source "elpaca-menu-lock-file" :id rust-mode
+					  :type git :protocol https :inherit t :depth
+					  treeless :ref
+					  "265e243732761b925e03ebb61930a3aeea034d0e"))
  (s :source "elpaca-menu-lock-file" :recipe
 	(:package "s" :fetcher github :repo "magnars/s.el" :files
 			  ("*.el" "*.el.in" "dir" "*.info" "*.texi" "*.texinfo"
