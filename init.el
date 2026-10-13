@@ -70,42 +70,30 @@ collection.  Use revert-gc-cons-percentage to restore the value."
 (setopt elpaca-lock-file
         (expand-file-name "lisp/elpaca/lockfile.eld" user-emacs-directory))
 
-(defun my-elpaca-assign-git-branches ()
-  "Checkout each queued Elpaca package's configured branch if possible.
-Only switches when HEAD is detached, the target branch already exists
-locally, and the current HEAD is at the same commit as that branch.
-This is useful when the Elpaca lockfile leaves a repo's HEAD detached."
-  (interactive)
-  (dolist (e (elpaca--queued))
-    (let* ((package-name (elpaca<-package e))
-           (ep (elpaca-get package-name))
-           (branch (plist-get (elpaca<-recipe ep) :branch))
-           (repo (elpaca-source-dir ep))
-           branch-rev head-rev detached-p)
-      (when (and branch (file-directory-p repo))
-        (with-temp-buffer
-          (let ((default-directory repo))
-            (setq detached-p (not (zerop (call-process "git" nil t nil
-                                                       "symbolic-ref" "--short" "HEAD"))))))
-        (with-temp-buffer
-          (let ((default-directory repo))
-            (when (zerop (call-process "git" nil t nil "rev-parse" "--verify"
-                                       (format "refs/heads/%s" branch)))
-              (setq branch-rev (string-trim (buffer-string))))))
-        (with-temp-buffer
-          (let ((default-directory repo))
-            (when (zerop (call-process "git" nil t nil "rev-parse" "HEAD"))
-              (setq head-rev (string-trim (buffer-string))))))
-        (if (and detached-p branch-rev head-rev (string= branch-rev head-rev))
-            (progn
-              (message "Checking out %s to %s" package-name branch)
-              (let ((default-directory repo))
-                (call-process "git" nil nil nil "checkout" branch)))
-          (when detached-p
-            (message "Skipping %s (%s)"
-                     package-name
-                     (cond ((or (null branch-rev) (null head-rev)) "missing ref")
-                           (t "HEAD mismatch")))))))))
+(defun my-elpaca-git-setup-upstreams (e)
+  "Checkout a branch for each detached repo head, and track the configured upstream.
+When packages are cloned by elpaca using a lockfile, the cloned repo
+ends up in a detached HEAD state.  This will create an branch and allow
+to update a package using commands like `elpaca-update'."
+  ;; based on https://github.com/progfolio/elpaca/issues/447
+  (let* ((my-elpaca-branch-name "my-elpaca-branch")
+         (default-directory (elpaca<-source-dir e))
+         (recipe (elpaca<-recipe e))
+         (recipe-branch-name (plist-get recipe :branch))
+         (ref (plist-get recipe :ref))
+         (remote
+          (or (car-safe (plist-get recipe :remotes)) elpaca-default-remote-name))
+         (head-detached-p
+          (string-equal "HEAD"
+                        (string-trim (elpaca-process-output
+                                      "git" "rev-parse" "--abbrev-ref" "--symbolic-full-name" "HEAD")))))
+
+    (when head-detached-p
+      (elpaca-with-process-call ("git" "checkout" "-b" my-elpaca-branch-name ref))
+      (elpaca-with-process-call ("git" "branch" "-u" (format "%s/%s" remote recipe-branch-name)))
+      (elpaca-continue e))))
+
+(add-to-list 'elpaca-git-default-build-steps 'my-elpaca-git-setup-upstreams t)
 
 (defun my-elpaca-write-lock-file ()
   "Write the elpaca lock file to my preferred location."
@@ -792,7 +780,7 @@ From https://www.emacswiki.org/emacs/XModMapMode")
 ;;; 10 diminish
 
 (use-package diminish
-  :ensure (:wait t :branch "master") ; wait to finish before proceeding to the next
+  :ensure (:wait t) ; wait to finish before proceeding to the next
   :demand t)
 
 
@@ -807,8 +795,7 @@ From https://www.emacswiki.org/emacs/XModMapMode")
 
 ;;; acp
 
-(use-package acp
-  :ensure (:branch "main"))
+(use-package acp)
 
 
 ;;; adoc-addons
@@ -822,7 +809,6 @@ From https://www.emacswiki.org/emacs/XModMapMode")
 ;;; adoc-mode
 
 (use-package adoc-mode
-  :ensure (:branch "master")
   :after (tempo)
   :hook ((adoc-mode-hook . no-indent-tabs-mode)
          (adoc-mode-hook . outline-minor-mode))
@@ -892,7 +878,6 @@ From https://www.emacswiki.org/emacs/XModMapMode")
 ;;; agent-shell
 
 (use-package agent-shell
-  :ensure (:branch "main")
   :commands (agent-shell-opencode-start-agent)
   :bind (:map
          my-ctl-c-a-map
@@ -928,7 +913,7 @@ This will return ~/.emacs.d/agent-shell/<dir>."
 ;;; agent-shell-sidebar
 
 (use-package agent-shell-sidebar
-  :ensure (:host github :repo "cmacrae/agent-shell-sidebar" :branch "main")
+  :ensure (:host github :repo "cmacrae/agent-shell-sidebar")
   :bind (("C-z C-a" . agent-shell-sidebar-toggle)
          :map agent-shell-mode-map
          ("C-c C-f" . agent-shell-sidebar-change-provider))
@@ -940,7 +925,6 @@ This will return ~/.emacs.d/agent-shell/<dir>."
 ;;; aggressive-indent
 
 (use-package aggressive-indent
-  :ensure (:branch "master")
   :bind (:map my-ctl-c-i-map
               ("A" . aggressive-indent-mode))
   :hook ((clojure-mode-hook . aggressive-indent-mode)
@@ -955,7 +939,6 @@ This will return ~/.emacs.d/agent-shell/<dir>."
 ;;; alert
 
 (use-package alert
-  :ensure (:branch "master")
   :custom
   (alert-fade-time 10)
   :config
@@ -1021,7 +1004,7 @@ This will return ~/.emacs.d/agent-shell/<dir>."
 
 (use-package anvil-ide
   :disabled
-  :ensure (:host github :repo "zawatton/anvil-ide.el" :branch "main"))
+  :ensure (:host github :repo "zawatton/anvil-ide.el"))
 
 
 ;;; autorevert
@@ -1035,7 +1018,6 @@ This will return ~/.emacs.d/agent-shell/<dir>."
 ;;; avy
 
 (use-package avy
-  :ensure (:branch "master")
   :bind (:map
          my-ctl-z-map
          ("C-v" . avy-goto-char-timer)
@@ -1050,20 +1032,17 @@ This will return ~/.emacs.d/agent-shell/<dir>."
 ;;; blacken
 
 (use-package blacken
-  :ensure (:branch "master")
   :hook (python-mode-hook))
 
 
 ;;; breadcrumb
 
-(use-package breadcrumb
-  :ensure (:branch "master"))
+(use-package breadcrumb)
 
 
 ;;; browse-kill-ring
 
 (use-package browse-kill-ring
-  :ensure (:branch "master")
   :bind (:map my-ctl-c-b-map ("k" . browse-kill-ring)))
 
 
@@ -1118,7 +1097,7 @@ This will return ~/.emacs.d/agent-shell/<dir>."
 ;;; calibre
 
 (use-package calibre
-  :ensure (:branch "master")
+  :disabled
   :bind (("C-c L" . calibre-library))
   :custom (calibre-libraries '(("library" . "~/calibre"))))
 
@@ -1126,7 +1105,6 @@ This will return ~/.emacs.d/agent-shell/<dir>."
 ;;; cape
 
 (use-package cape
-  :ensure (:branch "main")
   :bind (:map my-ctl-c-p-map
               ("TAB" . completion-at-point)
               ;; ("M-TAB" . completion-at-point)
@@ -1156,20 +1134,17 @@ This will return ~/.emacs.d/agent-shell/<dir>."
 
 ;;; centered-cursor-mode
 
-(use-package centered-cursor-mode
-  :ensure (:branch "master"))
+(use-package centered-cursor-mode)
 
 
 ;;; chess
 
-(use-package chess
-  :ensure (:branch "externals/chess"))
+(use-package chess)
 
 
 ;;; chronos
 
 (use-package chronos
-  :ensure (:branch "master")
   :bind (("C-c T" . chronos-load))
   :custom
   (chronos-standard-timers '("0:0:30/30-second finished"
@@ -1209,7 +1184,7 @@ This will return ~/.emacs.d/agent-shell/<dir>."
 ;;; claude-code-ide
 
 (use-package claude-code-ide
-  :ensure (:host github :repo "manzaltu/claude-code-ide.el" :branch "main")
+  :ensure (:host github :repo "manzaltu/claude-code-ide.el")
   :bind (:map
          my-ctl-z-map
          ("C-c" . my-claude-code-ide))
@@ -1236,14 +1211,12 @@ This will return ~/.emacs.d/agent-shell/<dir>."
 
 ;;; clojure-mode
 
-(use-package clojure-mode
-  :ensure (:branch "master"))
+(use-package clojure-mode)
 
 
 ;;; command-log-mode
 
 (use-package command-log-mode
-  :ensure (:branch "master")
   :bind (("C-c c l" . clm/toggle-command-log-buffer))
   :custom
   (command-log-mode-is-global t)
@@ -1274,7 +1247,6 @@ This will return ~/.emacs.d/agent-shell/<dir>."
 ;;; comment-dwim-2
 
 (use-package comment-dwim-2
-  :ensure (:branch "master")
   :bind (([remap comment-dwim] . comment-dwim-2)))
 
 
@@ -1303,7 +1275,6 @@ This will return ~/.emacs.d/agent-shell/<dir>."
 ;;; consult
 
 (use-package consult
-  :ensure (:branch "main")
   :demand t
   :bind (([remap repeat-complex-command] . consult-complex-command)
          ([remap switch-to-buffer-other-frame] . consult-buffer-other-frame)
@@ -1356,7 +1327,6 @@ This will return ~/.emacs.d/agent-shell/<dir>."
 ;;; consult-dir
 
 (use-package consult-dir
-  :ensure (:branch "master")
   :demand t
   :bind (:map goto-map
               ("d" . consult-dir)
@@ -1392,7 +1362,6 @@ This will return ~/.emacs.d/agent-shell/<dir>."
 ;;; corfu
 
 (use-package corfu
-  :ensure (:branch "main")
   :demand t
   :bind (:map corfu-map
               ("C-s" . corfu-next)
@@ -1419,7 +1388,6 @@ This will return ~/.emacs.d/agent-shell/<dir>."
 ;;; cov
 
 (use-package cov
-  :ensure (:branch "master")
   :after (python)
   :bind (:map python-mode-map
               ("C-c C C" . my-python-run-coverage))
@@ -1439,20 +1407,17 @@ This will return ~/.emacs.d/agent-shell/<dir>."
 
 ;;; csv-mode
 
-(use-package csv-mode
-  :ensure (:branch "externals/csv-mode"))
+(use-package csv-mode)
 
 
 ;;; currency-convert
 
-(use-package currency-convert
-  :ensure (:branch "master"))
+(use-package currency-convert)
 
 
 ;;; deadgrep
 
 (use-package deadgrep
-  :ensure (:branch "master")
   :bind (:map deadgrep-mode-map
               ("C-o" . my-deadgrep-open-result-other-window))
   :config
@@ -1469,7 +1434,6 @@ This will return ~/.emacs.d/agent-shell/<dir>."
 ;;; devdocs
 
 (use-package devdocs
-  :ensure (:branch "main")
   :bind (("C-h D I" . devdocs-install)
          ("C-h D D" . devdocs-lookup)))
 
@@ -1485,7 +1449,6 @@ This will return ~/.emacs.d/agent-shell/<dir>."
 ;;; diff-hl
 
 (use-package diff-hl
-  :ensure (:branch "master")
   :demand t
   :bind (:map my-ctl-c-d-map
               ("h h" . global-diff-hl-mode)
@@ -1611,7 +1574,6 @@ be file B."
 ;;; dired-narrow (from dired-hacks)
 
 (use-package dired-narrow
-  :ensure (:branch "master")
   :after (dired)
   :bind (:map dired-mode-map
               ("/ /" . dired-narrow)
@@ -1623,7 +1585,6 @@ be file B."
 ;;; dired-rainbow (from dired-hacks)
 
 (use-package dired-rainbow
-  :ensure (:branch "master")
   :after (dired personal-theme)
   :demand t
   :config
@@ -1671,7 +1632,6 @@ be file B."
 ;;; dired-sidebar
 
 (use-package dired-sidebar
-  :ensure (:branch "master")
   :bind (:map my-ctl-c-d-map
               ("s" . dired-sidebar-toggle-sidebar)
               ("S" . dired-sidebar-jump-to-sidebar)
@@ -1691,7 +1651,6 @@ be file B."
 ;;; dired-subtree
 
 (use-package dired-subtree
-  :ensure (:branch "master")
   :after (dired)
   :bind (:map dired-mode-map
               ("<backtab>" . dired-subtree-cycle)
@@ -1718,8 +1677,7 @@ If the item at point is a file, try to remove the subtree."
 
 ;;; dockerfile-mode
 
-(use-package dockerfile-mode
-  :ensure (:branch "master"))
+(use-package dockerfile-mode)
 
 
 ;;; easy-kill
@@ -1740,7 +1698,6 @@ If the item at point is a file, try to remove the subtree."
 
 (use-package easy-kill-extras
   :disabled
-  :ensure (:branch "master")
   :demand t
   :after (easy-kill))
 
@@ -1766,7 +1723,6 @@ If the item at point is a file, try to remove the subtree."
 ;;; eat
 
 (use-package eat
-  :ensure (:branch "master")
   :hook ((eshell-load-hook . eat-eshell-mode)
          (eshell-load-hook . eat-eshell-visual-command-mode)))
 
@@ -1774,7 +1730,6 @@ If the item at point is a file, try to remove the subtree."
 ;;; eca
 
 (use-package eca
-  :ensure (:branch "master")
   :bind (("C-z C-e" . my-eca-chat-toggle-window)
          :map
          my-ctl-c-e-map
@@ -1944,7 +1899,6 @@ If the item at point is a file, try to remove the subtree."
 ;;; edit-indirect
 
 (use-package edit-indirect
-  :ensure (:branch "master")
   :bind (("C-c '" . edit-indirect-region)))
 
 
@@ -2014,7 +1968,7 @@ If the item at point is a file, try to remove the subtree."
 ;;; emms
 
 (use-package emms
-  :ensure (:source "GNU ELPA" :branch "master")
+  :ensure (:source "GNU ELPA")
   :bind (([remap emms-playlist-save] . my-emms-playlist-save)
          :map my-ctl-c-M-map
          ("%" . my-emms-toggle-random-playlist)
@@ -2366,7 +2320,6 @@ The default format is specified by `emms-source-playlist-default-format'."
 ;;; emojify
 
 (use-package emojify
-  :ensure (:branch "master")
   :hook ((vterm-mode . emojify-mode)))
 
 
@@ -2427,7 +2380,6 @@ The default format is specified by `emms-source-playlist-default-format'."
 ;;; eshell-toggle
 
 (use-package eshell-toggle
-  :ensure (:branch "master")
   :bind (:map my-ctl-z-map
               ("C-s" . my-eshell-toggle))
   :custom
@@ -2457,7 +2409,6 @@ The default format is specified by `emms-source-playlist-default-format'."
 ;;; eshell-up
 
 (use-package eshell-up
-  :ensure (:branch "master")
   :after (eshell)
   :demand t)
 
@@ -2465,21 +2416,18 @@ The default format is specified by `emms-source-playlist-default-format'."
 ;;; eshell-z
 
 (use-package eshell-z
-  :ensure (:branch "master")
   :after (eshell)
   :demand t)
 
 
 ;;; eterm-256color
 
-(use-package eterm-256color
-  :ensure (:branch "main"))
+(use-package eterm-256color)
 
 
 ;;; expand-region
 
 (use-package expand-region
-  :ensure (:branch "master")
   :bind (:map my-ctl-c-e-map
               ("[" . er/mark-inside-pairs)
               ("{" . er/mark-outside-pairs)
@@ -2497,27 +2445,23 @@ The default format is specified by `emms-source-playlist-default-format'."
 
 ;;; focus
 
-(use-package focus
-  :ensure (:branch "master"))
+(use-package focus)
 
 
 ;;; forge
 
 (use-package forge
-  :ensure (:branch "main")
   :after (magit))
 
 
 ;;; free-keys
 
-(use-package free-keys
-  :ensure (:branch "master"))
+(use-package free-keys)
 
 
 ;;; ghostel
 
 (use-package ghostel
-  :ensure (:branch "main")
   :demand t
   :bind (:map
          ghostel-semi-char-mode-map
@@ -2565,8 +2509,7 @@ The default format is specified by `emms-source-playlist-default-format'."
 
 ;;; git-timemachine
 
-(use-package git-timemachine
-  :ensure (:branch "master"))
+(use-package git-timemachine)
 
 
 ;;; gnus
@@ -2755,14 +2698,12 @@ The default format is specified by `emms-source-playlist-default-format'."
 
 ;;; go-mode
 
-(use-package go-mode
-  :ensure (:branch "master"))
+(use-package go-mode)
 
 
 ;;; goggles
 
 (use-package goggles
-  :ensure (:branch "main")
   :demand t
   :hook ((prog-mode-hook . goggles-mode)
          (text-mode-hook . goggles-mode)))
@@ -2771,7 +2712,6 @@ The default format is specified by `emms-source-playlist-default-format'."
 ;;; gptel
 
 (use-package gptel
-  :ensure (:branch "master")
   :bind (:map
          my-meta-=-map
          ("=" . gptel-send)
@@ -2969,8 +2909,7 @@ If region is active, rewrite the region. Otherwise rewrite the entire buffer."
 
 ;;; graphviz-dot-mode
 
-(use-package graphviz-dot-mode
-  :ensure (:branch "master"))
+(use-package graphviz-dot-mode)
 
 
 ;;; grep
@@ -3008,7 +2947,6 @@ If region is active, rewrite the region. Otherwise rewrite the entire buffer."
 ;;; highlight-indent-guides
 
 (use-package highlight-indent-guides
-  :ensure (:branch "master")
   :bind (:map my-ctl-c-h-map
               ("i" . highlight-indent-guides-mode))
   :custom
@@ -3024,7 +2962,6 @@ If region is active, rewrite the region. Otherwise rewrite the entire buffer."
 ;;; highlight-numbers
 
 (use-package highlight-numbers
-  :ensure (:branch "master")
   :bind (:map my-ctl-c-h-map
               ("n" . highlight-numbers-mode)))
 
@@ -3057,8 +2994,7 @@ If region is active, rewrite the region. Otherwise rewrite the entire buffer."
 
 (use-package howm
   :after (org)
-  :demand t
-  :ensure (:protocol ssh :remotes (("fork" :repo "nicolaisingh/howm")) :branch "master"))
+  :demand t)
 
 ;;; howm-action-lock (action-lock)
 
@@ -3803,8 +3739,7 @@ Howm file separator lines (📕 ...) are level 1; `*' headings start at level 2.
 
 ;;; htmlize
 
-(use-package htmlize
-  :ensure (:branch "master"))
+(use-package htmlize)
 
 
 ;;; hyperbole
@@ -4117,7 +4052,6 @@ Howm file separator lines (📕 ...) are level 1; `*' headings start at level 2.
 ;;; json-navigator
 
 (use-package json-navigator
-  :ensure (:branch "master")
   :bind (:map json-navigator-mode-map
               ("*" . tree-mode-expand-level)
               ("SPC" . tree-mode-toggle-expand)
@@ -4187,8 +4121,7 @@ Howm file separator lines (📕 ...) are level 1; `*' headings start at level 2.
 
 ;;; know-your-http-well
 
-(use-package know-your-http-well
-  :ensure (:branch "master"))
+(use-package know-your-http-well)
 
 
 ;;; llm-tool-collection
@@ -4196,7 +4129,7 @@ Howm file separator lines (📕 ...) are level 1; `*' headings start at level 2.
 (use-package llm-tool-collection
   :after (gptel)
   :demand t
-  :ensure (:repo "~/.emacs.d/packages/llm-tool-collection" :branch "main")
+  :ensure (:repo "~/.emacs.d/packages/llm-tool-collection")
   :config
   (mapcar (apply-partially #'apply #'gptel-make-tool)
           (llm-tool-collection-get-category "filesystem"))
@@ -4215,14 +4148,12 @@ Howm file separator lines (📕 ...) are level 1; `*' headings start at level 2.
 
 ;;; lorem-ipsum
 
-(use-package lorem-ipsum
-  :ensure (:branch "master"))
+(use-package lorem-ipsum)
 
 
 ;;; magit
 
 (use-package magit
-  :ensure (:branch "main")
   :bind (("C-c g" . magit-dispatch)
          ("C-x g" . magit-status)
          :map my-ctl-c-G-map
@@ -4245,7 +4176,6 @@ Howm file separator lines (📕 ...) are level 1; `*' headings start at level 2.
 ;;; magit-todos
 
 (use-package magit-todos
-  :ensure (:branch "master")
   :after (magit)
   :demand t
   :custom
@@ -4258,7 +4188,6 @@ Howm file separator lines (📕 ...) are level 1; `*' headings start at level 2.
 ;;; marginalia
 
 (use-package marginalia
-  :ensure (:branch "main")
   :demand t
   :bind (:map minibuffer-local-map
               ("M-M" . marginalia-cycle))
@@ -4269,7 +4198,6 @@ Howm file separator lines (📕 ...) are level 1; `*' headings start at level 2.
 ;;; markdown-mode
 
 (use-package markdown-mode
-  :ensure (:branch "master")
   :hook ((markdown-mode-hook . my-markdown-mode-config))
   :bind (:map
          markdown-mode-map
@@ -4289,7 +4217,6 @@ Howm file separator lines (📕 ...) are level 1; `*' headings start at level 2.
 ;;; mcp
 
 (use-package mcp
-  :ensure (:branch "master")
   :after (gptel)
   :bind (:map
          my-meta-=-map
@@ -4313,14 +4240,12 @@ Howm file separator lines (📕 ...) are level 1; `*' headings start at level 2.
 
 ;;; memory-usage
 
-(use-package memory-usage
-  :ensure (:branch "externals/memory-usage"))
+(use-package memory-usage)
 
 
 ;;; mermaid-mode
 
 (use-package mermaid-mode
-  :ensure (:branch "master")
   :bind (:map
          mermaid-mode-map
          ("C-c C-b" . mermaid-compile-buffer)
@@ -4387,7 +4312,6 @@ Howm file separator lines (📕 ...) are level 1; `*' headings start at level 2.
 ;;; move-text
 
 (use-package move-text
-  :ensure (:branch "master")
   :demand t
   :bind (("M-S-<up>" . move-text-up)
          ("M-S-<down>" . move-text-down))
@@ -4406,7 +4330,6 @@ Howm file separator lines (📕 ...) are level 1; `*' headings start at level 2.
 ;;; multi-term
 
 (use-package multi-term
-  :ensure (:branch "master")
   :disabled
   :bind (:map my-ctl-c-t-map
               ("T" . multi-term)
@@ -4437,7 +4360,6 @@ Howm file separator lines (📕 ...) are level 1; `*' headings start at level 2.
 ;;; multi-vterm
 
 (use-package multi-vterm
-  :ensure (:branch "master")
   :disabled
   :bind (:map my-ctl-c-t-map
               ("R" . multi-vterm-rename-buffer)
@@ -4448,7 +4370,6 @@ Howm file separator lines (📕 ...) are level 1; `*' headings start at level 2.
 ;;; multiple-cursors
 
 (use-package multiple-cursors
-  :ensure (:branch "master")
   :bind (:map my-ctl-c-m-map
               ("c ." . mc/mark-all-like-this-dwim)
               ("c C-M-SPC" . mc/mark-all-in-region-regexp)
@@ -4471,7 +4392,6 @@ Howm file separator lines (📕 ...) are level 1; `*' headings start at level 2.
 ;;; nix-ts-mode
 
 (use-package nix-ts-mode
-  :ensure (:branch "trunk")
   :mode "\\.nix\\'"
   :hook ((nix-ts-mode-hook . no-indent-tabs-mode)
          (nix-ts-mode-hook . (lambda ()
@@ -4483,7 +4403,6 @@ Howm file separator lines (📕 ...) are level 1; `*' headings start at level 2.
 ;;; nov
 
 (use-package nov
-  :ensure (:branch "master")
   :bind (:map nov-mode-map
               ("w" . my-nov-update-text-width))
   :mode ("\\.epub\\'" . nov-mode)
@@ -4517,7 +4436,6 @@ Howm file separator lines (📕 ...) are level 1; `*' headings start at level 2.
 ;;; ob-mermaid
 
 (use-package ob-mermaid
-  :ensure (:branch "master")
   :after (org ob)
   :demand t
   :config
@@ -4527,7 +4445,6 @@ Howm file separator lines (📕 ...) are level 1; `*' headings start at level 2.
 ;;; occult
 
 (use-package occult
-  :ensure (:branch "main")
   :bind (:map
          my-ctl-c-f-map
          ("r" . occult-toggle)))
@@ -4535,14 +4452,12 @@ Howm file separator lines (📕 ...) are level 1; `*' headings start at level 2.
 
 ;;; operate-on-number
 
-(use-package operate-on-number
-  :ensure (:branch "master"))
+(use-package operate-on-number)
 
 
 ;;; orderless
 
 (use-package orderless
-  :ensure (:branch "master")
   :demand t
   :custom
   (completion-styles '(orderless basic)))
@@ -4991,7 +4906,6 @@ of the new org-mode file."
 ;;; org-bookmark-heading
 
 (use-package org-bookmark-heading
-  :ensure (:branch "master")
   :after (org)
   :demand t)
 
@@ -5018,7 +4932,6 @@ of the new org-mode file."
 ;;; org-present
 
 (use-package org-present
-  :ensure (:branch "master")
   :after (org)
   :hook ((org-present-mode-hook . (lambda ()
                                     (org-present-big)
@@ -5035,7 +4948,6 @@ of the new org-mode file."
 ;;; org-sticky-header
 
 (use-package org-sticky-header
-  :ensure (:branch "master")
   :after (org)
   :custom
   (org-sticky-header-at-point t)
@@ -5046,7 +4958,6 @@ of the new org-mode file."
 ;;; org-web-tools
 
 (use-package org-web-tools
-  :ensure (:branch "master")
   :after (org)
   :bind (:map
          org-mode-map
@@ -5059,7 +4970,6 @@ of the new org-mode file."
 ;;; orgalist
 
 (use-package orgalist
-  :ensure (:branch "externals/orgalist")
   :bind (:map
          orgalist-mode-map
          ("C-c C--" . orgalist-cycle-bullet)
@@ -5075,7 +4985,6 @@ of the new org-mode file."
 ;;; osm
 
 (use-package osm
-  :ensure (:branch "main")
   :custom
   (osm-home '(12.49 122.48 6)))
 
@@ -5104,21 +5013,18 @@ of the new org-mode file."
 ;;; ox-asciidoc
 
 (use-package ox-asciidoc
-  :ensure (:branch "master")
   :after (ox))
 
 
 ;;; ox-gfm
 
 (use-package ox-gfm
-  :ensure (:branch "master")
   :after (ox))
 
 
 ;;; ox-jira
 
 (use-package ox-jira
-  :ensure (:branch "trunk")
   :after (ox)
   :demand t)
 
@@ -5133,14 +5039,12 @@ of the new org-mode file."
 
 ;;; package-lint
 
-(use-package package-lint
-  :ensure (:branch "main"))
+(use-package package-lint)
 
 
 ;;; pass
 
 (use-package pass
-  :ensure (:branch "master")
   :custom
   (pass-suppress-confirmations nil)
   :bind (:map
@@ -5150,20 +5054,17 @@ of the new org-mode file."
 
 ;;; password-store
 
-(use-package password-store
-  :ensure (:branch "master"))
+(use-package password-store)
 
 
 ;;; password-store-otp
 
-(use-package password-store-otp
-  :ensure (:protocol ssh :remotes (("fork" :repo "nicolaisingh/password-store-otp.el")) :branch "master"))
+(use-package password-store-otp)
 
 
 ;;; pdf-tools
 
 (use-package pdf-tools
-  :ensure (:branch "master")
   :magic ("%PDF" . pdf-view-mode)
   :config
   (pdf-tools-install t))
@@ -5172,7 +5073,6 @@ of the new org-mode file."
 ;;; plantuml-mode
 
 (use-package plantuml-mode
-  :ensure (:branch "develop")
   :mode ("\\.plantuml\\'" . plantuml-mode)
   :custom
   (plantuml-default-exec-mode 'executable)
@@ -5182,14 +5082,12 @@ of the new org-mode file."
 
 ;;; plz
 
-(use-package plz
-  :ensure (:branch "master"))
+(use-package plz)
 
 
 ;;; prettier-js
 
 (use-package prettier-js
-  :ensure (:branch "main")
   :hook ((js2-mode-hook . prettier-js-mode)
          (typescript-ts-mode-hook . prettier-js-mode)))
 
@@ -5197,7 +5095,6 @@ of the new org-mode file."
 ;;; prism
 
 (use-package prism
-  :ensure (:branch "master")
   :after (personal-theme)
   :bind (:map my-ctl-c-h-map
               ("b" . prism-mode)
@@ -5217,7 +5114,6 @@ of the new org-mode file."
 ;;; prodigy
 
 (use-package prodigy
-  :ensure (:branch "master")
   :bind (:map my-ctl-c-P-map ("p" . prodigy))
   :config
   (prodigy-define-service
@@ -5282,14 +5178,12 @@ of the new org-mode file."
 
 ;;; protobuf
 
-(use-package protobuf-mode
-  :ensure (:branch "main"))
+(use-package protobuf-mode)
 
 
 ;;; pytest
 
 (use-package pytest
-  :ensure (:branch "master")
   :after (python)
   :bind (:map
          python-mode-map
@@ -5361,20 +5255,17 @@ of the new org-mode file."
 
 ;;; pyvenv
 
-(use-package pyvenv
-  :ensure (:branch "master"))
+(use-package pyvenv)
 
 
 ;;; qrencode
 
-(use-package qrencode
-  :ensure (:branch "main"))
+(use-package qrencode)
 
 
 ;;; rainbow-mode
 
-(use-package rainbow-mode
-  :ensure (:branch "externals/rainbow-mode"))
+(use-package rainbow-mode)
 
 
 ;;; recentf
@@ -5407,7 +5298,6 @@ of the new org-mode file."
 ;;; restclient
 
 (use-package restclient
-  :ensure (:branch "master")
   :mode (("\\.restclient\\'" . restclient-mode)
          ("\\.http\\'" . restclient-mode))
   :hook ((restclient-mode-hook . no-indent-tabs-mode)
@@ -5516,8 +5406,7 @@ of the new org-mode file."
 
 (use-package saveplace-pdf-view
   :after (:any doc-view pdf-tools)
-  :demand t
-  :ensure (:protocol ssh :branch "master"))
+  :demand t)
 
 
 ;;; scheme
@@ -5533,7 +5422,6 @@ of the new org-mode file."
 ;;; selected
 
 (use-package selected
-  :ensure (:branch "master")
   :demand t
   :bind (:map selected-keymap
               ("= p" . my-gptel-proofread)
@@ -5620,14 +5508,12 @@ of the new org-mode file."
 
 ;;; shell-maker
 
-(use-package shell-maker
-  :ensure (:branch "main"))
+(use-package shell-maker)
 
 
 ;;; slime
 
 (use-package slime
-  :ensure (:branch "master")
   :config
   (setq inferior-lisp-program "sbcl"))
 
@@ -5635,7 +5521,6 @@ of the new org-mode file."
 ;;; smartparens
 
 (use-package smartparens
-  :ensure (:branch "master")
   :demand t
   :bind (:map
          smartparens-mode-map
@@ -5691,7 +5576,6 @@ of the new org-mode file."
 ;;; spacious-padding
 
 (use-package spacious-padding
-  :ensure (:branch "main")
   :custom
   (spacious-padding-subtle-mode-line t)
   (spacious-padding-widths (list
@@ -5724,7 +5608,6 @@ of the new org-mode file."
 ;;; symbol-overlay
 
 (use-package symbol-overlay
-  :ensure (:branch "master")
   :bind (:map
          my-ctl-c-s-map
          ("o" . symbol-overlay-mode)))
@@ -5738,8 +5621,7 @@ of the new org-mode file."
 
 ;;; terraform-mode
 
-(use-package terraform-mode
-  :ensure (:branch "master"))
+(use-package terraform-mode)
 
 
 ;;; tex-mode
@@ -5765,14 +5647,12 @@ of the new org-mode file."
 
 ;;; transient
 
-(use-package transient
-  :ensure (:branch "main"))
+(use-package transient)
 
 
 ;;; tree-mode
 
-(use-package tree-mode
-  :ensure (:branch "master"))
+(use-package tree-mode)
 
 
 ;;; treesit
@@ -5803,7 +5683,6 @@ of the new org-mode file."
 ;;; treesit-fold
 
 (use-package treesit-fold
-  :ensure (:branch "master")
   :bind (:map
          my-ctl-c-f-map
          ("f" . treesit-fold-toggle)
@@ -5832,20 +5711,17 @@ of the new org-mode file."
 
 ;;; uniline
 
-(use-package uniline
-  :ensure (:branch "main"))
+(use-package uniline)
 
 
 ;;; uuidgen
 
-(use-package uuidgen
-  :ensure (:branch "master"))
+(use-package uuidgen)
 
 
 ;;; visual-fill-column
 
 (use-package visual-fill-column
-  :ensure (:branch "main")
   :hook ((adoc-mode-hook . visual-line-mode)
          (org-mode-hook . visual-line-mode)
          (markdown-mode-hook . visual-line-mode)
@@ -5865,7 +5741,6 @@ of the new org-mode file."
 
 (use-package vterm
   :disabled
-  :ensure (:branch "master")
   :demand t
   :bind (:map
          vterm-mode-map
@@ -5888,14 +5763,13 @@ of the new org-mode file."
 ;;; vundo
 
 (use-package vundo
-  :ensure (:branch "master")
   :bind (("C-c u" . vundo)))
 
 
 ;;; whisper
 
 (use-package whisper
-  :ensure (:host github :repo "natrys/whisper.el" :branch "master")
+  :ensure (:host github :repo "natrys/whisper.el")
   :bind (("C-c W" . whisper-run))
   :custom
   (whisper-install-whispercpp t)
@@ -5932,7 +5806,6 @@ of the new org-mode file."
 ;;; writeroom-mode
 
 (use-package writeroom-mode
-  :ensure (:branch "master")
   :custom
   (writeroom-extra-line-spacing line-spacing)
   (writeroom-fringes-outside-margins t)
@@ -5966,7 +5839,6 @@ of the new org-mode file."
 ;;; yasnippet
 
 (use-package yasnippet
-  :ensure (:branch "master")
   :demand t
   :bind (:map
          yas-minor-mode-map
@@ -5995,8 +5867,7 @@ of the new org-mode file."
 
 ;;; ztree
 
-(use-package ztree
-  :ensure (:branch "master"))
+(use-package ztree)
 
 
 (provide 'init)
