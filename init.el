@@ -509,6 +509,7 @@ From https://www.emacswiki.org/emacs/XModMapMode")
   :demand t
   :ensure nil ; built-in package
   :bind (([remap eval-last-sexp] . pp-eval-last-sexp)
+         ([remap eval-expression] . pp-eval-expression)
          ("C-S-t" . tab-new)
          ("C-S-w" . tab-close)
          ("C-`" . my-select-tab-or-other-window)
@@ -1321,7 +1322,7 @@ This will return ~/.emacs.d/agent-shell/<dir>."
   :custom
   (consult-async-min-input 2)
   (consult-narrow-key "<")
-  (consult-preview-key "C-SPC")
+  (consult-preview-key "C-c C-SPC")
 
   :config
   (with-eval-after-load 'org
@@ -4112,6 +4113,7 @@ Howm file separator lines (📕 ...) are level 1; `*' headings start at level 2.
                                     ghostel--scroll-intercept-down
                                     ghostel--send-event
                                     next-line
+                                    org-self-insert-command
                                     previous-line
                                     self-insert-command))
 
@@ -4300,6 +4302,16 @@ Howm file separator lines (📕 ...) are level 1; `*' headings start at level 2.
   :after (mermaid-mode)
   :custom
   (mermaid-ts-indent-level 4))
+
+
+;;; midnight
+
+(use-package midnight
+  :ensure nil
+  :demand t
+  :hook ((after-init-hook . midnight-mode))
+  :custom
+  (clean-buffer-list-delay-general 5))
 
 
 ;;; misearch
@@ -4809,7 +4821,6 @@ of the new org-mode file."
 ;;; org-indent
 
 (use-package org-indent
-  :disabled
   :after (org)
   :ensure nil
   :hook ((org-mode-hook . org-indent-mode))
@@ -5091,6 +5102,21 @@ of the new org-mode file."
 ;;; plz
 
 (use-package plz)
+
+
+;;; pp
+
+(use-package pp
+  :ensure nil
+  :config
+  (add-to-list 'display-buffer-alist
+               '("\\`\\*Pp \\(Eval\\|Macroexpand\\) Output\\*\\'"
+                 (display-buffer-in-side-window)
+                 (side . bottom)
+                 (slot . 0)
+                 (window-height . 0.30)
+                 (window-parameters . ((no-delete-other-windows .
+                                                                t))))))
 
 
 ;;; prettier-js
