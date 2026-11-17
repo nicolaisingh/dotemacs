@@ -9,7 +9,7 @@
 						   "README*" "*-pkg.el"))
 				:source "elpaca-menu-lock-file" :id acp :branch "main"
 				:type git :protocol https :inherit t :depth treeless
-				:ref "5b3abb2956d16f39ed76bc53fe31d3c2ee7fecfd"))
+				:ref "5140f4121156707245567b8fc3072d4c3b5c867f"))
  (adoc-mode :source "elpaca-menu-lock-file" :recipe
 			(:package "adoc-mode" :fetcher github :repo
 					  "bbatsov/adoc-mode" :files
@@ -38,7 +38,7 @@
 						:source "elpaca-menu-lock-file" :id
 						agent-shell :branch "main" :type git :protocol
 						https :inherit t :depth treeless :ref
-						"956a0be6b56e21b6de47a74a2a52fed0288b2abb"))
+						"4755fe7a68a84527582ec8eac640b606e083cdab"))
  (agent-shell-sidebar :source "elpaca-menu-lock-file" :recipe
 					  (:source "elpaca-menu-lock-file" :package
 							   "agent-shell-sidebar" :id
@@ -80,6 +80,12 @@
 				  "master" :type git :protocol https :inherit t :depth
 				  treeless :ref
 				  "31fc56855289d0846e73d7ca9b84b628aeac16a0"))
+ (anvil :source "elpaca-menu-lock-file" :recipe
+		(:source "elpaca-menu-lock-file" :package "anvil" :id anvil
+				 :host github :repo "zawatton/anvil.el" :files
+				 (:defaults "*.sh") :ref
+				 "08692245a06398187c4d702c36a04904906a22ba" :type git
+				 :protocol https :inherit t :depth treeless))
  (async :source "elpaca-menu-lock-file" :recipe
 		(:package "async" :repo "jwiegley/emacs-async" :fetcher github
 				  :files
@@ -968,31 +974,6 @@
 				  "elpaca-menu-lock-file" :id hydra :type git
 				  :protocol https :inherit t :depth treeless :ref
 				  "59a2a45a35027948476d1d7751b0f0215b1e61aa"))
- (hyperbole :source "elpaca-menu-lock-file" :recipe
-			(:package "hyperbole" :url
-					  "https://git.savannah.gnu.org/git/hyperbole.git"
-					  :fetcher git :files
-					  ("*.el" "MANIFEST" "dir" "ChangeLog" "Makefile"
-					   "HY-ABOUT" "HY-ANNOUNCE" "HY-CONCEPTS.kotl"
-					   "HY-NEWS" "HY-WHY.kotl" "INSTALL" "DEMO"
-					   "DEMO-ROLO.otl" "FAST-DEMO" "README.md" "_hypb"
-					   ".hypb" "hyrolo.py" "smart-clib-sym"
-					   "topwin.py" "hyperbole-banner.png"
-					   ("kotl" "kotl/MANIFEST" "kotl/EXAMPLE.kotl"
-						"kotl/*.el")
-					   ("man" "man/hyperbole.texi" "man/hyperbole.css"
-						"man/hkey-help.txt" "man/hyperbole.info"
-						"man/hyperbole.html" "man/hyperbole.pdf")
-					   ("man/im" "man/im/*.png")
-					   ("HY-TALK" "HY-TALK/.hypb" "HY-TALK/HYPB"
-						"HY-TALK/HY-TALK.org" "HY-TALK/HYPERAMP.org"
-						"HY-TALK/HYPERORG.org")
-					   ("test" "test/MANIFEST" "test/*tests.el"
-						"test/hy-test-*.el"))
-					  :source "elpaca-menu-lock-file" :id hyperbole
-					  :type git :protocol https :inherit t :depth
-					  treeless :ref
-					  "5e7da602760c64b75d62924e19a039ad48991a20"))
  (json-navigator :source "elpaca-menu-lock-file" :recipe
 				 (:package "json-navigator" :fetcher github :repo
 						   "DamienCassou/json-navigator" :files
@@ -1760,7 +1741,7 @@
 						:source "elpaca-menu-lock-file" :id
 						shell-maker :branch "main" :type git :protocol
 						https :inherit t :depth treeless :ref
-						"dcc05a8cf24eb62f2f611fd2d009a161fada5f6e"))
+						"071c6df3ca22a2f4c0daa689848ac9bd21bf4e2b"))
  (slime :source "elpaca-menu-lock-file" :recipe
 		(:package "slime" :fetcher github :repo "slime/slime" :files
 				  ("*.el" ("lib" "lib/hyperspec.el") "swank" "*.lisp"
