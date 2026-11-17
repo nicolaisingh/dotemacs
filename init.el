@@ -3358,7 +3358,7 @@ This makes `howm-create' honor \"#+HOWM_NAMED_FILE:\" directives."
      ((= (prefix-numeric-value which-template) 4)
       (cdr (my-howm-templates-select-template)))
      (t
-      (concat howm-view-title-header " %date %file\n\n%cursor\n\n\n"))))
+      (concat howm-view-title-header " \n%date %file\n\n%cursor\n\n"))))
 
   (defun my-howm-insert-keywords-line ()
     "Insert keywords line or append if on one."
@@ -4506,7 +4506,7 @@ Howm file separator lines (📕 ...) are level 1; `*' headings start at level 2.
                             (set-fill-column-silently 100))))
   :custom
   (org-adapt-indentation nil)
-  (org-agenda-files (expand-file-name "org-agenda-files" user-emacs-directory))
+  ;; (org-agenda-files (expand-file-name "org-agenda-files" user-emacs-directory))
   (org-agenda-text-search-extra-files '(agenda-archives))
   (org-archive-location "archive/%s::")
   (org-auto-align-tags nil)
