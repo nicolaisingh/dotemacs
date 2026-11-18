@@ -3404,6 +3404,8 @@ This makes `howm-create' honor \"#+HOWM_NAMED_FILE:\" directives."
                                "#\\+filetags: \\(.+\\)$"
                                "\\|"
                                "^keywords: \\(.+\\)$"
+                               "\\|"
+                               "^\\*+ .*\\s-\\(:[[:alnum:]_@#%:]+:\\)$"
                                "\\)"))
            (text-regexp (concat "\\(?:"
                                 "^keywords: \\(.+\\)$"
@@ -3415,7 +3417,8 @@ This makes `howm-create' honor \"#+HOWM_NAMED_FILE:\" directives."
           (while (re-search-forward org-regexp nil t)
             (let ((org-title (match-string-no-properties 1))
                   (org-filetags (match-string-no-properties 2))
-                  (keywords-line (match-string-no-properties 3)))
+                  (keywords-line (match-string-no-properties 3))
+                  (org-heading-tags (match-string-no-properties 4)))
               (when org-title
                 (setq all-keywords (append all-keywords
                                            (list org-title))))
@@ -3424,7 +3427,10 @@ This makes `howm-create' honor \"#+HOWM_NAMED_FILE:\" directives."
                                            (split-string org-filetags ":" t))))
               (when keywords-line
                 (setq all-keywords (append all-keywords
-                                           (split-string keywords-line " ")))))))
+                                           (split-string keywords-line " "))))
+              (when org-heading-tags
+                (setq all-keywords (append all-keywords
+                                           (split-string org-heading-tags ":" t)))))))
 
          ((derived-mode-p 'text-mode)
           (while (re-search-forward text-regexp nil t)

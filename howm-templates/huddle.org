@@ -1,7 +1,6 @@
 #+HOWM_NAMED_FILE: meetings.org
 
-* %cursor %dateonly
-keywords: @meeting
+* %cursor %dateonly :@meeting:
 [@] start    [@] end
 
 
